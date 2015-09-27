@@ -336,7 +336,7 @@ MySceneGraph.prototype.checkProperty = function(name, parentName, condition) {
 MySceneGraph.prototype.checkReference = function (array, name, nodeId, objectId) {
 
 	if (!(objectId in array)) {
-		return "NODE with id=" + nodeId + " referenced " + name + " id=" + objectId +", which doesn't exist.";
+		return "NODE with id=" + nodeId + " references " + name + " id=" + objectId +", which doesn't exist.";
 	}
 
 	return null;
@@ -418,6 +418,10 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 
 MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coordB, coordC, coordD) {
 
+	if (arguments.length < 5) {
+		return null;
+	}
+	
 	var node = root.getElementsByTagName(attribute);
 
 	if (node == null || node.length == 0) {
@@ -665,7 +669,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 		var currentElement = rootElement.children[i];
 
 		if (currentElement.nodeName != nodeName) {
-			console.warn("WARNING: element has invalid name (expected " + nodeName + ", got " + currentElement.nodeName + ").");
+			this.onXMLError("element in " + rootElement.nodeName + " has invalid name (expected " + nodeName + ", got " + currentElement.nodeName + ").");
 			continue;
 		}
 		
@@ -673,7 +677,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 
 		if (id == null) {
 			this.onXMLError(this.onElementMissing('id', nodeName));
-			return;
+			continue;
 		}
 
 		var error = parseFunc.call(this, id, currentElement);
