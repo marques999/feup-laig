@@ -29,8 +29,7 @@ XMLscene.prototype.init = function (application)
 	this.axis = new CGFaxis(this);
 };
 
-XMLscene.prototype.initLights = function ()
-{
+XMLscene.prototype.initLights = function () {
 	this.shader.bind();
 	this.lights[0].setPosition(2, 3, 3, 1);
 	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -38,13 +37,11 @@ XMLscene.prototype.initLights = function ()
 	this.shader.unbind();
 };
 
-XMLscene.prototype.initCameras = function ()
-{
+XMLscene.prototype.initCameras = function () {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
-XMLscene.prototype.setDefaultAppearance = function ()
-{
+XMLscene.prototype.setDefaultAppearance = function () {
 	this.setAmbient(0.2, 0.4, 0.8, 1.0);
 	this.setDiffuse(0.2, 0.4, 0.8, 1.0);
 	this.setSpecular(0.2, 0.4, 0.8, 1.0);
@@ -65,40 +62,32 @@ XMLscene.prototype.initAxis = function (length)
 	this.axis.display();
 };
 
-XMLscene.prototype.initFrustum = function (far, near)
-{
-
+XMLscene.prototype.initFrustum = function (far, near) {
 };
 
-XMLscene.prototype.initRotation = function (matrix)
-{
+XMLscene.prototype.initRotation = function (matrix) {
 	this.rotateX = matrix[0];
 	this.rotateY = matrix[1];
 	this.rotateZ = matrix[2];
 };
 
-XMLscene.prototype.initScale = function (matrix)
-{
+XMLscene.prototype.initScale = function (matrix) {
 	this.defaultScale = matrix;
 };
 
-XMLscene.prototype.initTranslate = function (matrix)
-{
+XMLscene.prototype.initTranslate = function (matrix) {
 	this.defaultTranslate = matrix;
 };
 
-XMLscene.prototype.updateLights = function ()
-{
+XMLscene.prototype.updateLights = function () {
 	this.lights[0].update();
 };
 
-XMLscene.prototype.setGlobalAmbient = function (r, g, b, a)
-{
+XMLscene.prototype.setGlobalAmbient = function (r, g, b, a) {
 	this.scene.setGlobalAmbientLight(r, g, b, a);
 };
 
-XMLscene.prototype.onGraphLoaded = function ()
-{
+XMLscene.prototype.onGraphLoaded = function () {
 	this.gl.clearColor(this.graph.gBackground[0], this.graph.gBackground[1], this.graph.gBackground[2], this.graph.gBackground[3]);
 	this.lights[0].setVisible(true);
 	this.lights[0].enable();
@@ -113,22 +102,20 @@ XMLscene.prototype.display = function ()
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-	// Initialize Model-View matrix as identity (no transformation
+	// Initialize Model-View matrix as identity (no transformation)
 	this.updateProjectionMatrix();
 	this.loadIdentity();
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
-
 	this.scale.apply(this, this.defaultScale);
 	this.rotate(1, 0, 0, this.rotateX);
 	this.rotate(0, 1, 0, this.rotateY);
 	this.rotate(0, 0, 1, this.rotateZ);
 	this.translate.apply(this, this.defaultTranslate);
-
+	
 	// Draw axis
 	this.axis.display();
-
 	this.setDefaultAppearance();
 
 	// ---- END Background, camera and axis setup

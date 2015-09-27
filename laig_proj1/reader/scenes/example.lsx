@@ -2,7 +2,7 @@
 
  <INITIALS>
     <frustum near="0.1" far="500"/>                      <!-- frustum planes-->
-     <translate x="1.5" y="1.7" z="1.0" />                 <!-- initial translate -->
+     <translate x="2" y="1.7" z="1.0" />                 <!-- initial translate -->
      <rotation axis="x" angle="-45" />                  <!-- initial rotation 3 -->
      <rotation axis="y" angle="0" />                  <!-- initial rotation 2 -->
      <rotation axis="z" angle="22" />                  <!-- initial rotation 1 -->
@@ -24,7 +24,7 @@
          <diffuse r="0.2" g="0.2" b="0.2" a="1.0" />        <!-- diffuse component -->
          <specular r="0.2" g="0.2" b="0.2" a="1.0" />       <!-- specular component -->
      </LIGHT>
-      <LIGHT id="ss">                                    <!-- light identifier -->
+      <LIGHT id="tt">                                    <!-- light identifier -->
         <enable value ="tt" />                         <!-- enable/disable -->
          <position x="ff" y="ff" z="ff" w="ff" />       <!-- light position -->
          <ambient r="ff" g="ff" b="ff" a="ff" />        <!-- ambient component -->
@@ -36,8 +36,8 @@
 
 
 <TEXTURES>
-     <TEXTURE id="ss">
-         <file path="ss" />                             <!-- path to file -->
+     <TEXTURE fs="ss">
+        <file path="ss" />                             <!-- path to file -->
         <amplif_factor s="ff" t="ff" />                <!-- x/s, y/t -->
      </TEXTURE>
      <TEXTURE id="tt">
@@ -69,7 +69,7 @@
      <!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
      <LEAF id="myrectangle" type="rectangle" args="0.0 0.0 3.0 1.5" />      <!-- 2D coordinates for left-top and right-bottom vertices. -->
      <LEAF id="as" type="cylinder" args="ff ff ff ii ii" />    <!-- height, bottom radius, top radius, sections along height, parts per section -->
-     <LEAF id="ss" type="sphere" args="5.0 8 8" />            <!-- radius, parts along radius, parts per section -->
+     <LEAF id="ss" type="sphere" args="ff ff f" />            <!-- radius, parts along radius, parts per section -->
      <LEAF id="mytriangle" type="triangle" args="0.0 0.0 0.0 0.0 1.5 0.5 0.0 0.0 1.0"/>   <!-- coordinates of each vertex -->
 </LEAVES>
 

@@ -6,6 +6,10 @@ function MyCylinder(scene, radius, height, slices, stacks) {
 	this.height = height;
 	this.slices = slices;
 	this.stacks = stacks;
+	this.indices = [];
+	this.normals = [];
+	this.texCoords = [];
+	this.vertices = [];
 	this.minS = 0.0;
 	this.maxS = 1.0;
 	this.minT = 0.0;
@@ -18,18 +22,13 @@ MyCylinder.prototype.constructor = MyCylinder;
 
 MyCylinder.prototype.initBuffers = function() {
 
-	this.indices = [];
-	this.normals = [];
-	this.texCoords = [];
-	this.vertices = [];
-
 	var texelIncrementS = (this.maxS - this.minS) / this.slices;
 	var texelIncrementT = (this.maxT - this.minT) / this.stacks;
 	var thetaIncrement = (2 * Math.PI) / this.slices;
 	var stackIncrement = this.height / this.stacks;
 	var sCoord = this.maxS;
-	var theta = 0;
 	var vertexNumber = 1;
+	var theta = 0;
 
 	for (var i = 0; i <= this.slices; i++) {
 

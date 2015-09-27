@@ -2,7 +2,7 @@ function MySceneGraph(filename, scene) {
 	
 	this.loadedOk = null;
 	this.scene = scene;
-	this.gVerbose = true;
+	this.verbose = true;
 
 	scene.graph = this;
 
@@ -11,11 +11,11 @@ function MySceneGraph(filename, scene) {
 	this.materials = {};
 	this.leaves = {};
 
-	this.primitiveTypes = [	'rectangle', 'cylinder', 'sphere', 'triangle' ];
+	this.primitiveTypes = [ 'rectangle', 'cylinder', 'sphere', 'triangle' ];
 	this.axisTypes = ['x', 'y', 'z'];
 	
 	this.reader = new CGFXMLreader();
-	this.reader.open('scenes/'+filename, this);  
+	this.reader.open('scenes/' + filename, this);  
 }
 
 MySceneGraph.prototype.onXMLReady = function() 
@@ -45,6 +45,17 @@ MySceneGraph.prototype.onXMLReady = function()
 	for (var i = 0; i < rootTags.length; i++) {
 
 		var currentElement = rootElement.getElementsByTagName(rootTags[i]);
+
+		if (currentElement == null || currentElement.length == 0) {
+			this.onXMLError(this.onElementMissing(rootTags[i], 'SCENE'));
+			return;
+		}
+
+		if (currentElement.length != 1) {
+			this.onXMLError(this.onMultipleElements(rootTags[i], 'SCENE'));
+			return;
+		}
+
 		var error = rootParsers[i].call(this, currentElement[0]);
 
 		if (error != null) {
@@ -57,26 +68,6 @@ MySceneGraph.prototype.onXMLReady = function()
 	this.scene.onGraphLoaded();
 };
 
-MySceneGraph.prototype.clampRGBA = function(value, coord)
-{
-	var valueChanged = false;
-	
-	if (value < 0.0) {
-		value = 0.0;
-		valueChanged = true;
-	}
-	else if (value > 1.0) {
-		value = 1.0;
-		valueChanged = true;
-	}
-
-	if (valueChanged) {
-		console.warn("WARNING: invalid value for coordinate '" + coord + "', setting to default value...");
-	}
-	
-	return value;
-}
-
 MySceneGraph.prototype.display = function() {
 
 	for (var leaf in this.leaves) {
@@ -86,39 +77,54 @@ MySceneGraph.prototype.display = function() {
 
 MySceneGraph.prototype.parseLight = function(id, root) {
 	
+	var parseErrors = 0;
 	var parent = root.nodeName;
 
 	if (id in this.lights) {
 		console.warn("WARNING: " + parent + " with id=" + id + " already exists, skipping...");
-		return;
+		return null;
 	}
 	
-	var myLight = new CGFlight(this.scene, id);
-
 	var lightEnabled = this.parseBoolean(root, 'enable');
-	if (lightEnabled == null) {
-		return this.onAttributeMissing('enable', id, parent);
+	var error = this.checkValue(lightEnabled, 'enable', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 	
 	var lightPosition = this.parseCoordinatesXYZW(root, 'position');
-	if (lightPosition == null) {
-		return this.onAttributeMissing('position', id, parent);
+	var error = this.checkValue(lightPosition, 'position', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var lightAmbient = this.parseRGBA(root, 'ambient');	
-	if (lightAmbient == null) {
-		return this.onAttributeMissing('ambient', id, parent);
+	var error = this.checkValue(lightAmbient, 'ambient', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var lightDiffuse = this.parseRGBA(root, 'diffuse');	
-	if (lightDiffuse == null) {
-		return this.onAttributeMissing('diffuse', id, parent);
+	var error = this.checkValue(lightDiffuse, 'diffuse', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var lightSpecular = this.parseRGBA(root, 'specular');
-	if (lightSpecular == null) {
-		return this.onAttributeMissing('specular', id, parent);
+	var error = this.checkValue(lightSpecular, 'specular', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
+
+	if (parseErrors != 0) {
+		return this.onParseError(parent, parseErrors, id);
+	}
+
+	var myLight = new CGFlight(this.scene, id);
 
 	myLight.setPosition.apply(this, lightPosition);	
 	myLight.setAmbient.apply(this, lightAmbient);	
@@ -129,7 +135,7 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	this.lights[id] = myLight;
 	this.scene.addLight(myLight);
 
-	if (this.gVerbose) {
+	if (this.verbose) {
 		this.printHeader('LIGHT', id)
 		this.printValues('enable', 'value', lightEnabled);
 		this.printXYZW('position', lightPosition);
@@ -143,38 +149,40 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 
 MySceneGraph.prototype.parseIllumination = function(root) {
 
+	var parseErrors = 0;
 	var parent = root.nodeName;
-
-	if (root == null || root.length == 0) {
-		return this.onElementMissing(parent, 'SCENE');
-	}
-
-	if (root.length > 1) {
-		return this.onMultipleElements(parent);
-	}
 	
-	var globalAmbient = this.parseRGBA(root, 'ambient');
-	if (globalAmbient == null) {
-		return this.onElementMissing('ambient', parent);
+	var globalAmbient = this.parseRGBA(root, 'ambient');	
+	var error = this.checkValue(globalAmbient, 'ambient', parent);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var globalDoubleside = this.parseBoolean(root, 'doubleside');
-	if (globalDoubleside == null) {
-		return this.onElementMissing('doubleside', parent);
+	var error = this.checkValue(globalDoubleside, 'doubleside', parent);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var globalBackground = this.parseRGBA(root, 'background');
-	if (globalBackground == null) {
-		return this.onElementMissing('background', parent);
+	var error = this.checkValue(globalBackground, 'background', parent);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
+	}
+
+	if (parseErrors != 0) {
+		return this.onParseError(parent, parseErrors);
 	}
 
 	this.gAmbient = globalAmbient;
 	this.gDoubleside = globalDoubleside;
 	this.gBackground = globalBackground;
-
 	this.scene.setGlobalAmbient.apply(this, this.gAmbient);
 
-	if (this.gVerbose) {
+	if (this.verbose) {
 		this.printHeader('ILLUMINATION');
 		this.printRGBA('ambient', this.gAmbient);
 		this.printValues('doubleside', 'value', this.gDoubleside);
@@ -184,7 +192,7 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 	return null;	
 }
 
-MySceneGraph.prototype.parseRotate = function(array, id, angle, axisFound) {
+MySceneGraph.prototype.parseRotation = function(array, id, angle, axisFound) {
 
 	if (axisFound[id]) {
 		console.warn("WARNING: more than three 'rotate' properties found in <INITIALS>!");
@@ -198,6 +206,7 @@ MySceneGraph.prototype.parseRotate = function(array, id, angle, axisFound) {
 MySceneGraph.prototype.parseNode = function(id, root) {
 
 	var parent = root.nodeName;
+	var parseErrors = 0;
 
 	var nodeMaterial = this.parseString(root, 'MATERIAL', 'id');
 	if (nodeMaterial == null) {
@@ -215,7 +224,6 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	}
 
 	error = this.checkReference(this.textures, 'TEXTURE', id, nodeTexture);
-
 	if (error != null) {
 		return error;
 	}
@@ -226,7 +234,8 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 MySceneGraph.prototype.parseTexture = function(id, root) {
 
 	var parent = root.nodeName;
-	
+	var parseErrors = 0;
+
 	if (id in this.textures) {
 		console.warn("WARNING: " + parent + " with id=" + id + " already exists, skipping...");
 		return;
@@ -234,22 +243,31 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 	
 	var texturePath = this.parseString(root, 'file', 'path');
 	if (texturePath == null) {
-		return this.onAttributeMissing('file', id, parent);
+		parseErrors++;
+		this.onXMLError(this.onAttributeMissing('file', id, parent));
 	}
 
 	var textureS = this.parseFloat(root, 'amplif_factor', 's');
-	if (textureS == null) {
-		return this.onAttributeMissing('amplification factor S', id, parent);
+	var error = this.checkValue(textureS, 'amplification factor S', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var textureT = this.parseFloat(root, 'amplif_factor', 't');	
-	if (textureT == null) {
-		return this.onAttributeMissing('amplification factor T', id, parent);
+	var error = this.checkValue(textureT, 'amplification factor T', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
+	}
+
+	if (parseErrors != 0) {
+		return this.onParseError(parent, parseErrors, id);
 	}
 
 	this.textures[id] = new XMLtexture(texturePath, textureS, textureT);
 
-	if (this.gVerbose) {
+	if (this.verbose) {
 		this.printHeader('TEXTURE', id);
 		this.printValues('file', 'path', texturePath);
 		this.printValues('amplif_factor', 's', textureS, 't', textureT);
@@ -289,7 +307,7 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 		this.leaves[id] = new MySphere(this.scene, leafArgs[0], leafArgs[1], leafArgs[2]);
 	}
 
-	if (this.gVerbose) {
+	if (this.verbose) {
 		this.printHeader("LEAF", id);
 		this.printValues(null, 'type', leafType, 'args', leafArgs);
 	}
@@ -311,7 +329,7 @@ MySceneGraph.prototype.checkArguments = function(id, argsGot, argsExpected) {
 MySceneGraph.prototype.checkProperty = function(name, parentName, condition) {
 
 	if (!condition) {
-		console.warn("WARNING: multiple definitions for property '" + name + " found in <" + parentName + ">!");
+		console.warning("WARNING: multiple definitions for property '" + name + " found in <" + parentName + ">!");
 	}
 }
 
@@ -319,6 +337,29 @@ MySceneGraph.prototype.checkReference = function (array, name, nodeId, objectId)
 
 	if (!(objectId in array)) {
 		return "NODE with id=" + nodeId + " referenced " + name + " id=" + objectId +", which doesn't exist.";
+	}
+
+	return null;
+}
+
+MySceneGraph.prototype.checkValue = function(value, node, parent, id) {
+
+	if (value == null) {
+
+		if (id == undefined) {
+			return this.onElementMissing(node, parent);
+		}
+
+		return this.onAttributeMissing(node, id, parent);
+	}
+
+	if (value != value) {
+
+		if (id == undefined) {
+			return this.onElementInvalid(node, parent);
+		}
+		
+		return this.onAttributeInvalid(node, id, parent);
 	}
 
 	return null;
@@ -336,8 +377,21 @@ MySceneGraph.prototype.onElementMissing = function(node, parent) {
 	return node + " attribute is missing from <" + parent + ">.";
 }
 
-MySceneGraph.prototype.onMultipleElements = function(node) {
-	return "more than one '" + node + "' element found.";
+MySceneGraph.prototype.onElementInvalid = function(node, parent) {
+	return node + " attribute from <" + parent + "> has an invalid value.";
+}
+
+MySceneGraph.prototype.onMultipleElements = function(node, parent) {
+	return "more than one '" + node + "' element found in <" + parent + ">.";
+}
+
+MySceneGraph.prototype.onParseError = function(parent, nerr, id) {
+
+	if (id == undefined) {
+		return nerr + " errors found while parsing <" + parent + ">.";
+	}
+
+	return nerr + " errors found while parsing " + parent + " with id=" + id + ".";
 }
 
 ///////////////////////////////////////////
@@ -352,8 +406,14 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 		return null;
 	}
 
-	this.checkProperty(attribute, root.nodeName, node.length == 1);
-	return this.reader.getBoolean(node[0], 'value', true);
+	this.checkProperty(attribute, root.nodeName, node.length == 1);	
+	var checkResult = this.reader.getBoolean(node[0], 'value', true);
+	
+	if (checkResult == null) {
+		checkResult = NaN;
+	}
+
+	return checkResult;
 }
 
 MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coordB, coordC, coordD) {
@@ -366,20 +426,37 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coor
 
 	this.checkProperty(attribute, root.nodeName, node.length == 1);
 
-	if (arguments.length == 6) {
-		return [
-			this.reader.getFloat(node[0], coordA, true), 
-			this.reader.getFloat(node[0], coordB, true),
-			this.reader.getFloat(node[0], coordC, true),
-			this.reader.getFloat(node[0], coordD, true),
-		];
+	var x = this.reader.getFloat(node[0], coordA, true);
+	if (x != x) {
+		return NaN;
 	}
 
-	return [
-		this.reader.getFloat(node[0], coordA, true), 
-		this.reader.getFloat(node[0], coordB, true),
-		this.reader.getFloat(node[0], coordC, true),
-	];
+	var y = this.reader.getFloat(node[0], coordB, true);
+	if (y != y) {
+		return NaN;
+	}
+
+	var z = this.reader.getFloat(node[0], coordC, true);
+	if (z != z) {
+		return NaN;
+	}
+
+	if (x == null || y == null || z == null) {
+		return NaN;
+	}
+
+	if (arguments.length == 6) {
+
+		var w =  this.reader.getFloat(node[0], coordD, true);
+
+		if (w != w) {
+			return NaN;
+		}
+
+		return [ x, y, z, w ];
+	}
+
+	return [ x, y, z ];
 }
 
 MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
@@ -416,12 +493,31 @@ MySceneGraph.prototype.parseRGBA = function(root, attribute) {
 
 	this.checkProperty(attribute, root.nodeName, node.length == 1);
 	
-	return [
-		 this.clampRGBA(this.reader.getFloat(node[0], 'r', true), 'r'), 
-		 this.clampRGBA(this.reader.getFloat(node[0], 'g', true), 'g'), 
-		 this.clampRGBA(this.reader.getFloat(node[0], 'b', true), 'b'),
-		 this.clampRGBA(this.reader.getFloat(node[0], 'a', true), 'a')
-	];
+	var r = this.reader.getFloat(node[0], 'r', true);
+	if (r !== r) {
+		return NaN;
+	}
+
+	var g = this.reader.getFloat(node[0], 'g', true);
+	if (g !== g) {
+		return NaN;
+	}
+
+	var b = this.reader.getFloat(node[0], 'b', true);
+	if (b !== b) {
+		return NaN;
+	}
+
+	var a = this.reader.getFloat(node[0], 'a', true);
+	if (a !== a) {
+		return NaN;
+	}
+
+	if (r == null || g == null || b == null || a == null) {
+		return NaN;
+	}
+
+	return [ r, g, b, a ];
 }
 
 MySceneGraph.prototype.parseString = function(root, name, attribute) {
@@ -441,35 +537,50 @@ MySceneGraph.prototype.parseString = function(root, name, attribute) {
 MySceneGraph.prototype.parseMaterial = function(id, root) {
 	
 	var parent = root.nodeName;
+	var parseErrors = 0;
 	
 	if (id in this.materials) {
 		console.warn("WARNING: " + parent + " with id=" + id + " already exists, skipping...");
-		return;
+		return null;
 	}
 	
 	var materialShininess = this.parseFloat(root, 'shininess', 'value');
-	if (materialShininess == null) {
-		return this.onAttributeMissing('shininess', id, parent);
+	var error = this.checkValue(materialShininess, 'shininess', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
-	var materialSpecular = this.parseRGBA(root, 'specular');
-	if (materialSpecular == null) {
-		return this.onAttributeMissing('specular', id, parent);
+	var materialSpecular = this.parseRGBA(root, 'specular');	
+	var error = this.checkValue(materialSpecular, 'specular', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var materialDiffuse = this.parseRGBA(root, 'diffuse');
-	if (materialDiffuse == null) {
-		return this.onAttributeMissing('diffuse', id, parent);
+	var error = this.checkValue(materialDiffuse, 'diffuse', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
-	var materialAmbient = this.parseRGBA(root, 'ambient');
-	if (materialAmbient == null) {
-		return this.onAttributeMissing('ambient', id, parent);
+	var materialAmbient = this.parseRGBA(root, 'ambient');	
+	var error = this.checkValue(materialDiffuse, 'ambient', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
-	var materialEmission = this.parseRGBA(root, 'emission');
-	if (materialEmission == null) {
-		return this.onAttributeMissing('emission', id, parent);
+	var materialEmission = this.parseRGBA(root, 'emission');	
+	var error = this.checkValue(materialDiffuse, 'emission', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
+	}
+
+	if (parseErrors != 0) {
+		return this.onParseError(parent, parseErrors, id);
 	}
 
 	var myMaterial = new CGFappearance(this.scene);
@@ -482,7 +593,7 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 	
 	this.materials[id] = myMaterial;
 
-	if (this.gVerbose) {
+	if (this.verbose) {
 		this.printHeader('MATERIAL', id);
 		this.printValues('shininess', 'value', materialShininess);
 		this.printRGBA('specular', materialSpecular);
@@ -547,19 +658,9 @@ MySceneGraph.prototype.printXYZW = function(attribute, xyzw) {
 
 MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 
-	var root_sz = rootElement.length;
+	var parent = rootElement.nodeName;
 
-	if (rootElement == null || root_sz == 0) {
-		return "'" + rootElement.nodeName + "' element is missing from <SCENE>.";
-	}
-
-	if (root_sz > 1) {
-		return "either zero or more than one '" + rootElement.nodeName + "' elements found.";
-	}
-
-	var sz = rootElement.children.length;
-
-	for (var i = 0; i < sz; i++) {
+	for (var i = 0; i < rootElement.children.length; i++) {
 		
 		var currentElement = rootElement.children[i];
 
@@ -568,7 +669,13 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 			continue;
 		}
 		
-		var id = this.reader.getString(currentElement, 'id', true);
+		var id = this.reader.getString(currentElement, 'id', false);
+
+		if (id == null) {
+			this.onXMLError(this.onElementMissing('id', nodeName));
+			return;
+		}
+
 		var error = parseFunc.call(this, id, currentElement);
 
 		if (error != null) {
@@ -579,34 +686,33 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 	return null;
 }
 
-MySceneGraph.prototype.parseLeaves = function(rootElement) {
-	return this.parseArray(rootElement, 'LEAF', this.parseLeaf);
+MySceneGraph.prototype.parseLeaves = function(root) {
+	return this.parseArray(root, 'LEAF', this.parseLeaf);
 }
 
-MySceneGraph.prototype.parseLights = function(rootElement) {
-	return this.parseArray(rootElement, 'LIGHT', this.parseLight);
+MySceneGraph.prototype.parseLights = function(root) {
+	return this.parseArray(root, 'LIGHT', this.parseLight);
 }
 
-MySceneGraph.prototype.parseMaterials = function(rootElement) {
-	return this.parseArray(rootElement, 'MATERIAL', this.parseMaterial);
+MySceneGraph.prototype.parseMaterials = function(root) {
+	return this.parseArray(root, 'MATERIAL', this.parseMaterial);
 }
 
-MySceneGraph.prototype.parseNodes = function(rootElement) {
+MySceneGraph.prototype.parseNodes = function(root) {
 
-	var globalRoot = this.parseString(rootElement, 'ROOT', 'id');
-
+	var globalRoot = this.parseString(root, 'ROOT', 'id');
 	if (globalRoot == null) {
-		return this.onElementMissing('ROOT', rootElement.nodeName);
+		return this.onElementMissing('ROOT', root.nodeName);
 	}
 
-	this.gRoot = globalRoot;
+	this.graphRoot = globalRoot;
 
-	if (this.gVerbose) {
+	if (this.verbose) {
 		this.printHeader("NODES");
 		this.printValues('root', 'id', globalRoot);
 	}
 
-	return this.parseArray(rootElement, 'NODE', this.parseNode);
+	return this.parseArray(root, 'NODE', this.parseNode);
 }
 
 MySceneGraph.prototype.parseTextures = function(rootElement) {
@@ -615,42 +721,51 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 
 MySceneGraph.prototype.parseGlobals = function(root) {
 
-	if (root == null || root.length == 0) {
-		return this.onElementMissing('INITIALS', 'SCENE');
-	}
-
-	this.checkProperty('INITIALS', root.nodeName, root.length == 1);
+	var parent = root.nodeName;
+	var parseErrors = 0;
 
 	// <frustum near="ff" far="ff/>	
-	//
-	var parent = root.nodeName;
-	var node = root.getElementsByTagName('frustum');
-	var node_sz = node.length;
-
-	if (node == null || node_sz == 0) {
-		return this.onElementMissing('frustum', parent);
+	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
+	var error = this.checkValue(globalFrustumNear, 'near', 'frustum');
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
-	this.checkProperty('frustum', 'INITIALS', node_sz == 1);
-	var globalFrustumNear = this.reader.getFloat(node[0], 'near', true);
-	var globalFrustumFar = this.reader.getFloat(node[0], 'far', true);
+	// <frustum near="ff" far="ff/>	
+	var globalFrustumFar = this.parseFloat(root, 'frustum', 'far');
+	var error = this.checkValue(globalFrustumFar, 'far', 'frustum');
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
+	}
 
 	// <reference length="ff"/>
 	var globalReference = this.parseFloat(root, 'reference', 'length');
-	if (globalReference == null) {
-		return this.onElementMissing('reference', parent);
+	var error = this.checkValue(globalReference, 'length', 'reference');
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	// <scale sx="ff" sy="ff" sz="ff"/>
 	var globalScale = this.parseCoordinatesScale(root, 'scale');
-	if (globalScale == null) {
-		return this.onElementMissing('scale', parent);
+	var error = this.checkValue(globalScale, 'scale', parent);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	// <translate x="ff" y="ff" z="ff"/>
 	var globalTranslate = this.parseCoordinatesXYZ(root, 'translate');
-	if (globalTranslate == null) {
-		return this.onElementMissing('translate', parent);
+	var error = this.checkValue(globalTranslate, 'translate', parent);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
+	}
+
+	if (parseErrors != 0) {
+		return this.onParseError(parent, parseErrors);
 	}
 	
 	// <rotate axis="x" angle="ff"/>
@@ -679,16 +794,16 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		switch (axis)
 		{
 		case 'x':
-			this.parseRotate(globalRotation, 0, angle, axisFound);
+			this.parseRotation(globalRotation, 0, angle, axisFound);
 			break;
 		case 'y':
-			this.parseRotate(globalRotation, 1, angle, axisFound);
+			this.parseRotation(globalRotation, 1, angle, axisFound);
 			break;
 		case 'z':
-			this.parseRotate(globalRotation, 2, angle, axisFound);
+			this.parseRotation(globalRotation, 2, angle, axisFound);
 			break;
 		default:
-			console.warn("WARNING: unknown axis '" + axis + "' found in 'rotation'.");
+			console.warn("WARNING: unknown rotation axis '" + axis + "' found in <" + parent + ">.");
 			break;
 		}
 	}
@@ -699,7 +814,7 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	this.scene.initRotation(globalRotation);
 	this.scene.initTranslate(globalTranslate);
 
-	if (this.gVerbose) {
+	if (this.verbose) {
 		this.printHeader('INITIALS');
 		this.printValues('frustum', 'near', globalFrustumNear, 'far', globalFrustumFar);
 		this.printXYZ('translate', globalTranslate);
@@ -711,7 +826,7 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	}
 };
 
-MySceneGraph.prototype.onXMLError=function (message) {
+MySceneGraph.prototype.onXMLError = function (message) {
 	console.error("XML Loading Error: " + message);	
 	this.loadedOk = false;
 };

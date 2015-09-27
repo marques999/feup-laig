@@ -5,6 +5,10 @@ function MySphere(scene, radius, slices, stacks)
 	this.radius = radius;
 	this.slices = slices;
 	this.stacks = stacks;
+	this.indices = [];
+	this.normals = [];
+	this.texCoords = [];
+	this.vertices = [];
 	this.minS = 0.0;
 	this.maxS = 1.0;
 	this.minT = 0.0;
@@ -15,12 +19,7 @@ function MySphere(scene, radius, slices, stacks)
 MySphere.prototype = Object.create(CGFobject.prototype);
 MySphere.prototype.constructor = MySphere;
 
-MySphere.prototype.initBuffers = function()
-{
-	this.indices = [];
-	this.normals = [];
-	this.texCoords = [];
-	this.vertices = [];
+MySphere.prototype.initBuffers = function() {
 
 	var texelLengthS = (this.maxS - this.minS) / this.slices;
 	var texelLengthT = (this.maxT - this.minT) / this.stacks;
@@ -30,13 +29,12 @@ MySphere.prototype.initBuffers = function()
 	var vertexNumber = 1;
 	var phi = 0;
 	
-	for (var i = 0; i <= this.slices; i++)
-	{	
+	for (var i = 0; i <= this.slices; i++) {
+
 		var theta = 0;
 		var tCoord = this.minT;
 
-		for (var j = 0; j <= this.stacks; j++)
-		{
+		for (var j = 0; j <= this.stacks; j++) {
 			
 			var x = this.radius * Math.cos(phi) * Math.sin(theta);
 			var z = this.radius * Math.sin(phi) * Math.sin(theta);
@@ -49,8 +47,8 @@ MySphere.prototype.initBuffers = function()
 			theta += thetaIncrement;
 			tCoord += texelLengthT;
 			
-			if (j < this.stacks)
-			{
+			if (j < this.stacks) {
+				
 				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber + this.stacks + 1);
 				this.indices.push(vertexNumber + this.stacks, vertexNumber, vertexNumber - 1);
 				this.indices.push(vertexNumber + this.stacks + 1, vertexNumber + this.stacks, vertexNumber);
@@ -63,8 +61,7 @@ MySphere.prototype.initBuffers = function()
 		phi += phiIncrement;
 		sCoord -= texelLengthS;
 		
-		if (i < this.slices) 
-		{
+		if (i < this.slices) {
 			vertexNumber++;
 		}
 	}
