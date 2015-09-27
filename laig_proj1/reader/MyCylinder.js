@@ -1,5 +1,5 @@
-function MyCylinder(scene, radius, height, slices, stacks)
-{
+function MyCylinder(scene, radius, height, slices, stacks) {
+
 	CGFobject.call(this, scene);
 
 	this.radius = radius;
@@ -11,13 +11,13 @@ function MyCylinder(scene, radius, height, slices, stacks)
 	this.minT = 0.0;
 	this.maxT = 1.0;
 	this.initBuffers();
-}
+};
 
 MyCylinder.prototype = Object.create(CGFobject.prototype);
 MyCylinder.prototype.constructor = MyCylinder;
 
-MyCylinder.prototype.initBuffers = function ()
-{
+MyCylinder.prototype.initBuffers = function() {
+
 	this.indices = [];
 	this.normals = [];
 	this.texCoords = [];
@@ -68,4 +68,4 @@ MyCylinder.prototype.initBuffers = function ()
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
-}
+};

@@ -1,5 +1,5 @@
-function MyRectangle(scene, vertexA, vertexB)
-{
+function MyRectangle(scene, vertexA, vertexB) {
+
 	CGFobject.call(this, scene);
 
 	this.minX = vertexA[0];
@@ -32,13 +32,13 @@ function MyRectangle(scene, vertexA, vertexB)
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
-}
+};
 
 MyRectangle.prototype = Object.create(CGFobject.prototype);
 MyRectangle.prototype.constructor = MyRectangle;
 
-MyRectangle.setTexture = function(factorS, factorT)
-{
+MyRectangle.setTexture = function(factorS, factorT) {
+
     this.maxS = this.width / factorS;
     this.maxT = this.height / factorT;
 
@@ -48,4 +48,4 @@ MyRectangle.setTexture = function(factorS, factorT)
 		0.0, 0.0,
 		this.maxS, 0.0,
 	];
-}
+};

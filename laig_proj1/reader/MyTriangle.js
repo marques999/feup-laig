@@ -1,5 +1,5 @@
-function MyTriangle(scene, left, middle, right)
-{
+function MyTriangle(scene, left, middle, right) {
+
     CGFobject.call(this, scene);
 
     this.vertexA = left;
@@ -24,7 +24,7 @@ function MyTriangle(scene, left, middle, right)
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
-}
+};
 
 MyTriangle.prototype = Object.create(CGFobject.prototype);
 MyTriangle.prototype.constructor = MyTriangle;
