@@ -6,8 +6,6 @@ function MyRectangle(scene, vertexA, vertexB) {
 	this.minY = vertexA[1];
 	this.maxX = vertexB[0];
 	this.maxY = vertexB[1];
-	this.maxS = 1.0;
-	this.maxT = 1.0;
 	this.width = this.maxX - this.minX;
 	this.height = this.maxY - this.minY;
 
@@ -39,13 +37,15 @@ MyRectangle.prototype.constructor = MyRectangle;
 
 MyRectangle.setTexture = function(factorS, factorT) {
 
+	this.minS = 0.0;
+	this.minT = 0.0;
     this.maxS = this.width / factorS;
     this.maxT = this.height / factorT;
 
     this.texCoords = [
-		0.0, this.maxT,
-		this.maxS, this.maxT,
-		0.0, 0.0,
-		this.maxS, 0.0,
+		this.minS, this.minT,
+		this.maxS, this.minT,
+		this.minS, this.maxT,
+		this.maxS, this.maxT
 	];
 };

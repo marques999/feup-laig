@@ -49,9 +49,37 @@ XMLscene.prototype.setDefaultAppearance = function () {
 	this.setShininess(10.0);
 };
 
-XMLscene.prototype.addLight = function(myLight) {
-	this.lights.push(myLight);
-	this.activeLights++;
+XMLscene.prototype.addLights = function() {
+	
+	// var lightsArray = this.graph.getLights();
+
+	// for (var light in lightsArray) {
+	
+	// 	var item = lightsArray[light];
+	// 	var index = this.activeLights;
+	// 	var data = null;
+
+	// 	this.lights[index] = new CGFlight(this, item.getId());	
+		
+	// 	data = item.getPosition();	
+	// 	this.lights[index].setPosition(data[0], data[1], data[2], data[3]);
+	// 	data = item.getAmbient();
+	// 	this.lights[index].setAmbient(data[0], data[1], data[2], data[3]);
+	// 	data = item.getDiffuse();
+	// 	this.lights[index].setDiffuse(data[0], data[1], data[2], data[3]);
+	// 	data = item.getSpecular();
+	// 	this.lights[index].setDiffuse(data[0], data[1], data[2], data[3]);
+		
+	// 	if (item.isEnabled()) {
+	// 		this.lights[index].enable();
+	// 	}
+	// 	else {
+	// 		this.lights[index].disable();
+
+	// 	}
+		
+	// 	this.activeLights++;
+	// }	
 };
 
 XMLscene.prototype.initAxis = function(length) {
@@ -104,10 +132,12 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
 
+	this.lights[0].enable();
+	this.addLights();
+
 	// INITIALIZE LIGHTS
 	for (var i = 0; i < this.activeLights; i++) {
 		this.lights[i].setVisible(true);
-		this.lights[i].enable();
 	}
 };
 

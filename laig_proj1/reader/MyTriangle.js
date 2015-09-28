@@ -1,10 +1,10 @@
-function MyTriangle(scene, left, middle, right) {
+function MyTriangle(scene, vertexA, vertexB, vertexC) {
 
     CGFobject.call(this, scene);
 
-    this.vertexA = left;
-    this.vertexB = middle;
-    this.vertexC = right;
+    this.vertexA = vertexA;
+    this.vertexB = vertexB;
+    this.vertexC = vertexC;
 
 	this.vertices = [
 		this.vertexA[0], this.vertexA[1], this.vertexA[2],
@@ -21,6 +21,10 @@ function MyTriangle(scene, left, middle, right) {
 		0, 0, 1,
 		0, 0, 1,
 	];
+
+	this.texCoords = [
+		
+	]
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();

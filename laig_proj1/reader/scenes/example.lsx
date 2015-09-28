@@ -34,7 +34,7 @@
 
 <TEXTURES>
 	<TEXTURE id="ss">
-		<file path="./floor.png" />						<!-- path to file -->
+		<file path="floor.png" />						<!-- path to file -->
 		<amplif_factor s="2.0" t="2.0" />			<!-- x/s, y/t -->
 	</TEXTURE>
 	<TEXTURE id="tt">
@@ -64,7 +64,7 @@
 	<!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
 	<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 3.0 1.5" />
 	<!-- 2D coordinates for left-top and right-bottom vertices. -->
-	<LEAF id="as" type="cylinder" args="ff ff ff ii ii" />
+	<LEAF id="asd" type="cylinder" args="ff ff ff ii ii" />
 	<!-- height, bottom radius, top radius, sections along height, parts per section -->
 	<LEAF id="ss" type="sphere" args="ff ff f" />
 	<!-- radius, parts along radius, parts per section -->
@@ -79,10 +79,10 @@
 	<NODE id="ss">
 	<!-- defines one intermediate node; may be repeated as necessary -->
 	<!-- next two lines are mandatory -->
-		<MATERIAL id="ss" />      
+		<MATERIAL id="gg" />      
 		<!-- declared material superimposes the material received from parent node -->
 		<!-- id="null" maintains material from parent node        -->
-		<TEXTURE id="ss" />       
+		<TEXTURE id="gg" />       
 		<!-- declared texture superimposes the texture received from parent node -->
 		<!-- id="null" maintains texture from parent node       -->
 		<!-- id="clear" clears texture declaration received from parent node      -->

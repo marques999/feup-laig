@@ -9,6 +9,7 @@ function MySceneGraph(filename, scene) {
 	this.textures = {};
 	this.lights = {};
 	this.materials = {};
+	this.nodes = {};
 	this.leaves = {};
 
 	this.primitiveTypes = [ 'rectangle', 'cylinder', 'sphere', 'triangle' ];
@@ -81,8 +82,7 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	var parent = root.nodeName;
 
 	if (id in this.lights) {
-		console.warn("WARNING: " + parent + " with id=" + id + " already exists, skipping...");
-		return null;
+		return this.onElementDuplicate(parent, id);
 	}
 	
 	var lightEnabled = this.parseBoolean(root, 'enable');
@@ -124,22 +124,15 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 		return this.onParseError(parent, parseErrors, id);
 	}
 
-	var myLight = new CGFlight(this.scene, id);
+	var myLight = new XMLlight(id);
 
-	myLight.setPosition.apply(this, lightPosition);
-	myLight.setAmbient.apply(this, lightAmbient);	
-	myLight.setDiffuse.apply(this, lightDiffuse);
-	myLight.setSpecular.apply(this, lightSpecular);
-	
-	if (lightEnabled) {
-		 myLight.enable()
-	}
-	else {
-		 myLight.disable();
-	}
+	myLight.setPosition(lightPosition);
+	myLight.setAmbient(lightAmbient);	
+	myLight.setDiffuse(lightDiffuse);
+	myLight.setSpecular(lightSpecular);
+	myLight.setEnabled(lightEnabled);
 
 	this.lights[id] = myLight;
-	this.scene.addLight(myLight);
 
 	if (this.verbose) {
 		this.printHeader('LIGHT', id)
@@ -153,11 +146,14 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	return null;
 }
 
+MySceneGraph.prototype.getLights = function() {
+	return this.lights;
+}
+
 MySceneGraph.prototype.parseIllumination = function(root) {
 
 	var parseErrors = 0;
 	var parent = root.nodeName;
-	
 	var globalAmbient = this.parseRGBA(root, 'ambient');	
 	var error = this.checkValue(globalAmbient, 'ambient', parent);
 	if (error != null) {
@@ -213,24 +209,32 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	var parent = root.nodeName;
 	var parseErrors = 0;
 
+	if (id in this.nodes) {
+		return this.onElementDuplicate(parent, id);
+	}
+
 	var nodeMaterial = this.parseString(root, 'MATERIAL', 'id');
 	if (nodeMaterial == null) {
-		return this.onAttributeMissing('MATERIAL', id, parent);
+		parseErrors++;
+		this.onXMLError(this.onAttributeMissing('MATERIAL', id, parent));
 	}
 
 	var error = this.checkReference(this.materials, 'MATERIAL', id, nodeMaterial);
 	if (error != null) {
-		return error;
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	var nodeTexture = this.parseString(root, 'TEXTURE', 'id');
 	if (nodeTexture == null) {
-		return this.onAttributeMissing('TEXTURE', id, parent);
+		parseErrors++;
+		this.onXMLError(this.onAttributeMissing('TEXTURE', id, parent));
 	}
 
 	error = this.checkReference(this.textures, 'TEXTURE', id, nodeTexture);
 	if (error != null) {
-		return error;
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	return null;
@@ -242,8 +246,7 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 	var parseErrors = 0;
 
 	if (id in this.textures) {
-		console.warn("WARNING: " + parent + " with id=" + id + " already exists, skipping...");
-		return;
+		return this.onElementDuplicate(parent, id);
 	}
 	
 	var texturePath = this.parseString(root, 'file', 'path');
@@ -252,10 +255,10 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 		this.onXMLError(this.onAttributeMissing('file', id, parent));
 	}
 
-	//if (!this.checkUrl(texturePath)) {
-	//	parseErrors++;
-	//	this.onXMLError(this.onAttributeInvalid('path', id, parent));
-	//}
+	// if (!this.checkUrl(texturePath)) {
+	// 	parseErrors++;
+	// 	this.onXMLError(texturePath + " not found.");
+	// }
 	
 	var textureS = this.parseFloat(root, 'amplif_factor', 's');
 	var error = this.checkValue(textureS, 'amplification factor S', parent, id);
@@ -286,21 +289,57 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 	return null;
 };
 
+MySceneGraph.prototype.onElementDuplicate = function(parent, id) {
+	return parent + " with id=" + id + " already exists, skipping...";
+}
+
+MySceneGraph.prototype.readRectangle = function(id, args) {
+
+		this.checkArguments(id, args.length, 4);
+
+		var vec1 = [args[0], args[1]].map(parseFloat);
+
+
+
+		var vec2 = [args[2], args[3]].map(parseFloat);
+
+
+		return [vec1, vec2];
+}
+
 MySceneGraph.prototype.parseLeaf = function(id, root) {
 
-	var leafType = this.reader.getItem(root, 'type', this.primitiveTypes);
-	var leafArgs = this.reader.getString(root, 'args', true).trim().split(' ');
-	
+	var parent = root.nodeName;
+	var parseErrors = 0;
+
 	if (id in this.leaves) {
-		console.warn("WARNING: leaf with id=" + id + " already exists, skipping...");
-		return;
+		return this.onElementDuplicate(parent, id);
+	}
+
+	var leafType = this.reader.getItem(root, 'type', this.primitiveTypes);
+	var error = this.checkValue(leafType, 'type', parent, id);
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
+	}
+
+	var leafArgs = this.reader.getString(root, 'args', true).trim().split(' ');
+	if (leafArgs == null) {
+		parseErrors++;
+		this.onXMLError(error);
+	}
+	
+	if (parseErrors != 0) {
+		return this.onParseError(parent, parseErrors, id);
 	}
 
 	if (leafType == 'rectangle') {
-		this.checkArguments(id, leafArgs.length, 4);
-		var vec1 = [leafArgs[0], leafArgs[1]].map(parseFloat);
-		var vec2 = [leafArgs[2], leafArgs[3]].map(parseFloat);
-		this.leaves[id] = new MyRectangle(this.scene, vec1, vec2);
+		
+		var rectangle = this.readRectangle(id, leafArgs);
+
+			this.leaves[id] = new MyRectangle(this.scene, rectangle[0], rectangle[1]);
+	
+		
 	}
 	else if (leafType == 'triangle') {
 		this.checkArguments(id, leafArgs.length, 9);
@@ -311,6 +350,11 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 	}
 	else if (leafType == 'cylinder') {
 		this.checkArguments(id, leafArgs.length, 5);
+		this.leaves[id] = new MyCylinder(this.scene, 	leafArgs[1], // radius
+														leafArgs[0], // height		
+														leafArgs[3], // slices
+														leafArgs[2] // stacks
+											);
 	}
 	else if (leafType == 'sphere') {
 		this.checkArguments(id, leafArgs.length, 3);
