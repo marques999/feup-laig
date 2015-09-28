@@ -126,11 +126,17 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 
 	var myLight = new CGFlight(this.scene, id);
 
-	myLight.setPosition.apply(this, lightPosition);	
+	myLight.setPosition.apply(this, lightPosition);
 	myLight.setAmbient.apply(this, lightAmbient);	
 	myLight.setDiffuse.apply(this, lightDiffuse);
 	myLight.setSpecular.apply(this, lightSpecular);
-	lightEnabled ? myLight.enable() : myLight.disable();
+	
+	if (lightEnabled) {
+		 myLight.enable()
+	}
+	else {
+		 myLight.disable();
+	}
 
 	this.lights[id] = myLight;
 	this.scene.addLight(myLight);
@@ -177,16 +183,15 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 		return this.onParseError(parent, parseErrors);
 	}
 
-	this.gAmbient = globalAmbient;
-	this.gDoubleside = globalDoubleside;
-	this.gBackground = globalBackground;
-	this.scene.setGlobalAmbient.apply(this, this.gAmbient);
+	this.scene.setDoubleside(globalDoubleside);
+	this.scene.setBackground(globalBackground);
+	this.scene.setAmbient(globalAmbient);
 
 	if (this.verbose) {
 		this.printHeader('ILLUMINATION');
-		this.printRGBA('ambient', this.gAmbient);
-		this.printValues('doubleside', 'value', this.gDoubleside);
-		this.printRGBA('background', this.gBackground);
+		this.printRGBA('ambient', globalAmbient);
+		this.printValues('doubleside', 'value', globalDoubleside);
+		this.printRGBA('background', globalBackground);
 	}
 	
 	return null;	
@@ -247,6 +252,11 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 		this.onXMLError(this.onAttributeMissing('file', id, parent));
 	}
 
+	//if (!this.checkUrl(texturePath)) {
+	//	parseErrors++;
+	//	this.onXMLError(this.onAttributeInvalid('path', id, parent));
+	//}
+	
 	var textureS = this.parseFloat(root, 'amplif_factor', 's');
 	var error = this.checkValue(textureS, 'amplification factor S', parent, id);
 	if (error != null) {
@@ -363,6 +373,23 @@ MySceneGraph.prototype.checkValue = function(value, node, parent, id) {
 	}
 
 	return null;
+}
+
+MySceneGraph.prototype.checkUrl = function(url) {
+
+	var request = new XMLHttpRequest();
+
+	if (request) 
+	{
+		request.open("GET", url);
+	
+		if (request.status == 200) 
+		{
+			return true; 
+		}
+	}
+
+	return false;
 }
 
 MySceneGraph.prototype.onAttributeMissing = function(node, id, parent) {
@@ -490,7 +517,6 @@ MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
 MySceneGraph.prototype.parseRGBA = function(root, attribute) {
 
 	var node = root.getElementsByTagName(attribute);
-
 	if (node == null || node.length == 0) {
 		return null;
 	}
