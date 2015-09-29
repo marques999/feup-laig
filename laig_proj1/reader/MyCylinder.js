@@ -43,10 +43,7 @@ MyCylinder.prototype.initBuffers = function() {
 			this.normals.push(x, 0, y);
 			this.texCoords.push(sCoord, tCoord);
 
-			z += stackIncrement;
-			tCoord -= texelIncrementT;
-
-			if (j < this.stacks) {
+			if (i > 0 && j > 0) {
 
 				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber + this.stacks + 1);
 				this.indices.push(vertexNumber + this.stacks, vertexNumber, vertexNumber - 1);
@@ -55,14 +52,17 @@ MyCylinder.prototype.initBuffers = function() {
 
 				vertexNumber++;
 			}
+
+			z += stackIncrement;
+			tCoord -= texelIncrementT;
+		}
+
+		if (i > 0) {
+			vertexNumber++;
 		}
 
 		theta += thetaIncrement;
 		sCoord -= texelIncrementS;
-
-		if (i < this.slices) {
-			vertexNumber++;
-		}
 	}
 
 	this.primitiveType = this.scene.gl.TRIANGLES;

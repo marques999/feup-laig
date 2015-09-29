@@ -9,12 +9,11 @@ function XMLNode(id, textureId, materialId) {
 XMLNode.prototype = Object.create(Object.prototype);
 XMLNode.prototype.constructor = XMLNode;
 
-XMLNode.prototype.addTransf = function(transf){
+XMLNode.prototype.addTransformation = function(transf) {
     this.geomTransf.push(transf);
 }
 
-
-XMLNode.prototype.addTChild = function(child){
+XMLNode.prototype.addChild = function(child) {
      this.children.push(child);
 }
 

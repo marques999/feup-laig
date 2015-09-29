@@ -16,9 +16,6 @@ XMLscene.prototype.init = function (application)
 
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
-	this.defaultRotateX = 0.0;
-	this.defaultRotateY = 0.0;
-	this.defaultRotateZ = 0.0;
 
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(100.0);
@@ -26,6 +23,7 @@ XMLscene.prototype.init = function (application)
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
 
+	this.rotation = [];
 	this.axis = new CGFaxis(this);
 	this.activeLights = 1;
 };
@@ -49,39 +47,6 @@ XMLscene.prototype.setDefaultAppearance = function () {
 	this.setShininess(10.0);
 };
 
-XMLscene.prototype.addLights = function() {
-	
-	// var lightsArray = this.graph.getLights();
-
-	// for (var light in lightsArray) {
-	
-	// 	var item = lightsArray[light];
-	// 	var index = this.activeLights;
-	// 	var data = null;
-
-	// 	this.lights[index] = new CGFlight(this, item.getId());	
-		
-	// 	data = item.getPosition();	
-	// 	this.lights[index].setPosition(data[0], data[1], data[2], data[3]);
-	// 	data = item.getAmbient();
-	// 	this.lights[index].setAmbient(data[0], data[1], data[2], data[3]);
-	// 	data = item.getDiffuse();
-	// 	this.lights[index].setDiffuse(data[0], data[1], data[2], data[3]);
-	// 	data = item.getSpecular();
-	// 	this.lights[index].setDiffuse(data[0], data[1], data[2], data[3]);
-		
-	// 	if (item.isEnabled()) {
-	// 		this.lights[index].enable();
-	// 	}
-	// 	else {
-	// 		this.lights[index].disable();
-
-	// 	}
-		
-	// 	this.activeLights++;
-	// }	
-};
-
 XMLscene.prototype.initAxis = function(length) {
 	this.reference = length;
 };
@@ -91,10 +56,17 @@ XMLscene.prototype.initFrustum = function(far, near) {
 	this.frustumNear = near;
 };
 
-XMLscene.prototype.initRotation = function(matrix) {
-	this.defaultRotateX = Math.PI * matrix[0] / 180;
-	this.defaultRotateY = Math.PI * matrix[1] / 180;
-	this.defaultRotateZ = Math.PI * matrix[2] / 180;
+XMLscene.prototype.setRotation = function(id, axis, angle) {
+
+	if (axis == 'x') {
+		this.rotation[id] = [angle, 1, 0, 0]
+	}
+	else if (axis == 'y') {
+		this.rotation[id] = [angle, 0, 1, 0];
+	}
+	else if (axis == 'z') {
+		this.rotation[id] = [angle, 0, 0, 1];
+	}
 };
 
 XMLscene.prototype.initScale = function(matrix) {
@@ -126,18 +98,21 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.setGlobalAmbientLight.apply(this, this.ambient);
 
 	// SET AXIS LENGTH
-	//this.axis = new CGFaxis(this, this.reference);
+	this.axis = new CGFaxis(this, this.reference);
 
 	// SET FRUSTUM
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
 
-	this.lights[0].enable();
-	this.addLights();
-
 	// INITIALIZE LIGHTS
-	for (var i = 0; i < this.activeLights; i++) {
-		this.lights[i].setVisible(true);
+	this.lights[0].enable();
+
+	var lightsArray = this.graph.getLights();
+
+	for (var light in lightsArray) {
+		this.lights[this.activeLights] = lightsArray[light];
+		this.lights[this.activeLights].setVisible(true);
+		this.activeLights++;
 	}
 };
 
@@ -157,9 +132,9 @@ XMLscene.prototype.display = function () {
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 	this.scale.apply(this, this.defaultScale);
-	this.rotate(this.defaultRotateX, 1.0, 0.0, 0.0);
-	this.rotate(this.defaultRotateY, 0.0, 1.0, 0.0);
-	this.rotate(this.defaultRotateZ, 0.0, 0.0, 1.0);
+	this.rotate.apply(this, this.rotation[0]);
+	this.rotate.apply(this, this.rotation[1]);
+	this.rotate.apply(this, this.rotation[2]);
 	this.translate.apply(this, this.defaultTranslate);
 
 	// Draw axis
@@ -173,10 +148,8 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk) {
 
-		for (var i = 0; i < this.activeLights; i++) {
-			this.lights[i].update();
-		}
-		
+			this.lights[0].update();	
+	
 		this.graph.display();
 	};
 

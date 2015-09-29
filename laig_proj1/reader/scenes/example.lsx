@@ -6,19 +6,19 @@
 	<rotation axis="x" angle="0.0" />			<!-- initial rotation 2 -->
 	<rotation axis="z" angle="0.0" />			<!-- initial rotation 1 -->
 	<scale sx="1.0" sy="3.0" sz="1.0" />		<!-- initial scaling -->
-	<reference length="1.0" />					<!-- axis length; "0" means no axis-->
+	<reference length="5.0" />					<!-- axis length; "0" means no axis-->
 </INITIALS>
 
-<ILUMINATION>
+<ILLUMINATION>
 	<ambient r="0.0" g="1.0" b="0.5" a="1.0" />			<!-- global ambient -->
-	<doubleside value="1"/>
+	<doubleside value="1" />
 	<background r="0.53" g="0.45" b="0.8" a="1.0" />	<!-- background color -->
-</ILUMINATION>
+</ILLUMINATION>
 
 <LIGHTS>
 	<LIGHT id="ss">										<!-- light identifier -->
 		<enable value ="1" />							<!-- enable/disable -->
-		<position x="8" y="8" z="5" w="1.0" />			<!-- light position -->
+		<position x="8" y="8" z="5" w="0.0" />			<!-- light position -->
 		<ambient r="0.5" g="0.0" b="0.5" a="1.0" />		<!-- ambient component -->
 		<diffuse r="0.7" g="0.0" b="0.7" a="1.0" />		<!-- diffuse component -->
 		<specular r="0.5" g="0.0" b="0.5" a="1.0" />	<!-- specular component -->
@@ -66,7 +66,7 @@
 	<!-- 2D coordinates for left-top and right-bottom vertices. -->
 	<LEAF id="asd" type="cylinder" args="ff ff ff ii ii" />
 	<!-- height, bottom radius, top radius, sections along height, parts per section -->
-	<LEAF id="ss" type="sphere" args="ff ff f" />
+	<LEAF id="ss" type="sphere" args="3.0 16 16" />
 	<!-- radius, parts along radius, parts per section -->
 	<LEAF id="mytriangle" type="triangle" args="0.0 0.0 0.0 0.0 1.5 0.5 0.0 0.0 1.0" />
 	<!-- coordinates of each vertex -->

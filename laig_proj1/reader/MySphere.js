@@ -38,32 +38,32 @@ MySphere.prototype.initBuffers = function() {
 			
 			var x = this.radius * Math.cos(phi) * Math.sin(theta);
 			var z = this.radius * Math.sin(phi) * Math.sin(theta);
-			var y = this.radius * Math.cos(theta);
+			var y = Math.cos(theta);
 
 			this.vertices.push(x, y, z);
 			this.normals.push(x, y, z);
 			this.texCoords.push(sCoord, tCoord);
 
-			theta += thetaIncrement;
-			tCoord += texelLengthT;
-			
-			if (j < this.stacks) {
+			if (i > 0 && j > 0) {
 				
 				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber + this.stacks + 1);
 				this.indices.push(vertexNumber + this.stacks, vertexNumber, vertexNumber - 1);
 				this.indices.push(vertexNumber + this.stacks + 1, vertexNumber + this.stacks, vertexNumber);
 				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber - 1);
-				
+
 				vertexNumber++;
 			}
+
+			theta += thetaIncrement;
+			tCoord += texelLengthT;
+		}
+
+		if (i > 0) {
+			vertexNumber++;
 		}
 
 		phi += phiIncrement;
 		sCoord -= texelLengthS;
-		
-		if (i < this.slices) {
-			vertexNumber++;
-		}
 	}
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
