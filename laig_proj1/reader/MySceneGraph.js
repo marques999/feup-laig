@@ -65,6 +65,9 @@ MySceneGraph.prototype.onXMLReady = function()
 		}
 	}
 	
+	this.nodeValidation();	
+	this.fdsertch(this.graphRoot);
+
 	this.loadedOk = true;
 	this.scene.onGraphLoaded();
 };
@@ -211,6 +214,7 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	var parent = root.nodeName;
 	var parseErrors = 0;
 
+	console.log("processing node " +  id);
 	if (id in this.nodes) {
 		return this.onElementDuplicate(parent, id);
 	}
@@ -272,19 +276,21 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 		}
 	}
 	
-	var descends = root.getElementsByTagName('DESCENDANTS');	
-	nnodes=descends[0].children.length;
+	var nodeDescendants = root.getElementsByTagName('DESCENDANTS')[0].children;	
+	nnodes=nodeDescendants.length;
 	
 	console.log("Descendents: ");
 	if(nnodes == 0) {
 		console.log("none!");
 	}
 	for(var i = 0; i < nnodes; i++) {
-		var id = this.reader.getString(descends[0].children[i],'id',true)
-		node.addTChild(id);
-		console.log("\t\tid=" + id);		
+		var idd = this.reader.getString(nodeDescendants[i],'id',true);
+		node.addTChild(idd);
+		console.log("\t\tid=" + idd);		
 	}
-
+	
+	this.nodes[id] = node;
+	console.log("read: " + id);
 
 	return null;
 }
@@ -455,16 +461,23 @@ MySceneGraph.prototype.onReservedId = function(id, root) {
 
 MySceneGraph.prototype.readRectangle = function(id, args) {
 
-		this.checkArguments(id, args.length, 4);
+	this.checkArguments(id, args.length, 4);
 
-		var vec1 = [args[0], args[1]].map(parseFloat);
+	var vec1 = [args[0], args[1]].map(parseFloat);
+	var vec2 = [args[2], args[3]].map(parseFloat);
 
+	this.leaves[id] = new MyRectangle(this.scene, rectangle[0], rectangle[1]);
+}
 
+MySceneGraph.prototype.readTriangle = function(id, args) {
 
-		var vec2 = [args[2], args[3]].map(parseFloat);
-
-
-		return [vec1, vec2];
+	this.checkArguments(id, leafArgs.length, 9);
+		
+	var vec1 = [leafArgs[0], leafArgs[1], leafArgs[2]].map(parseFloat);
+	var vec2 = [leafArgs[3], leafArgs[4], leafArgs[5]].map(parseFloat);
+	var vec3 = [leafArgs[6], leafArgs[7], leafArgs[8]].map(parseFloat);
+	
+	this.leaves[id] = new MyTriangle(this.scene, vec1, vec2, vec3);
 }
 
 MySceneGraph.prototype.parseLeaf = function(id, root) {
@@ -493,20 +506,13 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 		return this.onParseError(parent, parseErrors, id);
 	}
 
-	if (leafType == 'rectangle') {
-		
-		var rectangle = this.readRectangle(id, leafArgs);
+	var error = null;
 
-			this.leaves[id] = new MyRectangle(this.scene, rectangle[0], rectangle[1]);
-	
-		
+	if (leafType == 'rectangle') {
+		error = this.readRectangle(id, leafArgs);	
 	}
 	else if (leafType == 'triangle') {
-		this.checkArguments(id, leafArgs.length, 9);
-		var vec1 = [leafArgs[0], leafArgs[1], leafArgs[2]].map(parseFloat);
-		var vec2 = [leafArgs[3], leafArgs[4], leafArgs[5]].map(parseFloat);
-		var vec3 = [leafArgs[6], leafArgs[7], leafArgs[8]].map(parseFloat);
-		this.leaves[id] = new MyTriangle(this.scene, vec1, vec2, vec3);
+		error = this.readTriagle(id, leafArgs);
 	}
 	else if (leafType == 'cylinder') {
 		this.checkArguments(id, leafArgs.length, 5);
@@ -519,6 +525,11 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 	else if (leafType == 'sphere') {
 		this.checkArguments(id, leafArgs.length, 3);
 		this.leaves[id] = new MySphere(this.scene, leafArgs[0], leafArgs[1], leafArgs[2]);
+	}
+
+	if (error != null) {
+		parseErrors++;
+		this.onXMLError(error);
 	}
 
 	if (this.verbose) {
@@ -1031,7 +1042,7 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 
 MySceneGraph.prototype.fdsertch = function(root) {
 	if(root in this.nodes){
-		fdsertchAux(nodes[root]);
+		this.fdsertchAux(this.nodes[root]);
 	}
 	else {
 		console.error("Root info. not found!");
@@ -1040,19 +1051,21 @@ MySceneGraph.prototype.fdsertch = function(root) {
 
 MySceneGraph.prototype.fdsertchAux = function(node) {
 
-	for(var i = 0; i < node.children.lenght; i++) {
+	console.log("S:" + node.id);	
+	for(var i = 0; i < node.children.length; i++) {			
 		var nextId = node.children[i];
 		var nextElement = null;
 		var isLeaf = false;
 
 		if(nextId in this.nodes)
 			nextElement = this.nodes[nextId];
-		else if(nextID in this.leaves) {
+		else if(nextId in this.leaves) {
 			isLeaf = true;
 			nextElement = this.leaves[nextId];
 		}
 		else {
-			console.error("Descendant of id=" + nextId + "not found while exploring node of id=" + node.id + ".");
+			console.error("Descendant of id=" + nextId + " not found while exploring node of id=" + node.id + ".");
+			return
 		}
 
 		/*if(nextElement.textureId == null)
@@ -1071,20 +1084,28 @@ MySceneGraph.prototype.fdsertchAux = function(node) {
 
 MySceneGraph.prototype.nodeValidation = function() {
 
-	for(var i = 0; i < this.nodes.length; i++) {
-		var children = this.nodes.children;
-		for(var n = 0; n < children.length; n++) {
-			if(!((children in this.leaves || children in this.nodes) && children != this.nodes[i].id)){
-				var index = this.nodes.children.indexOf(n);
-				this.nodes[i].children.splice(index,1);
+var ready;
+
+do {
+		ready = true;
+		for(var i in this.nodes) {		
+			var children = this.nodes[i].children;
+			//console.log("Processing id=" + this.nodes[i].id)
+			for(var n = 0; n < children.length; n++) {
+				if(!((children[n] in this.leaves || children[n] in this.nodes) && children[n] != this.nodes[i].id)){
+					//console.log("Erasing reference with id=" + children[n] + " from node id=" + this.nodes[i].id);				
+					this.nodes[i].children.splice(n,1);
+					//console.log("new size:" + this.nodes[i].children.length);
+				}
 			}
-		}
-		if(this.nodes.children.length == 0) {
-			var index = this.nodes.indexOf(i);
-			this.nodes.splice(index,1);	
-			i = -1;
-		}
-	}
+			if(this.nodes[i].children.length == 0) {
+				//console.log("Erasing node id=" + this.nodes[i].id);
+				delete this.nodes[i];
+				ready = false;		
+			}
+		}		
+	}while(!ready);
+	
 }
 
 MySceneGraph.prototype.onXMLError = function (message) {

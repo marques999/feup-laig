@@ -73,10 +73,10 @@
 </LEAVES>
 
 <NODES>
-	<ROOT id="ss" />	
+	<ROOT id="s0" />	
 	<!-- identifier of root node of the scene graph; this node     -->
 	<!-- must be defined in one of the following NODE declarations -->
-	<NODE id="ss">
+	<NODE id="s0">
 	<!-- defines one intermediate node; may be repeated as necessary -->
 	<!-- next two lines are mandatory -->
 		<MATERIAL id="gg" />      
@@ -92,11 +92,42 @@
 		<SCALE sx="ff" sy="ff" sz="ff" />
 		<!-- declaring descendents, ate least one node or one leaf must be present -->
 		<DESCENDANTS>
-			<DESCENDANT id="ss" />		
+			<DESCENDANT id="s1" />	
+			<DESCENDANT id="s2" />	
+			<DESCENDANT id="s3" />		
 			<!-- "ss" is the identifier of a node or of leaf; -->
 			<!--  may be repeatad as necessary. It can refer an -->
 			<!--  identifier of another node, later defined in the lsx file. -->
 		</DESCENDANTS>
+	</NODE>
+	<NODE id="s1">
+		<MATERIAL id="gg" />
+		<TEXTURE id="gg" />  
+		<DESCENDANTS>
+			<DESCENDANT id="s10" />	
+			<DESCENDANT id="s4" />				
+		</DESCENDANTS>		
+	</NODE>
+	<NODE id="s2">
+		<MATERIAL id="gg" />
+		<TEXTURE id="gg" />  
+		<DESCENDANTS>			
+			<DESCENDANT id="s4" />				
+		</DESCENDANTS>		
+	</NODE>
+	<NODE id="s3">
+		<MATERIAL id="gg" />
+		<TEXTURE id="gg" />  
+		<DESCENDANTS>
+			<DESCENDANT id="mytriangle" />							
+		</DESCENDANTS>		
+	</NODE>
+	<NODE id="s4">
+		<MATERIAL id="gg" />
+		<TEXTURE id="gg" />  
+		<DESCENDANTS>
+			<DESCENDANT id="s15" />							
+		</DESCENDANTS>		
 	</NODE>
  </NODES>
  </SCENE>
