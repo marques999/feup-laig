@@ -370,6 +370,12 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 };
 
 ///////////////////////////////////////////
+// 			ID REFERENCE			 //
+///////////////////////////////////////////	
+
+
+
+///////////////////////////////////////////
 // 				DATA VALIDATION			 //
 ///////////////////////////////////////////	
 
@@ -899,6 +905,67 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		this.printValues('reference', 'length', globalReference);
 	}
 };
+
+
+MySceneGraph.prototype.fdsertch = function(root) {
+	if(root in this.nodes){
+		fdsertchAux(nodes[root]);
+	}
+	else {
+		console.error("Root info. not found!");
+	}
+
+}
+
+
+MySceneGraph.prototype.fdsertchAux = function(node) {
+
+	for(var i = 0; i < node.children.lenght; i++) {
+		var nextId = node.children[i];
+		var nextElement = null;
+		var isLeaf = false;
+
+		if(nextId in this.nodes)
+			nextElement = this.nodes[nextId];
+		else if(nextID in this.leaves) {
+			isLeaf = true;
+			nextElement = this.leaves[nextId];
+		}
+		else {
+			console.error("Descendant of id=" + nextId + "not found while exploring node of id=" + node.id + ".");
+		}
+
+		/*if(nextElement.textureId == null)
+			nextElement.textureId = child.textureId;
+
+		if(nextElement.materialId == null)
+			nextElement.materialId = child.materialId;*/
+
+		console.log("Seartching child id=" + nextElement.id);
+		
+		if (!isLeaf) {
+			fdsertchAux(nextElement);
+		}
+	}
+}
+
+MySceneGraph.prototype.nodeValidation = function() {
+
+	for(var i = 0; i < this.nodes.length; i++) {
+		var children = this.nodes.children;
+		for(var n = 0; n < children.length; n++) {
+			if(!((children in this.leaves || children in this.nodes) && children != this.nodes[i].id)){
+				var index = this.nodes.children.indexOf(n);
+				this.nodes[i].children.splice(index,1);
+			}
+		}
+		if(this.nodes.children.length == 0) {
+			var index = this.nodes.indexOf(i);
+			this.nodes.splice(index,1);	
+			i = -1;
+		}
+	}
+}
 
 MySceneGraph.prototype.onXMLError = function (message) {
 	console.error("XML Loading Error: " + message);	
