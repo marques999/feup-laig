@@ -154,6 +154,7 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 
 	var parseErrors = 0;
 	var parent = root.nodeName;
+
 	var globalAmbient = this.parseRGBA(root, 'ambient');	
 	var error = this.checkValue(globalAmbient, 'ambient', parent);
 	if (error != null) {
@@ -179,9 +180,10 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 		return this.onParseError(parent, parseErrors);
 	}
 
+	this.scene.setAmbient(globalAmbient);
 	this.scene.setDoubleside(globalDoubleside);
 	this.scene.setBackground(globalBackground);
-	this.scene.setAmbient(globalAmbient);
+	
 
 	if (this.verbose) {
 		this.printHeader('ILLUMINATION');
@@ -211,6 +213,10 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 
 	if (id in this.nodes) {
 		return this.onElementDuplicate(parent, id);
+	}
+
+	if (id == 'null' || id == 'clear') {
+		return this.onReservedId(parent, id);
 	}
 
 	var nodeMaterial = this.parseString(root, 'MATERIAL', 'id');
@@ -299,6 +305,28 @@ MySceneGraph.prototype.parseNodeScale = function(root, node, id) {
 	return null;		
 };
 
+MySceneGraph.prototype.getNodeTexture = function(node, parent) {
+
+	if (node.getTexture() == 'null') {
+		return parent.getTexture();	
+	}
+
+	if (node.getTexture() == 'clear') {
+		return null;
+	}
+
+	return node.getTexture();
+}
+
+MySceneGraph.prototype.getNodeMaterial = function(node, parent) {
+
+	if (node.getMaterial() == 'null') {
+		return parent.getTexture();
+	}
+
+	return node.getTexture();
+}
+
 MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 
 	var parent = root.nodeName;
@@ -372,6 +400,10 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 	if (id in this.textures) {
 		return this.onElementDuplicate(parent, id);
 	}
+
+	if (id = 'null' || id == 'clear') {
+		return this.onReservedId(parent, id);;
+	}
 	
 	var texturePath = this.parseString(root, 'file', 'path');
 	if (texturePath == null) {
@@ -415,6 +447,10 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 
 MySceneGraph.prototype.onElementDuplicate = function(parent, id) {
 	return parent + " with id=" + id + " already exists, skipping...";
+}
+
+MySceneGraph.prototype.onReservedId = function(id, root) {
+	return parent + " ith id=" + id + " has a reserved id (null, clear), skipping...";
 }
 
 MySceneGraph.prototype.readRectangle = function(id, args) {
@@ -702,8 +738,11 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 	var parseErrors = 0;
 	
 	if (id in this.materials) {
-		console.warn("WARNING: " + parent + " with id=" + id + " already exists, skipping...");
-		return null;
+		return this.onElementDuplicate(parent, id);
+	}
+
+	if (id == 'null' || id == 'clear') {
+		return this.onReservedId(parent, id);
 	}
 	
 	var materialShininess = this.parseFloat(root, 'shininess', 'value');
@@ -940,10 +979,6 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	if (node == null || node_sz == 0) {
 		return this.onElementMissing('rotation', parent);
 	}
-
-	if (node_sz < 3) {
-		return "at least one rotate attribute is missing from INITIALS."
-	}
 	
 	var globalRotation = [];
 	var axisFound = [false, false, false];
@@ -968,6 +1003,12 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 			console.warn("WARNING: unknown rotation axis '" + axis + "' found in <" + parent + ">.");
 			break;
 		}
+
+		// verificar se as tr^es coordenadas estão presentes
+	}
+
+	if (!axisFound[0] || !axisFound[1] || !axisFound[2]) {
+		return "at least one rotation axis is missing from INITIALS";
 	}
 
 	this.scene.initAxis(globalReference);
@@ -988,7 +1029,6 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	}
 };
 
-
 MySceneGraph.prototype.fdsertch = function(root) {
 	if(root in this.nodes){
 		fdsertchAux(nodes[root]);
@@ -996,9 +1036,7 @@ MySceneGraph.prototype.fdsertch = function(root) {
 	else {
 		console.error("Root info. not found!");
 	}
-
 }
-
 
 MySceneGraph.prototype.fdsertchAux = function(node) {
 
