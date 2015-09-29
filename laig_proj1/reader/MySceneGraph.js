@@ -613,7 +613,7 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 
 MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coordB, coordC, coordD) {
 
-	if (arguments.length < 5) {
+	if (arguments.length < 5 || arguments.length > 6) {
 		return null;
 	}
 	
@@ -626,21 +626,17 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coor
 	this.checkProperty(attribute, root.nodeName, node.length == 1);
 
 	var x = this.reader.getFloat(node[0], coordA, true);
-	if (x != x) {
+	if (x != x || x == null) {
 		return NaN;
 	}
 
 	var y = this.reader.getFloat(node[0], coordB, true);
-	if (y != y) {
+	if (y != y || y ==  null) {
 		return NaN;
 	}
 
 	var z = this.reader.getFloat(node[0], coordC, true);
-	if (z != z) {
-		return NaN;
-	}
-
-	if (x == null || y == null || z == null) {
+	if (z != z || z == null) {
 		return NaN;
 	}
 
@@ -648,7 +644,7 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coor
 
 		var w =  this.reader.getFloat(node[0], coordD, true);
 
-		if (w != w) {
+		if (w != w || w == null) {
 			return NaN;
 		}
 
