@@ -1,5 +1,6 @@
 function XMLNode(id, textureId, materialId) {
     this.id = id;
+    this.indegree = 0;
     this.textureId = textureId;
     this.materialId = materialId;
     this.geomTransf = [];   
@@ -18,7 +19,6 @@ XMLNode.prototype.addChild = function(child) {
 }
 
 XMLNode.prototype.applyTransform = function(scene) {
-    console.log("Aplaying transformations....");
    // for (var i = this.geomTransf.length - 1; i >= 0; i--) {
 //
     //    this.geomTransf[i].apply(scene);

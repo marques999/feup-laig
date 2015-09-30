@@ -65,10 +65,25 @@ MySceneGraph.prototype.onXMLReady = function()
 		}
 	}
 	
-	this.nodeValidation();	
-	this.fdsertch(this.graphRoot);
+	if (!(this.graphRoot in this.nodes)) {
+		this.onXMLError("graph root with id=" + this.graphRoot + "not declared in <NODES>");
+		return;
+	}
 
 	this.loadedOk = true;
+	this.resetIndegree();
+
+	for (var node in this.nodes) {
+		var nodeIndegree = this.nodes[node].indegree;
+		console.log("node id=" + node + " indegree=" + this.nodes[node].indegree);
+		if (nodeIndegree == 0 && node != this.graphRoot) {
+			consol.log("node id=" +  node + "erased.");
+			delete this.nodes[node];
+		}
+	}
+
+	this.validateNodes();
+	this.processNodes(this.graphRoot);
 	this.scene.onGraphLoaded();
 };
 
@@ -1110,25 +1125,36 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	}
 };
 
-MySceneGraph.prototype.fdsertch = function(root) {
-	if(root in this.nodes){
-		var rootNode = this.nodes[root];
-		console.log("Pushing: " + root);
-		this.scene.pushMatrix();
-		// aplicar transformações do rooot
-		this.fdsertchAux(rootNode, rootNode.materialId, rootNode.textureId);
-		this.scene.popMatrix();
-		console.log("Popping: " + root);
-	}
-	else {
-		console.error("Root info. not found!");
+MySceneGraph.prototype.checkRoot = function(rootId) {
+	if (rootId in this.nodes) {
+		this.onXMLError("root info not found");
 	}
 }
 
-MySceneGraph.prototype.fdsertchAux = function(node, materialId, textureId) {
+MySceneGraph.prototype.processNodes = function() {
+
+	if(this.graphRoot == null) {
+		return;
+	}
+
+	var rootNode = this.nodes[this.graphRoot];
+	console.log("[PROCESS NODES] Pushing: " + this.graphRoot);
+
+	// aplicar transformações do rooot
+	this.scene.pushMatrix();
+	this.processNodesAux(rootNode, rootNode.materialId, rootNode.textureId);
+	this.scene.popMatrix();
+
+	console.log("[PROCESS NODES] Popping: " + this.graphRoot);
+}
+
+MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
+
+	this.onProcessNode("Applying transformations", node.id);
 
 	node.applyTransform();	
-	//console.log("Corrent Node:" + node.id);	
+	
+	//console.log("current node:" + node.id);	
 	
 	for(var i = 0; i < node.children.length; i++) {			
 		
@@ -1154,44 +1180,43 @@ MySceneGraph.prototype.fdsertchAux = function(node, materialId, textureId) {
 			return
 		}
 
-<<<<<<< HEAD
-		/*if(nextElement.textureId == null)
-			nextElement.textureId = child.textureId;
-
-		if(nextElement.materialId == null)
-			nextElement.materialId = child.materialId;*/
-
-		console.log("Searching child id=" + nextElement.id);
-=======
-		/*if (!isLeaf) 
-			console.log("Next Node id=" + nextId);
-		else
-			console.log("Next Leave id=" + nextId);*/
-	
->>>>>>> origin/master
-		
-		
 		// aplicar transformações ao nextId
 		if (!isLeaf) {		
-		this.scene.pushMatrix();	
-		console.log("Pushing: " + nextId);
-			
-			this.fdsertchAux(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
+			this.scene.pushMatrix();	
+			this.onProcessNode("Pushing", nextId);
+			this.processNodesAux(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
 			this.scene.popMatrix();
-			console.log("Popping: " + nextId);
+			this.onProcessNode("Popping", nextId);
 		} else{
 			
-			console.log("Drawing: " + nextId);
+			this.onProcessNode("Drawing", nextId);
 		//	extElement.apply(mId);
 		//	extElement.apply(tId);
 		//	nextElement.display.call(this.scene);
 		}
-		
-		
 	}
 }
 
-MySceneGraph.prototype.nodeValidation = function() {
+MySceneGraph.prototype.onProcessNode = function(message, id) {
+	
+	if (this.verbose) {
+		console.log("[PROCESS NODES] " + message + ": " + id);
+	}
+}
+
+MySceneGraph.prototype.resetIndegree = function() {
+
+	for (var node in this.nodes) {
+		var children = this.nodes[node].children;
+		for (var i = 0; i < children.length; i++) {
+			if (children[i] in this.nodes) {
+				this.nodes[children[i]].indegree++;
+			}
+		}
+	}
+}
+
+MySceneGraph.prototype.validateNodes = function() {
 
 	var ready = false;
 
