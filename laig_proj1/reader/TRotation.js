@@ -6,8 +6,8 @@ function TRotation(axis, angle) {
 TRotation.prototype = Object.create(TTransformation.prototype);
 TRotation.prototype.constructor = TRotation;
 
-TScale.prototype.apply = function (scene) {
-    console.log("Applying Rotation!");
+TRotation.prototype.apply = function (scene) {
+
     var degToRad = this.angle * Math.PI / 180;
 
     if (this.axis == 'x') {

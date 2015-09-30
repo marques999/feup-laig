@@ -38,7 +38,7 @@ MySphere.prototype.initBuffers = function() {
 			
 			var x = this.radius * Math.cos(phi) * Math.sin(theta);
 			var z = this.radius * Math.sin(phi) * Math.sin(theta);
-			var y = Math.cos(theta);
+			var y = this.radius * Math.cos(theta);
 
 			this.vertices.push(x, y, z);
 			this.normals.push(x, y, z);

@@ -6,6 +6,5 @@ TTranslation.prototype = Object.create(TTransformation.prototype);
 TTranslation.prototype.constructor = TTranslation;
 
 TTranslation.prototype.apply = function (scene) {
-     console.log("Applying Translation!");
     scene.translate(x, y, z);
 }
