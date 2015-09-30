@@ -35,15 +35,15 @@ MyCylinder.prototype.initBuffers = function() {
 	for (var i = 0; i <= this.slices; i++) {
 
 		var tCoord = this.maxT;
-		var newRadius = this.radiusBottom;
+		var nRadius = this.radiusBottom;
 		var x = Math.cos(theta);
 		var y = Math.sin(theta);
 		var z = 0;
 
 		for (var j = 0; j <= this.stacks; j++) {
 
-			this.vertices.push(x * newRadius, z, y * newRadius);
-			this.normals.push(x * newRadius, 0, y * newRadius);
+			this.vertices.push(x * nRadius, z, y * nRadius);
+			this.normals.push(x * nRadius, 0, y * nRadius);
 			this.texCoords.push(sCoord, tCoord);
 
 			if (i > 0 && j > 0) {
@@ -58,7 +58,7 @@ MyCylinder.prototype.initBuffers = function() {
 
 			z += stackIncrement;
 			tCoord -= texelIncrementT;
-			newRadius += radiusStep;
+			nRadius += radiusStep;
 		}
 
 		if (i > 0) {

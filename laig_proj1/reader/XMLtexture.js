@@ -19,7 +19,6 @@ XMLtexture.prototype.setFactor = function(factorS, factorT) {
 }
 
 XMLtexture.prototype.apply = function(scene, material) {
-
 	material.loadTexture.call(scene, this.path);
 	material.setTextureWrap.call(scene, "REPEAT", "REPEAT");
 };

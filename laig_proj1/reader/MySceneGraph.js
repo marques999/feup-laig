@@ -574,26 +574,22 @@ MySceneGraph.prototype.parseRGBA = function(root, attribute) {
 MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
 
 	var node = root.getElementsByTagName(name);
-
 	if (node == null || node.length == 0) {
 		return null;
 	}
 
 	this.checkProperty(name, root.nodeName, node.length == 1);
-
 	return this.reader.getFloat(node[0], attribute);
 }
 
 MySceneGraph.prototype.parseString = function(root, name, attribute) {
 
 	var node = root.getElementsByTagName(name);
-
 	if (node == null || node.length == 0) {
 		return null;
 	}
 
 	this.checkProperty(name, root.nodeName, node.length == 1);
-
 	return this.reader.getString(node[0], attribute);
 }
 
@@ -1244,7 +1240,7 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 				leafTexture = this.textures[textureId];
 
 				if (leafTexture != null) {
-					leafMaterial.loadTexture(leafTexture.path);
+					leafTexture.apply(this.scene, leafMaterial);
 				}
 			}
 
@@ -1254,6 +1250,7 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 			}
 
 		//	leafMaterial.apply.call(this.scene);
+
 		//	nextElement.display.call(this.scene);
 			this.onProcessNode("Drawing", nextId);
 		}
@@ -1352,8 +1349,7 @@ MySceneGraph.prototype.printValues = function ()
 	console.log(string);
 }
 
-MySceneGraph.prototype.printHeader = function (attribute, id)
-{
+MySceneGraph.prototype.printHeader = function (attribute, id) {
 
 	if (id == undefined) {
 		console.log("[" + attribute + "]");

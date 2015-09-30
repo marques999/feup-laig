@@ -157,8 +157,10 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk) {
 
-		this.lights[0].update();	
-		this.lights[1].update();
+		for (var i = 0; i < this.activeLights; i++) {
+			this.lights[i].update();
+		}
+		
 		this.graph.display();
 	};
 
