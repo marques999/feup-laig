@@ -79,54 +79,62 @@
 	<NODE id="s0">
 	<!-- defines one intermediate node; may be repeated as necessary -->
 	<!-- next two lines are mandatory -->
-		<MATERIAL id="gg" />      
+		<MATERIAL id="tt" />      
 		<!-- declared material superimposes the material received from parent node -->
 		<!-- id="null" maintains material from parent node        -->
-		<TEXTURE id="gg" />       
+		<TEXTURE id="ss" />       
 		<!-- declared texture superimposes the texture received from parent node -->
 		<!-- id="null" maintains texture from parent node       -->
 		<!-- id="clear" clears texture declaration received from parent node      -->
 		<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
-		<TRANSLATION x="ff" y="ff" z="ff" />
-		<ROTATION axis="cc" angle="ff" />
-		<SCALE sx="ff" sy="ff" sz="ff" />
+		<TRANSLATION x="3.5" y="-1.2" z="2.4" />
+		<ROTATION axis="x" angle="25" />
+		<SCALE sx="1.0" sy="2.0" sz="1.0" />
 		<!-- declaring descendents, ate least one node or one leaf must be present -->
 		<DESCENDANTS>
 			<DESCENDANT id="s1" />	
 			<DESCENDANT id="s2" />	
-			<DESCENDANT id="s3" />		
+			<DESCENDANT id="s3" />
+			<DESCENDANT id="s4" />				
 			<!-- "ss" is the identifier of a node or of leaf; -->
 			<!--  may be repeatad as necessary. It can refer an -->
 			<!--  identifier of another node, later defined in the lsx file. -->
 		</DESCENDANTS>
 	</NODE>
 	<NODE id="s1">
-		<MATERIAL id="gg" />
-		<TEXTURE id="gg" />  
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />  
 		<DESCENDANTS>
-			<DESCENDANT id="s10" />	
-			<DESCENDANT id="s4" />				
+			<DESCENDANT id="asd" />							
 		</DESCENDANTS>		
 	</NODE>
 	<NODE id="s2">
-		<MATERIAL id="gg" />
-		<TEXTURE id="gg" />  
+		<MATERIAL id="null" />
+		<TEXTURE id="clear" />  
 		<DESCENDANTS>			
-			<DESCENDANT id="s4" />				
+			<DESCENDANT id="asd" />				
+		</DESCENDANTS>		
+	</NODE>	
+	<NODE id="s4">
+		<MATERIAL id="ss" />
+		<TEXTURE id="tt" />  
+		<DESCENDANTS>
+			<DESCENDANT id="s5" />							
+		</DESCENDANTS>		
+	</NODE>
+	<NODE id="s5">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />  
+		<DESCENDANTS>
+			<DESCENDANT id="mytriangle" />	
+			<DESCENDANT id="ss" />							
 		</DESCENDANTS>		
 	</NODE>
 	<NODE id="s3">
-		<MATERIAL id="gg" />
-		<TEXTURE id="gg" />  
+		<MATERIAL id="ss" />
+		<TEXTURE id="clear" />  
 		<DESCENDANTS>
-			<DESCENDANT id="mytriangle" />							
-		</DESCENDANTS>		
-	</NODE>
-	<NODE id="s4">
-		<MATERIAL id="gg" />
-		<TEXTURE id="gg" />  
-		<DESCENDANTS>
-			<DESCENDANT id="s15" />							
+			<DESCENDANT id="s1" />									
 		</DESCENDANTS>		
 	</NODE>
  </NODES>

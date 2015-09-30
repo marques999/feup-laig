@@ -216,7 +216,7 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	var parent = root.nodeName;
 	var parseErrors = 0;
 
-	console.log("processing node " +  id);
+	//console.log("processing node " +  id);
 	if (id in this.nodes) {
 		return this.onElementDuplicate(parent, id);
 	}
@@ -283,7 +283,7 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	
 	console.log("Descendents: ");
 	if(nnodes == 0) {
-		console.log("none!");
+		console.error("Node with id=" + id + " as no descendets!");
 	}
 	for(var i = 0; i < nnodes; i++) {
 		var idd = this.reader.getString(nodeDescendants[i],'id',true);
@@ -291,8 +291,7 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 		console.log("\t\tid=" + idd);		
 	}
 	
-	this.nodes[id] = node;
-	console.log("read: " + id);
+	this.nodes[id] = node;	
 
 	return null;
 }
@@ -307,32 +306,32 @@ MySceneGraph.prototype.parseNodeScale = function(root, node, id) {
 		return error;
 	}
 
-	node.addTransformation(new TScale(this.scene, coords[0], coords[1], coords[2]));
+	node.addTransformation(new TScale(coords[0], coords[1], coords[2]));
 	console.log("\t\tScale: sx=" + coords[0] + " sy=" + coords[1] + " sz=" + coords[2]);
 
 	return null;		
 };
 
-MySceneGraph.prototype.getNodeTexture = function(node, parent) {
+MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
 
-	if (node.getTexture() == 'null') {
-		return parent.getTexture();	
+	if (nextElement.textureId == 'null') {
+		return currTextureId;
 	}
 
-	if (node.getTexture() == 'clear') {
+	if (nextElement.textureId == 'clear') {
 		return null;
 	}
 
-	return node.getTexture();
+	return nextElement.textureId;
 }
 
-MySceneGraph.prototype.getNodeMaterial = function(node, parent) {
+MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 
-	if (node.getMaterial() == 'null') {
-		return parent.getTexture();
+	if (nextElement.materialId == 'null') {
+		return currMaterialId;
 	}
 
-	return node.getTexture();
+	return nextElement.materialId;
 }
 
 MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
@@ -345,7 +344,7 @@ MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 		return error;
 	}
 
-	node.addTransformation(new TTranslation(this.scene, coords[0], coords[1], coords[2]));			
+	node.addTransformation(new TTranslation( coords[0], coords[1], coords[2]));			
 	console.log("\t\tTranslation: x=" + coords[0] + " y=" + coords[1] + " z=" + coords[2]);
 
 	return null;
@@ -375,7 +374,7 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 		return this.onParseError(parent, parseErrors, id);
 	}
 
-	node.addTransformation(new TRotation(this.scene, axis, ang));
+	node.addTransformation(new TRotation( axis, ang));
 	console.log("\t\tRotation: axis=" + axis + " angle=" + ang);
 
 	return null;
@@ -1112,16 +1111,23 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 
 MySceneGraph.prototype.fdsertch = function(root) {
 	if(root in this.nodes){
-		this.fdsertchAux(this.nodes[root]);
+		var rootNode = this.nodes[root];
+		console.log("Pushing: " + root);
+		this.scene.pushMatrix();
+		// aplicar transformações do rooot
+		this.fdsertchAux(rootNode, rootNode.materialId, rootNode.textureId);
+		this.scene.popMatrix();
+		console.log("Popping: " + root);
 	}
 	else {
 		console.error("Root info. not found!");
 	}
 }
 
-MySceneGraph.prototype.fdsertchAux = function(node) {
+MySceneGraph.prototype.fdsertchAux = function(node, materialId, textureId) {
 
-	console.log("S:" + node.id);	
+	node.applyTransform();	
+	//console.log("Corrent Node:" + node.id);	
 	
 	for(var i = 0; i < node.children.length; i++) {			
 		
@@ -1129,29 +1135,48 @@ MySceneGraph.prototype.fdsertchAux = function(node) {
 		var nextElement = null;
 		var isLeaf = false;
 
-		if(nextId in this.nodes) {
+		var mId = materialId;
+		var tId = textureId;
+		
+		/*console.log("Material: " + materialId);
+		console.log("Textura: " + textureId);*/
+
+		if(nextId in this.nodes) {			
 			nextElement = this.nodes[nextId];
 		}	
 		else if(nextId in this.leaves) {
 			isLeaf = true;
-			nextElement = this.leaves[nextId];
+			nextElement = this.leaves[nextId];			
 		}
 		else {
 			console.error("Descendant of id=" + nextId + " not found while exploring node of id=" + node.id + ".");
 			return
 		}
 
-		/*if(nextElement.textureId == null)
-			nextElement.textureId = child.textureId;
-
-		if(nextElement.materialId == null)
-			nextElement.materialId = child.materialId;*/
-
-		console.log("Seartching child id=" + nextElement.id);
+		/*if (!isLeaf) 
+			console.log("Next Node id=" + nextId);
+		else
+			console.log("Next Leave id=" + nextId);*/
+	
 		
-		if (!isLeaf) {
-			fdsertchAux(nextElement);
+		
+		// aplicar transformações ao nextId
+		if (!isLeaf) {		
+		this.scene.pushMatrix();	
+		console.log("Pushing: " + nextId);
+			
+			this.fdsertchAux(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
+			this.scene.popMatrix();
+			console.log("Popping: " + nextId);
+		} else{
+			
+			console.log("Drawing: " + nextId);
+		//	extElement.apply(mId);
+		//	extElement.apply(tId);
+		//	nextElement.display.call(this.scene);
 		}
+		
+		
 	}
 }
 
@@ -1167,16 +1192,17 @@ MySceneGraph.prototype.nodeValidation = function() {
 			var children = this.nodes[i].children;
 			//console.log("Processing id=" + this.nodes[i].id)
 
-			for(var n = 0; n < children.length; n++) {
+			for(var n = 0; n < children.length; n++) {				
 				if(!((children[n] in this.leaves || children[n] in this.nodes) && children[n] != this.nodes[i].id)){
-					console.log("Erasing reference with id=" + children[n] + " from node id=" + this.nodes[i].id);				
+					//console.log("Erasing reference with id=" + children[n] + " from node id=" + this.nodes[i].id);				
 					this.nodes[i].children.splice(n,1);
-					console.log("new size:" + this.nodes[i].children.length);
+					//console.log("new size:" + this.nodes[i].children.length);
+					n--;
 				}
 			}
 
 			if(this.nodes[i].children.length == 0) {
-				console.log("Erasing node id=" + this.nodes[i].id);
+				//console.log("Erasing node id=" + this.nodes[i].id);
 				delete this.nodes[i];
 				ready = false;		
 			}

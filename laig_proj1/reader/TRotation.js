@@ -1,28 +1,22 @@
-function TRotation(sceen, axis, ang) {
-
-    TTransformation.call(this, sceen);
-       
-    this.ang = ang;
-    this.setCoord(axis);
+function TRotation(axis, angle) {
+    this.axis = axis;
+    this.angle = angle;
 };
 
 TRotation.prototype = Object.create(TTransformation.prototype);
-TRotation.prototype.constructor = TRotation; 
+TRotation.prototype.constructor = TRotation;
 
-   
+TScale.prototype.apply = function (scene) {
+    console.log("Applying Rotation!");
+    var degToRad = this.angle * Math.PI / 180;
 
-TRotation.prototype.setCoord = function(axis) {
-
-   if(axis == 'x') {
-      TTransformation.prototype.setCoords.call(this,1,0,0);        
-   }
-   else if(axis == 'y') {
-       TTransformation.prototype.setCoords.call(this,0,1,0);
-   }
-   else if(axis == 'z') {
-        TTransformation.prototype.setCoords.call(this,0,0,1);
-   }
-   
-      
-};
-
+    if (this.axis == 'x') {
+        scene.rotate(degToRad, 1, 0, 0);
+    }
+    else if (this.axis == 'y') {
+        scene.rotate(degToRad, 0, 1, 0);
+    }
+    else if (this.axis == 'z') {
+        scene.rotate(degToRad, 0, 0, 1);
+    }
+}
