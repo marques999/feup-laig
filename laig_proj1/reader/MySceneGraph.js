@@ -92,50 +92,42 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	var error = this.checkValue(lightEnabled, 'enable', parent, id);
 	if (error != null) {
 		parseErrors++;
-		this.onXMLError(error);
+		this.onXMLWarning(error);
 	}
 	
 	var lightPosition = this.parseCoordinatesXYZW(root, 'position');
 	var error = this.checkValue(lightPosition, 'position', parent, id);
 	if (error != null) {
 		parseErrors++;
-		this.onXMLError(error);
+		this.onXMLWarning(error);
 	}
 
 	var lightAmbient = this.parseRGBA(root, 'ambient');	
 	var error = this.checkValue(lightAmbient, 'ambient', parent, id);
 	if (error != null) {
 		parseErrors++;
-		this.onXMLError(error);
+		this.onXMLWarning(error);
 	}
 
 	var lightDiffuse = this.parseRGBA(root, 'diffuse');	
 	var error = this.checkValue(lightDiffuse, 'diffuse', parent, id);
 	if (error != null) {
 		parseErrors++;
-		this.onXMLError(error);
+		this.onXMLWarning(error);
 	}
 
 	var lightSpecular = this.parseRGBA(root, 'specular');
 	var error = this.checkValue(lightSpecular, 'specular', parent, id);
 	if (error != null) {
 		parseErrors++;
-		this.onXMLError(error);
+		this.onXMLWarning(error);
 	}
 
 	if (parseErrors != 0) {
 		return this.onParseError(parent, parseErrors, id);
 	}
 
-	var myLight = new CGFlight(this.scene, id);
-
-	myLight.setPosition.apply(this.scene, lightPosition);
-	myLight.setAmbient.apply(this.scene, lightAmbient);	
-	myLight.setDiffuse.apply(this.scene, lightDiffuse);
-	myLight.setSpecular.apply(this.scene, lightSpecular);
-	lightEnabled ? myLight.enable.call(this.scene) : myLight.disable.call(this.scene);
-
-	this.lights[id] = myLight;
+	this.lights[id] = this.scene.pushLight(lightEnabled, lightPosition, lightAmbient, lightDiffuse, lightSpecular);
 
 	if (this.verbose) {
 		this.printHeader('LIGHT', id)
@@ -201,14 +193,18 @@ MySceneGraph.prototype.parseRotation = function(id, axis, angle, axisFound) {
 
 	if (axis != 'x' && axis != 'y' && axis != 'z') {
 		console.warn("WARNING: unknown rotation axis '" + axis + "' found in <" + parent + ">.");
+		return false;
 	}
-	else if (axisFound[id]) {
-		console.warn("WARNING: more than three 'rotate' properties found in <INITIALS>!");
+
+	if (axisFound[axis]) {
+		console.warn("WARNING: more than two 'rotate' properties found for axis " + axis + " in <INITIALS>!");
+		return false;
 	}
-	else {
-		axisFound[id] = true;
-		this.scene.setRotation(id, axis, angle);
-	}
+
+	axisFound[axis] = true;
+	this.scene.setRotation(id, axis, angle);
+	
+	return true;
 }
 
 MySceneGraph.prototype.parseNode = function(id, root) {
@@ -812,7 +808,8 @@ MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
 	}
 
 	this.checkProperty(name, root.nodeName, node.length == 1);
-	return this.reader.getFloat(node[0], attribute, true);
+
+	return this.reader.getFloat(node[0], attribute);
 }
 
 MySceneGraph.prototype.parseString = function(root, name, attribute) {
@@ -824,7 +821,8 @@ MySceneGraph.prototype.parseString = function(root, name, attribute) {
 	}
 
 	this.checkProperty(name, root.nodeName, node.length == 1);
-	return this.reader.getString(node[0], attribute, true);
+
+	return this.reader.getString(node[0], attribute);
 }
 
 ///////////////////7
@@ -864,14 +862,14 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 	}
 
 	var materialAmbient = this.parseRGBA(root, 'ambient');	
-	var error = this.checkValue(materialDiffuse, 'ambient', parent, id);
+	var error = this.checkValue(materialAmbient, 'ambient', parent, id);
 	if (error != null) {
 		parseErrors++;
 		this.onXMLError(error);
 	}
 
 	var materialEmission = this.parseRGBA(root, 'emission');	
-	var error = this.checkValue(materialDiffuse, 'emission', parent, id);
+	var error = this.checkValue(materialEmission, 'emission', parent, id);
 	if (error != null) {
 		parseErrors++;
 		this.onXMLError(error);
@@ -883,12 +881,12 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 
 	var myMaterial = new CGFappearance(this.scene);
 
-	myMaterial.setAmbient(materialAmbient);
-	myMaterial.setDiffuse(materialDiffuse);
-	myMaterial.setEmission(materialEmission);
-	myMaterial.setSpecular(materialSpecular);
+	myMaterial.setAmbient(materialAmbient[0], materialAmbient[1], materialAmbient[2], materialAmbient[3]);
+	myMaterial.setDiffuse(materialDiffuse[0], materialDiffuse[1], materialDiffuse[2], materialDiffuse[3]);
+	myMaterial.setSpecular(materialSpecular[0], materialSpecular[1], materialSpecular[2], materialSpecular[3]);
+	myMaterial.setEmission(materialEmission[0], materialEmission[1], materialEmission[2], materialEmission[3]);
 	myMaterial.setShininess(materialShininess);
-	
+
 	this.materials[id] = myMaterial;
 
 	if (this.verbose) {
@@ -1077,19 +1075,22 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		return this.onElementMissing('rotation', parent);
 	}
 	
-	var globalRotation = [];
-	var axisFound = [false, false, false];
+	// inicializar array associativo com as coordenadas
+	var axisFound =  { 'x': false, 'y': false, 'z': false };
+	var j = 0;
 
 	for (var i = 0; i < node_sz; i++)
 	{
 		var axis = this.reader.getItem(node[i], 'axis', this.axisTypes);
 		var angle = this.reader.getFloat(node[i], 'angle');
-		this.parseRotation(i, axis, angle, axisFound);
+		
+		if (this.parseRotation(j, axis, angle, axisFound) == true) {
+			j++;
+		}
 	}
 
-	// verificar se as tr^es coordenadas estão presentes
-
-	if (!axisFound[0] || !axisFound[1] || !axisFound[2]) {
+	// verificar se as três coordenadas estão presentes
+	if (!axisFound['x'] || !axisFound['y'] || !axisFound['z']) {
 		return "at least one rotation axis is missing from INITIALS";
 	}
 
@@ -1102,9 +1103,9 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		this.printHeader('INITIALS');
 		this.printValues('frustum', 'near', globalFrustumNear, 'far', globalFrustumFar);
 		this.printXYZ('translate', globalTranslate);
-		this.printValues('rotation', 'axis', 'x', 'angle', globalRotation[0]);
-		this.printValues('rotation', 'axis', 'y', 'angle', globalRotation[1]);
-		this.printValues('rotation', 'axis', 'z', 'angle', globalRotation[2]);
+		this.printValues('rotation', 'axis', 'x', 'angle', this.scene.rotation[0]);
+		this.printValues('rotation', 'axis', 'y', 'angle', this.scene.rotation[1]);
+		this.printValues('rotation', 'axis', 'z', 'angle', this.scene.rotation[2]);
 		this.printXYZ('scale', globalScale);
 		this.printValues('reference', 'length', globalReference);
 	}
@@ -1147,7 +1148,7 @@ MySceneGraph.prototype.fdsertchAux = function(node) {
 		if(nextElement.materialId == null)
 			nextElement.materialId = child.materialId;*/
 
-		console.log("Seartching child id=" + nextElement.id);
+		console.log("Searching child id=" + nextElement.id);
 		
 		if (!isLeaf) {
 			fdsertchAux(nextElement);
@@ -1187,4 +1188,8 @@ MySceneGraph.prototype.nodeValidation = function() {
 MySceneGraph.prototype.onXMLError = function (message) {
 	console.error("XML Loading Error: " + message);	
 	this.loadedOk = false;
+};
+
+MySceneGraph.prototype.onXMLWarning = function (message) {
+	console.warn("XML Loading Error: " + message);	
 };

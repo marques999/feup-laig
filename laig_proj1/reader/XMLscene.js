@@ -57,17 +57,30 @@ XMLscene.prototype.initFrustum = function(far, near) {
 };
 
 XMLscene.prototype.setRotation = function(id, axis, angle) {
-
 	if (axis == 'x') {
-		this.rotation[id] = [angle, 1, 0, 0]
+		this.rotation[id] = [angle * Math.PI / 180, 1, 0, 0]
 	}
 	else if (axis == 'y') {
-		this.rotation[id] = [angle, 0, 1, 0];
+		this.rotation[id] = [angle * Math.PI / 180, angle, 0, 1, 0];
 	}
 	else if (axis == 'z') {
-		this.rotation[id] = [angle, 0, 0, 1];
+		this.rotation[id] = [angle * Math.PI / 180, angle, 0, 0, 1];
 	}
 };
+
+XMLscene.prototype.pushLight = function(enabled, position, ambient, diffuse, specular) {
+
+	var currentLight = this.lights[this.activeLights];
+
+	currentLight.setPosition(position[0], position[1], position[2], position[3]);
+	currentLight.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
+	currentLight.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
+	currentLight.setSpecular(specular[0], specular[1], specular[2], specular[3]);
+	enabled ? currentLight.enable() : currentLight.disable();
+	currentLight.update();
+	
+	return this.lights[this.activeLights++];
+}
 
 XMLscene.prototype.initScale = function(matrix) {
 	this.defaultScale = matrix;
@@ -95,7 +108,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
 	
 	// SET GLOBAL ILLUMINATION
-	this.setGlobalAmbientLight.apply(this, this.ambient);
+	this.setGlobalAmbientLight(this.ambient[0], this.ambient[1], this.ambient[2], this.ambient[3]);
 
 	// SET AXIS LENGTH
 	this.axis = new CGFaxis(this, this.reference);
@@ -107,12 +120,8 @@ XMLscene.prototype.onGraphLoaded = function() {
 	// INITIALIZE LIGHTS
 	this.lights[0].enable();
 
-	var lightsArray = this.graph.getLights();
-
-	for (var light in lightsArray) {
-		this.lights[this.activeLights] = lightsArray[light];
-		this.lights[this.activeLights].setVisible(true);
-		this.activeLights++;
+	for (var i = 0; i < this.activeLights; i++) {
+		this.lights[i].setVisible(true);
 	}
 };
 
@@ -148,8 +157,8 @@ XMLscene.prototype.display = function () {
 	// This is one possible way to do it
 	if (this.graph.loadedOk) {
 
-			this.lights[0].update();	
-	
+		this.lights[0].update();	
+		this.lights[1].update();
 		this.graph.display();
 	};
 
