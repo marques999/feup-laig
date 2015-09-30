@@ -64,7 +64,7 @@
 	<!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
 	<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 3.0 1.5" />
 	<!-- 2D coordinates for left-top and right-bottom vertices. -->
-	<LEAF id="asd" type="cylinder" args="6.0 2.0 2.0 8 3" />
+	<LEAF id="asd" type="cylinder" args="3.0 2.0 4.0 8 8" />
 	<!-- height, bottom radius, top radius, sections along height, parts per section -->
 	<LEAF id="ss" type="sphere" args="ff ii ii" />
 	<!-- radius, parts along radius, parts per section -->

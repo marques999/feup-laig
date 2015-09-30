@@ -1,8 +1,9 @@
-function MyCylinder(scene, radius, height, slices, stacks) {
+function MyCylinder(scene, radiusBottom, radiusTop, height, slices, stacks) {
 
 	CGFobject.call(this, scene);
 
-	this.radius = radius;
+	this.radiusBottom = radiusBottom;
+	this.radiusTop = radiusTop;
 	this.height = height;
 	this.slices = slices;
 	this.stacks = stacks;
@@ -24,6 +25,7 @@ MyCylinder.prototype.initBuffers = function() {
 
 	var texelIncrementS = (this.maxS - this.minS) / this.slices;
 	var texelIncrementT = (this.maxT - this.minT) / this.stacks;
+	var radiusStep = (this.radiusTop - this.radiusBottom) / this.stacks;
 	var thetaIncrement = (2 * Math.PI) / this.slices;
 	var stackIncrement = this.height / this.stacks;
 	var sCoord = this.maxS;
@@ -33,14 +35,15 @@ MyCylinder.prototype.initBuffers = function() {
 	for (var i = 0; i <= this.slices; i++) {
 
 		var tCoord = this.maxT;
-		var x = this.radius * Math.cos(theta);
-		var y = this.radius * Math.sin(theta);
+		var newRadius = this.radiusBottom;
+		var x = Math.cos(theta);
+		var y = Math.sin(theta);
 		var z = 0;
 
 		for (var j = 0; j <= this.stacks; j++) {
 
-			this.vertices.push(x, z, y);
-			this.normals.push(x, 0, y);
+			this.vertices.push(x * newRadius, z, y * newRadius);
+			this.normals.push(x * newRadius, 0, y * newRadius);
 			this.texCoords.push(sCoord, tCoord);
 
 			if (i > 0 && j > 0) {
@@ -55,6 +58,7 @@ MyCylinder.prototype.initBuffers = function() {
 
 			z += stackIncrement;
 			tCoord -= texelIncrementT;
+			newRadius += radiusStep;
 		}
 
 		if (i > 0) {

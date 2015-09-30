@@ -540,7 +540,7 @@ MySceneGraph.prototype.readCylinder = function(id, args) {
 		return this.onAttributeInvalid('number of slices', id, 'NODE');
 	}
 
-	this.leaves[id] = new MyCylinder(this.scene, myRadiusBottom, myHeight,	mySlices, myStacks);
+	this.leaves[id] = new MyCylinder(this.scene, myRadiusBottom, myRadiusTop, myHeight,	mySlices, myStacks);
 
 	return null;
 }
