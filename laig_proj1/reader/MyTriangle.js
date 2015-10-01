@@ -23,7 +23,9 @@ function MyTriangle(scene, vertexA, vertexB, vertexC) {
 	];
 
 	this.texCoords = [
-		
+		0.0, 0.0,
+		0.5, 0.5,
+		1.0, 1.0
 	]
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
@@ -32,3 +34,17 @@ function MyTriangle(scene, vertexA, vertexB, vertexC) {
 
 MyTriangle.prototype = Object.create(CGFobject.prototype);
 MyTriangle.prototype.constructor = MyTriangle;
+
+MyTriangle.setTextureFactor = function(factorS, factorT) {
+
+	this.minS = 0.0;
+	this.minT = 0.0;
+    this.maxS = this.width / factorS;
+    this.maxT = this.height / factorT;
+
+    this.texCoords = [
+		this.minS, this.minT,
+		this.maxS, this.minT,
+		this.minS, this.maxT,
+	];
+};

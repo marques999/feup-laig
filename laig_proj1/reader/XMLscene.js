@@ -22,6 +22,7 @@ XMLscene.prototype.init = function (application)
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
 
+	this.lightNames = [];
 	this.rotation = [];
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
@@ -67,11 +68,10 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
 	}
 };
 
-XMLscene.prototype.pushLight = function(enabled, position, ambient, diffuse, specular) {
+XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse, specular) {
 
 	var currentLight = this.lights[this.activeLights];
 
-	this.shader.bind();
 	currentLight.setPosition(position[0], position[1], position[2], position[3]);
 	currentLight.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
 	currentLight.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
@@ -79,7 +79,8 @@ XMLscene.prototype.pushLight = function(enabled, position, ambient, diffuse, spe
 	enabled ? currentLight.enable() : currentLight.disable();
 	currentLight.setVisible(true);
 	currentLight.update();
-	this.shader.unbind();
+
+	this.lightNames[this.activeLights] = id;
 
 	return this.lights[this.activeLights++];
 }
@@ -119,6 +120,10 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
 };
+
+XMLscene.prototype.isReady = function () {
+	return this.graph.loadedOk;
+}
 
 XMLscene.prototype.display = function () {
 

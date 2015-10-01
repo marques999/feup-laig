@@ -196,11 +196,12 @@ MySceneGraph.prototype.parseNodeScale = function (root, node, id) {
 
 	var coords = this.parseNodeCoordinates(root, 'sx', 'sy', 'sz');
 	var error = this.checkValue(coords, 'coordinates', root.nodeName, id);
+	
 	if (error != null) {
 		return error;
 	}
 
-	node.addTransformation(new TScale(coords[0], coords[1], coords[2]));
+	mat4.scale(node.matrix, node.matrix, coords);
 
 	if (this.verbose) {
 		console.log("\t\tnode with id=" + id + " has scale: { sx=" + coords[0] + " sy=" + coords[1] + " sz=" + coords[2] + " }");
@@ -213,11 +214,12 @@ MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 
 	var coords = this.parseNodeCoordinates(root, 'x', 'y', 'z');				
 	var error = this.checkValue(coords, 'coordinates', root.nodeName, id);
+	
 	if (error != null) {
 		return error;
 	}
 
-	node.addTransformation(new TTranslation(coords[0], coords[1], coords[2]));			
+	mat4.translate(node.matrix, node.matrix, coords);			
 
 	if (this.verbose) {
 		console.log("\t\tnode with id=" + id + " has translation: { x=" + coords[0] + " y=" + coords[1] + " z=" + coords[2] + " }");
@@ -230,9 +232,9 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 
 	var parent = root.nodeName;
 	var parseErrors = 0;
-
 	var axis = this.reader.getString(root, 'axis', true);
 	var error = this.checkValue(axis, 'axis', parent, id);
+	
 	if (error != null) {
 		parseErrors++;
 		this.onXMLWarning(error);
@@ -240,6 +242,7 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 
 	var angle = this.reader.getFloat(root, 'angle', true);
 	var error = this.checkValue(angle, 'angle', parent, id);
+	
 	if (error != null) {
 		parseErrors++;
 		this.onXMLWarning(error);
@@ -249,7 +252,15 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 		return this.onParseError(parent, parseErrors, id);
 	}
 
-	node.addTransformation(new TRotation(axis, angle));
+    if (axis == 'x') {
+        mat4.rotateX(node.matrix, node.matrix, angle * Math.PI / 180);
+    }
+    else if (axis == 'y') {
+        mat4.rotateY(node.matrix, node.matrix, angle * Math.PI / 180);
+    }
+    else if (axis == 'z') {
+        mat4.rotateZ(node.matrix, node.matrix, angle * Math.PI / 180);
+    }
 
 	if (this.verbose) {
 		console.log("\t\tnode with id=" + id + " has rotation: { axis=" + axis + " angle=" + angle + " }");
@@ -264,6 +275,10 @@ MySceneGraph.prototype.onElementDuplicate = function(parent, id) {
 
 MySceneGraph.prototype.onReservedId = function(id, root) {
 	return parent + " ith id=" + id + " has a reserved id (null, clear), skipping...";
+}
+
+MySceneGraph.prototype.onInvalidArguments = function(id, argsGot, argsExpected) {	
+	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + ".";
 }
 
 /*
@@ -284,12 +299,12 @@ MySceneGraph.prototype.readRectangle = function(id, args) {
 
 	var vec1 = [args[0], args[1]].map(parseFloat);
 	if (vec1[0] != vec1[0] || vec1[1] != vec1[1]) {
-		return this.onAttributeInvalid('first rectangle vertex', id, 'NODE');
+		return this.onAttributeInvalid('first rectangle vertex', id, 'RECTANGLE');
 	}
 
 	var vec2 = [args[2], args[3]].map(parseFloat);
 	if (vec2[0] != vec2[0] || vec2[1] != vec2[1]) {
-		return this.onAttributeInvalid('second rectangle vertex', id, 'NODE');
+		return this.onAttributeInvalid('second rectangle vertex', id, 'RECTANGLE');
 	}
 
 	this.leaves[id] = new MyRectangle(this.scene, vec1, vec2);
@@ -305,17 +320,17 @@ MySceneGraph.prototype.readTriangle = function(id, leafArgs) {
 		
 	var vec1 = [leafArgs[0], leafArgs[1], leafArgs[2]].map(parseFloat);
 	if (vec1[0] != vec1[0] || vec1[1] != vec1[1] || vec1[2] != vec1[2]) {
-		return this.onAttributeInvalid('first triangle vertex', id, 'NODE');
+		return this.onAttributeInvalid('first triangle vertex', id, 'TRIANGLE');
 	}
 
 	var vec2 = [leafArgs[3], leafArgs[4], leafArgs[5]].map(parseFloat);
 	if (vec2[0] != vec2[0] || vec2[1] != vec2[1] || vec2[2] != vec2[2]) {
-		return this.onAttributeInvalid('second triangle vertex', id, 'NODE');
+		return this.onAttributeInvalid('second triangle vertex', id, 'TRIANGLE');
 	}
 
 	var vec3 = [leafArgs[6], leafArgs[7], leafArgs[8]].map(parseFloat);
 	if (vec3[0] != vec3[0] || vec3[1] != vec3[1] || vec3[2] != vec3[2]) {
-		return this.onAttributeInvalid('third triangle vertex', id, 'NODE');
+		return this.onAttributeInvalid('third triangle vertex', id, 'TRIANGLE');
 	}
 
 	this.leaves[id] = new MyTriangle(this.scene, vec1, vec2, vec3);
@@ -331,27 +346,27 @@ MySceneGraph.prototype.readCylinder = function(id, args) {
 
 	var myHeight = parseFloat(args[0]);
 	if (myHeight != myHeight) {
-		return this.onAttributeInvalid('cylinder height', id, 'NODE');
+		return this.onAttributeInvalid('cylinder height', id, 'CYLINDER');
 	}
 
 	var myRadiusBottom = parseFloat(args[1]);
 	if (myRadiusBottom != myRadiusBottom) {
-		return this.onAttributeInvalid('cylinder bottom radius', id, 'NODE');
+		return this.onAttributeInvalid('cylinder bottom radius', id, 'CYLINDER');
 	}
 
 	var myRadiusTop = parseFloat(args[2]);
 	if (myRadiusTop != myRadiusTop) {
-		return this.onAttributeInvalid('cylinder top radius', id, 'NODE');
+		return this.onAttributeInvalid('cylinder top radius', id, 'CYLINDER');
 	}
 
 	var myStacks = parseInt(args[3]);
 	if (myStacks != myStacks) {
-		return this.onAttributeInvalid('number of stacks', id, 'NODE');
+		return this.onAttributeInvalid('number of stacks', id, 'CYLINDER');
 	}
 	
 	var mySlices = parseInt(args[4]);
 	if (mySlices != mySlices) {
-		return this.onAttributeInvalid('number of slices', id, 'NODE');
+		return this.onAttributeInvalid('number of slices', id, 'CYLINDER');
 	}
 
 	this.leaves[id] = new MyCylinder(this.scene, myRadiusBottom, myRadiusTop, myHeight,	mySlices, myStacks);
@@ -367,31 +382,22 @@ MySceneGraph.prototype.readSphere = function(id, leafArgs) {
 
 	var myRadius = parseFloat(leafArgs[0]);
 	if (myRadius != myRadius) {
-		return this.onAttributeInvalid('sphere radius', id, 'LEAF');
+		return this.onAttributeInvalid('sphere radius', id, 'SPHERE');
 	}
 
 	var myStacks = parseInt(leafArgs[1]);
 	if (myStacks != myStacks) {
-		return this.onAttributeInvalid('number of stacks', id, 'LEAF');
+		return this.onAttributeInvalid('number of stacks', id, 'SPHERE');
 	}
 	
 	var mySlices = parseInt(leafArgs[2]);
 	if (mySlices != mySlices) {
-		return this.onAttributeInvalid('number of slices', id, 'LEAF');
+		return this.onAttributeInvalid('number of slices', id, 'SPHERE');
 	}
 
 	this.leaves[id] = new MySphere(this.scene, myRadius, myStacks, mySlices);
 
 	return null;
-}
-
-
-///////////////////////////////////////////
-// 				DATA VALIDATION			 //
-///////////////////////////////////////////	
-
-MySceneGraph.prototype.onInvalidArguments = function(id, argsGot, argsExpected) {	
-	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + ".";
 }
 
 MySceneGraph.prototype.checkProperty = function(name, parentName, condition) {
@@ -824,7 +830,7 @@ MySceneGraph.prototype.parseLight = function (id, root) {
 		return this.onParseError(parent, parseErrors, id);
 	}
 
-	this.lights[id] = this.scene.pushLight(lightEnabled, lightPosition, lightAmbient, lightDiffuse, lightSpecular);
+	this.lights[id] = this.scene.pushLight(id, lightEnabled, lightPosition, lightAmbient, lightDiffuse, lightSpecular);
 
 	if (this.verbose) {
 		this.printHeader('LIGHT', id)
@@ -911,6 +917,7 @@ MySceneGraph.prototype.parseMaterial = function (id, root) {
 	myMaterial.setEmission(materialEmission[0], materialEmission[1], materialEmission[2], materialEmission[3]);
 	myMaterial.setSpecular(materialSpecular[0], materialSpecular[1], materialSpecular[2], materialSpecular[3]);
 	myMaterial.setShininess(materialShininess);
+	myMaterial.setTextureWrap("REPEAT", "REPEAT");
 
 	this.materials[id] = myMaterial;
 
@@ -949,7 +956,7 @@ MySceneGraph.prototype.parseTexture = function (id, root)
 		return this.onElementDuplicate(parent, id);
 	}
 
-	if (id = 'null' || id == 'clear') {
+	if (id == 'null' || id == 'clear') {
 		return this.onReservedId(parent, id);;
 	}
 
@@ -958,11 +965,6 @@ MySceneGraph.prototype.parseTexture = function (id, root)
 		parseErrors++;
 		this.onXMLWarning(this.onAttributeMissing('file', id, parent));
 	}
-
-	// if (!this.checkUrl(texturePath)) {
-	// 	parseErrors++;
-	// 	this.onXMLError(texturePath + " not found.");
-	// }
 
 	var textureS = this.parseFloat(root, 'amplif_factor', 's');
 	var error = this.checkValue(textureS, 'amplification factor S', parent, id);
@@ -982,7 +984,13 @@ MySceneGraph.prototype.parseTexture = function (id, root)
 		return this.onParseError(parent, parseErrors, id);
 	}
 
-	this.textures[id] = new XMLtexture(texturePath, textureS, textureT);
+	var textureObject = new CGFtexture(this.scene, texturePath);
+
+	if (textureObject == null) {
+	 	return texturePath + " not found.";
+	}
+
+	this.textures[id] = new XMLtexture(textureObject, textureS, textureT);
 
 	if (this.verbose) {
 		this.printHeader('TEXTURE', id);
@@ -1210,8 +1218,8 @@ MySceneGraph.prototype.processNodes = function() {
 
 MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 
-	node.applyTransform(this.scene);	
-		
+	this.scene.multMatrix(node.matrix);
+
 	for (var i = 0; i < node.children.length; i++) {			
 		
 		var nextId = node.children[i];
@@ -1234,22 +1242,25 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 		if (isLeaf) 
 		{
 			var leafMaterial = null;
-			var leafTexture = null;
 
-			if (materialId == null || materialId == 'null') {
+			if (mId == null || mId == 'null') {
 				leafMaterial = this.defaultMaterial;
 			}
 			else {
-				leafMaterial = this.materials[materialId];
+				leafMaterial = this.materials[mId];
 			}
 
+			if (tId == null) {
+				leafMaterial.setTexture(null);
+			}
+			else {
+				var leafTexture = this.textures[tId];
+
+				//nextElement.setTextureFactor(leafTexture.factorS, leafTexture.factorT);
+				leafMaterial.setTexture(leafTexture.path);	
+			}
+			
 			this.scene.applyMaterial(leafMaterial);
-
-			if (textureId != null && textureId != 'null') {
-				leafTexture = this.textures[textureId];
-				leafTexture.apply(this.scene, leafMaterial);
-			}
-
 			this.scene.drawPrimitive(nextElement);
 			this.onProcessNode("Drawing", nextId);
 		}
@@ -1300,7 +1311,7 @@ MySceneGraph.prototype.validateNodes = function() {
 
 			for(var n = 0; n < children.length; n++) {				
 				if (!((children[n] in this.leaves || children[n] in this.nodes) && children[n] != this.nodes[node].id)) {
-					this.onDebug("Erasing reference with id=" + children[n] + " from node id=" + this.nodes[i].id);				
+					this.onDebug("Erasing reference with id=" + children[n] + " from node id=" + this.nodes[node].id);				
 					this.nodes[node].children.splice(n, 1);
 					n--;
 				}

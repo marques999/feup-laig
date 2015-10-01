@@ -24,11 +24,11 @@
 		<specular r="0.5" g="0.5" b="0.5" a="1.0" />	<!-- specular component -->
 	</LIGHT>
 	<LIGHT id="tt">										<!-- light identifier -->
-		<enable value ="tt" />							<!-- enable/disable -->
-		<position x="ff" y="ff" z="ff" w="ff" />		<!-- light position -->
-		<ambient r="ff" g="ff" b="ff" a="ff" />			<!-- ambient component -->
-		<diffuse r="ff" g="ff" b="ff" a="ff" />			<!-- diffuse component -->
-		<specular r="ff" g="ff" b="ff" a="ff" />		<!-- specular component -->
+		<enable value ="1" />							<!-- enable/disable -->
+		<position x="-4" y="4" z="2" w="0.0" />		<!-- light position -->
+		<ambient r="0.5" g="0.5" b="0.5" a="1.0" />		<!-- ambient component -->
+		<diffuse r="0.7" g="0.7" b="0.7" a="1.0" />		<!-- diffuse component -->
+		<specular r="0.5" g="0.5" b="0.5" a="1.0" />	<!-- specular component -->
 	</LIGHT>
 </LIGHTS>
 
@@ -38,7 +38,7 @@
 		<amplif_factor s="2.0" t="2.0" />			<!-- x/s, y/t -->
 	</TEXTURE>
 	<TEXTURE id="tt">
-		<file path="floor.png" />						<!-- path to file -->
+		<file path="wall.png" />						<!-- path to file -->
 		<amplif_factor s="2.0" t="2.0" />			<!-- x/s, y/t -->
 	</TEXTURE>
 </TEXTURES>
@@ -80,7 +80,7 @@
 
 	<NODE id="robot">
 		<MATERIAL id="robot_green" />      
-		<TEXTURE id="null" />       
+		<TEXTURE id="ss" />       
 		<DESCENDANTS>
 			<DESCENDANT id="robot_body" />	
 			<DESCENDANT id="robot_head" />	
@@ -101,7 +101,7 @@
 	
 	<NODE id="robot_head">
 		<MATERIAL id="null" />
-		<TEXTURE id="null" />
+		<TEXTURE id="tt" />
 		<TRANSLATION x="0.0" y="1.5" z="0.0" />
 		<SCALE sx="0.7" sy="0.6" sz="0.7" />
 		<DESCENDANTS>			
@@ -161,8 +161,8 @@
 	</NODE>
 	
 	<NODE id="robot_right_wheel">
-		<MATERIAL id="null" />
-		<TEXTURE id="null" />
+		<MATERIAL id="robot_blue" />
+		<TEXTURE id="tt" />
 		<TRANSLATION x="0.9" y="0.4" z="0.0" />
 		<ROTATION axis="z" angle="90"/>
 		<SCALE sx="0.4" sy="0.4" sz="0.4" />	

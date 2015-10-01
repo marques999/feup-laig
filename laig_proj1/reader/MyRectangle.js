@@ -22,10 +22,10 @@ function MyRectangle(scene, vertexA, vertexB) {
 	];
 
 	this.normals = [
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1,
+		0, 0, -1,
 	];
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
