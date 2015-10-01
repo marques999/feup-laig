@@ -88,16 +88,12 @@ MySceneGraph.prototype.onXMLReady = function()
 	this.resetIndegree();
 	this.removeOrphans();
 	this.validateNodes();
-	this.processNodes(this.graphRoot);
 	this.loadedOk = true;
 	this.scene.onGraphLoaded();
 };
 
 MySceneGraph.prototype.display = function() {
-
-	for (var leaf in this.leaves) {
-		this.leaves[leaf].display();
-	}
+	this.processNodes(this.graphRoot);
 }
 
 MySceneGraph.prototype.getLights = function() {
@@ -1217,7 +1213,7 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 
 	this.onProcessNode("Applying transformations", node.id);
 
-	node.applyTransform();	
+	node.applyTransform(this.scene);	
 		
 	for(var i = 0; i < node.children.length; i++) {			
 		
@@ -1254,6 +1250,8 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 			if (leafMaterial == null) {
 				leafMaterial = this.defaultMaterial;
 			}
+			
+			this.onProcessNode("Applying material", materialId);
 
 			if (textureId != null && textureId != 'null') {
 
@@ -1262,6 +1260,8 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 				if (leafTexture != null) {
 					leafTexture.apply(this.scene, leafMaterial);
 				}
+				
+				this.onProcessNode("Applying texture", textureId);
 			}
 
 			if (!(nextElement instanceof CGFobject)) {
@@ -1271,7 +1271,7 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 
 		//	leafMaterial.apply.call(this.scene);
 
-		//	nextElement.display.call(this.scene);
+			this.scene.drawPrimitive(nextElement);
 			this.onProcessNode("Drawing", nextId);
 		}
 		else

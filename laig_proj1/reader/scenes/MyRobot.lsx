@@ -5,7 +5,7 @@
 	<rotation axis="y" angle="0.0" />			<!-- initial rotation 3 -->
 	<rotation axis="x" angle="0.0" />			<!-- initial rotation 2 -->
 	<rotation axis="z" angle="0.0" />			<!-- initial rotation 1 -->
-	<scale sx="1.0" sy="3.0" sz="1.0" />		<!-- initial scaling -->
+	<scale sx="1.0" sy="1.0" sz="1.0" />		<!-- initial scaling -->
 	<reference length="5.0" />					<!-- axis length; "0" means no axis-->
 </INITIALS>
 
@@ -64,9 +64,9 @@
 	<!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
 	<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 3.0 1.5" />
 	<!-- 2D coordinates for left-top and right-bottom vertices. -->
-	<LEAF id="mycylinder" type="cylinder" args="3.0 2.0 4.0 8 8" />
+	<LEAF id="mycylinder" type="cylinder" args="1.0 1.0 1.0 16 16" />
 	<!-- height, bottom radius, top radius, sections along height, parts per section -->
-	<LEAF id="mysphere" type="sphere" args="1.0 8 8" />
+	<LEAF id="mysphere" type="sphere" args="1.0 16 16" />
 	<!-- radius, parts along radius, parts per section -->
 	<LEAF id="mytriangle" type="triangle" args="0.0 0.0 0.0 0.0 1.5 0.5 0.0 0.0 1.0" />
 	<!-- coordinates of each vertex -->
@@ -78,7 +78,6 @@
 	<NODE id="robot">
 		<MATERIAL id="null" />      
 		<TEXTURE id="null" />       
-		<TRANSLATION x="8.5" y="0.0" z="8.0" />
 		<DESCENDANTS>
 			<DESCENDANT id="robot_body" />	
 			<DESCENDANT id="robot_head" />	
@@ -152,9 +151,9 @@
 		<TEXTURE id="null" />
 		<TRANSLATION x="-0.9" y="0.4" z="0.0" />
 		<SCALE sx="1.0" sy="0.4" sz="0.4" />
-		<ROTATION axis="y" angle="45"/>
+		<ROTATION axis="y" angle="90"/>
 		<DESCENDANTS>
-			<DESCENDANT id="myrectangle" />									
+			<DESCENDANT id="mycylinder" />									
 		</DESCENDANTS>		
 	</NODE>
 	
@@ -163,9 +162,9 @@
 		<TEXTURE id="null" />
 		<TRANSLATION x="0.9" y="0.4" z="0.0" />
 		<SCALE sx="1.0" sy="0.4" sz="0.4" />
-		<ROTATION axis="y" angle="-45"/>
+		<ROTATION axis="y" angle="-90"/>
 		<DESCENDANTS>
-			<DESCENDANT id="myrectangle" />									
+			<DESCENDANT id="mycylinder" />									
 		</DESCENDANTS>		
 	</NODE>
 	

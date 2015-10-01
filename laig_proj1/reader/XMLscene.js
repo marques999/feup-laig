@@ -47,6 +47,10 @@ XMLscene.prototype.initFrustum = function(far, near) {
 	this.frustumNear = near;
 };
 
+XMLscene.prototype.drawPrimitive = function(prim) {
+	prim.display();
+};
+
 XMLscene.prototype.setRotation = function(id, axis, angle) {
 	if (axis == 'x') {
 		this.rotation[id] = [angle * Math.PI / 180, 1, 0, 0]
