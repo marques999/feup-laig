@@ -83,7 +83,18 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 	this.lightNames[this.activeLights] = id;
 
 	return this.lights[this.activeLights++];
-}
+};
+
+XMLscene.prototype.initLights = function () {
+	this.shader.bind();
+	this.lights[0].setPosition(2, 3, 3, 1);
+	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[0].setVisible(true);
+	this.lights[0].enable();
+	this.lights[0].update();
+	this.activeLights++;
+	this.shader.unbind();
+};
 
 XMLscene.prototype.initScale = function(matrix) {
 	this.defaultScale = matrix;
@@ -119,6 +130,10 @@ XMLscene.prototype.onGraphLoaded = function() {
 	// SET FRUSTUM
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
+
+	if (this.activeLights == 0) {
+		this.initLights();
+	}
 };
 
 XMLscene.prototype.isReady = function () {

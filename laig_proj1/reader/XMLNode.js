@@ -1,4 +1,5 @@
 function XMLNode(id, textureId, materialId) {
+
     this.id = id;
     this.indegree = 0;
     this.textureId = textureId;

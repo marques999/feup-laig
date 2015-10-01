@@ -35,7 +35,7 @@ function MyRectangle(scene, vertexA, vertexB) {
 MyRectangle.prototype = Object.create(CGFobject.prototype);
 MyRectangle.prototype.constructor = MyRectangle;
 
-MyRectangle.setTexture = function(factorS, factorT) {
+MyRectangle.setTextureFactor = function(factorS, factorT) {
 
 	this.minS = 0.0;
 	this.minT = 0.0;

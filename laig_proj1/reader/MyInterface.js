@@ -17,9 +17,7 @@ MyInterface.prototype.init = function(application)
 };
 
 MyInterface.prototype.refreshLights = function(lArray, lNames) {
-
 	groupLights.open();
 	groupLights.add(this.scene, 'lights[0]', lNames[0]);
 	groupLights.add(this.scene, 'lights[1]', lNanes[1]);
-
 }
