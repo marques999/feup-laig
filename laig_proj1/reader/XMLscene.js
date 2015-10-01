@@ -12,7 +12,6 @@ XMLscene.prototype.init = function (application)
 
 	this.enableTextures(true);
 	this.initCameras();
-	this.initLights();
 
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
@@ -25,15 +24,7 @@ XMLscene.prototype.init = function (application)
 
 	this.rotation = [];
 	this.axis = new CGFaxis(this);
-	this.activeLights = 1;
-};
-
-XMLscene.prototype.initLights = function() {
-	this.shader.bind();
-	this.lights[0].setPosition(2, 3, 3, 1);
-	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
-	this.lights[0].update();
-	this.shader.unbind();
+	this.activeLights = 0;
 };
 
 XMLscene.prototype.initCameras = function () {
@@ -72,13 +63,16 @@ XMLscene.prototype.pushLight = function(enabled, position, ambient, diffuse, spe
 
 	var currentLight = this.lights[this.activeLights];
 
+	this.shader.bind();
 	currentLight.setPosition(position[0], position[1], position[2], position[3]);
 	currentLight.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
 	currentLight.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
 	currentLight.setSpecular(specular[0], specular[1], specular[2], specular[3]);
 	enabled ? currentLight.enable() : currentLight.disable();
+	currentLight.setVisible(true);
 	currentLight.update();
-	
+	this.shader.unbind();
+
 	return this.lights[this.activeLights++];
 }
 
@@ -116,13 +110,6 @@ XMLscene.prototype.onGraphLoaded = function() {
 	// SET FRUSTUM
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
-
-	// INITIALIZE LIGHTS
-	this.lights[0].enable();
-
-	for (var i = 0; i < this.activeLights; i++) {
-		this.lights[i].setVisible(true);
-	}
 };
 
 XMLscene.prototype.display = function () {
@@ -152,15 +139,12 @@ XMLscene.prototype.display = function () {
 
 	// ---- END Background, camera and axis setup
 
-	// it is important that things depending on the proper loading of the graph
-	// only get executed after the graph has loaded correctly.
-	// This is one possible way to do it
 	if (this.graph.loadedOk) {
 
 		for (var i = 0; i < this.activeLights; i++) {
 			this.lights[i].update();
 		}
-		
+
 		this.graph.display();
 	};
 

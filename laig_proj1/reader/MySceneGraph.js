@@ -24,6 +24,16 @@ function MySceneGraph(filename, scene) {
 	this.reader.open('scenes/' + filename, this);  
 }
 
+/*
+  _____ _   _ _____ _______ 
+ |_   _| \ | |_   _|__   __|
+   | | |  \| | | |    | |   
+   | | | . ` | | |    | |   
+  _| |_| |\  |_| |_   | |   
+ |_____|_| \_|_____|  |_|   
+
+*/
+
 MySceneGraph.prototype.onXMLReady = function() 
 {
 	var rootElement = this.reader.xmlDoc.documentElement;	
@@ -136,6 +146,16 @@ MySceneGraph.prototype.parseIllumination = function (root) {
 	
 	return null;	
 }
+
+/*
+  _______ _____            _   _  _____ ______ ____  _____  __  __ 
+ |__   __|  __ \     /\   | \ | |/ ____|  ____/ __ \|  __ \|  \/  |
+    | |  | |__) |   /  \  |  \| | (___ | |__ | |  | | |__) | \  / |
+    | |  |  _  /   / /\ \ | . ` |\___ \|  __|| |  | |  _  /| |\/| |
+    | |  | | \ \  / ____ \| |\  |____) | |   | |__| | | \ \| |  | |
+    |_|  |_|  \_\/_/    \_\_| \_|_____/|_|    \____/|_|  \_\_|  |_|
+
+*/
 
 MySceneGraph.prototype.parseRotation = function (id, axis, angle, axisFound) {
 
@@ -388,6 +408,10 @@ MySceneGraph.prototype.checkProperty = function(name, parentName, condition) {
 
 MySceneGraph.prototype.checkReference = function (array, name, nodeId, objectId) {
 
+	if (objectId == 'null' || objectId == 'clear') {
+		return null;
+	}
+
 	if (!(objectId in array)) {
 		return "NODE with id=" + nodeId + " references " + name + " id=" + objectId +", which doesn't exist.";
 	}
@@ -616,7 +640,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 			continue;
 		}
 		
-		var id = this.reader.getString(currentElement, 'id', false);
+		var id = this.reader.getString(currentElement, 'id');
 
 		if (id == null) {
 			this.onXMLError(this.onElementMissing('id', nodeName));
@@ -675,27 +699,23 @@ MySceneGraph.prototype.parseNode = function (id, root) {
 
 	var nodeMaterial = this.parseString(root, 'MATERIAL', 'id');
 	if (nodeMaterial == null) {
-		parseErrors++;
-		this.onXMLError(this.onAttributeMissing('MATERIAL', id, parent));
+		return this.onAttributeMissing('MATERIAL', id, parent);
 	}
 
-	// var error = this.checkReference(this.materials, 'MATERIAL', id, nodeMaterial);
-	// if (error != null) {
-	// 	parseErrors++;
-	// 	this.onXMLError(error);
-	// }
+	var error = this.checkReference(this.materials, 'MATERIAL', id, nodeMaterial);
+	if (error != null) {
+	 	return error;
+	}
 
 	var nodeTexture = this.parseString(root, 'TEXTURE', 'id');
 	if (nodeTexture == null) {
-		parseErrors++;
-		this.onXMLError(this.onAttributeMissing('TEXTURE', id, parent));
+		return this.onAttributeMissing('TEXTURE', id, parent);
 	}
 
-	// error = this.checkReference(this.textures, 'TEXTURE', id, nodeTexture);
-	// if (error != null) {
-	// 	parseErrors++;
-	// 	this.onXMLError(error);
-	// }
+	error = this.checkReference(this.textures, 'TEXTURE', id, nodeTexture);
+	if (error != null) {
+	 	return error;
+	}
 
 	var node = new XMLNode(id, nodeTexture, nodeMaterial);
 	var node_sz = root.children.length;
