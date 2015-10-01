@@ -51,6 +51,10 @@ XMLscene.prototype.drawPrimitive = function(prim) {
 	prim.display();
 };
 
+XMLscene.prototype.applyMaterial = function(appearance) {
+	appearance.apply();
+}
+
 XMLscene.prototype.setRotation = function(id, axis, angle) {
 	if (axis == 'x') {
 		this.rotation[id] = [angle * Math.PI / 180, 1, 0, 0]

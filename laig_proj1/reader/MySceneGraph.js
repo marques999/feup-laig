@@ -3,7 +3,7 @@ function MySceneGraph(filename, scene) {
 	this.loadedOk = null;
 	this.scene = scene;
 	this.verbose = true;
-
+	this.debug = false;
 	scene.graph = this;
 
 	this.textures = {};
@@ -19,7 +19,6 @@ function MySceneGraph(filename, scene) {
 
 	this.primitiveTypes = [ 'rectangle', 'cylinder', 'sphere', 'triangle' ];
 	this.axisTypes = ['x', 'y', 'z'];
-	
 	this.reader = new CGFXMLreader();
 	this.reader.open('scenes/' + filename, this);  
 }
@@ -81,7 +80,7 @@ MySceneGraph.prototype.onXMLReady = function()
 	}
 	
 	if (!(this.graphRoot in this.nodes)) {
-		this.onXMLError("graph root with id=" + this.graphRoot + "not declared in <NODES>");
+		this.onXMLError("invalid graph root - node with id=" + this.graphRoot + " not found in <NODES>");
 		return;
 	}
 
@@ -782,6 +781,10 @@ MySceneGraph.prototype.parseLight = function (id, root) {
 		return this.onElementDuplicate(parent, id);
 	}
 
+	if (id == 'null' || id == 'clear') {
+		return this.onReservedId(parent, id);
+	}
+
 	var lightEnabled = this.parseBoolean(root, 'enable');
 	var error = this.checkValue(lightEnabled, 'enable', parent, id);
 	if (error != null) {
@@ -1077,28 +1080,28 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	var parent = root.nodeName;
 	var parseErrors = 0;
 
-	// <frustum near="ff" far="ff/>	
+	// <frustum near="ff" far="ff" />	
 	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
 	var error = this.checkValue(globalFrustumNear, 'near', 'frustum');
 	if (error != null) {
 		return error;
 	}
 
-	// <frustum near="ff" far="ff/>	
+	// <frustum near="ff" far="ff" />	
 	var globalFrustumFar = this.parseFloat(root, 'frustum', 'far');
 	var error = this.checkValue(globalFrustumFar, 'far', 'frustum');
 	if (error != null) {
 		return error;
 	}
 
-	// <reference length="ff"/>
+	// <reference length="ff" />
 	var globalReference = this.parseFloat(root, 'reference', 'length');
 	var error = this.checkValue(globalReference, 'length', 'reference');
 	if (error != null) {
 		return error;
 	}
 
-	// <scale sx="ff" sy="ff" sz="ff"/>
+	// <scale sx="ff" sy="ff" sz="ff" />
 	var globalScale = this.parseCoordinatesScale(root, 'scale');
 	var error = this.checkValue(globalScale, 'scale', parent);
 	if (error != null) {
@@ -1112,12 +1115,12 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		return error;
 	}
 	
-	// <rotate axis="x" angle="ff"/>
-	// <rotate axis="y" angle="ff"/>
-	// <rotate axis="z" angle="ff"/>
+	// <rotate axis="x" angle="ff" />
+	// <rotate axis="y" angle="ff" />
+	// <rotate axis="z" angle="ff" />
 	//
-	node = root.getElementsByTagName('rotation');
-	node_sz = node.length;
+	var node = root.getElementsByTagName('rotation');
+	var node_sz = node.length;
 
 	if (node == null || node_sz == 0) {
 		return this.onElementMissing('rotation', parent);
@@ -1125,7 +1128,9 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	
 	// inicialização de um array associativo para registar as coordenadas lidas
 	var axisFound = {
-		'x': false, 'y': false, 'z': false
+		'x': false, 
+		'y': false,
+		'z': false
 	};
 
 	var j = 0;
@@ -1196,26 +1201,18 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 
 MySceneGraph.prototype.processNodes = function() {
 
-	if (this.graphRoot == null) {
-		return;
-	}
-
 	var rootNode = this.nodes[this.graphRoot];
-
 	this.scene.pushMatrix();
-	this.onProcessNode("Pushing", this.graphRoot),
+	this.scene.applyMaterial(this.materials[rootNode.materialId]);
 	this.processNodesAux(rootNode, rootNode.materialId, rootNode.textureId);
 	this.scene.popMatrix();
-	this.onProcessNode("Popping", this.graphRoot);
 };
 
 MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 
-	this.onProcessNode("Applying transformations", node.id);
-
 	node.applyTransform(this.scene);	
 		
-	for(var i = 0; i < node.children.length; i++) {			
+	for (var i = 0; i < node.children.length; i++) {			
 		
 		var nextId = node.children[i];
 		var nextElement = null;
@@ -1224,7 +1221,6 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 		var tId = textureId;
 
 		if (nextId in this.nodes) {
-			isLeaf = false;
 			nextElement = this.nodes[nextId];
 		}	
 		else if(nextId in this.leaves) {
@@ -1235,7 +1231,7 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 			continue;
 		}
 
-		if (isLeaf)
+		if (isLeaf) 
 		{
 			var leafMaterial = null;
 			var leafTexture = null;
@@ -1247,40 +1243,21 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 				leafMaterial = this.materials[materialId];
 			}
 
-			if (leafMaterial == null) {
-				leafMaterial = this.defaultMaterial;
-			}
-			
-			this.onProcessNode("Applying material", materialId);
+			this.scene.applyMaterial(leafMaterial);
 
 			if (textureId != null && textureId != 'null') {
-
 				leafTexture = this.textures[textureId];
-
-				if (leafTexture != null) {
-					leafTexture.apply(this.scene, leafMaterial);
-				}
-				
-				this.onProcessNode("Applying texture", textureId);
+				leafTexture.apply(this.scene, leafMaterial);
 			}
-
-			if (!(nextElement instanceof CGFobject)) {
-				console.log("WHAT!");
-				return;
-			}
-
-		//	leafMaterial.apply.call(this.scene);
 
 			this.scene.drawPrimitive(nextElement);
 			this.onProcessNode("Drawing", nextId);
 		}
-		else
+		else 
 		{
 			this.scene.pushMatrix();	
-			this.onProcessNode("Pushing", nextId);
 			this.processNodesAux(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
 			this.scene.popMatrix();
-			this.onProcessNode("Popping", nextId);
 		}		
 	}
 }
@@ -1301,7 +1278,7 @@ MySceneGraph.prototype.removeOrphans = function () {
 
 	for (var node in this.nodes) {
 		var nodeIndegree = this.nodes[node].indegree;
-		console.log("[PROCESS NODES] node id=" + node + " has indegree=" + this.nodes[node].indegree);
+		this.onDebug("[PROCESS NODES] node id=" + node + " has indegree=" + this.nodes[node].indegree);
 		if (nodeIndegree == 0 && node != this.graphRoot) {
 			this.onProcessNode("Erasing", node);
 			delete this.nodes[node];
@@ -1323,14 +1300,14 @@ MySceneGraph.prototype.validateNodes = function() {
 
 			for(var n = 0; n < children.length; n++) {				
 				if (!((children[n] in this.leaves || children[n] in this.nodes) && children[n] != this.nodes[node].id)) {
-					//console.log("Erasing reference with id=" + children[n] + " from node id=" + this.nodes[i].id);				
+					this.onDebug("Erasing reference with id=" + children[n] + " from node id=" + this.nodes[i].id);				
 					this.nodes[node].children.splice(n, 1);
 					n--;
 				}
 			}
 
 			if (this.nodes[node].children.length == 0) {
-				this.onParseError("Deleting", this.nodes[node]);
+				this.onProcessNode("Deleting", this.nodes[node]);
 				delete this.nodes[node];
 				ready = false;		
 			}
@@ -1393,7 +1370,7 @@ MySceneGraph.prototype.printXYZW = function (attribute, xyzw) {
 
 MySceneGraph.prototype.onProcessNode = function(message, id) {
 	
-	if (this.verbose) {
+	if (this.debug) {
 		console.log("[PROCESS NODES] " + message + ": " + id);
 	}
 }
@@ -1406,3 +1383,9 @@ MySceneGraph.prototype.onXMLError = function (message) {
 MySceneGraph.prototype.onXMLWarning = function (message) {
 	console.warn("WARNING: " + message);	
 };
+
+MySceneGraph.prototype.onDebug = function (message) {
+	if (this.debug) {
+		console.log("DEBUG: " + message);
+	}
+}
