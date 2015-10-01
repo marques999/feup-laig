@@ -12,7 +12,6 @@ function getUrlVars() {
 }	 
 
 serialInclude(['../lib/CGF.js', 
-				'../lib/GLMatrix.js',
 				'MyInterface.js',
 				'XMLscene.js', 
 				'XMLlight.js', 

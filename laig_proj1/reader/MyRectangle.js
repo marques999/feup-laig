@@ -1,11 +1,11 @@
-function MyRectangle(scene, vertexA, vertexB) {
+function MyRectangle(scene, minX, minY, maxX, maxY) {
 
 	CGFobject.call(this, scene);
 
-	this.minX = vertexA[0];
-	this.minY = vertexA[1];
-	this.maxX = vertexB[0];
-	this.maxY = vertexB[1];
+	this.minX = minX || 0.0;
+	this.minY = minY || 0.0;
+	this.maxX = maxX || 1.0;
+	this.maxY = maxY || 1.0;
 	this.width = this.maxX - this.minX;
 	this.height = this.maxY - this.minY;
 
