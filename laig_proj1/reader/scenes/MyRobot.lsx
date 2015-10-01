@@ -1,0 +1,201 @@
+<SCENE>
+<INITIALS>
+	<frustum near="0.1" far="200" /> 			<!-- frustum planes-->
+	<translate x="0.0" y="0.0" z="0.0" />		<!-- initial translate -->
+	<rotation axis="y" angle="0.0" />			<!-- initial rotation 3 -->
+	<rotation axis="x" angle="0.0" />			<!-- initial rotation 2 -->
+	<rotation axis="z" angle="0.0" />			<!-- initial rotation 1 -->
+	<scale sx="1.0" sy="3.0" sz="1.0" />		<!-- initial scaling -->
+	<reference length="5.0" />					<!-- axis length; "0" means no axis-->
+</INITIALS>
+
+<ILLUMINATION>
+	<ambient r="0.0" g="1.0" b="0.5" a="1.0" />			<!-- global ambient -->
+	<doubleside value="1" />
+	<background r="0.53" g="0.45" b="0.8" a="1.0" />	<!-- background color -->
+</ILLUMINATION>
+
+<LIGHTS>
+	<LIGHT id="ss">										<!-- light identifier -->
+		<enable value ="1" />							<!-- enable/disable -->
+		<position x="8" y="8" z="5" w="0.0" />			<!-- light position -->
+		<ambient r="0.5" g="0.0" b="0.5" a="1.0" />		<!-- ambient component -->
+		<diffuse r="0.7" g="0.0" b="0.7" a="1.0" />		<!-- diffuse component -->
+		<specular r="0.5" g="0.0" b="0.5" a="1.0" />	<!-- specular component -->
+	</LIGHT>
+	<LIGHT id="tt">										<!-- light identifier -->
+		<enable value ="tt" />							<!-- enable/disable -->
+		<position x="ff" y="ff" z="ff" w="ff" />		<!-- light position -->
+		<ambient r="ff" g="ff" b="ff" a="ff" />			<!-- ambient component -->
+		<diffuse r="ff" g="ff" b="ff" a="ff" />			<!-- diffuse component -->
+		<specular r="ff" g="ff" b="ff" a="ff" />		<!-- specular component -->
+	</LIGHT>
+</LIGHTS>
+
+<TEXTURES>
+	<TEXTURE id="ss">
+		<file path="floor.png" />						<!-- path to file -->
+		<amplif_factor s="2.0" t="2.0" />			<!-- x/s, y/t -->
+	</TEXTURE>
+	<TEXTURE id="tt">
+		<file path="floor.png" />						<!-- path to file -->
+		<amplif_factor s="2.0" t="2.0" />			<!-- x/s, y/t -->
+	</TEXTURE>
+</TEXTURES>
+
+<MATERIALS>
+	<MATERIAL id="ss">                                  
+		<shininess value="5" />
+		<specular r="0.6" g="0.6" b="1.0" a="0.5" />	<!-- specular reflection -->
+		<diffuse r="1.0" g="0.0" b="0.0" a="0.8" />		<!-- diffuse reflection -->
+		<ambient r="0.2" g="0.2" b="0.2" a="0.5" />		<!-- ambient reflection -->
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />	<!-- emission component -->
+	</MATERIAL>
+	<MATERIAL id="tt">                                  
+		<shininess value="5" />
+		<specular r="0.6" g="0.6" b="1.0" a="0.5" />	<!-- specular reflection -->
+		<diffuse r="1.0" g="0.0" b="0.0" a="0.8" />		<!-- diffuse reflection -->
+		<ambient r="0.2" g="0.2" b="0.2" a="0.5" />		<!-- ambient reflection -->
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />	<!-- emission component -->
+	</MATERIAL>
+</MATERIALS>
+
+<LEAVES>
+	<!-- next lines define nodes of type leaf; they may be repeated, in any order, as necessary -->
+	<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 3.0 1.5" />
+	<!-- 2D coordinates for left-top and right-bottom vertices. -->
+	<LEAF id="mycylinder" type="cylinder" args="3.0 2.0 4.0 8 8" />
+	<!-- height, bottom radius, top radius, sections along height, parts per section -->
+	<LEAF id="mysphere" type="sphere" args="1.0 8 8" />
+	<!-- radius, parts along radius, parts per section -->
+	<LEAF id="mytriangle" type="triangle" args="0.0 0.0 0.0 0.0 1.5 0.5 0.0 0.0 1.0" />
+	<!-- coordinates of each vertex -->
+</LEAVES>
+
+<NODES>
+	<ROOT id="robot" />	
+
+	<NODE id="robot">
+		<MATERIAL id="null" />      
+		<TEXTURE id="null" />       
+		<TRANSLATION x="8.5" y="0.0" z="8.0" />
+		<DESCENDANTS>
+			<DESCENDANT id="robot_body" />	
+			<DESCENDANT id="robot_head" />	
+			<DESCENDANT id="robot_arms" />
+			<DESCENDANT id="robot_wheels" />				
+		</DESCENDANTS>
+	</NODE>
+	
+	<NODE id="robot_body">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="0.25" z="0.0" />
+		<SCALE sx="0.7" sy="1.25" sz="0.7" />
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />							
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="robot_head">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="1.5" z="0.0" />
+		<SCALE sx="0.7" sy="0.6" sz="0.7" />
+		<DESCENDANTS>			
+			<DESCENDANT id="mysphere" />				
+		</DESCENDANTS>		
+	</NODE>	
+	
+	<NODE id="robot_arms">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />  
+		<DESCENDANTS>
+			<DESCENDANT id="robot_left_arm" />
+			<DESCENDANT id="robot_right_arm" />	
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="robot_wheels">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />  
+		<DESCENDANTS>
+			<DESCENDANT id="robot_left_wheel" />	
+			<DESCENDANT id="robot_right_wheel" />							
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="robot_left_arm">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="-0.75" y="1.5" z="0.0" />
+		<DESCENDANTS>
+			<DESCENDANT id="robot_forearm" />
+			<DESCENDANT id="robot_shoulder" />
+			<DESCENDANT id="robot_hand" />									
+		</DESCENDANTS>		
+	</NODE>
+	
+		<NODE id="robot_right_arm">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.75" y="1.5" z="0.0" />
+		<DESCENDANTS>
+			<DESCENDANT id="robot_forearm" />
+			<DESCENDANT id="robot_shoulder" />
+			<DESCENDANT id="robot_hand" />									
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="robot_left_wheel">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="-0.9" y="0.4" z="0.0" />
+		<SCALE sx="1.0" sy="0.4" sz="0.4" />
+		<ROTATION axis="y" angle="45"/>
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />									
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="robot_right_wheel">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.9" y="0.4" z="0.0" />
+		<SCALE sx="1.0" sy="0.4" sz="0.4" />
+		<ROTATION axis="y" angle="-45"/>
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />									
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="robot_forearm">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<SCALE sx="0.15" sy="0.5" sz="0.15" />
+		<TRANSLATION x="0.0" y="-1.0" z="0.0" />
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />									
+		</DESCENDANTS>		
+
+	</NODE>
+		<NODE id="robot_shoulder">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<SCALE sx="0.15" sy="0.15" sz="0.15" />
+		<DESCENDANTS>
+			<DESCENDANT id="mysphere" />									
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="robot_hand">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="-0.5" z="0.0" />
+		<SCALE sx="0.15" sy="0.15" sz="0.15" />
+		<DESCENDANTS>
+			<DESCENDANT id="mysphere" />									
+		</DESCENDANTS>		
+	</NODE>
+ </NODES>
+ </SCENE>
