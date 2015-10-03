@@ -1,6 +1,6 @@
 function MySphere(scene, radius, slices, stacks) {
 
-	CGFobject.call(this, scene);
+	MyPrimitive.call(this, scene);
 
 	this.radius = radius;
 	this.slices = slices;
@@ -9,30 +9,26 @@ function MySphere(scene, radius, slices, stacks) {
 	this.normals = [];
 	this.texCoords = [];
 	this.vertices = [];
-	this.minS = 0.0;
-	this.maxS = 1.0;
-	this.minT = 0.0;
-	this.maxT = 1.0;
 	this.initBuffers();
 }
 
-MySphere.prototype = Object.create(CGFobject.prototype);
+MySphere.prototype = Object.create(MyPrimitive.prototype);
 MySphere.prototype.constructor = MySphere;
 
 MySphere.prototype.initBuffers = function() {
 
-	var texelLengthS = (this.maxS - this.minS) / this.slices;
-	var texelLengthT = (this.maxT - this.minT) / this.stacks;
+	var texelLengthS = 1.0 / this.slices;
+	var texelLengthT = 1.0 / this.stacks;
 	var phiIncrement = (2 * Math.PI) / this.slices;
 	var thetaIncrement = Math.PI / this.stacks;
-	var sCoord = this.maxS;
+	var sCoord = 1.0;
 	var vertexNumber = 1;
 	var phi = 0;
 	
 	for (var i = 0; i <= this.slices; i++) {
 
 		var theta = 0;
-		var tCoord = this.minT;
+		var tCoord = 0.0;
 
 		for (var j = 0; j <= this.stacks; j++) {
 			
@@ -70,5 +66,6 @@ MySphere.prototype.initBuffers = function() {
 	this.initGLBuffers();
 }
 
-MySphere.setTextureFactor = function(factorS, factorT) {
+MySphere.updateTexCoords = function(ampS, ampT) {
+	return null;
 };

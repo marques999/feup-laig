@@ -1,6 +1,6 @@
 function MyCylinder(scene, radiusBottom, radiusTop, height, slices, stacks) {
 
-	CGFobject.call(this, scene);
+	MyPrimitive.call(this, scene);
 
 	this.radiusBottom = radiusBottom;
 	this.radiusTop = radiusTop;
@@ -11,30 +11,26 @@ function MyCylinder(scene, radiusBottom, radiusTop, height, slices, stacks) {
 	this.normals = [];
 	this.texCoords = [];
 	this.vertices = [];
-	this.minS = 0.0;
-	this.maxS = 1.0;
-	this.minT = 0.0;
-	this.maxT = 1.0;
 	this.initBuffers();
 };
 
-MyCylinder.prototype = Object.create(CGFobject.prototype);
+MyCylinder.prototype = Object.create(MyPrimitive.prototype);
 MyCylinder.prototype.constructor = MyCylinder;
 
 MyCylinder.prototype.initBuffers = function() {
 
-	var texelIncrementS = (this.maxS - this.minS) / this.slices;
-	var texelIncrementT = (this.maxT - this.minT) / this.stacks;
+	var texelIncrementS = 1.0 / this.slices;
+	var texelIncrementT = 1.0 / this.stacks;
 	var radiusStep = (this.radiusTop - this.radiusBottom) / this.stacks;
 	var thetaIncrement = (2 * Math.PI) / this.slices;
 	var stackIncrement = this.height / this.stacks;
-	var sCoord = this.maxS;
+	var sCoord = 1.0;
 	var vertexNumber = 1;
 	var theta = 0;
 
 	for (var i = 0; i <= this.slices; i++) {
 
-		var tCoord = this.maxT;
+		var tCoord = 1.0;
 		var nRadius = this.radiusBottom;
 		var x = Math.cos(theta);
 		var y = Math.sin(theta);
@@ -73,5 +69,6 @@ MyCylinder.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
-MyCylinder.setTextureFactor = function(factorS, factorT) {
+MyCylinder.updateTexCoords = function(ampS, ampT) {
+	return null;
 };
