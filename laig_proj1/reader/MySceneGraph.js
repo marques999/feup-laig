@@ -116,13 +116,6 @@ MySceneGraph.prototype.parseIllumination = function (root) {
 		return error;
 	}
 
-	var globalDoubleside = this.parseBoolean(root, 'doubleside');
-	error = this.checkValue(globalDoubleside, 'doubleside', root.nodeName);
-	
-	if (error != null) {
-		return error;
-	}
-
 	var globalBackground = this.parseRGBA(root, 'background');
 	error = this.checkValue(globalBackground, 'background', root.nodeName);
 	
@@ -131,13 +124,11 @@ MySceneGraph.prototype.parseIllumination = function (root) {
 	}
 
 	this.scene.setAmbient(globalAmbient);
-	this.scene.setDoubleside(globalDoubleside);
 	this.scene.setBackground(globalBackground);
 	
 	if (this.verbose) {
 		this.printHeader('ILLUMINATION');
 		this.printRGBA('ambient', globalAmbient);
-		this.printValues('doubleside', 'value', globalDoubleside);
 		this.printRGBA('background', globalBackground);
 	}
 	
@@ -1165,9 +1156,9 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		return error;
 	}
 
-	// <translate x="ff" y="ff" z="ff"/>
-	var globalTranslate = this.parseCoordinatesXYZ(root, 'translate');
-	error = this.checkValue(globalTranslate, 'translate', parent);
+	// <translation x="ff" y="ff" z="ff"/>
+	var globalTranslate = this.parseCoordinatesXYZ(root, 'translation');
+	error = this.checkValue(globalTranslate, 'translation', parent);
 	if (error != null) {
 		return error;
 	}

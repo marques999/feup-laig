@@ -108,10 +108,6 @@ XMLscene.prototype.setBackground = function(rgba) {
 	this.background = rgba;
 }
 
-XMLscene.prototype.setDoubleside = function(doubleside) {
-	this.doubleside = doubleside;
-}
-
 XMLscene.prototype.setAmbient = function(rgba) {
 	this.ambient = rgba;
 };
