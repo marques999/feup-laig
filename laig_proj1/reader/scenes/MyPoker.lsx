@@ -67,135 +67,387 @@
 </MATERIALS>
 
 <LEAVES>
-	<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 3.0 1.5" />
-	<LEAF id="mycylinder" type="cylinder" args="1.0 1.0 1.0 16 16" />
-	<LEAF id="mysphere" type="sphere" args="1.0 16 16" />
-	<LEAF id="mytriangle" type="triangle" args="0.0 0.0 0.0 0.0 1.5 0.5 0.0 0.0 1.0" />
+	<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 1.0 1.0" />
+	<LEAF id="leg_base1" type="cylinder" args="0.5 0.2 0.4 16.0 16.0" />
+	<LEAF id="leg_base2" type="cylinder" args="1.5 0.4 0.2 16 16" />	
 </LEAVES>
 
 <NODES>
 
-	<ROOT id="robot" />	
+	<ROOT id="table" />	
 
-	<NODE id="robot">
-		<MATERIAL id="robot_green" />      
+
+	<NODE id="table">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />							
+		<DESCENDANTS>
+			<DESCENDANT id="table_top" />
+			<DESCENDANT id="table_legs" />											
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_legs">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />							
+		<DESCENDANTS>
+			<DESCENDANT id="table_leg1" />
+			<DESCENDANT id="table_leg2" />
+			<DESCENDANT id="table_leg3" />
+			<DESCENDANT id="table_leg4" />
+			<DESCENDANT id="table_leg5" />
+			<DESCENDANT id="table_leg6" />												
+		</DESCENDANTS>		
+	</NODE>
+
+	
+
+	<NODE id="table_top">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />								
+		<DESCENDANTS>
+			<DESCENDANT id="table_topBase" />
+			<DESCENDANT id="table_Holes" />			
+			<DESCENDANT id="table_topFront" />									
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_Holes">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />								
+		<DESCENDANTS>
+			<DESCENDANT id="hole1" />
+			<DESCENDANT id="hole2" />
+			<DESCENDANT id="hole3" />
+			<DESCENDANT id="hole4" />	
+			<DESCENDANT id="hole5" />
+			<DESCENDANT id="hole6" />											
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="hole1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="0" y="2.6" z="0" />								
+		<DESCENDANTS>
+			<DESCENDANT id="hole" />													
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="hole2">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="4.775" y="2.6" z="0" />							
+		<DESCENDANTS>
+			<DESCENDANT id="hole" />													
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="hole3">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="4.775" y="2.6" z="5.55" />								
+		<DESCENDANTS>
+			<DESCENDANT id="hole" />													
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="hole4">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="9.55" y="2.6" z="5.55" />								
+		<DESCENDANTS>
+			<DESCENDANT id="hole" />													
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="hole5">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="9.55" y="2.6" z="0" />							
+		<DESCENDANTS>
+			<DESCENDANT id="hole" />													
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="hole6">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0" y="2.6" z="5.55" />										
+		<DESCENDANTS>
+			<DESCENDANT id="hole" />													
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="hole">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />			
+		<SCALE sx="0.45" sy="0.3" sz="0.45" />								
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />																
+		</DESCENDANTS>		
+	</NODE>
+
+	
+
+	<NODE id="table_topBase">
+		<MATERIAL id="robot_green" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0" y="2.4" z="0" />
+		<SCALE sx="10.0" sy="0.2" sz="6.0" />									
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />															
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_topFront">
+		<MATERIAL id="robot_blue" />
+		<TEXTURE id="null" />										
+		<DESCENDANTS>
+			<DESCENDANT id="leg_topFrontP1" />
+			<DESCENDANT id="leg_topFrontP2" />	
+			<DESCENDANT id="leg_topFrontP3" />	
+			<DESCENDANT id="leg_topFrontP4" />	
+			<DESCENDANT id="leg_topFrontP5" />	
+			<DESCENDANT id="leg_topFrontP6" />								
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_topFrontP1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0" y="2.6" z="0.45" />
+		<SCALE sx="0.45" sy="0.3" sz="5.1" />										
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />												
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_topFrontP2">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.45" y="2.6" z="0" />
+		<SCALE sx="4.325" sy="0.3" sz="0.45" />											
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />												
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_topFrontP3">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="9.55" y="2.6" z="0.45" />
+		<SCALE sx="0.45" sy="0.3" sz="5.1" />										
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />												
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_topFrontP4">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.45" y="2.6" z="5.55" />
+		<SCALE sx="4.325" sy="0.3" sz="0.45" />											
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />												
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_topFrontP5">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="5.225" y="2.6" z="0" />
+		<SCALE sx="4.325" sy="0.3" sz="0.45" />											
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />												
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_topFrontP6">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="5.225" y="2.6" z="5.55" />
+		<SCALE sx="4.325" sy="0.3" sz="0.45" />											
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />												
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_leg1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="+0.6" y="0.0" z="+0.6" />									
+		<DESCENDANTS>
+			<DESCENDANT id="table_leg" />											
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_leg2">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="+5.0" y="0.0" z="+0.6" />									
+		<DESCENDANTS>
+			<DESCENDANT id="table_leg" />											
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_leg3">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="+9.4" y="0.0" z="+0.6" />									
+		<DESCENDANTS>
+			<DESCENDANT id="table_leg" />											
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_leg4">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="+9.4" y="0.0" z="+5.4" />									
+		<DESCENDANTS>
+			<DESCENDANT id="table_leg" />											
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_leg5">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="+0.6" y="0.0" z="+5.4" />									
+		<DESCENDANTS>
+			<DESCENDANT id="table_leg" />											
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="table_leg6">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="+5.0" y="0.0" z="+5.4" />									
+		<DESCENDANTS>
+			<DESCENDANT id="table_leg" />											
+		</DESCENDANTS>		
+	</NODE>
+	
+
+	<NODE id="table_leg">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />								
+		<DESCENDANTS>
+			<DESCENDANT id="leg_base" />
+			<DESCENDANT id="leg_top" />									
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_base">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />			
+		<DESCENDANTS>
+			<DESCENDANT id="leg_baseP1" />	
+			<DESCENDANT id="leg_baseP2" />								
+		</DESCENDANTS>		
+	</NODE>
+
+
+	<NODE id="leg_baseP1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="0" y="0.5" z="0" />
+		<ROTATION axis="x" angle="90" />	
+		<DESCENDANTS>
+			<DESCENDANT id="leg_base1" />									
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_baseP2">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="0" y="2.0" z="0" />
+		<ROTATION axis="x" angle="90" />	
+		<DESCENDANTS>
+			<DESCENDANT id="leg_base2" />						
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg_top">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="0" y="2.0" z="0" />
+		<SCALE sx="0.9" sy="0.4" sz="0.9" />		
+		<DESCENDANTS>
+			<DESCENDANT id="leg" />									
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="leg">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="-0.5" y="0.0" z="-0.5" />					
+		<DESCENDANTS>
+			<DESCENDANT id="cube" />											
+		</DESCENDANTS>		
+	</NODE>
+
+
+	<NODE id="cube">
+		<MATERIAL id="null" />      
 		<TEXTURE id="null" />       
 		<DESCENDANTS>
-			<DESCENDANT id="robot_body" />	
-			<DESCENDANT id="robot_head" />	
-			<DESCENDANT id="robot_arms" />
-			<DESCENDANT id="robot_wheels" />				
+			<DESCENDANT id="cube_front" />	
+			<DESCENDANT id="cube_back" />	
+			<DESCENDANT id="cube_top" />
+			<DESCENDANT id="cube_down" />
+			<DESCENDANT id="cube_left" />	
+			<DESCENDANT id="cube_right" />			
 		</DESCENDANTS>
-	</NODE>
-	
-	<NODE id="robot_body">
-		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<TRANSLATION x="0.0" y="0.25" z="0.0" />
-		<SCALE sx="0.7" sy="1.25" sz="0.7" />
-		<DESCENDANTS>
-			<DESCENDANT id="mycylinder" />							
-		</DESCENDANTS>		
-	</NODE>
-	
-	<NODE id="robot_head">
-		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<TRANSLATION x="0.0" y="1.5" z="0.0" />
-		<SCALE sx="0.7" sy="0.6" sz="0.7" />
-		<DESCENDANTS>			
-			<DESCENDANT id="mysphere" />				
-		</DESCENDANTS>		
 	</NODE>	
 	
-	<NODE id="robot_arms">
-		<MATERIAL id="robot_blue" />
-		<TEXTURE id="null" />  
-		<DESCENDANTS>
-			<DESCENDANT id="robot_left_arm" />
-			<DESCENDANT id="robot_right_arm" />	
-		</DESCENDANTS>		
-	</NODE>
-	
-	<NODE id="robot_wheels">
-		<MATERIAL id="robot_red" />
-		<TEXTURE id="null" />  
-		<DESCENDANTS>
-			<DESCENDANT id="robot_left_wheel" />	
-			<DESCENDANT id="robot_right_wheel" />							
-		</DESCENDANTS>		
-	</NODE>
-	
-	<NODE id="robot_left_arm">
+	<NODE id="cube_back">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="-0.75" y="1.5" z="0.0" />
+		<TRANSLATION x="0" y="1" z="0" />
+		<ROTATION axis="x" angle="180" />	
 		<DESCENDANTS>
-			<DESCENDANT id="robot_forearm" />
-			<DESCENDANT id="robot_shoulder" />
-			<DESCENDANT id="robot_hand" />									
+			<DESCENDANT id="myrectangle" />									
 		</DESCENDANTS>		
 	</NODE>
-	
-		<NODE id="robot_right_arm">
+	<NODE id="cube_front">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0.75" y="1.5" z="0.0" />
+		<TRANSLATION x="0" y="0" z="1" />		
 		<DESCENDANTS>
-			<DESCENDANT id="robot_forearm" />
-			<DESCENDANT id="robot_shoulder" />
-			<DESCENDANT id="robot_hand" />									
+			<DESCENDANT id="myrectangle" />									
 		</DESCENDANTS>		
 	</NODE>
-	
-	<NODE id="robot_left_wheel">
+	<NODE id="cube_down">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="-0.9" y="0.4" z="0.0" />
-		<ROTATION axis="z" angle="-90"/>
-		<SCALE sx="0.4" sy="0.4" sz="0.4" />
+		<ROTATION axis="x" angle="90" />		
 		<DESCENDANTS>
-			<DESCENDANT id="mycylinder" />									
+			<DESCENDANT id="myrectangle" />									
 		</DESCENDANTS>		
 	</NODE>
-	
-	<NODE id="robot_right_wheel">
+	<NODE id="cube_top">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0.9" y="0.4" z="0.0" />
-		<ROTATION axis="z" angle="90"/>
-		<SCALE sx="0.4" sy="0.4" sz="0.4" />	
+		<TRANSLATION x="0" y="1" z="1" />	
+		<ROTATION axis="x" angle="-90" />		
 		<DESCENDANTS>
-			<DESCENDANT id="mycylinder" />									
+			<DESCENDANT id="myrectangle" />									
 		</DESCENDANTS>		
 	</NODE>
-	
-	<NODE id="robot_forearm">
+	<NODE id="cube_left">
 		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<SCALE sx="0.15" sy="0.5" sz="0.15" />
-		<TRANSLATION x="0.0" y="-1.0" z="0.0" />
+		<TEXTURE id="null" />		
+		<ROTATION axis="y" angle="-90" />		
 		<DESCENDANTS>
-			<DESCENDANT id="mycylinder" />									
-		</DESCENDANTS>		
-
-	</NODE>
-		<NODE id="robot_shoulder">
-		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<SCALE sx="0.15" sy="0.15" sz="0.15" />
-		<DESCENDANTS>
-			<DESCENDANT id="mysphere" />									
+			<DESCENDANT id="myrectangle" />									
 		</DESCENDANTS>		
 	</NODE>
-	
-	<NODE id="robot_hand">
+	<NODE id="cube_right">
 		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<TRANSLATION x="0.0" y="-0.5" z="0.0" />
-		<SCALE sx="0.15" sy="0.15" sz="0.15" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="1" y="0" z="1" />	
+		<ROTATION axis="y" angle="90" />		
 		<DESCENDANTS>
-			<DESCENDANT id="mysphere" />									
+			<DESCENDANT id="myrectangle" />									
 		</DESCENDANTS>		
 	</NODE>
  </NODES>
