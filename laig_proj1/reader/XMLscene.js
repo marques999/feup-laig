@@ -15,6 +15,7 @@ XMLscene.prototype.init = function (application) {
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
+	this.gl.cullFace(this.gl.BACK);
     this.gl.depthFunc(this.gl.LEQUAL);
 	
 	this.defaultScale = [1.0, 1.0, 1.0];
@@ -67,7 +68,8 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
 };
 
 XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse, specular) {
-
+	
+	this.shader.bind();
 	var currentLight = this.lights[this.activeLights];
 
 	currentLight.setPosition(position[0], position[1], position[2], position[3]);
@@ -79,16 +81,19 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 	currentLight.update();
 
 	this.lightNames[this.activeLights] = id;
+	this.shader.unbind();
 
 	return this.lights[this.activeLights++];
 };
 
 XMLscene.prototype.initLights = function () {
+	this.shader.bind();
 	this.lights[0].setPosition(2, 3, 3, 1);
 	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
 	this.lights[0].setVisible(true);
 	this.lights[0].enable();
 	this.lights[0].update();
+	this.shader.unbind();
 };
 
 XMLscene.prototype.initScale = function(matrix) {
@@ -109,6 +114,8 @@ XMLscene.prototype.setAmbient = function(rgba) {
 
 XMLscene.prototype.onGraphLoaded = function() {
 	
+
+
 	// SET BACKGROUND
 	this.gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
 	
@@ -127,6 +134,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 		this.initLights();
 		this.activeLights++;
 	}
+
 };
 
 XMLscene.prototype.display = function () {
@@ -135,8 +143,8 @@ XMLscene.prototype.display = function () {
 	this.shader.bind();
 
 	// Clear image and depth buffer everytime we update the scene
-	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
 	// Initialize Model-View matrix as identity (no transformation)
 	this.updateProjectionMatrix();
@@ -163,7 +171,7 @@ XMLscene.prototype.display = function () {
 		}
 
 		this.graph.display();
-	};
+	}
 
 	this.shader.unbind();
 };
