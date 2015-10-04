@@ -38,8 +38,8 @@ MyCylinder.prototype.initBuffers = function() {
 
 		for (var j = 0; j <= this.stacks; j++) {
 
-			this.vertices.push(x * nRadius, z, y * nRadius);
-			this.normals.push(x * nRadius, 0, y * nRadius);
+			this.vertices.push(x * nRadius, y * nRadius, z) ;
+			this.normals.push(x * nRadius, y * nRadius, 0);
 			this.texCoords.push(sCoord, tCoord);
 
 			if (i > 0 && j > 0) {
@@ -69,6 +69,4 @@ MyCylinder.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
-MyCylinder.updateTexCoords = function(ampS, ampT) {
-	return null;
-};
+MyCylinder.prototype.updateTexCoords = function(ampS, ampT) {};

@@ -1,0 +1,95 @@
+<SCENE>
+<INITIALS>
+	<frustum near="0.1" far="200" /> 			<!-- frustum planes-->
+	<translation x="0.0" y="0.0" z="0.0" />		<!-- initial translate -->
+	<rotation axis="y" angle="0.0" />			<!-- initial rotation 3 -->
+	<rotation axis="x" angle="0.0" />			<!-- initial rotation 2 -->
+	<rotation axis="z" angle="0.0" />			<!-- initial rotation 1 -->
+	<scale sx="1.0" sy="1.0" sz="1.0" />		<!-- initial scaling -->
+	<reference length="5.0" />					<!-- axis length; "0" means no axis-->
+</INITIALS>
+
+<ILLUMINATION>
+	<ambient r="0.0" g="1.0" b="0.5" a="1.0" />			<!-- global ambient -->
+	<background r="0.53" g="0.45" b="0.8" a="1.0" />	<!-- background color -->
+</ILLUMINATION>
+
+<LIGHTS>
+	<LIGHT id="ss">										<!-- light identifier -->
+		<enable value ="1" />							<!-- enable/disable -->
+		<position x="8" y="8" z="5" w="1.0" />			<!-- light position -->
+		<ambient r="0.5" g="0.0" b="0.5" a="1.0" />		<!-- ambient component -->
+		<diffuse r="0.7" g="0.0" b="0.7" a="1.0" />		<!-- diffuse component -->
+		<specular r="0.5" g="0.0" b="0.5" a="1.0" />	<!-- specular component -->
+	</LIGHT>
+</LIGHTS>
+
+<TEXTURES>
+	<TEXTURE id="base">
+		<file path="toblerone.jpg" />				<!-- path to file -->
+		<amplif_factor s="1.0" t="1.0" />			<!-- x/s, y/t -->
+	</TEXTURE>
+</TEXTURES>
+
+<MATERIALS>
+	<MATERIAL id="yellow">                                  
+		<shininess value="56" />
+		<diffuse r="1.0" g="0.8" b="0.4" a="1.0" />		<!-- diffuse reflection -->
+		<ambient r="1.0" g="0.8" b="0.4" a="1.0" />		<!-- ambient reflection -->
+		<specular r="0.6" g="0.6" b="0.6" a="0.5" />	<!-- specular reflection -->
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />	<!-- emission component -->
+	</MATERIAL>
+</MATERIALS>
+
+<LEAVES>
+	<LEAF id="mytoblerone" type="cylinder" args="4.0 1.0 1.0 8 3" />
+	<!-- height, bottom radius, top radius, sections along height, parts per section -->
+	<LEAF id="mytriangle" type="triangle" args="0.5 0.0 0.0 0.0 1.0 0.0 -0.5 0.0 0.0" />
+	<!-- coordinates of each vertex -->
+</LEAVES>
+
+<NODES>
+	<ROOT id="s0" />	
+
+	<NODE id="s0">
+		<MATERIAL id="null" />      
+		<TEXTURE id="null" />
+		<TRANSLATION x="2.0" y="1.0" z="2.0" />
+		<DESCENDANTS>
+			<DESCENDANT id="toblerone_body" />	
+			<DESCENDANT id="toblerone_top" />	
+			<DESCENDANT id="toblerone_bottom" />		
+		</DESCENDANTS>
+	</NODE>
+	
+	<NODE id="toblerone_body">
+		<MATERIAL id="null" />
+		<TEXTURE id="base" />  
+		<ROTATION axis="z" angle="-30"/>
+		<DESCENDANTS>
+			<DESCENDANT id="mytoblerone" />							
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="toblerone_top">
+		<MATERIAL id="yellow" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="-0.5" z="0.0"/>
+		<SCALE sx="1.66" sy="1.5" sz="1.0"/>
+		<ROTATION axis="y" angle="180"/>
+		<DESCENDANTS>
+			<DESCENDANT id="mytriangle" />							
+		</DESCENDANTS>		
+	</NODE>
+	
+	<NODE id="toblerone_bottom">
+		<MATERIAL id="yellow" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="-0.5" z="4.0"/>
+		<SCALE sx="1.66" sy="1.5" sz="1.0"/>
+		<DESCENDANTS>
+			<DESCENDANT id="mytriangle" />							
+		</DESCENDANTS>		
+	</NODE>
+ </NODES>
+ </SCENE>

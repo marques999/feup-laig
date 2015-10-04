@@ -20,10 +20,10 @@ function MyRectangle(scene, minX, minY, maxX, maxY) {
 	];
 
 	this.normals = [
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1,
-		0, 0, -1,
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
+		0, 0, 1,
 	];
 
 	this.texCoords = [
@@ -33,6 +33,8 @@ function MyRectangle(scene, minX, minY, maxX, maxY) {
 		1.0, 0.0
 	];
 
+	this.ampS = 1.0;
+	this.ampT = 1.0;
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };
@@ -42,8 +44,14 @@ MyRectangle.prototype.constructor = MyRectangle;
 
 MyRectangle.updateTexCoords = function(ampS, ampT) {
 
-    var maxS = Math.abs(this.maxX - this.minX) / ampS;
-    var maxT = Math.abs(this.maxY - this.minY) / ampT;
+	if (this.ampS == ampS && this.ampT == ampT) {
+		return;
+	}
+
+	this.ampS = ampS;
+	this.ampT = ampT;
+    var maxS = Math.abs(this.maxX - this.minX) / this.ampS;
+    var maxT = Math.abs(this.maxY - this.minY) / this.ampT;
 
     this.texCoords = [
 		0.0, maxT,

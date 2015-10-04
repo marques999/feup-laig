@@ -1,29 +1,27 @@
-function XMLscene()
-{
+function XMLscene() {
 	CGFscene.call(this);
 };
 
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
-XMLscene.prototype.init = function (application)
-{
+XMLscene.prototype.init = function (application) {
+
 	CGFscene.prototype.init.call(this, application);
 
 	this.enableTextures(true);
 	this.initCameras();
-
-	this.defaultScale = [1.0, 1.0, 1.0];
-	this.defaultTranslate = [0.0, 0.0, 0.0];
-
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-	this.gl.clearDepth(100.0);
-	this.gl.enable(this.gl.DEPTH_TEST);
+    this.gl.clearDepth(100.0);
+    this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
-	this.gl.depthFunc(this.gl.LEQUAL);
-
+    this.gl.depthFunc(this.gl.LEQUAL);
+	
+	this.defaultScale = [1.0, 1.0, 1.0];
+	this.defaultRotation = [];
+	this.defaultTranslate = [0.0, 0.0, 0.0];	
 	this.lightNames = [];
-	this.rotation = [];
+
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
 };
@@ -58,13 +56,13 @@ XMLscene.prototype.applyMaterial = function(appearance) {
 
 XMLscene.prototype.setRotation = function(id, axis, angle) {
 	if (axis == 'x') {
-		this.rotation[id] = [angle * Math.PI / 180, 1, 0, 0]
+		this.defaultRotation[id] = [angle * Math.PI / 180, 1, 0, 0]
 	}
 	else if (axis == 'y') {
-		this.rotation[id] = [angle * Math.PI / 180, angle, 0, 1, 0];
+		this.defaultRotation[id] = [angle * Math.PI / 180, angle, 0, 1, 0];
 	}
 	else if (axis == 'z') {
-		this.rotation[id] = [angle * Math.PI / 180, angle, 0, 0, 1];
+		this.defaultRotation[id] = [angle * Math.PI / 180, angle, 0, 0, 1];
 	}
 };
 
@@ -86,14 +84,11 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 };
 
 XMLscene.prototype.initLights = function () {
-	this.shader.bind();
 	this.lights[0].setPosition(2, 3, 3, 1);
 	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
 	this.lights[0].setVisible(true);
 	this.lights[0].enable();
 	this.lights[0].update();
-	this.activeLights++;
-	this.shader.unbind();
 };
 
 XMLscene.prototype.initScale = function(matrix) {
@@ -127,14 +122,12 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
 
+	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
 		this.initLights();
+		this.activeLights++;
 	}
 };
-
-XMLscene.prototype.isReady = function () {
-	return this.graph.loadedOk;
-}
 
 XMLscene.prototype.display = function () {
 
@@ -152,9 +145,9 @@ XMLscene.prototype.display = function () {
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 	this.scale.apply(this, this.defaultScale);
-	this.rotate.apply(this, this.rotation[0]);
-	this.rotate.apply(this, this.rotation[1]);
-	this.rotate.apply(this, this.rotation[2]);
+	this.rotate.apply(this, this.defaultRotation[0]);
+	this.rotate.apply(this, this.defaultRotation[1]);
+	this.rotate.apply(this, this.defaultRotation[2]);
 	this.translate.apply(this, this.defaultTranslate);
 
 	// Draw axis

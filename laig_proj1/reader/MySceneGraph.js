@@ -14,9 +14,9 @@ function MySceneGraph(filename, scene) {
 	this.leaves = {};
 
 	this.defaultMaterial = new CGFappearance(this.scene);
-	this.defaultMaterial.setAmbient(0.2, 0.4, 0.8, 1.0);
-	this.defaultMaterial.setDiffuse(0.2, 0.4, 0.8, 1.0);
-	this.defaultMaterial.setSpecular(0.2, 0.4, 0.8, 1.0);
+	this.defaultMaterial.setAmbient(0.5, 0.5, 0.5, 1.0);
+	this.defaultMaterial.setDiffuse(0.5, 0.5, 0.5, 1.0);
+	this.defaultMaterial.setSpecular(0.5, 0.5, 0.5, 1.0);
 
 	this.reader = new CGFXMLreader();
 	this.reader.open('scenes/' + filename, this);  
@@ -235,7 +235,7 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
     }
     else if (axis == 'z') {
         mat4.rotateZ(node.matrix, node.matrix, angle * Math.PI / 180);
-    }
+    } // invalid axis
 
 	if (this.verbose) {
 		this.printValues('ROTATION', 'axis', axis, 'angle', angle);
@@ -264,14 +264,14 @@ MySceneGraph.prototype.readRectangle = function(id, args) {
 	var y1 = parseFloat(args[1]);
 
 	if (x1 != x1 || y1 != y1) {
-		return this.onAttributeInvalid('first rectangle vertex', id, 'RECTANGLE');
+		return this.onAttributeInvalid('bottom left vertex', id, 'RECTANGLE');
 	}
 
 	var x2 = parseFloat(args[2]);
 	var y2 = parseFloat(args[3]);
 
 	if (x2 != x2 || y2 != y2) {
-		return this.onAttributeInvalid('second rectangle vertex', id, 'RECTANGLE');
+		return this.onAttributeInvalid('top right vertex', id, 'RECTANGLE');
 	}
 
 	this.leaves[id] = new MyRectangle(this.scene, x1, y1, x2, y2);
@@ -313,17 +313,17 @@ MySceneGraph.prototype.readCylinder = function(id, args) {
 
 	var myHeight = parseFloat(args[0]);
 	if (myHeight != myHeight) {
-		return this.onAttributeInvalid('cylinder height', id, 'CYLINDER');
+		return this.onAttributeInvalid('height', id, 'CYLINDER');
 	}
 
 	var myRadiusBottom = parseFloat(args[1]);
 	if (myRadiusBottom != myRadiusBottom) {
-		return this.onAttributeInvalid('cylinder bottom radius', id, 'CYLINDER');
+		return this.onAttributeInvalid('bottom radius', id, 'CYLINDER');
 	}
 
 	var myRadiusTop = parseFloat(args[2]);
 	if (myRadiusTop != myRadiusTop) {
-		return this.onAttributeInvalid('cylinder top radius', id, 'CYLINDER');
+		return this.onAttributeInvalid('top radius', id, 'CYLINDER');
 	}
 
 	var myStacks = parseInt(args[3]);
@@ -1223,9 +1223,9 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		this.printHeader('INITIALS');
 		this.printValues('frustum', 'near', globalFrustumNear, 'far', globalFrustumFar);
 		this.printXYZ('translate', globalTranslate);
-		this.printValues('rotation', 'axis', 'x', 'angle', this.scene.rotation[0]);
-		this.printValues('rotation', 'axis', 'y', 'angle', this.scene.rotation[1]);
-		this.printValues('rotation', 'axis', 'z', 'angle', this.scene.rotation[2]);
+		this.printValues('rotation', 'axis', 'x', 'angle', this.scene.defaultRotation[0]);
+		this.printValues('rotation', 'axis', 'y', 'angle', this.scene.defaultRotation[1]);
+		this.printValues('rotation', 'axis', 'z', 'angle', this.scene.defaultRotation[2]);
 		this.printXYZ('scale', globalScale);
 		this.printValues('reference', 'length', globalReference);
 	}
@@ -1267,16 +1267,18 @@ MySceneGraph.prototype.processNodes = function() {
 	var rootNode = this.nodes[this.graphRoot];
 	this.scene.pushMatrix();
 	
-	if (rootNode.materialId != null) {
+	if (rootNode.materialId != null && rootNode.materialId != 'null') {
 
 		var rootMaterial = this.materials[rootNode.materialId];
 
-		if (rootNode.textureId != null) {
-			//nextElement.setTextureFactor(leafTexture.factorS, leafTexture.factorT);
-			rootMaterial.setTexture(this.textures[rootNode.textureId].path);	
+		if (rootNode.textureId != null && rootNode.textureId != 'null') {
+			rootMaterial.setTexture(this.textures[rootNode.textureId].tex);	
 		}
 
 		this.scene.applyMaterial(rootMaterial);
+	}
+	else {
+		this.scene.applyMaterial(this.defaultMaterial);
 	}
 
 	this.processNodesAux(rootNode, rootNode.materialId, rootNode.textureId);
@@ -1309,6 +1311,7 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 		if (isLeaf) 
 		{
 			var leafMaterial = null;
+			var leafTexture = null;
 
 			if (mId == null || mId == 'null') {
 				leafMaterial = this.defaultMaterial;
@@ -1317,14 +1320,13 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 				leafMaterial = this.materials[mId];
 			}
 
-			if (tId == null) {
+			if (tId == null || tId == 'null') {
 				leafMaterial.setTexture(null);
 			}
 			else {
-				var leafTexture = this.textures[tId];
-
-				//nextElement.setTextureFactor(leafTexture.factorS, leafTexture.factorT);
-				leafMaterial.setTexture(leafTexture.path);	
+				leafTexture = this.textures[tId];
+				nextElement.updateTexCoords(leafTexture.factorS, leafTexture.factorT);
+				leafMaterial.setTexture(leafTexture.tex);	
 			}
 			
 			this.scene.applyMaterial(leafMaterial);

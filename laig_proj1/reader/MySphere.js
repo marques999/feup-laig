@@ -66,6 +66,4 @@ MySphere.prototype.initBuffers = function() {
 	this.initGLBuffers();
 }
 
-MySphere.updateTexCoords = function(ampS, ampT) {
-	return null;
-};
+MySphere.prototype.updateTexCoords = function(ampS, ampT) {};

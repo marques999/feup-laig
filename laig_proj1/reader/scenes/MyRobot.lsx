@@ -91,8 +91,9 @@
 	<NODE id="robot_body">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0.0" y="0.25" z="0.0" />
-		<SCALE sx="0.7" sy="1.25" sz="0.7" />
+		<TRANSLATION x="0.0" y="1.5" z="0.0" />
+		<ROTATION axis="x" angle="90" />
+		<SCALE sx="0.7" sy="0.7" sz="1.25" />
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />							
 		</DESCENDANTS>		
@@ -152,7 +153,7 @@
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
 		<TRANSLATION x="-0.9" y="0.4" z="0.0" />
-		<ROTATION axis="z" angle="-90"/>
+		<ROTATION axis="y" angle="-90"/>
 		<SCALE sx="0.4" sy="0.4" sz="0.4" />
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />									
@@ -163,7 +164,7 @@
 		<MATERIAL id="robot_blue" />
 		<TEXTURE id="tt" />
 		<TRANSLATION x="0.9" y="0.4" z="0.0" />
-		<ROTATION axis="z" angle="90"/>
+		<ROTATION axis="y" angle="90"/>
 		<SCALE sx="0.4" sy="0.4" sz="0.4" />	
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />									
@@ -174,7 +175,7 @@
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
 		<SCALE sx="0.15" sy="0.5" sz="0.15" />
-		<TRANSLATION x="0.0" y="-1.0" z="0.0" />
+		<ROTATION axis="x" angle="90"/>
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />									
 		</DESCENDANTS>		
