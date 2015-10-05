@@ -18,7 +18,7 @@
 <LIGHTS>
 	<LIGHT id="l1">
 		<enable value ="1" />
-		<position x="10" y="8" z="3" w="1.0" />
+		<position x="12.5" y="8" z="7.5" w="1.0" />
 		<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
 		<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 		<specular r="0.6" g="0.6" b="0.6" a="1.0" />
@@ -26,7 +26,7 @@
 
 	<LIGHT id="l2">
 		<enable value ="1" />
-		<position x="0" y="8" z="3" w="1.0" />
+		<position x="4.5" y="8" z="7.5" w="1.0" />
 		<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
 		<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 		<specular r="0.6" g="0.6" b="0.6" a="1.0" />
@@ -149,13 +149,58 @@
 		<TEXTURE id="null" />
 		<DESCENDANTS>
 			<DESCENDANT id="table" />
-			<DESCENDANT id="sconces" />													
+			<DESCENDANT id="sconces" />	
+			<DESCENDANT id="walls" />												
 		</DESCENDANTS>
 	</NODE>
+
+	<NODE id="walls">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<DESCENDANTS>
+			<DESCENDANT id="floor" />
+			<DESCENDANT id="z_wall" />	
+			<DESCENDANT id="x_wall" />												
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="floor">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0" y="0" z="15" />
+		<SCALE sx="18.0" sy="1.0" sz="15.0"/>
+		<ROTATION axis="x" angle="-90" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />														
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="z_wall">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0" y="10" z="0" />
+		<SCALE sx="1.0" sy="10.0" sz="15.0"/>
+		<ROTATION axis="z" angle="180" />
+		<ROTATION axis="y" angle="-90" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />														
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="x_wall">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<SCALE sx="18.0" sy="10.0" sz="1.0"/>	
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />														
+		</DESCENDANTS>
+	</NODE>
+
 	
 	<NODE id="table">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
+      <TRANSLATION x="3.5" y="0" z="4.5" />
       <DESCENDANTS>
         <DESCENDANT id="table_legs" />
         <DESCENDANT id="table_top" />
@@ -244,7 +289,7 @@
 	<NODE id="sconce1">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />		
-		<TRANSLATION x="0.0" y="8.0" z="3.0" />							
+		<TRANSLATION x="4.5" y="8.0" z="7.5" />							
 		<DESCENDANTS>
 			<DESCENDANT id="sconce" />																	
 		</DESCENDANTS>		
@@ -253,7 +298,7 @@
 	<NODE id="sconce2">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />		
-		<TRANSLATION x="10.0" y="8.0" z="3.0" />					
+		<TRANSLATION x="12.5" y="8.0" z="7.5" />					
 		<DESCENDANTS>
 			<DESCENDANT id="sconce" />															
 		</DESCENDANTS>		
