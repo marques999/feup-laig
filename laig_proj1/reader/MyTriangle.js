@@ -5,9 +5,7 @@ function MyTriangle(scene, vertexA, vertexB, vertexC) {
     this.vertexA = vertexA;
     this.vertexB = vertexB;
     this.vertexC = vertexC;
-	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initBuffers();
-	this.initGLBuffers();
 };
 
 MyTriangle.prototype = Object.create(MyPrimitive.prototype);
@@ -39,6 +37,9 @@ MyTriangle.prototype.initBuffers = function() {
 		vertexNormal[0], vertexNormal[1], vertexNormal[2],
 		vertexNormal[0], vertexNormal[1], vertexNormal[2]
 	];
+
+	this.primitiveType = this.scene.gl.TRIANGLES;
+	this.initGLBuffers();
 };
 
 MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {};

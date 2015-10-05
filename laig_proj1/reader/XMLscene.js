@@ -9,13 +9,11 @@ XMLscene.prototype.init = function (application) {
 
 	CGFscene.prototype.init.call(this, application);
 
-	this.enableTextures(true);
 	this.initCameras();
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
-	this.gl.cullFace(this.gl.BACK);
     this.gl.depthFunc(this.gl.LEQUAL);
 	
 	this.defaultScale = [1.0, 1.0, 1.0];
@@ -25,6 +23,7 @@ XMLscene.prototype.init = function (application) {
 
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
+	this.enableTextures(true);
 };
 
 XMLscene.prototype.initCameras = function () {
@@ -87,13 +86,11 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 };
 
 XMLscene.prototype.initLights = function () {
-	this.shader.bind();
 	this.lights[0].setPosition(2, 3, 3, 1);
 	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
 	this.lights[0].setVisible(true);
 	this.lights[0].enable();
 	this.lights[0].update();
-	this.shader.unbind();
 };
 
 XMLscene.prototype.initScale = function(matrix) {
@@ -114,20 +111,20 @@ XMLscene.prototype.setAmbient = function(rgba) {
 
 XMLscene.prototype.onGraphLoaded = function() {
 	
-
+	this.shader.bind();
 
 	// SET BACKGROUND
 	this.gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
-	
+
 	// SET GLOBAL ILLUMINATION
 	this.setGlobalAmbientLight(this.ambient[0], this.ambient[1], this.ambient[2], this.ambient[3]);
-
-	// SET AXIS LENGTH
+	
+	// SET AXIS
 	this.axis = new CGFaxis(this, this.reference);
 
 	// SET FRUSTUM
-	this.camera.far = this.frustumFar;
-	this.camera.near = this.frustumNear;
+	//this.camera.far = this.frustumFar;
+	//this.camera.near = this.frustumNear;
 
 	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
@@ -135,6 +132,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 		this.activeLights++;
 	}
 
+	this.shader.unbind();
 };
 
 XMLscene.prototype.display = function () {

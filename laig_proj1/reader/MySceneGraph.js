@@ -1331,7 +1331,6 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 			
 			this.scene.applyMaterial(leafMaterial);
 			this.scene.drawPrimitive(nextElement);
-			this.onProcessNode("Drawing", nextId);
 		}
 		else 
 		{

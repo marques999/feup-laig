@@ -6,7 +6,16 @@ function MyRectangle(scene, minX, minY, maxX, maxY) {
 	this.minY = minY || 0.0;
 	this.maxX = maxX || 1.0;
 	this.maxY = maxY || 1.0;
+	this.ampS = 1.0;
+	this.ampT = 1.0;
+	this.initBuffers();
+};
 
+MyRectangle.prototype = Object.create(MyPrimitive.prototype);
+MyRectangle.prototype.constructor = MyRectangle;
+
+MyRectangle.prototype.initBuffers = function() {
+	
 	this.vertices = [
 	    this.minX, this.minY, 0.0,
 		this.maxX, this.minY, 0.0,
@@ -33,14 +42,9 @@ function MyRectangle(scene, minX, minY, maxX, maxY) {
 		1.0, 0.0
 	];
 
-	this.ampS = 1.0;
-	this.ampT = 1.0;
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };
-
-MyRectangle.prototype = Object.create(MyPrimitive.prototype);
-MyRectangle.prototype.constructor = MyRectangle;
 
 MyRectangle.updateTexCoords = function(ampS, ampT) {
 
