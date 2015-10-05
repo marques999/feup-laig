@@ -8,6 +8,8 @@ function MyRectangle(scene, minX, minY, maxX, maxY) {
 	this.maxY = maxY || 1.0;
 	this.ampS = 1.0;
 	this.ampT = 1.0;
+	this.width = this.maxX - this.minX;
+	this.height = this.maxY - this.minY;
 	this.initBuffers();
 };
 
@@ -15,7 +17,7 @@ MyRectangle.prototype = Object.create(MyPrimitive.prototype);
 MyRectangle.prototype.constructor = MyRectangle;
 
 MyRectangle.prototype.initBuffers = function() {
-	
+
 	this.vertices = [
 	    this.minX, this.minY, 0.0,
 		this.maxX, this.minY, 0.0,
@@ -24,15 +26,14 @@ MyRectangle.prototype.initBuffers = function() {
 	];
 
 	this.indices = [
-		0, 1, 2,
-		3, 2, 1
+		0, 1, 2, 3
 	];
 
 	this.normals = [
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
-		0, 0, 1,
+		0.0, 0.0, 1.0,
+		0.0, 0.0, 1.0,
+		0.0, 0.0, 1.0,
+		0.0, 0.0, 1.0
 	];
 
 	this.texCoords = [
@@ -42,7 +43,7 @@ MyRectangle.prototype.initBuffers = function() {
 		1.0, 0.0
 	];
 
-	this.primitiveType = this.scene.gl.TRIANGLES;
+	this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
 	this.initGLBuffers();
 };
 
@@ -54,8 +55,8 @@ MyRectangle.updateTexCoords = function(ampS, ampT) {
 
 	this.ampS = ampS;
 	this.ampT = ampT;
-    var maxS = Math.abs(this.maxX - this.minX) / this.ampS;
-    var maxT = Math.abs(this.maxY - this.minY) / this.ampT;
+    var maxS = this.width / this.ampS;
+    var maxT = this.height / this.ampT;
 
     this.texCoords = [
 		0.0, maxT,

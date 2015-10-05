@@ -1,10 +1,26 @@
-function MyTriangle(scene, vertexA, vertexB, vertexC) {
+function MyTriangle(scene, v1, v2, v3) {
 
     MyPrimitive.call(this, scene);
 
-    this.vertexA = vertexA;
-    this.vertexB = vertexB;
-    this.vertexC = vertexC;
+    this.v1 = v1;
+    this.v2 = v2;
+    this.v3 = v3;
+
+    this.a = Math.sqrt((v1[0] - v3[0]) * (v1[0] - v3[0]) + 
+			 		   (v1[1] - v3[1]) * (v1[1] - v3[1]) +
+			 		   (v1[2] - v3[2]) * (v1[2] - v3[2]));
+
+	this.b = Math.sqrt((v2[0] - v1[0]) * (v2[0] - v1[0]) + 
+			 		   (v2[1] - v1[1]) * (v2[1] - v1[1]) +
+			 		   (v2[2] - v1[2]) * (v2[2] - v1[2]));
+
+	this.c = Math.sqrt((v3[0] - v2[0]) * (v3[0] - v2[0]) + 
+			 		   (v3[1] - v2[1]) * (v3[1] - v2[1]) +
+			 		   (v3[2] - v2[2]) * (v3[2] - v2[2]));
+
+	this.beta = Math.acos((this.a*this.a - this.b*this.b + this.c * this.c) / (2 * this.a * this.c));
+	this.alpha = Math.acos((-this.a*this.a + this.b*this.b + this.c * this.c) / (2 * this.b * this.c));
+	this.gamma = Math.acos((this.a*this.a + this.b*this.b - this.c * this.c) / (2 * this.a * this.b));
 	this.initBuffers();
 };
 
@@ -14,9 +30,9 @@ MyTriangle.prototype.constructor = MyTriangle;
 MyTriangle.prototype.initBuffers = function() {
 	
 	this.vertices = [
-		this.vertexA[0], this.vertexA[1], this.vertexA[2],
-		this.vertexB[0], this.vertexB[1], this.vertexB[2],
-		this.vertexC[0], this.vertexC[1], this.vertexC[2]
+		this.v1[0], this.v1[1], this.v1[2],
+		this.v2[0], this.v2[1], this.v2[2],
+		this.v3[0], this.v3[1], this.v3[2]
 	];
 
 	this.indices = [
@@ -27,8 +43,8 @@ MyTriangle.prototype.initBuffers = function() {
 	var vertexCminusA = vec3.create();
 	var vertexNormal = vec3.create();
 	
-	vec3.subtract(vertexBminusA, this.vertexB, this.vertexA);
-	vec3.subtract(vertexCminusA, this.vertexC, this.vertexA);
+	vec3.subtract(vertexBminusA, this.v2, this.v1);
+	vec3.subtract(vertexCminusA, this.v3, this.v1);
 	vec3.cross(vertexNormal, vertexBminusA, vertexCminusA);
 	vec3.normalize(vertexNormal, vertexNormal);
 
@@ -42,4 +58,20 @@ MyTriangle.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
-MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {};
+MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {
+
+	if (this.ampS == ampS && this.ampT == ampT) {
+		return;
+	}
+
+	this.ampS = ampS;
+	this.ampT = ampT;
+
+	this.texCoords = [
+	  (this.c - this.a * Math.cos(this.beta)) / this.ampS, 0.0,
+	  0.0, 1.0 / this.ampT,
+	  this.c / this.ampS, 1.0 / this.ampT
+    ];
+
+    this.updateTexCoordsGLBuffers();
+};
