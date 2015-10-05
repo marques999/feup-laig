@@ -54,6 +54,22 @@
 		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 	</MATERIAL>
 	
+	<MATERIAL id="ball_black">
+		<shininess value="30" />
+		<specular r="1.0" g="1.0" b="1.0" a="1.0" />
+		<diffuse r="0.05" g="0.05" b="0.05" a="0.6" />
+		<ambient r="0.05" g="0.05" b="0.05" a="0.2" />
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+	</MATERIAL>
+	
+	<MATERIAL id="ball_white">
+		<shininess value="30" />
+		<specular r="1.0" g="1.0" b="1.0" a="1.0" />
+		<diffuse r="0.95" g="0.95" b="0.95" a="0.6" />
+		<ambient r="0.95" g="0.95" b="0.95" a="0.2" />
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+	</MATERIAL>
+	
 	<MATERIAL id="rubber_red">
 		<shininess value="1" />
 		<specular r="0.7" g="0.04" b="0.04" a="1.0" />
@@ -133,7 +149,24 @@
 		<TEXTURE id="null" />
 		<DESCENDANTS>
 			<DESCENDANT id="table" />
-			<DESCENDANT id="sconces" />	
+			<DESCENDANT id="sconces" />													
+		</DESCENDANTS>
+	</NODE>
+	
+	<NODE id="table">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+      <DESCENDANTS>
+        <DESCENDANT id="table_legs" />
+        <DESCENDANT id="table_top" />
+        <DESCENDANT id="cues" />
+      </DESCENDANTS>
+    </NODE>
+	
+	<NODE id="cues">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<DESCENDANTS>
 			<DESCENDANT id="cue1" />
 			<DESCENDANT id="cue2" />	
 		</DESCENDANTS>
@@ -313,15 +346,6 @@
 		</DESCENDANTS>		
 	</NODE>
 
-    <NODE id="table">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <DESCENDANTS>
-        <DESCENDANT id="table_legs" />
-        <DESCENDANT id="table_top" />
-      </DESCENDANTS>
-    </NODE>
-
 	<NODE id="table_legs">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
@@ -379,7 +403,7 @@
 	</NODE>
 
 	<NODE id="ball3">
-		<MATERIAL id="null" />
+		<MATERIAL id="ball_white" />
 		<TEXTURE id="null" />
 		<TRANSLATION x="7.5" y="2.75" z="4.3" />
 		<DESCENDANTS>
@@ -388,7 +412,7 @@
 	</NODE>
 
 	<NODE id="ball4">
-		<MATERIAL id="null" />
+		<MATERIAL id="ball_black" />
 		<TEXTURE id="null" />
 		<TRANSLATION x="3.8" y="2.75" z="5.1" />
 		<DESCENDANTS>
