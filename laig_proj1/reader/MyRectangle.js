@@ -47,7 +47,7 @@ MyRectangle.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
-MyRectangle.updateTexCoords = function(ampS, ampT) {
+MyRectangle.prototype.updateTexCoords = function(ampS, ampT) {
 
 	if (this.ampS == ampS && this.ampT == ampT) {
 		return;

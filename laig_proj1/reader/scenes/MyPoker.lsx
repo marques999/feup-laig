@@ -1,13 +1,13 @@
 <SCENE>
 
 <INITIALS>
-	<frustum near="0" far="200" />
+	<frustum near="0.1" far="200" />
 	<translation x="0.0" y="0.0" z="0.0" />
 	<rotation axis="y" angle="0.0" />
 	<rotation axis="x" angle="0.0" />
 	<rotation axis="z" angle="0.0" />
 	<scale sx="1.0" sy="1.0" sz="1.0" />
-	<reference length="2.0" />
+	<reference length="4.0" />
 </INITIALS>
 
 <ILLUMINATION>
@@ -34,14 +34,19 @@
 </LIGHTS>
 
 <TEXTURES>
-	<TEXTURE id="ss">
+	<TEXTURE id="room_floor">
 		<file path="floor.png" />
-		<amplif_factor s="2.0" t="2.0" />
+		<amplif_factor s="0.25" t="0.5" />
 	</TEXTURE>
 
-	<TEXTURE id="tt">
-		<file path="floor.png" />
-		<amplif_factor s="2.0" t="2.0" />
+	<TEXTURE id="room_wall">
+		<file path="wall.png" />
+		<amplif_factor s="0.5" t="1.0" />
+	</TEXTURE>
+	
+	<TEXTURE id="table_felt">
+		<file path="felt.png" />
+		<amplif_factor s="0.25" t="0.5" />
 	</TEXTURE>
 </TEXTURES>
 
@@ -83,7 +88,7 @@
 		<specular r="0.0" g="0.0" b="0.0" a="0.0" />
 		<diffuse r="1.0" g="1.0" b="1.0" a="0.1" />
 		<ambient r="1.0" g="1.0" b="1.0" a="0.1" />
-		<emission r="1.0" g="0.95" b="0.95" a="1.0" />
+		<emission r="1.0" g="0.95" b="0.95" a="0.8" />
 	</MATERIAL>
 
 	<MATERIAL id="lamp_white">
@@ -166,37 +171,35 @@
 
 	<NODE id="floor">
 		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<TRANSLATION x="0" y="0" z="15" />
+		<TEXTURE id="room_floor" />
+		<TRANSLATION x="0.0" y="0.0" z="15" />
 		<SCALE sx="18.0" sy="1.0" sz="15.0"/>
 		<ROTATION axis="x" angle="-90" />
 		<DESCENDANTS>
-			<DESCENDANT id="myrectangle" />														
+			<DESCENDANT id="myrectangle" />												
 		</DESCENDANTS>
 	</NODE>
 
 	<NODE id="z_wall">
 		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<TRANSLATION x="0" y="10" z="0" />
-		<SCALE sx="1.0" sy="10.0" sz="15.0"/>
-		<ROTATION axis="z" angle="180" />
-		<ROTATION axis="y" angle="-90" />
+		<TEXTURE id="room_wall" />
+		<TRANSLATION x="0.0" y="0.0" z="15.0" />
+		<SCALE sx="1.0" sy="8.0" sz="15.0"/>
+		<ROTATION axis="y" angle="90" />
 		<DESCENDANTS>
-			<DESCENDANT id="myrectangle" />														
+			<DESCENDANT id="myrectangle" />								
 		</DESCENDANTS>
 	</NODE>
 
 	<NODE id="x_wall">
 		<MATERIAL id="null" />
-		<TEXTURE id="null" />
-		<SCALE sx="18.0" sy="10.0" sz="1.0"/>	
+		<TEXTURE id="room_wall" />
+		<SCALE sx="18.0" sy="8.0" sz="1.0"/>	
 		<DESCENDANTS>
-			<DESCENDANT id="myrectangle" />														
+			<DESCENDANT id="myrectangle" />												
 		</DESCENDANTS>
 	</NODE>
 
-	
 	<NODE id="table">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
@@ -579,7 +582,7 @@
 
 	<NODE id="table_topBase">
 		<MATERIAL id="table_green" />
-		<TEXTURE id="null" />
+		<TEXTURE id="table_felt" />
 		<TRANSLATION x="0.45" y="2.4" z="0.45" />
 		<SCALE sx="9.1" sy="0.2" sz="5.1" />
 		<DESCENDANTS>

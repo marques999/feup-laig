@@ -5,6 +5,6 @@ function MyPrimitive(scene) {
 MyPrimitive.prototype = Object.create(CGFobject.prototype);
 MyPrimitive.prototype.constructor = MyPrimitive;
 
-MyPrimitive.updateTexCoords = function(ampS, ampT) {
+MyPrimitive.prototype.updateTexCoords = function(ampS, ampT) {
 	return null;
 };
