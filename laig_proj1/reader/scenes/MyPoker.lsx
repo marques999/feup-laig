@@ -48,6 +48,16 @@
 		<file path="felt.png" />
 		<amplif_factor s="0.25" t="0.5" />
 	</TEXTURE>
+	
+	<TEXTURE id="table_wood">
+		<file path="wood.jpg" />
+		<amplif_factor s="0.25" t="1.5" />
+	</TEXTURE>
+	
+	<TEXTURE id="marble">
+		<file path="marble.png" />
+		<amplif_factor s="1.0" t="2.0" />
+	</TEXTURE>
 </TEXTURES>
 
 <MATERIALS>
@@ -91,7 +101,7 @@
 		<emission r="1.0" g="0.95" b="0.95" a="0.8" />
 	</MATERIAL>
 
-	<MATERIAL id="lamp_white">
+	<MATERIAL id="scene_white">
 	  <shininess value="1" />
 	  <specular r="0.0" g="0.0" b="0.0" a="0.0" />
 	  <diffuse r="0.5" g="0.5" b="0.5" a="0.5" />
@@ -115,11 +125,19 @@
 		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 	</MATERIAL>
 	
+	<MATERIAL id="scene_yellow">
+		<shininess value="1" />
+		<specular r="0.2" g="0.2" b="0.2" a="0.6" />
+		<diffuse r="0.67" g="0.36" b="0.10" a="0.8" />
+		<ambient r="0.07" g="0.04" b="0.02" a="0.2" />
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+	</MATERIAL>
+	
 	<MATERIAL id="plastic_dark">
 		<shininess value="1" />
-		<specular r="0.2" g="0.2" b="0.2" a="0.8" />
+		<specular r="0.2" g="0.2" b="0.2" a="0.6" />
 		<diffuse r="0.20" g="0.20" b="0.20" a="0.8" />
-		<ambient r="0.10" g="0.10" b="0.101" a="0.2" />
+		<ambient r="0.10" g="0.10" b="0.10" a="0.2" />
 		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 	</MATERIAL>
 	
@@ -208,8 +226,113 @@
         <DESCENDANT id="table_legs" />
         <DESCENDANT id="table_top" />
         <DESCENDANT id="cues" />
+        <DESCENDANT id="ashtray" />        
       </DESCENDANTS>
     </NODE>
+    
+	<NODE id="ashtray">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="3.0" y="2.9" z="0.05" />
+		<SCALE sx="0.5" sy="0.5" sz="0.5"/>
+		<ROTATION axis="y" angle="15" />
+		<DESCENDANTS>
+			<DESCENDANT id="ashtray_base" />
+			<DESCENDANT	id="cigarette" />												
+		</DESCENDANTS>
+	</NODE>
+	
+		<NODE id="cigarette">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.4" y="0.7" z="-0.25" />
+		<ROTATION axis="x" angle="30" />
+		<SCALE sx="0.3" sy="0.3" sz="0.3"/>
+		<DESCENDANTS>
+			<DESCENDANT id="cigarette_base" />	
+			<DESCENDANT id="cigarette_top" />																
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="cigarette_base">
+		<MATERIAL id="scene_yellow" />
+		<TEXTURE id="null" />		
+		<SCALE sx="0.2" sy="0.2" sz="1.0"/>	
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />																	
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="cigarette_top">
+		<MATERIAL id="scene_white" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="0.0" z="1.0" />
+		<SCALE sx="0.2" sy="0.2" sz="2.3"/>	
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />																	
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="ashtray_base">
+		<MATERIAL id="null" />
+		<TEXTURE id="marble" />
+		<DESCENDANTS>
+			<DESCENDANT id="ashtray_baseP1" />	
+			<DESCENDANT id="ashtray_baseP2" />	
+			<DESCENDANT id="ashtray_baseP3" />	
+			<DESCENDANT id="ashtray_baseP4" />	
+			<DESCENDANT id="ashtray_baseP5" />																
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="ashtray_baseP1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.15" y="0" z="0.15" />
+		<SCALE sx="0.7" sy="0.15" sz="0.7"/>				
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube" />																			
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="ashtray_baseP2">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />			
+		<SCALE sx="1.0" sy="0.4" sz="0.15"/>
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube" />																			
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="ashtray_baseP3">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="0" z="0.85" />	
+		<SCALE sx="1.0" sy="0.4" sz="0.15"/>
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube" />																			
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="ashtray_baseP4">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="0" z="0.15" />	
+		<SCALE sx="0.15" sy="0.4" sz="0.7"/>
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube" />																			
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="ashtray_baseP5">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.85" y="0" z="0.15" />	
+		<SCALE sx="0.15" sy="0.4" sz="0.7"/>
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube" />																			
+		</DESCENDANTS>
+	</NODE>
 	
 	<NODE id="cues">
 		<MATERIAL id="null" />
@@ -340,7 +463,7 @@
 	</NODE>
 	
 	<NODE id="sconce_border">
-		<MATERIAL id="lamp_white" />
+		<MATERIAL id="scene_white" />
 		<TEXTURE id="null" />	
 		<TRANSLATION x="0" y="-0.35" z="0" />	
 		<ROTATION axis="x" angle="-90" />						
@@ -508,7 +631,7 @@
       </DESCENDANTS>
     </NODE>
 
-   <NODE id="hole1">
+	<NODE id="hole1">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />		
 		<TRANSLATION x="0" y="2.4" z="0" />								
@@ -538,7 +661,8 @@
 	<NODE id="hole4">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />	
-		<TRANSLATION x="9.25" y="2.4" z="5.25" />								
+		<TRANSLATION x="10.0" y="2.4" z="6.0" />
+		<ROTATION axis="y" angle="180" />								
 		<DESCENDANTS>
 			<DESCENDANT id="corner_hole" />													
 		</DESCENDANTS>		
@@ -547,7 +671,8 @@
 	<NODE id="hole5">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="9.25" y="2.4" z="0" />							
+		<TRANSLATION x="10.0" y="2.4" z="0" />	
+		<ROTATION axis="y" angle="-90" />						
 		<DESCENDANTS>
 			<DESCENDANT id="corner_hole" />													
 		</DESCENDANTS>		
@@ -556,7 +681,8 @@
 	<NODE id="hole6">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0" y="2.4" z="5.25" />										
+		<TRANSLATION x="0" y="2.4" z="6.0" />
+		<ROTATION axis="y" angle="90" />										
 		<DESCENDANTS>
 			<DESCENDANT id="corner_hole" />													
 		</DESCENDANTS>		
@@ -573,8 +699,27 @@
 
 	<NODE id="corner_hole">
 		<MATERIAL id="null" />
+		<TEXTURE id="null" />								
+		<DESCENDANTS>
+			<DESCENDANT id="corner_holeP1" />
+			<DESCENDANT id="corner_holeP2" />																
+		</DESCENDANTS>		
+	</NODE>
+	
+		<NODE id="corner_holeP1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<TRANSLATION x="0.45" y="0.0" z="0.0" />		
+		<SCALE sx="0.3" sy="0.5" sz="0.45" />								
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube" />																
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="corner_holeP2">
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />			
-		<SCALE sx="0.75" sy="0.5" sz="0.75" />								
+		<SCALE sx="0.45" sy="0.5" sz="0.75" />								
 		<DESCENDANTS>
 			<DESCENDANT id="primitive_cube" />																
 		</DESCENDANTS>		
@@ -592,7 +737,7 @@
 
     <NODE id="table_side">
       <MATERIAL id="wood_cherry" />
-      <TEXTURE id="null" />
+      <TEXTURE id="table_wood" />
       <DESCENDANTS>
 	  	<DESCENDANT id="table_side_cl" />
 		<DESCENDANT id="table_side_rl" />	
@@ -606,8 +751,9 @@
     <NODE id="table_side_cl">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
-      <TRANSLATION x="0.0" y="2.4" z="0.75" />
-      <SCALE sx="0.45" sy="0.5" sz="4.5" />
+      <TRANSLATION x="0.45" y="2.4" z="0.75" />
+	  <ROTATION axis="y" angle="-90" />
+      <SCALE sx="4.5" sy="0.5" sz="0.45" />
       <DESCENDANTS>
         <DESCENDANT id="primitive_cube" />
       </DESCENDANTS>
@@ -616,8 +762,9 @@
     <NODE id="table_side_cr">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
-      <TRANSLATION x="9.55" y="2.4" z="0.75" />
-      <SCALE sx="0.45" sy="0.5" sz="4.5" />
+      <TRANSLATION x="10.0" y="2.4" z="0.75" />
+	  <ROTATION axis="y" angle="-90" />
+      <SCALE sx="4.5" sy="0.5" sz="0.45" />
       <DESCENDANTS>
         <DESCENDANT id="primitive_cube" />
       </DESCENDANTS>
@@ -719,7 +866,7 @@
 
     <NODE id="table_leg">
       <MATERIAL id="null" />
-      <TEXTURE id="null" />
+      <TEXTURE id="table_wood" />
       <DESCENDANTS>
         <DESCENDANT id="leg_base" />
         <DESCENDANT id="primitive_leg_top" />
@@ -738,7 +885,7 @@
     <NODE id="leg_baseP1">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
-      <TRANSLATION x="0" y="0.5" z="0" />
+      <TRANSLATION x="0.0" y="0.5" z="0.0" />
       <ROTATION axis="x" angle="90" />
       <DESCENDANTS>
         <DESCENDANT id="leg_base1" />
@@ -748,7 +895,7 @@
     <NODE id="leg_baseP2">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
-      <TRANSLATION x="0" y="2.0" z="0" />
+      <TRANSLATION x="0.0" y="2.0" z="0.0" />
       <ROTATION axis="x" angle="90" />
       <DESCENDANTS>
         <DESCENDANT id="leg_base2" />
@@ -757,7 +904,7 @@
 
     <NODE id="primitive_leg_top">
       <MATERIAL id="null" />
-      <TEXTURE id="null" />
+      <TEXTURE id="clear" />
       <TRANSLATION x="0.0" y="2.0" z="0.0" />
       <SCALE sx="0.9" sy="0.4" sz="0.9" />
       <DESCENDANTS>
@@ -765,85 +912,83 @@
       </DESCENDANTS>
     </NODE>
 
-    <NODE id="primitive_leg">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <TRANSLATION x="-0.5" y="0.0" z="-0.5" />
-      <DESCENDANTS>
-        <DESCENDANT id="primitive_cube" />
-      </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="primitive_cube">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <DESCENDANTS>
-        <DESCENDANT id="primitive_cube_front" />
-        <DESCENDANT id="primitive_cube_back" />
-        <DESCENDANT id="primitive_cube_top" />
-        <DESCENDANT id="primitive_cube_down" />
-        <DESCENDANT id="primitive_cube_left" />
-        <DESCENDANT id="primitive_cube_right" />
-      </DESCENDANTS>
-    </NODE>
+	<NODE id="primitive_leg">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="-0.5" y="0.0" z="-0.5" />
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube" />
+		</DESCENDANTS>
+	</NODE>
 
-    <NODE id="primitive_cube_back">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <TRANSLATION x="0.0" y="1.0" z="0.0" />
-      <ROTATION axis="x" angle="180" />
-      <DESCENDANTS>
-        <DESCENDANT id="myrectangle" />
-      </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="primitive_cube_front">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <TRANSLATION x="0.0" y="0.0" z="1" />
-      <DESCENDANTS>
-        <DESCENDANT id="myrectangle" />
-      </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="primitive_cube_down">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <ROTATION axis="x" angle="90" />
-      <DESCENDANTS>
-        <DESCENDANT id="myrectangle" />
-      </DESCENDANTS>
-    </NODE>
-    
-    <NODE id="primitive_cube_top">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <TRANSLATION x="0.0" y="1.0" z="1.0" />
-      <ROTATION axis="x" angle="-90" />
-      <DESCENDANTS>
-        <DESCENDANT id="myrectangle" />
-      </DESCENDANTS>
-    </NODE>
+	<NODE id="primitive_cube">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<DESCENDANTS>
+			<DESCENDANT id="primitive_cube_front" />
+			<DESCENDANT id="primitive_cube_back" />
+			<DESCENDANT id="primitive_cube_top" />
+			<DESCENDANT id="primitive_cube_down" />
+			<DESCENDANT id="primitive_cube_left" />
+			<DESCENDANT id="primitive_cube_right" />
+		</DESCENDANTS>
+	</NODE>
 
-    <NODE id="primitive_cube_left">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <ROTATION axis="y" angle="-90" />
-      <DESCENDANTS>
-        <DESCENDANT id="myrectangle" />
-      </DESCENDANTS>
-    </NODE>
+	<NODE id="primitive_cube_back">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="1.0" z="0.0" />
+		<ROTATION axis="x" angle="180" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />
+		</DESCENDANTS>
+	</NODE>
+    
+	<NODE id="primitive_cube_front">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="0.0" z="1" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />
+		</DESCENDANTS>
+	</NODE>
+    
+	<NODE id="primitive_cube_down">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<ROTATION axis="x" angle="90" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />
+		</DESCENDANTS>
+	</NODE>
+    
+	<NODE id="primitive_cube_top">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="0.0" y="1.0" z="1.0" />
+		<ROTATION axis="x" angle="-90" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />
+		</DESCENDANTS>
+	</NODE>
 
-    <NODE id="primitive_cube_right">
-      <MATERIAL id="null" />
-      <TEXTURE id="null" />
-      <TRANSLATION x="1.0" y="0.0" z="1.0" />
-      <ROTATION axis="y" angle="90" />
-      <DESCENDANTS>
-        <DESCENDANT id="myrectangle" />
-      </DESCENDANTS>
-    </NODE>
+	<NODE id="primitive_cube_left">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<ROTATION axis="y" angle="-90" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />
+		</DESCENDANTS>
+	</NODE>
 
+	<NODE id="primitive_cube_right">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<TRANSLATION x="1.0" y="0.0" z="1.0" />
+		<ROTATION axis="y" angle="90" />
+		<DESCENDANTS>
+			<DESCENDANT id="myrectangle" />
+		</DESCENDANTS>
+    </NODE>
   </NODES>
-
 </SCENE>
