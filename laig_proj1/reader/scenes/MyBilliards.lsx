@@ -1,171 +1,170 @@
 <SCENE>
+	<INITIALS>
+		<frustum near="0.1" far="200" />
+		<translation x="0.0" y="0.0" z="0.0" />
+		<rotation axis="y" angle="0.0" />
+		<rotation axis="x" angle="0.0" />
+		<rotation axis="z" angle="0.0" />
+		<scale sx="1.0" sy="1.0" sz="1.0" />
+		<reference length="4.0" />
+	</INITIALS>
 
-<INITIALS>
-	<frustum near="0.1" far="200" />
-	<translation x="0.0" y="0.0" z="0.0" />
-	<rotation axis="y" angle="0.0" />
-	<rotation axis="x" angle="0.0" />
-	<rotation axis="z" angle="0.0" />
-	<scale sx="1.0" sy="1.0" sz="1.0" />
-	<reference length="4.0" />
-</INITIALS>
+	<ILLUMINATION>
+		<ambient r="0.83" g="0.92" b="1.0" a="1.0" />
+		<background r="0.08" g="0.08" b="0.12" a="1.0" />
+	</ILLUMINATION>
 
-<ILLUMINATION>
-	<ambient r="0.83" g="0.92" b="1.0" a="1.0" />
-	<background r="0.08" g="0.08" b="0.12" a="1.0" />
-</ILLUMINATION>
+	<LIGHTS>
+		<LIGHT id="l1">
+			<enable value ="1" />
+			<position x="12.5" y="8.0" z="7.5" w="1.0" />
+			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
+			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
+		</LIGHT>
 
-<LIGHTS>
-	<LIGHT id="l1">
-		<enable value ="1" />
-		<position x="12.5" y="8" z="7.5" w="1.0" />
-		<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
-		<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-		<specular r="0.6" g="0.6" b="0.6" a="1.0" />
-	</LIGHT>
+		<LIGHT id="l2">
+			<enable value ="1" />
+			<position x="4.5" y="8.0" z="7.5" w="1.0" />
+			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
+			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
+		</LIGHT>
+	</LIGHTS>
 
-	<LIGHT id="l2">
-		<enable value ="1" />
-		<position x="4.5" y="8" z="7.5" w="1.0" />
-		<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
-		<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-		<specular r="0.6" g="0.6" b="0.6" a="1.0" />
-	</LIGHT>
-</LIGHTS>
+	<TEXTURES>
+		<TEXTURE id="room_floor">
+			<file path="scenes/images/floor.png" />
+			<amplif_factor s="0.25" t="0.5" />
+		</TEXTURE>
 
-<TEXTURES>
-	<TEXTURE id="room_floor">
-		<file path="floor.png" />
-		<amplif_factor s="0.25" t="0.5" />
-	</TEXTURE>
+		<TEXTURE id="room_wall">
+			<file path="scenes/images/wall.png" />
+			<amplif_factor s="0.5" t="1.0" />
+		</TEXTURE>
+		
+		<TEXTURE id="table_felt">
+			<file path="scenes/images/felt.png" />
+			<amplif_factor s="0.25" t="0.5" />
+		</TEXTURE>
+		
+		<TEXTURE id="table_wood">
+			<file path="scenes/images/wood.jpg" />
+			<amplif_factor s="0.25" t="1.5" />
+		</TEXTURE>
+		
+		<TEXTURE id="marble">
+			<file path="scenes/images/marble.png" />
+			<amplif_factor s="1.0" t="2.0" />
+		</TEXTURE>
+	</TEXTURES>
 
-	<TEXTURE id="room_wall">
-		<file path="wall.png" />
-		<amplif_factor s="0.5" t="1.0" />
-	</TEXTURE>
-	
-	<TEXTURE id="table_felt">
-		<file path="felt.png" />
-		<amplif_factor s="0.25" t="0.5" />
-	</TEXTURE>
-	
-	<TEXTURE id="table_wood">
-		<file path="wood.jpg" />
-		<amplif_factor s="0.25" t="1.5" />
-	</TEXTURE>
-	
-	<TEXTURE id="marble">
-		<file path="marble.png" />
-		<amplif_factor s="1.0" t="2.0" />
-	</TEXTURE>
-</TEXTURES>
+	<MATERIALS>
+		<MATERIAL id="ball_red">
+			<shininess value="30" />
+			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
+			<diffuse r="0.66" g="0.0" b="0.05" a="0.6" />
+			<ambient r="0.66" g="0.0" b="0.02" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
+		
+		<MATERIAL id="ball_black">
+			<shininess value="30" />
+			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
+			<diffuse r="0.05" g="0.05" b="0.05" a="0.6" />
+			<ambient r="0.05" g="0.05" b="0.05" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
+		
+		<MATERIAL id="ball_white">
+			<shininess value="30" />
+			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
+			<diffuse r="0.95" g="0.95" b="0.95" a="0.6" />
+			<ambient r="0.95" g="0.95" b="0.95" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
+		
+		<MATERIAL id="rubber_red">
+			<shininess value="1" />
+			<specular r="0.7" g="0.04" b="0.04" a="1.0" />
+			<diffuse r="0.5" g="0.4" b="0.4" a="0.8" />
+			<ambient r="0.05" g="0.0" b="0.00" a="0.8" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
 
-<MATERIALS>
-	<MATERIAL id="ball_red">
-		<shininess value="30" />
-		<specular r="1.0" g="1.0" b="1.0" a="1.0" />
-		<diffuse r="0.66" g="0.0" b="0.05" a="0.6" />
-		<ambient r="0.66" g="0.0" b="0.02" a="0.2" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
-	
-	<MATERIAL id="ball_black">
-		<shininess value="30" />
-		<specular r="1.0" g="1.0" b="1.0" a="1.0" />
-		<diffuse r="0.05" g="0.05" b="0.05" a="0.6" />
-		<ambient r="0.05" g="0.05" b="0.05" a="0.2" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
-	
-	<MATERIAL id="ball_white">
-		<shininess value="30" />
-		<specular r="1.0" g="1.0" b="1.0" a="1.0" />
-		<diffuse r="0.95" g="0.95" b="0.95" a="0.6" />
-		<ambient r="0.95" g="0.95" b="0.95" a="0.2" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
-	
-	<MATERIAL id="rubber_red">
-		<shininess value="1" />
-		<specular r="0.7" g="0.04" b="0.04" a="1.0" />
-		<diffuse r="0.5" g="0.4" b="0.4" a="0.8" />
-		<ambient r="0.05" g="0.0" b="0.00" a="0.8" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
+		<MATERIAL id="bulb_white">
+			<shininess value="1" />
+			<specular r="0.0" g="0.0" b="0.0" a="0.0" />
+			<diffuse r="1.0" g="1.0" b="1.0" a="0.1" />
+			<ambient r="1.0" g="1.0" b="1.0" a="0.1" />
+			<emission r="1.0" g="0.95" b="0.95" a="0.8" />
+		</MATERIAL>
 
-	<MATERIAL id="bulb_white">
-		<shininess value="1" />
-		<specular r="0.0" g="0.0" b="0.0" a="0.0" />
-		<diffuse r="1.0" g="1.0" b="1.0" a="0.1" />
-		<ambient r="1.0" g="1.0" b="1.0" a="0.1" />
-		<emission r="1.0" g="0.95" b="0.95" a="0.8" />
-	</MATERIAL>
+		<MATERIAL id="scene_white">
+		  <shininess value="1" />
+		  <specular r="0.0" g="0.0" b="0.0" a="0.0" />
+		  <diffuse r="0.5" g="0.5" b="0.5" a="0.5" />
+		  <ambient r="0.5" g="0.5" b="0.5" a="0.2" />
+		  <emission r="0.5" g="0.5" b="0.5" a="0.5" />
+		</MATERIAL>
 
-	<MATERIAL id="scene_white">
-	  <shininess value="1" />
-	  <specular r="0.0" g="0.0" b="0.0" a="0.0" />
-	  <diffuse r="0.5" g="0.5" b="0.5" a="0.5" />
-	  <ambient r="0.5" g="0.5" b="0.5" a="0.2" />
-	  <emission r="0.5" g="0.5" b="0.5" a="0.5" />
-	</MATERIAL>
+		<MATERIAL id="table_green">
+		  <shininess value="5" />
+		  <specular r="0.1" g="0.1" b="0.1" a="0.5" />
+		  <diffuse r="0.06" g="0.44" b="0.3" a="1.0" />
+		  <ambient r="0.06" g="0.44" b="0.3" a="0.8" />
+		  <emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
 
-	<MATERIAL id="table_green">
-	  <shininess value="5" />
-	  <specular r="0.1" g="0.1" b="0.1" a="0.5" />
-	  <diffuse r="0.06" g="0.44" b="0.30" a="1.0" />
-	  <ambient r="0.06" g="0.44" b="0.30" a="0.8" />
-	  <emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
+		<MATERIAL id="wood_cherry">
+			<shininess value="2" />
+			<specular r="0.1" g="0.1" b="0.1" a="0.8" />
+			<diffuse r="0.48" g="0.2" b="0.1" a="0.8" />
+			<ambient r="0.08" g="0.02" b="0.01" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
+		
+		<MATERIAL id="scene_yellow">
+			<shininess value="1" />
+			<specular r="0.2" g="0.2" b="0.2" a="0.6" />
+			<diffuse r="0.67" g="0.36" b="0.10" a="0.8" />
+			<ambient r="0.07" g="0.04" b="0.02" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
+		
+		<MATERIAL id="plastic_dark">
+			<shininess value="1" />
+			<specular r="0.2" g="0.2" b="0.2" a="0.6" />
+			<diffuse r="0.2" g="0.2" b="0.2" a="0.8" />
+			<ambient r="0.1" g="0.1" b="0.1" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
+		
+		<MATERIAL id="wood_oak">
+			<shininess value="2" />
+			<specular r="0.1" g="0.1" b="0.1" a="0.8" />
+			<diffuse r="0.78" g="0.6" b="0.35" a="0.8" />
+			<ambient r="0.78" g="0.6" b="0.35" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
+	</MATERIALS>
 
-	<MATERIAL id="wood_cherry">
-		<shininess value="2" />
-		<specular r="0.1" g="0.1" b="0.1" a="0.8" />
-		<diffuse r="0.48" g="0.20" b="0.10" a="0.8" />
-		<ambient r="0.08" g="0.02" b="0.01" a="0.2" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
-	
-	<MATERIAL id="scene_yellow">
-		<shininess value="1" />
-		<specular r="0.2" g="0.2" b="0.2" a="0.6" />
-		<diffuse r="0.67" g="0.36" b="0.10" a="0.8" />
-		<ambient r="0.07" g="0.04" b="0.02" a="0.2" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
-	
-	<MATERIAL id="plastic_dark">
-		<shininess value="1" />
-		<specular r="0.2" g="0.2" b="0.2" a="0.6" />
-		<diffuse r="0.20" g="0.20" b="0.20" a="0.8" />
-		<ambient r="0.10" g="0.10" b="0.10" a="0.2" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
-	
-	<MATERIAL id="wood_oak">
-		<shininess value="2" />
-		<specular r="0.1" g="0.1" b="0.1" a="0.8" />
-		<diffuse r="0.78" g="0.60" b="0.35" a="0.8" />
-		<ambient r="0.78" g="0.60" b="0.35" a="0.2" />
-		<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-	</MATERIAL>
-</MATERIALS>
+	<LEAVES>
+		<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 1.0 1.0" />
+		<LEAF id="leg_base1" type="cylinder" args="0.5 0.2 0.4 16.0 16.0" />
+		<LEAF id="leg_base2" type="cylinder" args="1.5 0.4 0.2 16 16" />
+		<LEAF id="mycylinder" type="cylinder" args="1.0 1.0 1.0 16 16" />	
+		<LEAF id="mysconce_chain" type="cylinder" args="0.75 0.65 0.5 16 16" />
+		<LEAF id="myball" type="sphere" args="0.15 16 16" />
+		<LEAF id="mylamp" type="sphere" args="0.15 16 16" />
+		<LEAF id="mycueTop" type="cylinder" args="0.2 0.02 0.02 16 16" />
+		<LEAF id="mycueMid" type="cylinder" args="2.0 0.02 0.05 16 16" />
+		<LEAF id="mycueDown" type="cylinder" args="1.0 0.05 0.05 16 16" />
+	</LEAVES>
 
-  <LEAVES>
-	<LEAF id="myrectangle" type="rectangle" args="0.0 0.0 1.0 1.0" />
-	<LEAF id="leg_base1" type="cylinder" args="0.5 0.2 0.4 16.0 16.0" />
-	<LEAF id="leg_base2" type="cylinder" args="1.5 0.4 0.2 16 16" />
-	<LEAF id="mycylinder" type="cylinder" args="1.0 1.0 1.0 16 16" />	
-	<LEAF id="mysconce_chain" type="cylinder" args="0.75 0.65 0.5 16 16" />
-	<LEAF id="myball" type="sphere" args="0.15 16 16" />
-	<LEAF id="mylamp" type="sphere" args="0.15 16 16" />
-	<LEAF id="mycueTop" type="cylinder" args="0.2 0.02 0.02 16 16" />
-	<LEAF id="mycueMid" type="cylinder" args="2.0 0.02 0.05 16 16" />
-	<LEAF id="mycueDown" type="cylinder" args="1.0 0.05 0.05 16 16" />
-  </LEAVES>
+<NODES>
 
-  <NODES>
-
-    <ROOT id="scene" />
+<ROOT id="scene" />
 
     <NODE id="scene">
 		<MATERIAL id="null" />
@@ -221,7 +220,7 @@
 	<NODE id="table">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
-      <TRANSLATION x="3.5" y="0" z="4.5" />
+      <TRANSLATION x="3.5" y="0.0" z="4.5" />
       <DESCENDANTS>
         <DESCENDANT id="table_legs" />
         <DESCENDANT id="table_top" />
@@ -288,7 +287,7 @@
 	<NODE id="ashtray_baseP1">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0.15" y="0" z="0.15" />
+		<TRANSLATION x="0.15" y="0.0" z="0.15" />
 		<SCALE sx="0.7" sy="0.15" sz="0.7"/>				
 		<DESCENDANTS>
 			<DESCENDANT id="primitive_cube" />																			
@@ -307,7 +306,7 @@
 	<NODE id="ashtray_baseP3">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0.0" y="0" z="0.85" />	
+		<TRANSLATION x="0.0" y="0.0" z="0.85" />	
 		<SCALE sx="1.0" sy="0.4" sz="0.15"/>
 		<DESCENDANTS>
 			<DESCENDANT id="primitive_cube" />																			
@@ -317,7 +316,7 @@
 	<NODE id="ashtray_baseP4">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0.0" y="0" z="0.15" />	
+		<TRANSLATION x="0.0" y="0.0" z="0.15" />	
 		<SCALE sx="0.15" sy="0.4" sz="0.7"/>
 		<DESCENDANTS>
 			<DESCENDANT id="primitive_cube" />																			
@@ -327,7 +326,7 @@
 	<NODE id="ashtray_baseP5">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0.85" y="0" z="0.15" />	
+		<TRANSLATION x="0.85" y="0.0" z="0.15" />	
 		<SCALE sx="0.15" sy="0.4" sz="0.7"/>
 		<DESCENDANTS>
 			<DESCENDANT id="primitive_cube" />																			
@@ -368,7 +367,7 @@
 	<NODE id="cue">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />			
-		<TRANSLATION x="0" y="1.6" z="0" />
+		<TRANSLATION x="0.0" y="1.6" z="0.0" />
 		<ROTATION axis="x" angle="90" />									
 		<DESCENDANTS>
 			<DESCENDANT id="cueTop" />
@@ -388,7 +387,7 @@
 	<NODE id="cueMid">
 		<MATERIAL id="wood_oak" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0" y="0" z="0.2" />								
+		<TRANSLATION x="0.0" y="0.0" z="0.2" />								
 		<DESCENDANTS>
 			<DESCENDANT id="mycueMid" />																			
 		</DESCENDANTS>		
@@ -397,7 +396,7 @@
 	<NODE id="cueDown">
 		<MATERIAL id="plastic_dark" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0" y="0" z="2.2" />								
+		<TRANSLATION x="0.0" y="0.0" z="2.2" />								
 		<DESCENDANTS>
 			<DESCENDANT id="mycueDown" />																			
 		</DESCENDANTS>		
@@ -465,7 +464,7 @@
 	<NODE id="sconce_border">
 		<MATERIAL id="scene_white" />
 		<TEXTURE id="null" />	
-		<TRANSLATION x="0" y="-0.35" z="0" />	
+		<TRANSLATION x="0.0" y="-0.35" z="0.0" />	
 		<ROTATION axis="x" angle="-90" />						
 		<DESCENDANTS>
 			<DESCENDANT id="mysconce_chain" />														
@@ -634,7 +633,7 @@
 	<NODE id="hole1">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />		
-		<TRANSLATION x="0" y="2.4" z="0" />								
+		<TRANSLATION x="0.0" y="2.4" z="0.0" />								
 		<DESCENDANTS>
 			<DESCENDANT id="corner_hole" />													
 		</DESCENDANTS>		
@@ -643,7 +642,7 @@
 	<NODE id="hole2">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />			
-		<TRANSLATION x="4.775" y="2.4" z="0" />							
+		<TRANSLATION x="4.775" y="2.4" z="0.0" />							
 		<DESCENDANTS>
 			<DESCENDANT id="side_hole" />													
 		</DESCENDANTS>		
@@ -671,7 +670,7 @@
 	<NODE id="hole5">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="10.0" y="2.4" z="0" />	
+		<TRANSLATION x="10.0" y="2.4" z="0.0" />	
 		<ROTATION axis="y" angle="-90" />						
 		<DESCENDANTS>
 			<DESCENDANT id="corner_hole" />													
@@ -681,7 +680,7 @@
 	<NODE id="hole6">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
-		<TRANSLATION x="0" y="2.4" z="6.0" />
+		<TRANSLATION x="0.0" y="2.4" z="6.0" />
 		<ROTATION axis="y" angle="90" />										
 		<DESCENDANTS>
 			<DESCENDANT id="corner_hole" />													
