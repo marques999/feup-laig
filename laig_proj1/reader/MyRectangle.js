@@ -1,4 +1,4 @@
-function MyRectangle(scene, minX, minY, maxX, maxY) {
+function MyRectangle(scene, minX, maxY, maxX, minY) {
 
 	MyPrimitive.call(this, scene);
 
@@ -26,7 +26,7 @@ MyRectangle.prototype.initBuffers = function() {
 	];
 
 	this.indices = [
-		0, 1, 2, 3
+		0, 1, 2, 3,
 	];
 
 	this.normals = [
