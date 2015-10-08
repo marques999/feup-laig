@@ -46,8 +46,6 @@ MyCylinder.prototype.initBuffers = function() {
 
 				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber + this.stacks + 1);
 				this.indices.push(vertexNumber + this.stacks, vertexNumber, vertexNumber - 1);
-				this.indices.push(vertexNumber + this.stacks + 1, vertexNumber + this.stacks, vertexNumber);
-				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber - 1);
 
 				vertexNumber++;
 			}
