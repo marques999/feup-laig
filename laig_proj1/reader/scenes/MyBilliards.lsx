@@ -267,6 +267,24 @@
 		<TEXTURE id="null" />		
 		<SCALE sx="0.2" sy="0.2" sz="1.0"/>	
 		<DESCENDANTS>
+			<DESCENDANT id="cigarette_baseP1" />
+			<DESCENDANT id="cigarette_baseP2" />																	
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="cigarette_baseP1">
+		<MATERIAL id="scene_yellow" />
+		<TEXTURE id="null" />		
+		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>	
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />																	
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="cigarette_baseP2">
+		<MATERIAL id="scene_yellow" />
+		<TEXTURE id="null" />				
+		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />																	
 		</DESCENDANTS>
 	</NODE>
@@ -276,6 +294,25 @@
 		<TEXTURE id="null" />
 		<TRANSLATION x="0.0" y="0.0" z="1.0" />
 		<SCALE sx="0.2" sy="0.2" sz="2.3"/>	
+		<DESCENDANTS>
+			<DESCENDANT id="cigarette_topP1" />	
+			<DESCENDANT id="cigarette_topP2" />																	
+		</DESCENDANTS>
+	</NODE>
+
+	<NODE id="cigarette_topP1">
+		<MATERIAL id="scene_white" />
+		<TEXTURE id="null" />
+		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />																	
+		</DESCENDANTS>
+	</NODE>
+
+
+	<NODE id="cigarette_topP2">
+		<MATERIAL id="scene_white" />
+		<TEXTURE id="null" />		
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />																	
 		</DESCENDANTS>
@@ -389,6 +426,24 @@
 		<MATERIAL id="rubber_red" />
 		<TEXTURE id="null" />							
 		<DESCENDANTS>
+			<DESCENDANT id="cueTopP1" />
+			<DESCENDANT id="cueTopP2" />																				
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="cueTopP1">
+		<MATERIAL id="rubber_red" />
+		<TEXTURE id="null" />	
+		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>								
+		<DESCENDANTS>
+			<DESCENDANT id="mycueTop" />																			
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="cueTopP2">
+		<MATERIAL id="rubber_red" />
+		<TEXTURE id="null" />							
+		<DESCENDANTS>
 			<DESCENDANT id="mycueTop" />																			
 		</DESCENDANTS>		
 	</NODE>
@@ -398,6 +453,24 @@
 		<TEXTURE id="null" />
 		<TRANSLATION x="0.0" y="0.0" z="0.2" />								
 		<DESCENDANTS>
+			<DESCENDANT id="cueMidP1" />	
+			<DESCENDANT id="cueMidP2" />																			
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="cueMidP1">
+		<MATERIAL id="wood_oak" />
+		<TEXTURE id="null" />
+		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>								
+		<DESCENDANTS>
+			<DESCENDANT id="mycueMid" />																			
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="cueMidP2">
+		<MATERIAL id="wood_oak" />
+		<TEXTURE id="null" />									
+		<DESCENDANTS>
 			<DESCENDANT id="mycueMid" />																			
 		</DESCENDANTS>		
 	</NODE>
@@ -406,6 +479,24 @@
 		<MATERIAL id="plastic_dark" />
 		<TEXTURE id="null" />
 		<TRANSLATION x="0.0" y="0.0" z="2.2" />								
+		<DESCENDANTS>
+			<DESCENDANT id="cueDownP1" />
+			<DESCENDANT id="cueDownP2" />																				
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="cueDownP1">
+		<MATERIAL id="plastic_dark" />
+		<TEXTURE id="null" />
+		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>										
+		<DESCENDANTS>
+			<DESCENDANT id="mycueDown" />																			
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="cueDownP2">
+		<MATERIAL id="plastic_dark" />
+		<TEXTURE id="null" />										
 		<DESCENDANTS>
 			<DESCENDANT id="mycueDown" />																			
 		</DESCENDANTS>		
@@ -456,6 +547,26 @@
 		<SCALE sx="0.05" sy="0.8" sz="0.05"/>		
 		<ROTATION axis="x" angle="-90" />						
 		<DESCENDANTS>
+			<DESCENDANT id="sconce_chainP1" />	
+			<DESCENDANT id="sconce_chainP2" />														
+		</DESCENDANTS>		
+	</NODE>
+
+
+	<NODE id="sconce_chainP1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />							
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />														
+		</DESCENDANTS>		
+	</NODE>
+
+
+	<NODE id="sconce_chainP2">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />	
+		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>							
+		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />														
 		</DESCENDANTS>		
 	</NODE>
@@ -469,12 +580,32 @@
 			<DESCENDANT id="mylamp" />														
 		</DESCENDANTS>		
 	</NODE>
-	
+
+
 	<NODE id="sconce_border">
 		<MATERIAL id="scene_white" />
 		<TEXTURE id="null" />	
 		<TRANSLATION x="0.0" y="-0.35" z="0.0" />	
 		<ROTATION axis="x" angle="-90" />						
+		<DESCENDANTS>
+			<DESCENDANT id="sconce_borderP1" />	
+			<DESCENDANT id="sconce_borderP2" />														
+		</DESCENDANTS>	
+	</NODE>
+	
+	<NODE id="sconce_borderP1">
+		<MATERIAL id="scene_white" />
+		<TEXTURE id="null" />								
+		<DESCENDANTS>
+			<DESCENDANT id="mysconce_chain" />														
+		</DESCENDANTS>	
+	</NODE>
+
+
+	<NODE id="sconce_borderP2">
+		<MATERIAL id="scene_white" />
+		<TEXTURE id="null" />	
+		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>									
 		<DESCENDANTS>
 			<DESCENDANT id="mysconce_chain" />														
 		</DESCENDANTS>	
@@ -520,6 +651,25 @@
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
 		<SCALE sx="0.54" sy="0.05" sz="0.05"/>									
+		<DESCENDANTS>
+			<DESCENDANT id="rodP1" />	
+			<DESCENDANT id="rodP2" />														
+		</DESCENDANTS>		
+	</NODE>
+
+	<NODE id="rodP1">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />
+		<SCALE sx="1.0" sy="-1.0" sz="1.0"/>										
+		<DESCENDANTS>
+			<DESCENDANT id="mycylinder" />														
+		</DESCENDANTS>		
+	</NODE>
+
+
+	<NODE id="rodP2">
+		<MATERIAL id="null" />
+		<TEXTURE id="null" />										
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />														
 		</DESCENDANTS>		
@@ -896,6 +1046,24 @@
       <TRANSLATION x="0.0" y="0.5" z="0.0" />
       <ROTATION axis="x" angle="90" />
       <DESCENDANTS>
+        <DESCENDANT id="leg_baseP1.1" />
+        <DESCENDANT id="leg_baseP1.2" />
+      </DESCENDANTS>
+    </NODE>
+
+     <NODE id="leg_baseP1.1">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />  
+      <SCALE sx="-1.0" sy="1.0" sz="1.0" />   
+      <DESCENDANTS>
+        <DESCENDANT id="leg_base1" />
+      </DESCENDANTS>
+    </NODE>
+
+     <NODE id="leg_baseP1.2">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />     
+      <DESCENDANTS>
         <DESCENDANT id="leg_base1" />
       </DESCENDANTS>
     </NODE>
@@ -905,6 +1073,24 @@
       <TEXTURE id="null" />
       <TRANSLATION x="0.0" y="2.0" z="0.0" />
       <ROTATION axis="x" angle="90" />
+      <DESCENDANTS>
+        <DESCENDANT id="leg_baseP2.1" />
+        <DESCENDANT id="leg_baseP2.2" />
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="leg_baseP2.1">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />
+      <SCALE sx="-1.0" sy="1.0" sz="1.0" /> 
+      <DESCENDANTS>
+        <DESCENDANT id="leg_base2" />
+      </DESCENDANTS>
+    </NODE>
+
+    <NODE id="leg_baseP2.2">
+      <MATERIAL id="null" />
+      <TEXTURE id="null" />     
       <DESCENDANTS>
         <DESCENDANT id="leg_base2" />
       </DESCENDANTS>
