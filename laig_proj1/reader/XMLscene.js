@@ -41,9 +41,9 @@ XMLscene.prototype.initAxis = function(length) {
 	this.reference = length;
 };
 
-XMLscene.prototype.initFrustum = function(far, near) {
-	this.frustumFar = far;
+XMLscene.prototype.initFrustum = function(near, far) {
 	this.frustumNear = near;
+	this.frustumFar = far;
 };
 
 XMLscene.prototype.drawPrimitive = function(prim) {
@@ -123,8 +123,8 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.axis = new CGFaxis(this, this.reference);
 
 	// SET FRUSTUM
-	//this.camera.far = this.frustumFar;
-	//this.camera.near = this.frustumNear;
+	this.camera.far = this.frustumFar;
+	this.camera.near = this.frustumNear;
 
 	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {

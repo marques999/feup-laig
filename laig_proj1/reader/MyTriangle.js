@@ -69,8 +69,8 @@ MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {
 
 	this.texCoords = [
 	  0.0, 1.0 / this.ampT,
-	  (this.b - this.a * Math.cos(this.beta)) / this.ampS, 1.0 / this.ampT,
-	  1.0 / this.ampS, this.c / this.ampT
+	  (this.a - this.b * Math.cos(this.beta)) / this.ampS, 1.0 / this.ampT,
+	  1.0 / this.ampS, -this.c / this.ampT
     ];
 
     this.updateTexCoordsGLBuffers();
