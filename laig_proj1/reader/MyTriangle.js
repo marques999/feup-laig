@@ -18,9 +18,9 @@ function MyTriangle(scene, v1, v2, v3) {
 			 		   (v2[1] - v1[1]) * (v2[1] - v1[1]) +
 			 		   (v2[2] - v1[2]) * (v2[2] - v1[2]));
 
-	this.beta = Math.acos((this.a*this.a - this.b*this.b + this.c * this.c) / (2 * this.a * this.c));
-	this.alpha = Math.acos((-this.a*this.a + this.b*this.b + this.c * this.c) / (2 * this.b * this.c));
-	this.gamma = Math.acos((this.a*this.a + this.b*this.b - this.c * this.c) / (2 * this.a * this.b));
+	var angleBeta  = Math.acos((this.a*this.a - this.b*this.b + this.c * this.c) / (2 * this.a * this.c));
+	this.cosBeta = Math.cos(angleBeta);
+	this.sinBeta = Math.sin(angleBeta);
 	this.initBuffers();
 };
 
@@ -70,7 +70,7 @@ MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {
 	this.texCoords = [
 		0.0, 0.0,
 		this.c / this.ampS, 0.0,
-		(this.c - this.a * Math.cos(this.beta)) / this.ampS, (this.a * Math.sin(this.beta)) / this.ampT,
+		(this.c - this.a * this.cosBeta) / this.ampS, (this.a * this.sinBeta) / this.ampT,
     ];
 
     this.updateTexCoordsGLBuffers();
