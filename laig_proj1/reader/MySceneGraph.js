@@ -483,15 +483,11 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 	}
 
 	if (node.length != 1) {
-
-	}	
+		this.onMultipleDefinitions(attribute, root.nodeName);
+	}
 	var checkResult = this.reader.getBoolean(node[0], 'value', true);
 	
-	if (checkResult == null) {
-		return NaN;
-	}
-
-	return checkResult;
+	return checkResult == null ? NaN : checkResult;
 }
 
 MySceneGraph.prototype.parseNodeCoordinates = function (node, coordA, coordB, coordC) {
@@ -1057,7 +1053,7 @@ MySceneGraph.prototype.parseTexture = function (id, root)
 
 MySceneGraph.prototype.parseLeaves = function (root) {
 	return this.parseArray(root, 'LEAF', this.parseLeaf);
-}
+};
 
 MySceneGraph.prototype.parseLeaf = function(id, root) {
 
@@ -1068,19 +1064,19 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 		return this.onElementDuplicate(parent, id);
 	}
 
+	if (!root.hasAttribute('type')) {
+		parseErrors++;
+		this.onXMLWarning(this.onAttributeMissing('type', id, parent));
+	}
+
 	var leafType = this.reader.getString(root, 'type');
 
-	if (leafType == null) {
+	if (!root.hasAttribute('type')) {
 		parseErrors++;
 		this.onXMLWarning(this.onAttributeMissing('args', id, parent));
 	}
 
 	var leafArgs = this.reader.getString(root, 'args').trim().split(' ');
-	
-	if (leafArgs == null) {
-		parseErrors++;
-		this.onXMLWarning(this.onAttributeMissing('args', id, parent));
-	}
 
 	if (parseErrors != 0) {
 		return this.onParseError(parent, parseErrors, id);
@@ -1105,12 +1101,7 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 	}
 
 	if (error != null) {
-		parseErrors++;
-		this.onXMLWarning(error);
-	}
-
-	if (parseErrors != 0) {
-		return this.onParseError(parent, parseErrors, id);
+		return error;
 	}
 
 	if (this.verbose) {
@@ -1345,7 +1336,7 @@ MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
 			this.scene.popMatrix();
 		}		
 	}
-}
+};
 
 MySceneGraph.prototype.resetIndegree = function() {
 	for (var node in this.nodes) {
@@ -1356,7 +1347,7 @@ MySceneGraph.prototype.resetIndegree = function() {
 			}
 		}
 	}
-}
+};
 
 MySceneGraph.prototype.removeOrphans = function () {
 	for (var node in this.nodes) {
@@ -1396,7 +1387,7 @@ MySceneGraph.prototype.validateNodes = function() {
 			}
 		}		
 	} while(!ready);
-}
+};
 
 /*       
   _      ____   _____  _____ _____ _   _  _____ 
@@ -1408,8 +1399,8 @@ MySceneGraph.prototype.validateNodes = function() {
                                   
 */
 
-MySceneGraph.prototype.printValues = function ()
-{
+MySceneGraph.prototype.printValues = function () {
+	
 	if (arguments.length < 3) {
 		return;
 	}

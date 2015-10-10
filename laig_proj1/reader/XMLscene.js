@@ -5,7 +5,7 @@ function XMLscene() {
 XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
-XMLscene.prototype.init = function (application) {
+XMLscene.prototype.init = function(application) {
 
 	CGFscene.prototype.init.call(this, application);
 
@@ -19,7 +19,6 @@ XMLscene.prototype.init = function (application) {
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultRotation = [];
 	this.defaultTranslate = [0.0, 0.0, 0.0];	
-	this.lightNames = [];
 
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
@@ -28,6 +27,10 @@ XMLscene.prototype.init = function (application) {
 
 XMLscene.prototype.initCameras = function () {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+};
+
+XMLscene.prototype.setInterface = function(iFace) {
+	this.interface = iFace;
 };
 
 XMLscene.prototype.setDefaultAppearance = function () {
@@ -68,7 +71,6 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
 
 XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse, specular) {
 	
-	this.shader.bind();
 	var currentLight = this.lights[this.activeLights];
 
 	currentLight.setPosition(position[0], position[1], position[2], position[3]);
@@ -77,20 +79,13 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 	currentLight.setSpecular(specular[0], specular[1], specular[2], specular[3]);
 	enabled ? currentLight.enable() : currentLight.disable();
 	currentLight.setVisible(true);
-	currentLight.update();
-
-	this.lightNames[this.activeLights] = id;
-	this.shader.unbind();
+	this.interface.pushLight(id, this.activeLights, enabled);
 
 	return this.lights[this.activeLights++];
 };
 
-XMLscene.prototype.initLights = function () {
-	this.lights[0].setPosition(2, 3, 3, 1);
-	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
-	this.lights[0].setVisible(true);
-	this.lights[0].enable();
-	this.lights[0].update();
+XMLscene.prototype.toggleLight = function(id, status) {
+	status ? this.lights[id].enable() : this.lights[id].disable();
 };
 
 XMLscene.prototype.initScale = function(matrix) {
@@ -128,7 +123,11 @@ XMLscene.prototype.onGraphLoaded = function() {
 
 	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
-		this.initLights();
+		this.lights[0].setPosition(2, 3, 3, 1);
+		this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+		this.lights[0].setVisible(true);
+		this.lights[0].enable();
+		this.lights[0].update();
 		this.activeLights++;
 	}
 

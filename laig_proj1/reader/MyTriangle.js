@@ -6,17 +6,17 @@ function MyTriangle(scene, v1, v2, v3) {
     this.v2 = v2;
     this.v3 = v3;
 
-    this.a = Math.sqrt((v1[0] - v3[0]) * (v1[0] - v3[0]) + 
+    this.a = Math.sqrt((v3[0] - v2[0]) * (v3[0] - v2[0]) + 
+			 		   (v3[1] - v2[1]) * (v3[1] - v2[1]) +
+			 		   (v3[2] - v2[2]) * (v3[2] - v2[2]));
+
+	this.b = Math.sqrt((v1[0] - v3[0]) * (v1[0] - v3[0]) + 
 			 		   (v1[1] - v3[1]) * (v1[1] - v3[1]) +
 			 		   (v1[2] - v3[2]) * (v1[2] - v3[2]));
 
-	this.b = Math.sqrt((v2[0] - v1[0]) * (v2[0] - v1[0]) + 
+	this.c = Math.sqrt((v2[0] - v1[0]) * (v2[0] - v1[0]) + 
 			 		   (v2[1] - v1[1]) * (v2[1] - v1[1]) +
 			 		   (v2[2] - v1[2]) * (v2[2] - v1[2]));
-
-	this.c = Math.sqrt((v3[0] - v2[0]) * (v3[0] - v2[0]) + 
-			 		   (v3[1] - v2[1]) * (v3[1] - v2[1]) +
-			 		   (v3[2] - v2[2]) * (v3[2] - v2[2]));
 
 	this.beta = Math.acos((this.a*this.a - this.b*this.b + this.c * this.c) / (2 * this.a * this.c));
 	this.alpha = Math.acos((-this.a*this.a + this.b*this.b + this.c * this.c) / (2 * this.b * this.c));
@@ -68,9 +68,9 @@ MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {
 	this.ampT = ampT;
 
 	this.texCoords = [
-	  0.0, 0.0,
-	  (this.c - this.a * Math.cos(this.beta)) / this.ampS, (this.a * Math.sin(this.beta)) / this.ampT,
-	  this.c / this.ampT, 0.0,
+		0.0, 0.0,
+		this.c / this.ampS, 0.0,
+		(this.c - this.a * Math.cos(this.beta)) / this.ampS, (this.a * Math.sin(this.beta)) / this.ampT,
     ];
 
     this.updateTexCoordsGLBuffers();
