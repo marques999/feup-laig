@@ -15,8 +15,11 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
-	this.defaultScale = [1.0, 1.0, 1.0];
+    this.defaultAmbient = [0.1, 0.1, 0.1, 1.0];
+    this.defaultBackground = [0.0, 0.0, 0.0, 1.0];
+    this.defaultReference = 2.0;
 	this.defaultRotation = [];
+	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
@@ -27,8 +30,8 @@ XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
-XMLscene.prototype.setInterface = function(interface) {
-	this.interface = interface;
+XMLscene.prototype.setInterface = function(guiInterface) {
+	this.guiInterface = guiInterface;
 };
 
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -39,7 +42,7 @@ XMLscene.prototype.setDefaultAppearance = function() {
 };
 
 XMLscene.prototype.initAxis = function(length) {
-	this.reference = length;
+	this.defaultReference = length;
 };
 
 XMLscene.prototype.initFrustum = function(near, far) {
@@ -75,16 +78,16 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 	currentLight.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
 	currentLight.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
 	currentLight.setSpecular(specular[0], specular[1], specular[2], specular[3]);
-	enabled ? currentLight.enable() : currentLight.disable();
 	currentLight.setVisible(true);
-
-	this.interface.pushLight(id, this.activeLights, enabled);
+	
+	this.toggleLight(this.activeLights, enabled);
+	this.guiInterface.pushLight(id, this.activeLights, enabled);
 
 	return this.lights[this.activeLights++];
 };
 
-XMLscene.prototype.toggleLight = function(id, status) {
-	status ? this.lights[id].enable() : this.lights[id].disable();
+XMLscene.prototype.toggleLight = function(id, enabled) {
+	enabled ? this.lights[id].enable() : this.lights[id].disable();
 };
 
 XMLscene.prototype.initScale = function(matrix) {
@@ -96,29 +99,30 @@ XMLscene.prototype.initTranslate = function(matrix) {
 };
 
 XMLscene.prototype.setBackground = function(rgba) {
-	this.background = rgba;
+	this.defaultBackground = rgba;
 }
 
 XMLscene.prototype.setAmbient = function(rgba) {
-	this.ambient = rgba;
+	this.defaultAmbient = rgba;
 };
 
 XMLscene.prototype.onGraphLoaded = function() {
 	
-	this.shader.bind();
-
 	// SET BACKGROUND
-	this.gl.clearColor(this.background[0], this.background[1], this.background[2], this.background[3]);
+	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
+					   this.defaultBackground[2], this.defaultBackground[3]);
 
-	// SET GLOBAL ILLUMINATION
-	this.setGlobalAmbientLight(this.ambient[0], this.ambient[1], this.ambient[2], this.ambient[3]);
-	
 	// SET AXIS
-	this.axis = new CGFaxis(this, this.reference);
+	this.axis = new CGFaxis(this, this.defaultReference);
 
 	// SET FRUSTUM
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
+
+	// SET GLOBAL ILLUMINATION
+	this.shader.bind();
+	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
+							   this.defaultAmbient[2], this.defaultAmbient[3]);
 
 	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
@@ -126,7 +130,6 @@ XMLscene.prototype.onGraphLoaded = function() {
 		this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
 		this.lights[0].setVisible(true);
 		this.lights[0].enable();
-		this.lights[0].update();
 		this.activeLights++;
 	}
 

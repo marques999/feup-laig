@@ -20,7 +20,7 @@ MyInterface.prototype.pushLight = function(name, id, enabled) {
 	var self = this;
 
 	this.lights[name] = enabled;
-	this.gui.add(this.lights, name).onChange (function(value) {
+	this.gui.add(this.lights, name).onChange(function(value) {
 		self.scene.toggleLight(id, value);
 	});
 };

@@ -86,7 +86,7 @@ MySceneGraph.prototype.onXMLReady = function()
 	this.removeOrphans();
 	this.validateNodes();
 	this.loadedOk = true;
-	this.scene.onGraphLoaded();
+	this.scene.onGraphLoaded.call(this.scene);
 };
 
 MySceneGraph.prototype.display = function() {
@@ -485,6 +485,11 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 	if (node.length != 1) {
 		this.onMultipleDefinitions(attribute, root.nodeName);
 	}
+
+	if (!node[0].hasAttribute('value')) {
+		return null;
+	}
+
 	var checkResult = this.reader.getBoolean(node[0], 'value', true);
 	
 	return checkResult == null ? NaN : checkResult;
@@ -1071,7 +1076,7 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 
 	var leafType = this.reader.getString(root, 'type');
 
-	if (!root.hasAttribute('type')) {
+	if (!root.hasAttribute('args')) {
 		parseErrors++;
 		this.onXMLWarning(this.onAttributeMissing('args', id, parent));
 	}
@@ -1400,7 +1405,7 @@ MySceneGraph.prototype.validateNodes = function() {
 */
 
 MySceneGraph.prototype.printValues = function () {
-	
+
 	if (arguments.length < 3) {
 		return;
 	}
@@ -1418,29 +1423,28 @@ MySceneGraph.prototype.printValues = function () {
 
 	string += " }";
 	console.log(string);
-}
+};
 
-MySceneGraph.prototype.printHeader = function (attribute, id) {
-
+MySceneGraph.prototype.printHeader = function(attribute, id) {
 	if (id == undefined) {
 		console.log("[" + attribute + "]");
 	}
 	else {
 		console.log(attribute + " sucessfully read from file [ID=" + id + "]");
 	}
-}
+};
 
-MySceneGraph.prototype.printXYZ = function (attribute, xyz) {
+MySceneGraph.prototype.printXYZ = function(attribute, xyz) {
 	console.log("\t\t" + attribute + ": { x=" + xyz[0] + ", y=" + xyz[1] + ", z=" + xyz[2] + " }");
-}
+};
 
-MySceneGraph.prototype.printRGBA = function (attribute, rgba) {
+MySceneGraph.prototype.printRGBA = function(attribute, rgba) {
 	console.log("\t\t" + attribute + ": { r=" + rgba[0] + ", g=" + rgba[1] + ", b=" + rgba[2] + ", a=" + rgba[3] + " }");
-}
+};
 
-MySceneGraph.prototype.printXYZW = function (attribute, xyzw) {
+MySceneGraph.prototype.printXYZW = function(attribute, xyzw) {
 	console.log("\t\t" + attribute + ": { x=" + xyzw[0] + ", y=" + xyzw[1] + ", z=" + xyzw[2] + ", w=" + xyzw[3] + " }");
-}
+};
 
 MySceneGraph.prototype.onProcessNode = function(message, id) {
 	
@@ -1449,7 +1453,7 @@ MySceneGraph.prototype.onProcessNode = function(message, id) {
 	}
 }
 
-MySceneGraph.prototype.onXMLError = function (message) {
+MySceneGraph.prototype.onXMLError = function(message) {
 	console.error("XML Loading Error: " + message);	
 	this.loadedOk = false;
 };
