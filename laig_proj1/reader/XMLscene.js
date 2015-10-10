@@ -15,25 +15,23 @@ XMLscene.prototype.init = function(application) {
     this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
-	
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultRotation = [];
-	this.defaultTranslate = [0.0, 0.0, 0.0];	
-
+	this.defaultTranslate = [0.0, 0.0, 0.0];
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
 	this.enableTextures(true);
 };
 
-XMLscene.prototype.initCameras = function () {
+XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
-XMLscene.prototype.setInterface = function(iFace) {
-	this.interface = iFace;
+XMLscene.prototype.setInterface = function(interface) {
+	this.interface = interface;
 };
 
-XMLscene.prototype.setDefaultAppearance = function () {
+XMLscene.prototype.setDefaultAppearance = function() {
 	this.setAmbient(0.2, 0.4, 0.8, 1.0);
 	this.setDiffuse(0.2, 0.4, 0.8, 1.0);
 	this.setSpecular(0.2, 0.4, 0.8, 1.0);
@@ -49,8 +47,8 @@ XMLscene.prototype.initFrustum = function(near, far) {
 	this.frustumFar = far;
 };
 
-XMLscene.prototype.drawPrimitive = function(prim) {
-	prim.display();
+XMLscene.prototype.drawPrimitive = function(primitive) {
+	primitive.display();
 };
 
 XMLscene.prototype.applyMaterial = function(appearance) {
@@ -79,6 +77,7 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 	currentLight.setSpecular(specular[0], specular[1], specular[2], specular[3]);
 	enabled ? currentLight.enable() : currentLight.disable();
 	currentLight.setVisible(true);
+
 	this.interface.pushLight(id, this.activeLights, enabled);
 
 	return this.lights[this.activeLights++];

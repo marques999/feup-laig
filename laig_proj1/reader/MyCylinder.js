@@ -21,11 +21,11 @@ MyCylinder.prototype.initBuffers = function() {
 
 	var texelIncrementS = 1.0 / this.slices;
 	var texelIncrementT = 1.0 / this.stacks;
-	var radiusStep = (this.radiusTop - this.radiusBottom) / this.stacks;
+	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;
 	var thetaIncrement = (2 * Math.PI) / this.slices;
 	var stackIncrement = this.height / this.stacks;
-	var sCoord = 1.0;
 	var vertexNumber = 1;
+	var sCoord = 1.0;
 	var theta = 0;
 
 	for (var i = 0; i <= this.slices; i++) {
@@ -52,7 +52,7 @@ MyCylinder.prototype.initBuffers = function() {
 
 			z += stackIncrement;
 			tCoord -= texelIncrementT;
-			nRadius += radiusStep;
+			nRadius += radiusIncrement;
 		}
 
 		if (i > 0) {
