@@ -11,13 +11,13 @@ XMLscene.prototype.init = function(application) {
 
 	this.initCameras();
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    this.gl.clearDepth(100.0);
-    this.gl.enable(this.gl.DEPTH_TEST);
+	this.gl.clearDepth(100.0);
+	this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
-    this.gl.depthFunc(this.gl.LEQUAL);
-    this.defaultAmbient = [0.1, 0.1, 0.1, 1.0];
-    this.defaultBackground = [0.0, 0.0, 0.0, 1.0];
-    this.defaultReference = 2.0;
+	this.gl.depthFunc(this.gl.LEQUAL);
+	this.defaultAmbient = [0.1, 0.1, 0.1, 1.0];
+	this.defaultBackground = [0.0, 0.0, 0.0, 1.0];
+	this.defaultReference = 2.0;
 	this.defaultRotation = [];
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
@@ -73,13 +73,13 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
 XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse, specular) {
 	
 	var currentLight = this.lights[this.activeLights];
-
+	
 	currentLight.setPosition(position[0], position[1], position[2], position[3]);
 	currentLight.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
 	currentLight.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
 	currentLight.setSpecular(specular[0], specular[1], specular[2], specular[3]);
 	currentLight.setVisible(true);
-	
+
 	this.toggleLight(this.activeLights, enabled);
 	this.guiInterface.pushLight(id, this.activeLights, enabled);
 
@@ -112,6 +112,10 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
 					   this.defaultBackground[2], this.defaultBackground[3]);
 
+	// SET GLOBAL ILLUMINATION
+	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
+							   this.defaultAmbient[2], this.defaultAmbient[3]);
+
 	// SET AXIS
 	this.axis = new CGFaxis(this, this.defaultReference);
 
@@ -119,21 +123,16 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
 
-	// SET GLOBAL ILLUMINATION
-	this.shader.bind();
-	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
-							   this.defaultAmbient[2], this.defaultAmbient[3]);
-
 	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
+		this.shader.bind();
 		this.lights[0].setPosition(2, 3, 3, 1);
 		this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
 		this.lights[0].setVisible(true);
 		this.lights[0].enable();
 		this.activeLights++;
+		this.shader.unbind();
 	}
-
-	this.shader.unbind();
 };
 
 XMLscene.prototype.display = function () {

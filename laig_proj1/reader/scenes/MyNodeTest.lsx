@@ -94,7 +94,8 @@
 			<DESCENDANT id="s1" />	
 			<DESCENDANT id="s2" />	
 			<DESCENDANT id="s3" />
-			<DESCENDANT id="s4" />				
+			<DESCENDANT id="s4" />	
+			<DESCENDANT id="s6" />				
 			<!-- "ss" is the identifier of a node or of leaf; -->
 			<!--  may be repeatad as necessary. It can refer an -->
 			<!--  identifier of another node, later defined in the lsx file. -->
@@ -108,6 +109,13 @@
 		</DESCENDANTS>		
 	</NODE>
 	<NODE id="s2">
+		<MATERIAL id="null" />
+		<TEXTURE id="clear" />  
+		<DESCENDANTS>			
+			<DESCENDANT id="asd" />				
+		</DESCENDANTS>		
+	</NODE>	
+		<NODE id="s11">
 		<MATERIAL id="null" />
 		<TEXTURE id="clear" />  
 		<DESCENDANTS>			

@@ -10,7 +10,7 @@
 	</INITIALS>
 
 	<ILLUMINATION>
-		<ambient r="0.83" g="0.92" b="1.0" a="1.0" />
+		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
 
@@ -308,7 +308,6 @@
 			<DESCENDANT id="mycylinder" />																	
 		</DESCENDANTS>
 	</NODE>
-
 
 	<NODE id="cigarette_topP2">
 		<MATERIAL id="scene_white" />
