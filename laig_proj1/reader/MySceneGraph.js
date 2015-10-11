@@ -21,7 +21,7 @@ function MySceneGraph(filename, scene) {
 	this.filename = 'scenes/' + filename;
 	this.path = this.filename.substring(0, this.filename.lastIndexOf('/')) + '/';
 	this.reader.open(this.filename, this);
-}
+};
 
 /*
   _____ _   _ _____ _______ 
@@ -86,7 +86,7 @@ MySceneGraph.prototype.onXMLReady = function()
 	this.resetIndegree();
 	this.validateNodes();
 	this.loadedOk = true;
-	this.scene.onGraphLoaded.call(this.scene);
+	this.scene.onGraphLoaded();
 };
 
 MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
@@ -361,16 +361,19 @@ MySceneGraph.prototype.readTriangle = function(id, leafArgs) {
 	}
 		
 	var vec1 = [leafArgs[0], leafArgs[1], leafArgs[2]].map(parseFloat);
+	
 	if (vec1[0] != vec1[0] || vec1[1] != vec1[1] || vec1[2] != vec1[2]) {
 		return onAttributeInvalid('first triangle vertex', id, 'TRIANGLE');
 	}
 
 	var vec2 = [leafArgs[3], leafArgs[4], leafArgs[5]].map(parseFloat);
+	
 	if (vec2[0] != vec2[0] || vec2[1] != vec2[1] || vec2[2] != vec2[2]) {
 		return onAttributeInvalid('second triangle vertex', id, 'TRIANGLE');
 	}
 
 	var vec3 = [leafArgs[6], leafArgs[7], leafArgs[8]].map(parseFloat);
+	
 	if (vec3[0] != vec3[0] || vec3[1] != vec3[1] || vec3[2] != vec3[2]) {
 		return onAttributeInvalid('third triangle vertex', id, 'TRIANGLE');
 	}
@@ -380,33 +383,33 @@ MySceneGraph.prototype.readTriangle = function(id, leafArgs) {
 	return null;
 }
 
-MySceneGraph.prototype.readCylinder = function(id, args) {
+MySceneGraph.prototype.readCylinder = function(id, leafArgs) {
 
-	if (args.length != 5) {
-		return onInvalidArguments(id, args.length, 5);
+	if (leafArgs.length != 5) {
+		return onInvalidArguments(id, leafArgs.length, 5);
 	}
 
-	var myHeight = parseFloat(args[0]);
+	var myHeight = parseFloat(leafArgs[0]);
 	if (myHeight != myHeight) {
 		return onAttributeInvalid('height', id, 'CYLINDER');
 	}
 
-	var myRadiusBottom = parseFloat(args[1]);
+	var myRadiusBottom = parseFloat(leafArgs[1]);
 	if (myRadiusBottom != myRadiusBottom) {
 		return onAttributeInvalid('bottom radius', id, 'CYLINDER');
 	}
 
-	var myRadiusTop = parseFloat(args[2]);
+	var myRadiusTop = parseFloat(leafArgs[2]);
 	if (myRadiusTop != myRadiusTop) {
 		return onAttributeInvalid('top radius', id, 'CYLINDER');
 	}
 
-	var myStacks = parseInt(args[3]);
+	var myStacks = parseInt(leafArgs[3]);
 	if (myStacks != myStacks) {
 		return onAttributeInvalid('number of stacks', id, 'CYLINDER');
 	}
 	
-	var mySlices = parseInt(args[4]);
+	var mySlices = parseInt(leafArgs[4]);
 	if (mySlices != mySlices) {
 		return onAttributeInvalid('number of slices', id, 'CYLINDER');
 	}
@@ -487,12 +490,15 @@ MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coo
 		return NaN;
 	}
 
-	return [x, y, z];
+	return [ x, y, z ];
 }
 
-MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coordB, coordC, coordD) {
+MySceneGraph.prototype.parseCoordinates = function(root, attribute) {
 
-	if (arguments.length < 5 || arguments.length > 6) {
+	var error = false;
+	var arr = [];
+
+	if (arguments.length < 5) {
 		return null;
 	}
 	
@@ -506,34 +512,31 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coordA, coor
 		onMultipleDefinitions(attribute, root.nodeName);
 	}
 
-	if (!node[0].hasAttribute(coordA) || !node[0].hasAttribute(coordB) || !node[0].hasAttribute(coordC)) {
+	for (var i = 2; i < arguments.length; i++) {
+
+		var coordName = arguments[i];
+
+		if (!node[0].hasAttribute(coordName)) {
+			onCoordinateMissing(coordName, attribute);
+			error = true;
+		}
+
+		var coordValue = this.reader.getFloat(node[0], coordName);
+
+		if (coordValue != coordValue) {
+			onCoordinateInvalid(coordName, attribute);
+			error = true;
+		}
+		else {
+			arr.push(coordValue);
+		}
+	}
+
+	if (error) {		
 		return NaN;
 	}
 
-	var x = this.reader.getFloat(node[0], coordA);
-	var y = this.reader.getFloat(node[0], coordB);
-	var z = this.reader.getFloat(node[0], coordC);
-	
-	if (x != x || y != y || z != z) {
-		return NaN;
-	}
-
-	if (arguments.length == 6) {
-
-		if (!node[0].hasAttribute(coordD)) {
-			return NaN;
-		}
-
-		var w =  this.reader.getFloat(node[0], coordD);
-
-		if (w != w) {
-			return NaN;
-		}
-
-		return [ x, y, z, w ];
-	}
-
-	return [ x, y, z ];
+	return arr;
 }
 
 MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
@@ -677,10 +680,12 @@ MySceneGraph.prototype.parseNodes = function (root) {
 	return this.parseArray(root, 'NODE', this.parseNode);
 }
 
-MySceneGraph.prototype.parseNode = function (id, root) {
+MySceneGraph.prototype.parseNode = function(id, root) {
 
 	var parent = root.nodeName;
 	var parseErrors = 0;
+	var nodeMaterial = null;
+	var nodeTexture = null;
 
 	if (id in this.nodes) {
 		return onElementDuplicate(parent, id);
@@ -690,23 +695,31 @@ MySceneGraph.prototype.parseNode = function (id, root) {
 		return onReservedId(parent, id);
 	}
 
-	var nodeMaterial = this.parseString(root, 'MATERIAL', 'id');
+	if (root.children[0].nodeName != 'MATERIAL') {
+		onXMLWarning('MATERIAL should be tag number 1');
+	}
+
+	nodeMaterial = this.reader.getString(root.children[0], 'id');
 	if (nodeMaterial == null) {
 		return onAttributeMissing('MATERIAL', id, parent);
 	}
 
-	var error = checkReference(this.materials, 'MATERIAL', id, nodeMaterial);
+	var error = checkReference(this.materials, 'MATERIAL', id, nodeMaterial);	
 	if (error != null) {
 		nodeMaterial = null;
 	 	onXMLWarning(error);
 	}
 
-	var nodeTexture = this.parseString(root, 'TEXTURE', 'id');
+	if (root.children[1].nodeName != 'TEXTURE') {
+		return 'TEXTURE should be tag number 2';
+	}
+
+	nodeTexture = this.reader.getString(root.children[1], 'id');
 	if (nodeTexture == null) {
 		return onAttributeMissing('TEXTURE', id, parent);
 	}
 
-	error = checkReference(this.textures, 'TEXTURE', id, nodeTexture);
+	error = checkReference(this.textures, 'TEXTURE', id, nodeTexture);	
 	if (error != null) {
 		nodeTexture = null;
 	 	onXMLWarning(error);
@@ -723,23 +736,23 @@ MySceneGraph.prototype.parseNode = function (id, root) {
 
 	for (var i = 2; i < node_sz; i++) {
 	
-		var tranf = root.children[i];
+		var child = root.children[i];
 		var error = null;
 
-		if (tranf.nodeName == 'TRANSLATION') {
-			error = this.parseNodeTranslation(tranf, node, id);
+		if (child.nodeName == 'TRANSLATION') {
+			error = this.parseNodeTranslation(child, node, id);
 		}
-		else if (tranf.nodeName == 'ROTATION') {
-			error = this.parseNodeRotation(tranf, node, id);
+		else if (child.nodeName == 'ROTATION') {
+			error = this.parseNodeRotation(child, node, id);
 		}
-		else if (tranf.nodeName == 'SCALE') {
-			error = this.parseNodeScale(tranf, node, id);
+		else if (child.nodeName == 'SCALE') {
+			error = this.parseNodeScale(child, node, id);
 		}
-		else if (tranf.nodeName == 'DESCENDANTS') {
+		else if (child.nodeName == 'DESCENDANTS') {
 			break;
 		}
 		else {
-			onUnexpectedTag(tranf.nodeName, parent);
+			onUnexpectedTag(child.nodeName, parent);
 		}
 
 		if (error != null) {
@@ -772,7 +785,8 @@ MySceneGraph.prototype.parseNode = function (id, root) {
 		var childId = this.reader.getString(nodeDescendants[i], 'id', true);
 		
 		if (childId == null) {
-			return onAttributeMissing('id', id, parent);
+			onXMLWarning(onAttributeMissing('id', id, parent));
+			continue;
 		}
 
 		node.addChild(childId);
@@ -1178,7 +1192,6 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		return error;
 	}
 
-
 	var globalScale = this.parseCoordinatesScale(root, 'scale');
 	error = checkValue(globalScale, 'scale', parent);
 	if (error != null) {
@@ -1252,9 +1265,9 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 		printHeader('INITIALS');
 		printValues('frustum', 'near', globalFrustumNear, 'far', globalFrustumFar);
 		printXYZ('translate', globalTranslate);
-		printValues('rotation', 'axis', 'x', 'angle', this.scene.defaultRotation[0]);
-		printValues('rotation', 'axis', 'y', 'angle', this.scene.defaultRotation[1]);
-		printValues('rotation', 'axis', 'z', 'angle', this.scene.defaultRotation[2]);
+		printValues('rotation', 'axis', 'x', 'angle', this.scene.defaultRotationAngle[0]);
+		printValues('rotation', 'axis', 'y', 'angle', this.scene.defaultRotationAngle[1]);
+		printValues('rotation', 'axis', 'z', 'angle', this.scene.defaultRotationAngle[2]);
 		printXYZ('scale', globalScale);
 		printValues('reference', 'length', globalReference);
 	}
@@ -1326,13 +1339,8 @@ MySceneGraph.prototype.validateNodes = function() {
 			}
 
 			if (children.length == 0) {
-				onProcessNode("Deleting", node);
-				ready = false;
-			}
-
-			if (!ready) {
+				onProcessNode("Erasing", node);
 				delete this.nodes[node];
-				break;
 			}
 		}		
 	}

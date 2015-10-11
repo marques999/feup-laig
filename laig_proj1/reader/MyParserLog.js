@@ -22,6 +22,14 @@ function onElementMissing(node, parent) {
 	return node + " attribute is missing from <" + parent + ">.";
 };
 
+function onCoordinateMissing(coord, parent) {
+	console.warn("coordinate " + coord + " is missing from <" + parent + ">.");
+};
+
+function onCoordinateInvalid(coord, parent) {
+	console.warn("coordinate " + coord + " from <" + parent + "> is not a number.");
+}
+
 function onElementInvalid(node, parent) {
 	return node + " attribute from <" + parent + "> has an invalid value.";
 };
@@ -31,7 +39,7 @@ function onMultipleElements(node, parent) {
 };
 
 function onMultipleDefinitions(name, parent) {
-	console.warn("WARNING: multiple definitions for property '" + name + " found in <" + parent + ">, skipping duplicates...");
+	console.warn("WARNING: multiple definitions for <" + name + "> found in <" + parent + ">");
 };
 
 function onProcessNode(message, id) {

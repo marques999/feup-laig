@@ -10,24 +10,49 @@ XMLscene.prototype.init = function(application) {
 	CGFscene.prototype.init.call(this, application);
 
 	this.initCameras();
+	this.initDefaults();
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(100.0);
 	this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
-	this.defaultAmbient = [0.1, 0.1, 0.1, 1.0];
-	this.defaultBackground = [0.0, 0.0, 0.0, 1.0];
-	this.defaultReference = 2.0;
-	this.defaultRotation = [];
-	this.defaultScale = [1.0, 1.0, 1.0];
-	this.defaultTranslate = [0.0, 0.0, 0.0];
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
 	this.enableTextures(true);
+
+	mat4.identity(this.defaultMatrix);
+};
+
+XMLscene.prototype.initAxis = function(length) {
+	this.defaultReference = length;
 };
 
 XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+};
+
+XMLscene.prototype.initDefaults = function() {
+	this.defaultAmbient = [0.1, 0.1, 0.1, 1.0];
+	this.defaultBackground = [0.0, 0.0, 0.0, 1.0];
+	this.defaultMatrix = mat4.create();
+	this.defaultReference = 2.0;
+	this.defaultRotationAngle = [];
+	this.defaultRotationAxis = [];
+	this.defaultScale = [1.0, 1.0, 1.0];
+	this.defaultTranslate = [0.0, 0.0, 0.0];
+};
+
+XMLscene.prototype.initFrustum = function(near, far) {
+	this.frustumNear = near;
+	this.frustumFar = far;
+};
+
+XMLscene.prototype.initScale = function(matrix) {
+	this.defaultScale = matrix;
+};
+
+XMLscene.prototype.initTranslate = function(matrix) {
+	this.defaultTranslate = matrix;
 };
 
 XMLscene.prototype.setInterface = function(guiInterface) {
@@ -41,15 +66,6 @@ XMLscene.prototype.setDefaultAppearance = function() {
 	this.setShininess(10.0);
 };
 
-XMLscene.prototype.initAxis = function(length) {
-	this.defaultReference = length;
-};
-
-XMLscene.prototype.initFrustum = function(near, far) {
-	this.frustumNear = near;
-	this.frustumFar = far;
-};
-
 XMLscene.prototype.drawPrimitive = function(primitive) {
 	primitive.display();
 };
@@ -58,15 +74,26 @@ XMLscene.prototype.applyMaterial = function(appearance) {
 	appearance.apply();
 }
 
+XMLscene.prototype.setAmbient = function(rgba) {
+	this.defaultAmbient = rgba;
+};
+
+XMLscene.prototype.setBackground = function(rgba) {
+	this.defaultBackground = rgba;
+};
+
 XMLscene.prototype.setRotation = function(id, axis, angle) {
+
+	this.defaultRotationAngle[id] = angle * Math.PI / 180;
+
 	if (axis == 'x') {
-		this.defaultRotation[id] = [angle * Math.PI / 180, 1, 0, 0]
+		this.defaultRotationAxis[id] = [1, 0, 0];
 	}
 	else if (axis == 'y') {
-		this.defaultRotation[id] = [angle * Math.PI / 180, 0, 1, 0];
+		this.defaultRotationAxis[id] = [0, 1, 0];
 	}
 	else if (axis == 'z') {
-		this.defaultRotation[id] = [angle * Math.PI / 180, 0, 0, 1];
+		this.defaultRotationAxis[id] = [0, 0, 1];
 	}
 };
 
@@ -81,29 +108,13 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 	currentLight.setVisible(true);
 
 	this.toggleLight(this.activeLights, enabled);
-	this.guiInterface.pushLight(id, this.activeLights, enabled);
-
-	return this.lights[this.activeLights++];
+	this.guiInterface.pushLight(id, this.activeLights++, enabled);
+	
+	return currentLight;
 };
 
 XMLscene.prototype.toggleLight = function(id, enabled) {
 	enabled ? this.lights[id].enable() : this.lights[id].disable();
-};
-
-XMLscene.prototype.initScale = function(matrix) {
-	this.defaultScale = matrix;
-};
-
-XMLscene.prototype.initTranslate = function(matrix) {
-	this.defaultTranslate = matrix;
-};
-
-XMLscene.prototype.setBackground = function(rgba) {
-	this.defaultBackground = rgba;
-}
-
-XMLscene.prototype.setAmbient = function(rgba) {
-	this.defaultAmbient = rgba;
 };
 
 XMLscene.prototype.onGraphLoaded = function() {
@@ -123,15 +134,16 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
 
+	// SET TRANSFORMATIONS
+	mat4.scale(this.defaultMatrix, this.defaultMatrix, this.defaultScale);
+	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[0], this.defaultRotationAxis[0]);
+	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[1], this.defaultRotationAxis[1]);
+	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[2], this.defaultRotationAxis[2]);
+	mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);
+
 	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
-		this.shader.bind();
-		this.lights[0].setPosition(2, 3, 3, 1);
-		this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
-		this.lights[0].setVisible(true);
-		this.lights[0].enable();
-		this.activeLights++;
-		this.shader.unbind();
+		this.pushLight('default', true, [2, 3, 3, 1], [0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0], [0.1, 0.1, 0.1, 1.0]);
 	}
 };
 
@@ -150,11 +162,7 @@ XMLscene.prototype.display = function () {
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
-	this.scale.apply(this, this.defaultScale);
-	this.rotate.apply(this, this.defaultRotation[0]);
-	this.rotate.apply(this, this.defaultRotation[1]);
-	this.rotate.apply(this, this.defaultRotation[2]);
-	this.translate.apply(this, this.defaultTranslate);
+	this.multMatrix(this.defaultMatrix);
 
 	// Draw axis
 	this.axis.display();

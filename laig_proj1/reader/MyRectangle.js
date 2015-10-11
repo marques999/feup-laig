@@ -2,12 +2,12 @@ function MyRectangle(scene, minX, maxY, maxX, minY) {
 
 	MyPrimitive.call(this, scene);
 
-	this.minX = minX || 0.0;
-	this.minY = minY || 0.0;
-	this.maxX = maxX || 1.0;
-	this.maxY = maxY || 1.0;
-	this.ampS = 1.0;
-	this.ampT = 1.0;
+	this.minX = minX;
+	this.minY = minY;
+	this.maxX = maxX;
+	this.maxY = maxY;
+	this.ampS = 0.0;
+	this.ampT = 0.0;
 	this.width = this.maxX - this.minX;
 	this.height = this.maxY - this.minY;
 	this.initBuffers();
