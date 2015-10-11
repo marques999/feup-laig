@@ -63,10 +63,10 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
 		this.defaultRotation[id] = [angle * Math.PI / 180, 1, 0, 0]
 	}
 	else if (axis == 'y') {
-		this.defaultRotation[id] = [angle * Math.PI / 180, angle, 0, 1, 0];
+		this.defaultRotation[id] = [angle * Math.PI / 180, 0, 1, 0];
 	}
 	else if (axis == 'z') {
-		this.defaultRotation[id] = [angle * Math.PI / 180, angle, 0, 0, 1];
+		this.defaultRotation[id] = [angle * Math.PI / 180, 0, 0, 1];
 	}
 };
 

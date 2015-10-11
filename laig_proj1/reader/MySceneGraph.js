@@ -1,6 +1,6 @@
 function MySceneGraph(filename, scene) {
 	
-	this.loadedOk = true;
+	this.loadedOk = null;
 	this.scene = scene;
 	this.verbose = true;
 	
@@ -87,6 +87,28 @@ MySceneGraph.prototype.onXMLReady = function()
 	this.validateNodes();
 	this.loadedOk = true;
 	this.scene.onGraphLoaded.call(this.scene);
+};
+
+MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
+
+	if (nextElement.textureId == 'null') {
+		return currTextureId;
+	}
+
+	if (nextElement.textureId == 'clear') {
+		return null;
+	}
+
+	return nextElement.textureId;
+};
+
+MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
+
+	if (nextElement.materialId == 'null') {
+		return currMaterialId;
+	}
+
+	return nextElement.materialId;
 };
 
 /*
@@ -178,8 +200,15 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
    | | | |    | |   | |  | | |\/| | | | | . ` | / /\ \ | |    | || |  | | . ` |
   _| |_| |____| |___| |__| | |  | |_| |_| |\  |/ ____ \| |   _| || |__| | |\  |
  |_____|______|______\____/|_|  |_|_____|_| \_/_/    \_\_|  |_____\____/|_| \_|
-                                                                               
+
+
+	<ILLUMINATION>
+		<ambient r="ff" g="ff" b="ff" a="ff" />
+		<background r="ff" g="ff" b="ff" a="ff" />
+	</ILLUMINATION>	  
+
 */
+
 MySceneGraph.prototype.parseIllumination = function (root) {
 
 	var globalAmbient = this.parseRGBA(root, 'ambient');	
@@ -218,28 +247,6 @@ MySceneGraph.prototype.parseIllumination = function (root) {
 
 */
 
-MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
-
-	if (nextElement.textureId == 'null') {
-		return currTextureId;
-	}
-
-	if (nextElement.textureId == 'clear') {
-		return null;
-	}
-
-	return nextElement.textureId;
-}
-
-MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
-
-	if (nextElement.materialId == 'null') {
-		return currMaterialId;
-	}
-
-	return nextElement.materialId;
-}
-
 MySceneGraph.prototype.parseNodeScale = function (root, node, id) {
 
 	var coords = this.parseNodeCoordinates(root, 'sx', 'sy', 'sz');
@@ -249,7 +256,7 @@ MySceneGraph.prototype.parseNodeScale = function (root, node, id) {
 		return error;
 	}
 
-	mat4.scale(node.matrix, node.matrix, coords);
+	node.scale(coords);
 
 	if (this.verbose) {
 		printXYZ('SCALE', coords);
@@ -267,7 +274,7 @@ MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 		return error;
 	}
 
-	mat4.translate(node.matrix, node.matrix, coords);			
+	node.translate(coords);		
 
 	if (this.verbose) {
 		printXYZ('TRANSLATION', coords);
@@ -295,20 +302,11 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
-
-    if (axis == 'x') {
-        mat4.rotateX(node.matrix, node.matrix, angle * Math.PI / 180);
-    }
-    else if (axis == 'y') {
-        mat4.rotateY(node.matrix, node.matrix, angle * Math.PI / 180);
-    }
-    else if (axis == 'z') {
-        mat4.rotateZ(node.matrix, node.matrix, angle * Math.PI / 180);
-    }
-    else {
-    	parseErrors++;
-    	onUnknownAxis(axis, root.nodeName, 'NODE');
-    }
+	
+	if (!node.rotate(axis, angle)) {
+		parseErrors++;
+		onUnknownAxis(axis, root.nodeName, 'NODE');
+	}
 
     if (parseErrors != 0) {
 		return onParseError(parent, parseErrors, id);
@@ -779,14 +777,23 @@ MySceneGraph.prototype.parseNode = function (id, root) {
  | |      | || | |_ |  __  |  | |  \___ \ 
  | |____ _| || |__| | |  | |  | |  ____) |
  |______|_____\_____|_|  |_|  |_| |_____/ 
-                                          
+
+
+	<LIGHT id="ss">
+		<enable value ="tt" />
+		<position x="ff" y="ff" z="ff" w="ff" />
+		<ambient r="ff" g="ff" b="ff" a="ff" />
+		<diffuse r="ff" g="ff" b="ff" a="ff" />
+		<specular r="ff" g="ff" b="ff" a="ff" />
+	</LIGHT>
+
 */
 
-MySceneGraph.prototype.parseLights = function (root) {
+MySceneGraph.prototype.parseLights = function(root) {
 	return this.parseArray(root, 'LIGHT', this.parseLight);
 }
 
-MySceneGraph.prototype.parseLight = function (id, root) {
+MySceneGraph.prototype.parseLight = function(id, root) {
 
 	var parseErrors = 0;
 	var parent = root.nodeName;
@@ -864,14 +871,23 @@ MySceneGraph.prototype.parseLight = function (id, root) {
  | |\/| | / /\ \ | |  |  __| |  _  /  | |   / /\ \ | |     \___ \ 
  | |  | |/ ____ \| |  | |____| | \ \ _| |_ / ____ \| |____ ____) |
  |_|  |_/_/    \_\_|  |______|_|  \_\_____/_/    \_\______|_____/ 
-                                                                 
+
+ 
+	<MATERIAL id="ss">                                  
+		<shininess value="ff" />
+		<specular r="ff" g="ff" b="ff" a="ff" />
+		<diffuse r="ff" g="ff" b="ff" a="ff" />
+		<ambient r="ff" g="ff" b="ff" a="ff" />
+		<emission r="ff" g="ff" b="ff" a="ff" />
+	</MATERIAL>
+  
 */
 
 MySceneGraph.prototype.parseMaterials = function(root) {
 	return this.parseArray(root, 'MATERIAL', this.parseMaterial);
 }
 
-MySceneGraph.prototype.parseMaterial = function (id, root) {
+MySceneGraph.prototype.parseMaterial = function(id, root) {
 
 	var parent = root.nodeName;
 	var parseErrors = 0;
@@ -965,7 +981,7 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
 	return this.parseArray(rootElement, 'TEXTURE', this.parseTexture);
 }
 
-MySceneGraph.prototype.parseTexture = function (id, root)
+MySceneGraph.prototype.parseTexture = function(id, root)
 {
 	var parent = root.nodeName;
 	var parseErrors = 0;
@@ -1030,7 +1046,7 @@ MySceneGraph.prototype.parseTexture = function (id, root)
                                            
 */
 
-MySceneGraph.prototype.parseLeaves = function (root) {
+MySceneGraph.prototype.parseLeaves = function(root) {
 	return this.parseArray(root, 'LEAF', this.parseLeaf);
 };
 
@@ -1098,53 +1114,55 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
  | | |_ | |   | |  | |  _ < / /\ \ | |     \___ \ 
  | |__| | |___| |__| | |_) / ____ \| |____ ____) |
   \_____|______\____/|____/_/    \_\______|_____/ 
-                                                  
+                                                 
+	<GLOBALS>
+		<frustum near="ff" far="ff" />	
+		<translation x="ff" y="ff" z="ff"/>
+		<rotation axis="x" angle="ff" />
+		<rotation axis="y" angle="ff" />
+		<rotation axis="z" angle="ff" />
+		<scale sx="ff" sy="ff" sz="ff" />
+		<reference length="ff" />
+	</GLOBALS>
+
 */
 
 MySceneGraph.prototype.parseGlobals = function(root) {
 
 	var parent = root.nodeName;
 	var parseErrors = 0;
-
-	// <frustum near="ff" far="ff" />	
+	
 	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
 	var error = checkValue(globalFrustumNear, 'near', 'frustum');
 	if (error != null) {
 		return error;
 	}
 
-	// <frustum near="ff" far="ff" />	
 	var globalFrustumFar = this.parseFloat(root, 'frustum', 'far');
 	error = checkValue(globalFrustumFar, 'far', 'frustum');
 	if (error != null) {
 		return error;
 	}
 
-	// <reference length="ff" />
 	var globalReference = this.parseFloat(root, 'reference', 'length');
 	error = checkValue(globalReference, 'length', 'reference');
 	if (error != null) {
 		return error;
 	}
 
-	// <scale sx="ff" sy="ff" sz="ff" />
+
 	var globalScale = this.parseCoordinatesScale(root, 'scale');
 	error = checkValue(globalScale, 'scale', parent);
 	if (error != null) {
 		return error;
 	}
 
-	// <translation x="ff" y="ff" z="ff"/>
 	var globalTranslate = this.parseCoordinatesXYZ(root, 'translation');
 	error = checkValue(globalTranslate, 'translation', parent);
 	if (error != null) {
 		return error;
 	}
 	
-	// <rotate axis="x" angle="ff" />
-	// <rotate axis="y" angle="ff" />
-	// <rotate axis="z" angle="ff" />
-	//
 	var node = root.getElementsByTagName('rotation');
 	var node_sz = node.length;
 

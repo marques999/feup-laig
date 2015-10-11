@@ -1,16 +1,16 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="0.0" y="0.0" z="0.0" />
-		<rotation axis="y" angle="0.0" />
-		<rotation axis="x" angle="0.0" />
+		<translation x="-8.0" y="0.0" z="1.0" />
+		<rotation axis="y" angle="45.0" />
+		<rotation axis="x" angle="-22.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
 		<reference length="4.0" />
 	</INITIALS>
 
 	<ILLUMINATION>
-		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+		<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
 
@@ -34,27 +34,27 @@
 
 	<TEXTURES>
 		<TEXTURE id="room_floor">
-			<file path="scenes/images/floor.png" />
+			<file path="images/floor.png" />
 			<amplif_factor s="0.25" t="0.5" />
 		</TEXTURE>
 
 		<TEXTURE id="room_wall">
-			<file path="scenes/images/wall.png" />
+			<file path="images/wall.png" />
 			<amplif_factor s="0.5" t="1.0" />
 		</TEXTURE>
 		
 		<TEXTURE id="table_felt">
-			<file path="scenes/images/felt.png" />
+			<file path="images/felt.png" />
 			<amplif_factor s="0.25" t="0.5" />
 		</TEXTURE>
 		
 		<TEXTURE id="table_wood">
-			<file path="scenes/images/wood.jpg" />
+			<file path="images/wood.jpg" />
 			<amplif_factor s="0.25" t="1.5" />
 		</TEXTURE>
 		
 		<TEXTURE id="marble">
-			<file path="scenes/images/marble.png" />
+			<file path="images/marble.png" />
 			<amplif_factor s="1.0" t="2.0" />
 		</TEXTURE>
 	</TEXTURES>
