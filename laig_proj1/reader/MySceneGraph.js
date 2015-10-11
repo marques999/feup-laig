@@ -638,7 +638,24 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
  | . ` | |  | | |  | |  __|  \___ \ 
  | |\  | |__| | |__| | |____ ____) |
  |_| \_|\____/|_____/|______|_____/ 
-                                    
+      
+	<NODE id="ss">
+	
+		[REQUIRED]
+        <MATERIAL id="ss" />
+        <TEXTURE id="ss" />
+		
+		[OPTIONAL]
+        <TRANSLATION x="ff" y="ff" z="ff" />
+        <ROTATION axis="cc" angle="ff" />
+        <SCALE sx="ff" sy="ff" sz="ff" />
+
+		[REQUIRED]
+        <DESCENDANTS>
+            <DESCENDANT id="ss" />
+        </DESCENDANTS>
+
+    </NODE>	  
 */
 
 MySceneGraph.prototype.parseNodes = function (root) {
@@ -974,7 +991,13 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
     | |  |  __|   > <    | |  | |  | |  _  /|  __|  \___ \ 
     | |  | |____ / . \   | |  | |__| | | \ \| |____ ____) |
     |_|  |______/_/ \_\  |_|   \____/|_|  \_\______|_____/ 
-                                                           
+         
+		 
+	<TEXTURE id="ss">
+		<file path="ss" />
+		<amplif_factor s="ff" t="ff" />
+	</TEXTURE>		
+	
 */
 
 MySceneGraph.prototype.parseTextures = function(rootElement) {
@@ -1043,6 +1066,11 @@ MySceneGraph.prototype.parseTexture = function(id, root)
  | |    |  __|   / /\ \ \/ / |  __|  \___ \ 
  | |____| |____ / ____ \  /  | |____ ____) |
  |______|______/_/    \_\/   |______|_____/ 
+ 
+	<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
+	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" /> 
+	<LEAF id="ss" type="sphere" args="ff ii ii" />
+	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
                                            
 */
 
