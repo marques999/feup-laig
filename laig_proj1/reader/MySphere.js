@@ -1,4 +1,4 @@
-function MySphere(scene, radius, slices, stacks) {
+function MySphere(scene, radius, stacks, slices) {
 
 	MyPrimitive.call(this, scene);
 
@@ -29,11 +29,13 @@ MySphere.prototype.initBuffers = function() {
 
 		var theta = 0;
 		var tCoord = 0.0;
+		var deltaX = this.radius * Math.cos(phi);
+		var deltaY = this.radius * Math.sin(phi);
 
 		for (var j = 0; j <= this.stacks; j++) {
 			
-			var x = this.radius * Math.cos(phi) * Math.sin(theta);
-			var z = this.radius * Math.sin(phi) * Math.sin(theta);
+			var x = deltaX * Math.sin(theta);
+			var z = deltaY * Math.sin(theta);
 			var y = this.radius * Math.cos(theta);
 
 			this.vertices.push(x, y, z);

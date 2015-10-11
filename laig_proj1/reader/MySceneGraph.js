@@ -1,9 +1,8 @@
 function MySceneGraph(filename, scene) {
 	
-	this.loadedOk = null;
+	this.loadedOk = true;
 	this.scene = scene;
 	this.verbose = true;
-	this.debug = true;
 	
 	scene.graph = this;
 
@@ -90,13 +89,87 @@ MySceneGraph.prototype.onXMLReady = function()
 	this.scene.onGraphLoaded.call(this.scene);
 };
 
-MySceneGraph.prototype.display = function() {
-	this.processNodes(this.graphRoot);
-}
+/*
+  _____ _____  _____ _____  _           __     __
+ |  __ \_   _|/ ____|  __ \| |        /\\ \   / /
+ | |  | || | | (___ | |__) | |       /  \\ \_/ / 
+ | |  | || |  \___ \|  ___/| |      / /\ \\   /  
+ | |__| || |_ ____) | |    | |____ / ____ \| |   
+ |_____/_____|_____/|_|    |______/_/    \_\_|   
+                                                 
+*/
 
-MySceneGraph.prototype.getLights = function() {
-	return this.lights;
-}
+MySceneGraph.prototype.display = function() {
+
+	var rootNode = this.nodes[this.graphRoot];
+	var rootMaterial = this.defaultMaterial;
+
+	this.scene.pushMatrix();
+	
+	if (rootNode.materialId != null && rootNode.materialId != 'null') {
+		rootMaterial = this.materials[rootNode.materialId];
+	}
+
+	if (rootNode.textureId != null && rootNode.textureId != 'null') {
+		rootMaterial.setTexture(this.textures[rootNode.textureId].tex);	
+	}
+
+	this.scene.applyMaterial(rootMaterial);
+	this.processNodes(rootNode, rootNode.materialId, rootNode.textureId);
+	this.scene.popMatrix();
+};
+
+MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
+
+	this.scene.multMatrix(node.matrix);
+
+	for (var i = 0; i < node.children.length; i++) {			
+		
+		var nextId = node.children[i];
+		var nextElement = null;
+		var isLeaf = false;
+		var mId = materialId;
+		var tId = textureId;
+
+		if (nextId in this.nodes) {
+			nextElement = this.nodes[nextId];
+		}	
+		else if (nextId in this.leaves) {
+			isLeaf = true;
+			nextElement = this.leaves[nextId];			
+		}
+		else {
+			continue;
+		}
+
+		if (isLeaf) {
+
+			var leafMaterial = this.defaultMaterial;
+			var leafTexture = null;
+
+			if (mId != null && mId != 'null') {
+				leafMaterial = this.materials[mId];
+			}
+
+			if (tId == null || tId == 'null') {
+				leafMaterial.setTexture(null);
+			}
+			else {
+				leafTexture = this.textures[tId];
+				nextElement.updateTexCoords(leafTexture.factorS, leafTexture.factorT);
+				leafMaterial.setTexture(leafTexture.tex);	
+			}
+			
+			this.scene.applyMaterial(leafMaterial);
+			this.scene.drawPrimitive(nextElement);
+		}
+		else {
+			this.scene.pushMatrix();	
+			this.processNodes(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
+			this.scene.popMatrix();
+		}		
+	}
+};
 
 /*
   _____ _      _     _    _ __  __ _____ _   _       _______ _____ ____  _   _ 
@@ -340,7 +413,7 @@ MySceneGraph.prototype.readCylinder = function(id, args) {
 		return onAttributeInvalid('number of slices', id, 'CYLINDER');
 	}
 
-	this.leaves[id] = new MyCylinder(this.scene, myRadiusBottom, myRadiusTop, myHeight,	mySlices, myStacks);
+	this.leaves[id] = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
 
 	return null;
 }
@@ -402,7 +475,7 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 	return checkResult == null ? NaN : checkResult;
 }
 
-MySceneGraph.prototype.parseNodeCoordinates = function (node, coordA, coordB, coordC) {
+MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coordC) {
 
 	if (!node.hasAttribute(coordA) | !node.hasAttribute(coordB) || !node.hasAttribute(coordC)) {
 		return NaN;
@@ -593,7 +666,6 @@ MySceneGraph.prototype.parseNode = function (id, root) {
 
 	var parent = root.nodeName;
 	var parseErrors = 0;
-	var error = null;
 
 	if (id in this.nodes) {
 		return onElementDuplicate(parent, id);
@@ -608,7 +680,7 @@ MySceneGraph.prototype.parseNode = function (id, root) {
 		return onAttributeMissing('MATERIAL', id, parent);
 	}
 
-	error = checkReference(this.materials, 'MATERIAL', id, nodeMaterial);
+	var error = checkReference(this.materials, 'MATERIAL', id, nodeMaterial);
 	if (error != null) {
 		nodeMaterial = null;
 	 	onXMLWarning(error);
@@ -656,7 +728,7 @@ MySceneGraph.prototype.parseNode = function (id, root) {
 		}
 
 		if (error != null) {
-			return error;
+			onXMLWarning(error);
 		}
 	}
 
@@ -1108,7 +1180,7 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 			return error;
 		}
 		
-		if (this.parseSceneRotation(j, axis, angle, axisFound) == true) {
+		if (this.parseSceneRotation(j, axis, angle, axisFound)) {
 			j++;
 		}
 	}
@@ -1162,87 +1234,6 @@ MySceneGraph.prototype.parseSceneRotation = function(id, axis, angle, axisFound)
 	return true;
 };
 
-/*
-  _____ _____  _____ _____  _           __     __
- |  __ \_   _|/ ____|  __ \| |        /\\ \   / /
- | |  | || | | (___ | |__) | |       /  \\ \_/ / 
- | |  | || |  \___ \|  ___/| |      / /\ \\   /  
- | |__| || |_ ____) | |    | |____ / ____ \| |   
- |_____/_____|_____/|_|    |______/_/    \_\_|   
-                                                 
-*/
-
-MySceneGraph.prototype.processNodes = function() {
-
-	var rootNode = this.nodes[this.graphRoot];
-	var rootMaterial = this.defaultMaterial;
-
-	this.scene.pushMatrix();
-	
-	if (rootNode.materialId != null && rootNode.materialId != 'null') {
-		rootMaterial = this.materials[rootNode.materialId];
-	}
-
-	if (rootNode.textureId != null && rootNode.textureId != 'null') {
-		rootMaterial.setTexture(this.textures[rootNode.textureId].tex);	
-	}
-
-	this.scene.applyMaterial(rootMaterial);
-	this.processNodesAux(rootNode, rootNode.materialId, rootNode.textureId);
-	this.scene.popMatrix();
-};
-
-MySceneGraph.prototype.processNodesAux = function(node, materialId, textureId) {
-
-	this.scene.multMatrix(node.matrix);
-
-	for (var i = 0; i < node.children.length; i++) {			
-		
-		var nextId = node.children[i];
-		var nextElement = null;
-		var isLeaf = false;
-		var mId = materialId;
-		var tId = textureId;
-
-		if (nextId in this.nodes) {
-			nextElement = this.nodes[nextId];
-		}	
-		else if (nextId in this.leaves) {
-			isLeaf = true;
-			nextElement = this.leaves[nextId];			
-		}
-		else {
-			continue;
-		}
-
-		if (isLeaf) {
-
-			var leafMaterial = this.defaultMaterial;
-			var leafTexture = null;
-
-			if (mId != null && mId != 'null') {
-				leafMaterial = this.materials[mId];
-			}
-
-			if (tId == null || tId == 'null') {
-				leafMaterial.setTexture(null);
-			}
-			else {
-				leafTexture = this.textures[tId];
-				nextElement.updateTexCoords(leafTexture.factorS, leafTexture.factorT);
-				leafMaterial.setTexture(leafTexture.tex);	
-			}
-			
-			this.scene.applyMaterial(leafMaterial);
-			this.scene.drawPrimitive(nextElement);
-		}
-		else {
-			this.scene.pushMatrix();	
-			this.processNodesAux(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
-			this.scene.popMatrix();
-		}		
-	}
-};
 
 MySceneGraph.prototype.resetIndegree = function() {
 	for (var node in this.nodes) {

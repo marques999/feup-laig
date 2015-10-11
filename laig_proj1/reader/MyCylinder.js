@@ -1,4 +1,4 @@
-function MyCylinder(scene, radiusBottom, radiusTop, height, slices, stacks) {
+function MyCylinder(scene, height, radiusBottom, radiusTop, stacks, slices) {
 
 	MyPrimitive.call(this, scene);
 
@@ -19,11 +19,11 @@ MyCylinder.prototype.constructor = MyCylinder;
 
 MyCylinder.prototype.initBuffers = function() {
 
+	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;
+	var stackIncrement = this.height / this.stacks;
+	var thetaIncrement = (2 * Math.PI) / this.slices;
 	var texelIncrementS = 1.0 / this.slices;
 	var texelIncrementT = 1.0 / this.stacks;
-	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;
-	var thetaIncrement = (2 * Math.PI) / this.slices;
-	var stackIncrement = this.height / this.stacks;
 	var vertexNumber = 1;
 	var sCoord = 1.0;
 	var theta = 0;
