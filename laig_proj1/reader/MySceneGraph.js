@@ -132,7 +132,7 @@ MySceneGraph.prototype.display = function() {
 		rootMaterial = this.materials[rootNode.materialId];
 	}
 
-	if (rootNode.textureId != null && rootNode.textureId != 'null') {
+	if (rootNode.textureId != null && rootNode.textureId != 'null' && rootNode.textureId != 'clear') {
 		rootMaterial.setTexture(this.textures[rootNode.textureId].tex);	
 	}
 
@@ -329,21 +329,21 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 
 */
 
-MySceneGraph.prototype.readRectangle = function(id, args) {
+MySceneGraph.prototype.readRectangle = function(id, leafArgs) {
 
-	if (args.length != 4) {
+	if (leafArgs.length != 4) {
 		return onInvalidArguments(id, leafArgs.length, 4);
 	}
 
-	var x1 = parseFloat(args[0]);
-	var y1 = parseFloat(args[1]);
+	var x1 = parseFloat(leafArgs[0]);
+	var y1 = parseFloat(leafArgs[1]);
 
 	if (x1 != x1 || y1 != y1) {
 		return onAttributeInvalid('top left vertex', id, 'RECTANGLE');
 	}
 
-	var x2 = parseFloat(args[2]);
-	var y2 = parseFloat(args[3]);
+	var x2 = parseFloat(leafArgs[2]);
+	var y2 = parseFloat(leafArgs[3]);
 
 	if (x2 != x2 || y2 != y2) {
 		return onAttributeInvalid('bottom right vertex', id, 'RECTANGLE');
@@ -1095,30 +1095,23 @@ MySceneGraph.prototype.parseLeaves = function(root) {
 MySceneGraph.prototype.parseLeaf = function(id, root) {
 
 	var parent = root.nodeName;
-	var parseErrors = 0;
 
 	if (id in this.leaves) {
 		return onElementDuplicate(parent, id);
 	}
 
 	if (!root.hasAttribute('type')) {
-		parseErrors++;
-		onXMLWarning(onAttributeMissing('type', id, parent));
+		return onAttributeMissing('type', id, parent);
 	}
 
 	var leafType = this.reader.getString(root, 'type');
 
 	if (!root.hasAttribute('args')) {
-		parseErrors++;
-		onXMLWarning(onAttributeMissing('args', id, parent));
+		return onAttributeMissing('args', id, parent);
 	}
 
-	var leafArgs = this.reader.getString(root, 'args').trim().split(' ');
-
-	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
-	}
-
+	var unprocessedArgs = this.reader.getString(root, 'args');
+	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 	var error = null;
 
 	if (leafType == 'rectangle') {
