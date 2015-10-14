@@ -28,11 +28,6 @@ XMLNode.prototype.rotate = function(axis, angle) {
     else if (axis == 'z') {
         mat4.rotateZ(this.matrix, this.matrix, angle * Math.PI / 180);
     }
-	else {
-		return false;
-	}
-	
-	return true;
 };
 
 XMLNode.prototype.scale = function(coords) {

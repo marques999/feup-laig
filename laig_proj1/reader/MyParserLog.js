@@ -1,13 +1,13 @@
 function onAttributeMissing(node, id, parent) {
-	return parent + " with id=" + id + " is missing attribute '" + node + "'.";
+	return parent + " with id=" + id + " is missing attribute <" + node + ">!";
 };
 
 function onAttributeInvalid(node, id, parent) {
-	return parent + " with id=" + id + " has an invalid value for '" + node + "' attribute.";
+	console.warn("WARNING: " + parent + " with id=" + id + " has an invalid value for '" + node + "' attribute!");
 };
 
 function onURLInvalid(node, id, parent) {
-	return parent + " with id=" + id + " has an invalid URL for '" + node + "' attribute.";
+	return parent + " with id=" + id + " has an invalid URL for '" + node + "' attribute!";
 };
 
 function onElementDuplicate(parent, id) {
@@ -23,23 +23,23 @@ function onElementMissing(node, parent) {
 };
 
 function onCoordinateMissing(coord, parent) {
-	console.warn("coordinate " + coord + " is missing from <" + parent + ">.");
+	console.warn("WARNING: coordinate '" + coord + "' is missing from <" + parent + ">!");
 };
 
 function onCoordinateInvalid(coord, parent) {
-	console.warn("coordinate " + coord + " from <" + parent + "> is not a number.");
+	console.warn("WARNING: coordinate '" + coord + "' from <" + parent + "> has an invalid value!");
 }
 
 function onElementInvalid(node, parent) {
-	return node + " attribute from <" + parent + "> has an invalid value.";
+	return node + " attribute from <" + parent + "> has an invalid value!";
 };
 
 function onMultipleElements(node, parent) {
-	console.warn("WARNING: either zero or more than one '" + node + "' elements found in <" + parent + ">.");
+	console.warn("WARNING: either zero or more than one '" + node + "' elements found in <" + parent + ">!");
 };
 
 function onMultipleDefinitions(name, parent) {
-	console.warn("WARNING: multiple definitions for <" + name + "> found in <" + parent + ">");
+	console.warn("WARNING: multiple definitions for <" + name + "> found in <" + parent + ">!");
 };
 
 function onProcessNode(message, id) {
@@ -51,15 +51,15 @@ function onMultipleAxis(axis) {
 }
 
 function onInvalidArguments(id, argsGot, argsExpected) {	
-	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + ".";
+	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + "...";
 };
 
-function onUnexpectedTag(node, parent) {
-	console.warn("WARNING: unexpected tag <" + node + "> found in " + parent + ", skipping...");
+function onUnexpectedTag(tag, expected, parent, id) {
+	return "invalid tag <" + tag + "> found in " + parent + " with id=" + id + ", expected <" + expected + ">!";
 };
 
 function onUnknownAxis(axis, node, parent) {
-	console.warn("WARNING: unknown rotation axis '" + axis + "'for " + node + " found in <" + parent + ">.");
+	return "unknown axis '" + axis + "' for <" + node + "> found in <" + parent + ">!";
 }
 
 function onXMLWarning(message) {
@@ -69,10 +69,10 @@ function onXMLWarning(message) {
 function onParseError(parent, nerr, id) {
 
 	if (id == undefined) {
-		return nerr + " errors found while parsing <" + parent + ">.";
+		return nerr + " errors found while parsing <" + parent + ">!";
 	}
 
-	return nerr + " errors found while parsing <" + parent + "> with id=" + id + ".";
+	return nerr + " errors found while parsing <" + parent + "> with id=" + id + "...";
 }
 
 /*       
@@ -144,7 +144,7 @@ function checkReference(array, name, nodeId, objectId) {
 	}
 
 	if (!(objectId in array)) {
-		return "<NODE> with id=" + nodeId + " references " + name + " id=" + objectId +" which doesn't exist, using defaults...";
+		return "NODE with id=" + nodeId + " references " + name + " id=" + objectId +" which doesn't exist, using defaults...";
 	}
 
 	return null;
