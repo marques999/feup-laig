@@ -1313,7 +1313,6 @@ MySceneGraph.prototype.parseSceneRotation = function(id, axis, angle, axisFound)
 
 
 MySceneGraph.prototype.resetIndegree = function() {
-
 	for (var node in this.nodes) {	
 		var children = this.nodes[node].children;	
 		for (var i = 0; i < children.length; i++) {
