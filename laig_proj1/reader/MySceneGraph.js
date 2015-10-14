@@ -639,12 +639,12 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 		var currentElement = rootElement.children[i];
 
 		if (currentElement.nodeName != nodeName) {
-			console.warn("WARNING: element in " + parent + " has invalid name (expected " + nodeName + ", got " + currentElement.nodeName + ").");
+			console.warn("WARNING: invalid tag found <" + currentElement.nodeName + "> found in <" + parent + ">, expected <" + nodeName + ">!");
 			continue;
 		}
 		
 		if (!currentElement.hasAttribute('id')) {
-			console.warn("WARNING: <" + currentElement.nodeName + "> with index=" + i + " is missing ID.");
+			console.warn("WARNING: <" + currentElement.nodeName + "> with index=" + i + " is missing ID!");
 			continue;
 		}
 
