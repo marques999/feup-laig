@@ -87,30 +87,8 @@ MySceneGraph.prototype.onXMLReady = function()
 		this.scene.onGraphLoaded();
 	}
 	else {
-		this.onXMLError("invalid graph root '" + this.graphRoot + "'' not found in <NODES>");
+		this.onXMLError("invalid graph root '" + this.graphRoot + "'' not found in <NODES>!");
 	}
-};
-
-MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
-
-	if (nextElement.textureId == 'null') {
-		return currTextureId;
-	}
-
-	if (nextElement.textureId == 'clear') {
-		return null;
-	}
-
-	return nextElement.textureId;
-};
-
-MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
-
-	if (nextElement.materialId == 'null') {
-		return currMaterialId;
-	}
-
-	return nextElement.materialId;
 };
 
 /*
@@ -182,6 +160,23 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 			this.scene.popMatrix();
 		}
 	}
+};
+
+MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
+
+	if (nextElement.textureId == 'null') {
+		return currTextureId;
+	}
+
+	if (nextElement.textureId == 'clear') {
+		return null;
+	}
+
+	return nextElement.textureId;
+};
+
+MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
+	return nextElement.materialId == 'null' ? currMaterialId : nextElement.materialId;
 };
 
 /*
@@ -673,17 +668,12 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
  |_| \_|\____/|_____/|______|_____/ 
       
 	<NODE id="ss">
-	
-		[REQUIRED]
+
         <MATERIAL id="ss" />
         <TEXTURE id="ss" />
-		
-		[OPTIONAL]
         <TRANSLATION x="ff" y="ff" z="ff" />
         <ROTATION axis="cc" angle="ff" />
         <SCALE sx="ff" sy="ff" sz="ff" />
-
-		[REQUIRED]
         <DESCENDANTS>
             <DESCENDANT id="ss" />
         </DESCENDANTS>
@@ -1323,8 +1313,9 @@ MySceneGraph.prototype.parseSceneRotation = function(id, axis, angle, axisFound)
 
 
 MySceneGraph.prototype.resetIndegree = function() {
-	for (var node in this.nodes) {
-		var children = this.nodes[node].children;
+
+	for (var node in this.nodes) {	
+		var children = this.nodes[node].children;	
 		for (var i = 0; i < children.length; i++) {
 			if (children[i] in this.nodes) {
 				this.nodes[children[i]].indegree++;
@@ -1337,41 +1328,50 @@ MySceneGraph.prototype.validateNodes = function() {
 
 	var ready = false;
 
-	while(!ready) {
+	while (!ready) {
 
 		ready = true;
 
 		for (var node in this.nodes) {	
 
 			var children = this.nodes[node].children;
-			var nodeIndegree = this.nodes[node].indegree;
-			
-			console.log("[VALIDATE NODES] Processing: " + node + ", indegree=" + this.nodes[node].indegree);
-			
+			var nodeIndegree = this.nodes[node].indegree;		
+			this.onVisitNode(node, this.nodes[node].indegree);
+
 			if (nodeIndegree == 0 && node != this.graphRoot) {
-				onProcessNode("Deleting", node);	
-				ready = false;			
-			}
-
-			if (!ready) {
+				ready = false;	
+				this.onProcessNode("Deleting", node);	
 				delete this.nodes[node];
-				break;
+				continue;		
 			}
 
-			for (var n = 0; n < children.length; n++) {				
-				if (!(children[n] in this.leaves) && !(children[n] in this.nodes) && children[n] != node) {
-					console.log("Erasing reference with id=" + children[n] + " from node id=" + node);				
-					this.nodes[node].children.splice(n, 1);
+			for (var n = 0; n < children.length; n++) {						
+				if (!(children[n] in this.leaves) && !(children[n] in this.nodes) && children[n] != node) {	
+					this.onEraseChildren(children[n], node);
+					children.splice(n, 1);
 					n--;
 				}
 			}
 
 			if (children.length == 0) {
-				onProcessNode("Erasing", node);
+				ready = false;
+				this.onProcessNode("Erasing", node);
 				delete this.nodes[node];
 			}
 		}		
 	}
+};
+
+MySceneGraph.prototype.onEraseChildren = function(node, parent)	{
+	this.verbose &&	console.log("[VALIDATE NODES] Erasing reference with id=" + node + " from node id=" + parent);
+};
+
+MySceneGraph.prototype.onProcessNode = function(message, id) {
+	this.verbose &&	console.log("[VALIDATE NODES] " + message + ": " + id);
+};
+
+MySceneGraph.prototype.onVisitNode = function(node, indegree) {
+	this.verbose && console.log("[VALIDATE NODES] Processing: " + node + ", indegree=" + indegree);
 };
 
 MySceneGraph.prototype.onXMLError = function(message) {
