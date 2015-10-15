@@ -1,8 +1,8 @@
 /**
  * construtor default da classe 'XMLNode'
- * @param id {String} - identificador do nó
- * @param textureId {String} -  identificador da textura associada a este nó
- * @param materialId {String} - identificador do material associado a este nó
+ * @param {String} id - identificador do nó
+ * @param {String} textureId -  identificador da textura associada a este nó
+ * @param {String} materialId - identificador do material associado a este nó
  * @class
  */
 function XMLNode(id, textureId, materialId) {
