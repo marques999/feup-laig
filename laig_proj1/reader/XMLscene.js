@@ -21,6 +21,7 @@ XMLscene.prototype.init = function(application) {
 	this.enableTextures(true);
 
 	mat4.identity(this.defaultMatrix);
+		
 };
 
 XMLscene.prototype.initAxis = function(length) {
@@ -51,10 +52,20 @@ XMLscene.prototype.initScale = function(matrix) {
 	this.defaultScale = matrix;
 };
 
+/*
+ * sets default translation coordinate for the secene
+ * @param {array3} matrix
+ * @return {null}
+ */
 XMLscene.prototype.initTranslate = function(matrix) {
 	this.defaultTranslate = matrix;
 };
 
+/*
+ * sets current application interface
+ * @param {CGFinterface} guiInterface
+ * @return {null}
+ */
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
 };
@@ -66,14 +77,29 @@ XMLscene.prototype.setDefaultAppearance = function() {
 	this.setShininess(10.0);
 };
 
+/*
+ * draws primitive buffers on the screen
+ * @param {CGFobject} primitive
+ * @return {null}
+ */
 XMLscene.prototype.drawPrimitive = function(primitive) {
 	primitive.display();
 };
 
+/*
+ * binds CGFappearance to this scene
+ * @param {CGFappearance} appearance
+ * @return {null}
+ */
 XMLscene.prototype.applyMaterial = function(appearance) {
 	appearance.apply();
 }
 
+/*
+ * sets default value for the global ambient light
+ * @param {array4} rgba
+ * @return {null}
+ */
 XMLscene.prototype.setAmbient = function(rgba) {
 	this.defaultAmbient = rgba;
 };
@@ -117,8 +143,7 @@ XMLscene.prototype.toggleLight = function(id, enabled) {
 	enabled ? this.lights[id].enable() : this.lights[id].disable();
 };
 
-XMLscene.prototype.onGraphLoaded = function() {
-	
+XMLscene.prototype.onGraphLoaded = function() {	
 	// SET BACKGROUND
 	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
 					   this.defaultBackground[2], this.defaultBackground[3]);
@@ -127,6 +152,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
 							   this.defaultAmbient[2], this.defaultAmbient[3]);
 
+	
 	// SET AXIS
 	this.axis = new CGFaxis(this, this.defaultReference);
 

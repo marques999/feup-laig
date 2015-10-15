@@ -13,10 +13,22 @@ function XMLNode(id, textureId, materialId) {
 XMLNode.prototype = Object.create(Object.prototype);
 XMLNode.prototype.constructor = XMLNode;
 
+
+/**
+ * Adds a new descendant to the node. 
+ * @param {Character} child 
+ * @return {null} 
+ */
 XMLNode.prototype.addChild = function(child) {
 	this.children.push(child);
 };
 
+/**
+ * Multiplies the node tranformation matrix by the correspondant rotation matrix. 
+ * @param {Character} axis 
+ * @param {Number} angle
+ * @return {null} 
+ */
 XMLNode.prototype.rotate = function(axis, angle) {
 	
 	if (axis == 'x') {
@@ -30,10 +42,21 @@ XMLNode.prototype.rotate = function(axis, angle) {
     }
 };
 
+/**
+ * Multiplies the node tranformation matrix by the correspondant scale matrix. 
+ * @param {Array} coords 
+ * @return {null} 
+ */
 XMLNode.prototype.scale = function(coords) {
 	mat4.scale(this.matrix, this.matrix, coords);
 };
 
+
+/**
+ * Multiplies the node tranformation matrix by the correspondant translation matrix. 
+ * @param {Array} coords 
+ * @return {null} 
+ */
 XMLNode.prototype.translate = function(coords) {
 	mat4.translate(this.matrix, this.matrix, coords);	
 };
