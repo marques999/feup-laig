@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'XMLScene'
+ * construtor default da classe 'XMLscene'
  * @class
  */
 function XMLscene() {
@@ -10,7 +10,7 @@ XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
 /**
- * inicializa cena com valores default e define alguns aspetos da linguagem WebG
+ * inicializa cena com observador, eixos e alguns aspetos da linguagem WebGL
  * @param {CGFapplication} application
  * @return {null}
  */
@@ -50,6 +50,10 @@ XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
+/**
+ * inicializa algumas propriedades desta cena com os respetivos valores default
+ * @return {null}
+ */
 XMLscene.prototype.initDefaults = function() {
 	this.defaultAmbient = [0.1, 0.1, 0.1, 1.0];
 	this.defaultBackground = [0.0, 0.0, 0.0, 1.0];
@@ -91,8 +95,8 @@ XMLscene.prototype.initTranslate = function(matrix) {
 };
 
 /*
- * sets current application interface
- * @param {CGFinterface} guiInterface
+ * altera a interface da aplicação WebGL associada a esta cena
+ * @param {CGFinterface} guiInterface - novo apontador para uma CGFinterface
  * @return {null}
  */
 XMLscene.prototype.setInterface = function(guiInterface) {
@@ -100,7 +104,7 @@ XMLscene.prototype.setInterface = function(guiInterface) {
 };
 
 /*
- * 
+ * inicializa a cena com os valores da aparência default 
  * @return {null}
  */
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -129,8 +133,8 @@ XMLscene.prototype.applyMaterial = function(appearance) {
 }
 
 /*
- * altera o valor da componente de iluminação global ambiente
- * @param {Array} rgba - vetor de coordenadas (r, g, b, a) da componente
+ * altera a componente de iluminação global ambiente da cena
+ * @param {Array} rgba - vetor com as componentes (r, g, b, a) da iluminação ambiente
  * @return {null}
  */
 XMLscene.prototype.setAmbient = function(rgba) {
@@ -138,8 +142,8 @@ XMLscene.prototype.setAmbient = function(rgba) {
 };
 
 /*
- * altera o valor da cor de fundo da cena
- * @param {Array} rgba - vetor de coordenadas (r, g, b, a) da componente
+ * altera a cor de fundo da cena
+ * @param {Array} rgba - vetor com as componentes (r, g, b, a) da cor
  * @return {null}
  */
 XMLscene.prototype.setBackground = function(rgba) {
@@ -147,7 +151,7 @@ XMLscene.prototype.setBackground = function(rgba) {
 };
 
 /**
- * altera as coordenadas da rotação inicial da cena
+ * altera as coordenadas de rotação inicial da cena
  * @param {Integer} id - ordem da rotação na cena
  * @param {Character} axis - eixo da rotação (x, y, z)
  * @param {Float} angle - ângulo da rotação (em graus)
@@ -196,7 +200,7 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 /**
  * altera o estado ON/OFF de uma CGFlight existente na cena
  * @param {Integer} id - índice da CGFlight no array de luzes da cena
- * @param {Boolean} enabled - novo estado da CGFlight
+ * @param {Boolean} enabled - novo estado ON/OFF da CGFlight
  * @return {null}
  */
 XMLscene.prototype.toggleLight = function(id, enabled) {
@@ -204,7 +208,7 @@ XMLscene.prototype.toggleLight = function(id, enabled) {
 };
 
 /**
- * 
+ * callback executado quando é terminado o processamento do grafo de cena
  * @return {null}
  */
 XMLscene.prototype.onGraphLoaded = function() {	
@@ -238,7 +242,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 };
 
 /**
- * funçao de display principal da cena
+ * funçao de display da CGFscene
  * @return {null}
  */
 XMLscene.prototype.display = function () {
