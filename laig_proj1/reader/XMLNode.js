@@ -20,7 +20,6 @@ function XMLNode(id, textureId, materialId) {
 XMLNode.prototype = Object.create(Object.prototype);
 XMLNode.prototype.constructor = XMLNode;
 
-
 /**
  * acrescenta um descendente no final da lista de descendentes deste nó
  * @param {String} child - id do nó descendente

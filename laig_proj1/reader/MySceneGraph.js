@@ -132,10 +132,10 @@ MySceneGraph.prototype.display = function() {
 };
 
 /**
- * Processes all the nodes and its descendants (including the leaves) recursively in order to apply their tranformations, textures and materials. 
- * @param {XMLNode} node 
- * @param {String} materialId
- * @param {String} textureId
+ * processa recursivamente todos os nós do grafo de cena (incluindo as folhas) de forma a manter as  their tranformations, textures and materials. 
+ * @param {XMLNode} node - estrutura de dados que contém informações sobre o nó pai
+ * @param {String} materialId - identificador do material do pai
+ * @param {String} textureId - identificador da textura do pai
  * @return {null} 
  */
 MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
@@ -268,11 +268,11 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 */
 
 /**
- * Recieves a pointer for lsx illumination element and parse its content. 
+ * processa um escalamento
  * @param {XMLelement} root 
- * @param {XMLNode} node 
- * @param {String} id 
- * @return {null} 
+ * @param {XMLNode} node - estrutura de dados que contém as informações deste nó
+ * @param {String} id - identificador deste nó
+ * @return {String} 
  */
 MySceneGraph.prototype.parseNodeScale = function(root, node, id) {
 
@@ -292,6 +292,13 @@ MySceneGraph.prototype.parseNodeScale = function(root, node, id) {
 	return null;
 };
 
+/**
+ * processa uma translação
+ * @param {XMLelement} root
+ * @param {XMLNode} node - estrutura de dados que contém as informações deste nó
+ * @param {String} id - identificador deste nó
+ * @return {String}
+ */
 MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 
 	var coords = this.parseNodeCoordinates(root, 'x', 'y', 'z');				
@@ -310,6 +317,13 @@ MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 	return null;
 }
 
+/**
+ * processa uma rotação
+ * @param {XMLelement} root
+ * @param {XMLNode} node - estrutura de dados que contém as informações deste nó
+ * @param {String} id - identificador deste nó
+ * @return {String}
+ */
 MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 
 	var parent = root.nodeName;
