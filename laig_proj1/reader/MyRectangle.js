@@ -1,3 +1,12 @@
+/**
+ * construtor default da classe 'MyRectangle'
+ * @param {GCFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {Float} minX - coordenada X do vértice superior esquerdo do retângulo
+ * @param {Float} maxY - coordenada Y do vértice superior esquerdo do retângulo
+ * @param {Float} maxX - coordenada X do vértice inferior direito do retângulo
+ * @param {Float} minY - coordenada Y do vértice inferior direito do retângulo
+ * @class
+ */
 function MyRectangle(scene, minX, maxY, maxX, minY) {
 
 	MyPrimitive.call(this, scene);
@@ -16,6 +25,10 @@ function MyRectangle(scene, minX, maxY, maxX, minY) {
 MyRectangle.prototype = Object.create(MyPrimitive.prototype);
 MyRectangle.prototype.constructor = MyRectangle;
 
+/**
+ * inicializa buffers WebGL da primitiva
+ * @return {null}
+ */
 MyRectangle.prototype.initBuffers = function() {
 
 	this.vertices = [
@@ -47,6 +60,12 @@ MyRectangle.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
+/**
+ * atualiza coordenadas de textura do retângulo com os factores recebidos
+ * @param {Float} ampS - factor de amplificação na coordenada S
+ * @param {Float} ampT - factor de amplificação na coordenada T
+ * @return {null}
+ */
 MyRectangle.prototype.updateTexCoords = function(ampS, ampT) {
 
 	if (this.ampS == ampS && this.ampT == ampT) {

@@ -1,3 +1,11 @@
+/**
+ * construtor default da classe 'MySphere'
+ * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {Float} radius - raio da esfera
+ * @param {Integer} stacks - número de secções da esfera em altura
+ * @param {Integer} slices - número de secçoes da esfera em torno do raio
+ * @class
+ */
 function MySphere(scene, radius, stacks, slices) {
 
 	MyPrimitive.call(this, scene);
@@ -10,11 +18,15 @@ function MySphere(scene, radius, stacks, slices) {
 	this.texCoords = [];
 	this.vertices = [];
 	this.initBuffers();
-}
+};
 
 MySphere.prototype = Object.create(MyPrimitive.prototype);
 MySphere.prototype.constructor = MySphere;
 
+/**
+ * inicializa buffers WebGL da primitiva
+ * @return {null}
+ */
 MySphere.prototype.initBuffers = function() {
 
 	var texelLengthS = 1.0 / this.slices;
@@ -64,4 +76,4 @@ MySphere.prototype.initBuffers = function() {
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
-}
+};

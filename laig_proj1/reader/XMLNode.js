@@ -1,3 +1,10 @@
+/**
+ * construtor default da classe 'XMLNode'
+ * @param id {String} - identificador do nó
+ * @param textureId {String} -  identificador da textura associada a este nó
+ * @param materialId {String} - identificador do material associado a este nó
+ * @class
+ */
 function XMLNode(id, textureId, materialId) {
 
     this.id = id;
@@ -15,8 +22,8 @@ XMLNode.prototype.constructor = XMLNode;
 
 
 /**
- * Adds a new descendant to the node. 
- * @param {Character} child 
+ * acrescenta um descendente no final da lista de descendentes deste nó
+ * @param {String} child - id do nó descendente
  * @return {null} 
  */
 XMLNode.prototype.addChild = function(child) {
@@ -24,9 +31,9 @@ XMLNode.prototype.addChild = function(child) {
 };
 
 /**
- * Multiplies the node tranformation matrix by the correspondant rotation matrix. 
- * @param {Character} axis 
- * @param {Number} angle
+ * multiplica a matriz de transformação do nó por uma matriz de rotação
+ * @param {String} axis - eixo da rotação (x, y, z)
+ * @param {Float} angle - ângulo da rotação (em graus)
  * @return {null} 
  */
 XMLNode.prototype.rotate = function(axis, angle) {
@@ -43,8 +50,8 @@ XMLNode.prototype.rotate = function(axis, angle) {
 };
 
 /**
- * Multiplies the node tranformation matrix by the correspondant scale matrix. 
- * @param {Array} coords 
+ * multiplica a matriz de transformação do nó por uma matriz de escalamento
+ * @param {Array} coords - vetor de coordenadas (x, y, z) do escalamento 
  * @return {null} 
  */
 XMLNode.prototype.scale = function(coords) {
@@ -53,8 +60,8 @@ XMLNode.prototype.scale = function(coords) {
 
 
 /**
- * Multiplies the node tranformation matrix by the correspondant translation matrix. 
- * @param {Array} coords 
+ * multiplica a matriz de transformação do nó por uma matriz de translação
+ * @param {Array} coords - vetor de coordenadas (x, y, z) da translação
  * @return {null} 
  */
 XMLNode.prototype.translate = function(coords) {
