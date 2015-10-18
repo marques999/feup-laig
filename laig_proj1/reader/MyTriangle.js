@@ -1,3 +1,11 @@
+/**
+ * construtor default da classe 'MyTriangle'
+ * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {Array} v1 - vetor de coordenadas (x, y, z) do vértice esquerdo da base do triângulo
+ * @param {Array} v2 - vetor de coordenadas (x, y, z) do vértice direito da base do triângulo
+ * @param {Array} v3 - vetor de coordenadas (x, y, z) do vértice de topo do triângulo
+ * @class
+ */
 function MyTriangle(scene, v1, v2, v3) {
 
     MyPrimitive.call(this, scene);
@@ -5,6 +13,8 @@ function MyTriangle(scene, v1, v2, v3) {
     this.v1 = v1;
     this.v2 = v2;
     this.v3 = v3;
+    this.ampS = 0.0;
+    this.ampT = 0.0;
 
     this.a = Math.sqrt((v3[0] - v2[0]) * (v3[0] - v2[0]) + 
 			 		   (v3[1] - v2[1]) * (v3[1] - v2[1]) +
@@ -37,6 +47,10 @@ function MyTriangle(scene, v1, v2, v3) {
 MyTriangle.prototype = Object.create(MyPrimitive.prototype);
 MyTriangle.prototype.constructor = MyTriangle;
 
+/**
+ * inicializa buffers WebGL da primitiva
+ * @return {null}
+ */
 MyTriangle.prototype.initBuffers = function() {
 	
 	this.vertices = [
@@ -59,6 +73,12 @@ MyTriangle.prototype.initBuffers = function() {
 	this.initGLBuffers();
 };
 
+/**
+ * atualiza coordenadas de textura do triângulo com os factores recebidos
+ * @param {Float} ampS - factor de amplificação na coordenada S
+ * @param {Float} ampT - factor de amplificação na coordenada T
+ * @return {null}
+ */
 MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {
 
 	if (this.ampS == ampS && this.ampT == ampT) {

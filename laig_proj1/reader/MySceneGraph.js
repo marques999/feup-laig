@@ -33,6 +33,14 @@ function MySceneGraph(filename, scene) {
 
 */
 
+
+/**
+ * Calls the parser functions to process all the different lsx componets and seartches for invalide nodes. 
+ * in a for cicle, gets de lsx element with the tag specified in rootTags (currentElement)
+ * and calls the function pointer specified in rootParsers to parse currentElement
+ * at least cals the function to erase invalide nodes (validateNodes).
+ * @return {null} 
+ */
 MySceneGraph.prototype.onXMLReady = function() 
 {
 	var parent = 'SCENE';
@@ -99,8 +107,10 @@ MySceneGraph.prototype.onXMLReady = function()
  | |__| || |_ ____) | |    | |____ / ____ \| |   
  |_____/_____|_____/|_|    |______/_/    \_\_|   
                                                  
-*/
-
+/**
+ * Applies the declared materials and tranformations to the root node.  
+ * @return {null} 
+ */
 MySceneGraph.prototype.display = function() {
 
 	var rootNode = this.nodes[this.graphRoot];
@@ -120,6 +130,13 @@ MySceneGraph.prototype.display = function() {
 	this.scene.popMatrix();
 };
 
+/**
+ * processa recursivamente todos os nós do grafo de cena (incluindo as folhas) de forma a manter as  their tranformations, textures and materials. 
+ * @param {XMLNode} node - estrutura de dados que contém informações sobre o nó pai
+ * @param {String} materialId - identificador do material do pai
+ * @param {String} textureId - identificador da textura do pai
+ * @return {null} 
+ */
 MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 
 	this.scene.multMatrix(node.matrix);
@@ -161,6 +178,12 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 	}
 };
 
+/**
+ * Recieves the texture of the parent node of nextElement and return the texture that nextElement should receive. 
+ * @param {String} currTextureId
+ * @param {XMLNode} nextElement
+ * @return {String} 
+ */
 MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
 
 	if (nextElement.textureId == 'null') {
@@ -174,6 +197,12 @@ MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
 	return nextElement.textureId;
 };
 
+/**
+ * Recieves the material of the parent node of nextElement and return the material that nextElement should receive. 
+ * @param {String} currTextureId
+ * @param {XMLNode} nextElement
+ * @return {String} 
+ */
 MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 	return nextElement.materialId == 'null' ? currMaterialId : nextElement.materialId;
 };
@@ -194,6 +223,11 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 
 */
 
+/**
+ * Recieves a pointer for lsx illumination element and parse its content (ambient and background). 
+ * @param {XMLelement} root 
+ * @return {null} 
+ */
 MySceneGraph.prototype.parseIllumination = function(root) {
 
 	var globalAmbient = this.parseCoordinatesRGBA(root, 'ambient');	
@@ -232,6 +266,13 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 
 */
 
+/**
+ * processa um escalamento
+ * @param {XMLelement} root 
+ * @param {XMLNode} node - estrutura de dados que contém as informações deste nó
+ * @param {String} id - identificador deste nó
+ * @return {String} 
+ */
 MySceneGraph.prototype.parseNodeScale = function(root, node, id) {
 
 	var coords = this.parseNodeCoordinates(root, 'sx', 'sy', 'sz');
@@ -250,6 +291,13 @@ MySceneGraph.prototype.parseNodeScale = function(root, node, id) {
 	return null;
 };
 
+/**
+ * processa uma translação
+ * @param {XMLelement} root
+ * @param {XMLNode} node - estrutura de dados que contém as informações deste nó
+ * @param {String} id - identificador deste nó
+ * @return {String}
+ */
 MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 
 	var coords = this.parseNodeCoordinates(root, 'x', 'y', 'z');				
@@ -268,6 +316,13 @@ MySceneGraph.prototype.parseNodeTranslation = function(root, node, id) {
 	return null;
 }
 
+/**
+ * processa uma rotação
+ * @param {XMLelement} root
+ * @param {XMLNode} node - estrutura de dados que contém as informações deste nó
+ * @param {String} id - identificador deste nó
+ * @return {String}
+ */
 MySceneGraph.prototype.parseNodeRotation = function(root, node, id) {
 
 	var parent = root.nodeName;
@@ -1302,6 +1357,27 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	return null;
 };
 
+<<<<<<< HEAD
+=======
+MySceneGraph.prototype.parseSceneRotation = function(id, axis, angle, axisFound) {
+
+	if (axisFound[axis]) {
+		onMultipleAxis(axis);
+		return false;
+	}
+
+	axisFound[axis] = true;
+	this.scene.setRotation(id, axis, angle);
+
+	return true;
+};
+
+/**
+ * Determinates the number of parents that each node as.
+ * 1. for each descendant of each node increses its indegree by 1.  
+ * @return {null} 
+ */
+>>>>>>> be2cea0865fa2d5536559d7e35a94c66615dc0d6
 MySceneGraph.prototype.resetIndegree = function() {
 	for (var node in this.nodes) {	
 		var children = this.nodes[node].children;	
@@ -1313,6 +1389,14 @@ MySceneGraph.prototype.resetIndegree = function() {
 	}
 };
 
+/**
+ * Removes all the nodes from this.nodes that have no descendats or that have no parents.
+ * 1. checks for nodes with indegree = 0 and erases them
+ * 2. checks for invalid references in descendants and erases them
+ * 3. checks for nodes without descendants (children.length == 0) and erases them
+ * (repeats while there are invalide nodes or invalide node references caused by erasing previous nodes)
+ * @return {null} 
+ */
 MySceneGraph.prototype.validateNodes = function() {
 
 	var ready = false;
