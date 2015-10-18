@@ -33,8 +33,8 @@ main=function()
     app.init();
     app.setScene(myScene);
     app.setInterface(myInterface);
-	myScene.setInterface(myInterface);
     myInterface.setActiveCamera(myScene.camera);
+	myScene.setInterface(myInterface);
 
 	var filename = getUrlVars()['file'] || "example.lsx";
 	var myGraph = new MySceneGraph(filename, myScene);

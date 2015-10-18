@@ -105,7 +105,6 @@ MySceneGraph.prototype.display = function() {
 
 	var rootNode = this.nodes[this.graphRoot];
 	var rootMaterial = this.defaultMaterial;
-
 	this.scene.pushMatrix();
 	
 	if (rootNode.materialId != null && rootNode.materialId != 'null') {
@@ -1255,16 +1254,21 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 			continue;
 		}
 
+		if (axisFound[axis]) {
+			onMultipleAxis(axis);
+			continue;
+		}
+
 		var angle = this.reader.getFloat(node[i], 'angle');
 		error = checkValue(angle, 'rotation angle', parent);
 
 		if (error != null) {
 			return error;
 		}
-		
-		if (this.parseSceneRotation(j, axis, angle, axisFound)) {
-			j++;
-		}
+
+		axisFound[axis] = true;
+
+		this.scene.setRotation(j++, axis, angle);
 	}
 
 	if (!axisFound['x']) {
@@ -1297,20 +1301,6 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	
 	return null;
 };
-
-MySceneGraph.prototype.parseSceneRotation = function(id, axis, angle, axisFound) {
-
-	if (axisFound[axis]) {
-		onMultipleAxis(axis);
-		return false;
-	}
-
-	axisFound[axis] = true;
-	this.scene.setRotation(id, axis, angle);
-
-	return true;
-};
-
 
 MySceneGraph.prototype.resetIndegree = function() {
 	for (var node in this.nodes) {	
