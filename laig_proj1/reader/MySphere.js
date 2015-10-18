@@ -1,10 +1,10 @@
 /**
  * construtor default da classe 'MySphere'
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Float} radius - raio da esfera
- * @param {Integer} stacks - número de secções da esfera em altura
- * @param {Integer} slices - número de secçoes da esfera em torno do raio
- * @class
+ * @param {Number} radius - raio da esfera
+ * @param {Number} stacks - número de secções da esfera em altura
+ * @param {Number} slices - número de secçoes da esfera em torno do raio
+ * @constructor
  */
 function MySphere(scene, radius, stacks, slices) {
 
@@ -24,7 +24,7 @@ MySphere.prototype = Object.create(MyPrimitive.prototype);
 MySphere.prototype.constructor = MySphere;
 
 /**
- * inicializa buffers WebGL da primitiva
+ * inicializa os buffers WebGL da primitiva 'MySphere'
  * @return {null}
  */
 MySphere.prototype.initBuffers = function() {
@@ -36,7 +36,7 @@ MySphere.prototype.initBuffers = function() {
 	var sCoord = 1.0;
 	var vertexNumber = 1;
 	var phi = 0;
-	
+
 	for (var i = 0; i <= this.slices; i++) {
 
 		var theta = 0;
@@ -45,7 +45,7 @@ MySphere.prototype.initBuffers = function() {
 		var deltaY = this.radius * Math.sin(phi);
 
 		for (var j = 0; j <= this.stacks; j++) {
-			
+
 			var x = deltaX * Math.sin(theta);
 			var z = deltaY * Math.sin(theta);
 			var y = this.radius * Math.cos(theta);
@@ -55,10 +55,10 @@ MySphere.prototype.initBuffers = function() {
 			this.texCoords.push(sCoord, tCoord);
 
 			if (i > 0 && j > 0) {
-				
+
 				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber + this.stacks + 1);
 				this.indices.push(vertexNumber + this.stacks, vertexNumber, vertexNumber - 1);
-			
+
 				vertexNumber++;
 			}
 

@@ -1,9 +1,9 @@
 /**
- * construtor default da classe XMLtexture
+ * construtor default da classe 'XMLtexture'
  * @param {CGFtexture} tex - estrutura de dados que contém a textura
- * @param {Float} factorS - factor de amplificação na coordenada S
- * @param {Float} factorS - factor de amplificação na coordenada T
- * @class
+ * @param {Number} factorS - factor de amplificação na coordenada S
+ * @param {Number} factorS - factor de amplificação na coordenada T
+ * @constructor
  */
 function XMLtexture(tex, factorS, factorT) {
 	this.tex = tex;

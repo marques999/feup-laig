@@ -1,11 +1,11 @@
 /**
  * construtor default da classe 'MyRectangle'
- * @param {GCFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Float} minX - coordenada X do vértice superior esquerdo do retângulo
- * @param {Float} maxY - coordenada Y do vértice superior esquerdo do retângulo
- * @param {Float} maxX - coordenada X do vértice inferior direito do retângulo
- * @param {Float} minY - coordenada Y do vértice inferior direito do retângulo
- * @class
+ * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {Number} minX - coordenada X do vértice superior esquerdo do retângulo
+ * @param {Number} maxY - coordenada Y do vértice superior esquerdo do retângulo
+ * @param {Number} maxX - coordenada X do vértice inferior direito do retângulo
+ * @param {Number} minY - coordenada Y do vértice inferior direito do retângulo
+ * @constructor
  */
 function MyRectangle(scene, minX, maxY, maxX, minY) {
 
@@ -26,13 +26,13 @@ MyRectangle.prototype = Object.create(MyPrimitive.prototype);
 MyRectangle.prototype.constructor = MyRectangle;
 
 /**
- * inicializa buffers WebGL da primitiva
+ * inicializa os buffers WebGL da primitiva 'MyRectangle'
  * @return {null}
  */
 MyRectangle.prototype.initBuffers = function() {
 
 	this.vertices = [
-	    this.minX, this.minY, 0.0,
+		this.minX, this.minY, 0.0,
 		this.maxX, this.minY, 0.0,
 		this.minX, this.maxY, 0.0,
 		this.maxX, this.maxY, 0.0
@@ -61,9 +61,9 @@ MyRectangle.prototype.initBuffers = function() {
 };
 
 /**
- * atualiza coordenadas de textura do retângulo com os factores recebidos
- * @param {Float} ampS - factor de amplificação na coordenada S
- * @param {Float} ampT - factor de amplificação na coordenada T
+ * atualiza as coordenadas de textura do retângulo com os valores recebidos
+ * @param {Number} ampS - factor de amplificação na coordenada S
+ * @param {Number} ampT - factor de amplificação na coordenada T
  * @return {null}
  */
 MyRectangle.prototype.updateTexCoords = function(ampS, ampT) {
@@ -74,10 +74,10 @@ MyRectangle.prototype.updateTexCoords = function(ampS, ampT) {
 
 	this.ampS = ampS;
 	this.ampT = ampT;
-    var maxS = this.width / this.ampS;
-    var maxT = this.height / this.ampT;
+	var maxS = this.width / this.ampS;
+	var maxT = this.height / this.ampT;
 
-    this.texCoords = [
+	this.texCoords = [
 		0.0, maxT,
 		maxS, maxT,
 		0.0, 0.0,

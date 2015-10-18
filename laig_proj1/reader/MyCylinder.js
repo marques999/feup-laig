@@ -1,12 +1,12 @@
 /**
  * construtor default da classe 'MyCylinder'
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Float} height - altura do cilindro
- * @param {Float} radiusBottom - raio da base inferior do cilindro
- * @param {Float} radiusTop - radio da base superior do cilindro
- * @param {Integer} stacks - número de secções do cilindro em altura
- * @param {Integer} slices - número de secçoes do cilindro em torno dos raios
- * @class
+ * @param {Number} height - altura do cilindro
+ * @param {Number} radiusBottom - raio da base inferior do cilindro
+ * @param {Number} radiusTop - radio da base superior do cilindro
+ * @param {Number} stacks - número de secções do cilindro em altura
+ * @param {Number} slices - número de secçoes do cilindro em torno dos raios
+ * @constructor
  */
 function MyCylinder(scene, height, radiusBottom, radiusTop, stacks, slices) {
 
@@ -28,7 +28,7 @@ MyCylinder.prototype = Object.create(MyPrimitive.prototype);
 MyCylinder.prototype.constructor = MyCylinder;
 
 /**
- * inicializa buffers WebGL da primitiva
+ * inicializa os buffers WebGL da primitiva 'MyCylinder'
  * @return {null}
  */
 MyCylinder.prototype.initBuffers = function() {

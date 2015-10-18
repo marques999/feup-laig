@@ -1,6 +1,6 @@
 /**
  * construtor default da classe 'XMLscene'
- * @class
+ * @constructor
  */
 function XMLscene() {
 	CGFscene.call(this);
@@ -10,7 +10,7 @@ XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 
 /**
- * inicializa cena com observador, eixos e alguns aspetos da linguagem WebGL
+ * inicializa cena com valores por omissão, eixo e observador
  * @param {CGFapplication} application
  * @return {null}
  */
@@ -30,12 +30,12 @@ XMLscene.prototype.init = function(application) {
 	this.enableTextures(true);
 
 	mat4.identity(this.defaultMatrix);
-		
+
 };
 
 /**
- * altera o comprimento dos eixos da cena
- * @param {Float} length - comprimento dos eixos
+ * altera o comprimento dos eixos visíveis na cena
+ * @param {Number} length - comprimento dos eixos
  * @return {null}
  */
 XMLscene.prototype.initAxis = function(length) {
@@ -43,7 +43,7 @@ XMLscene.prototype.initAxis = function(length) {
 };
 
 /**
- * inicializa uma câmara na cena com os valores default
+ * cria um observador na cena com os valores por omissão
  * @return {null}
  */
 XMLscene.prototype.initCameras = function() {
@@ -51,7 +51,7 @@ XMLscene.prototype.initCameras = function() {
 };
 
 /**
- * inicializa algumas propriedades desta cena com os respetivos valores default
+ * inicializa várias propriedades desta cena com os seus valores por omissão
  * @return {null}
  */
 XMLscene.prototype.initDefaults = function() {
@@ -67,8 +67,8 @@ XMLscene.prototype.initDefaults = function() {
 
 /**
  * altera as posições dos planos do observador da cena
- * @param {Float} near - posição do plano mais próximo do observador
- * @param {Float} far - posição do plano mais afastado do obeservador
+ * @param {Number} near - posição do plano mais próximo do observador
+ * @param {Number} far - posição do plano mais afastado do obeservador
  * @return {null}
  */
 XMLscene.prototype.initFrustum = function(near, far) {
@@ -95,16 +95,32 @@ XMLscene.prototype.initTranslate = function(matrix) {
 };
 
 /*
- * altera a interface da aplicação WebGL associada a esta cena
- * @param {CGFinterface} guiInterface - novo apontador para uma CGFinterface
+ * altera a CGFinterface associada a esta cena
+ * @param {CGFinterface} guiInterface
  * @return {null}
  */
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
 };
 
+/**
+ * retorna o número de CGFlights inicializadas nesta cena
+ * @return {Number} - numero de luzes ativas
+ */
+ XMLscene.prototype.getActiveLights = function() {
+	return this.activeLights;
+};
+
+/**
+ * retorna o número máximo de CGFlights que podem existir nesta cena
+ * @return {Number} - numero máximo de luzes
+ */
+XMLscene.prototype.getNumberLights = function() {
+	return this.lights.length;
+}
+
 /*
- * inicializa a cena com os valores da aparência default 
+ * inicializa a aparência por omissão dos objetos
  * @return {null}
  */
 XMLscene.prototype.setDefaultAppearance = function() {
@@ -124,8 +140,8 @@ XMLscene.prototype.drawPrimitive = function(primitive) {
 };
 
 /*
- * associa uma CGFappearance a esta CGFscene
- * @param {CGFappearance} appearance - material da leaf
+ * associa uma CGFappearance a esta cena
+ * @param {CGFappearance} appearance
  * @return {null}
  */
 XMLscene.prototype.applyMaterial = function(appearance) {
@@ -143,7 +159,7 @@ XMLscene.prototype.setAmbient = function(rgba) {
 
 /*
  * altera a cor de fundo da cena
- * @param {Array} rgba - vetor com as componentes (r, g, b, a) da cor
+ * @param {Array} rgba - vetor com as componentes (r, g, b, a) da cor de fundo
  * @return {null}
  */
 XMLscene.prototype.setBackground = function(rgba) {
@@ -152,9 +168,9 @@ XMLscene.prototype.setBackground = function(rgba) {
 
 /**
  * altera as coordenadas de rotação inicial da cena
- * @param {Integer} id - ordem da rotação na cena
+ * @param {Number} id - ordem da rotação na cena
  * @param {Character} axis - eixo da rotação (x, y, z)
- * @param {Float} angle - ângulo da rotação (em graus)
+ * @param {Number} angle - ângulo da rotação (em graus)
  */
 XMLscene.prototype.setRotation = function(id, axis, angle) {
 
@@ -173,8 +189,8 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
 
 /**
  * adiciona uma nova CGFlight ao array de luzes da cena
- * @param {String} id - identificador da CGFlight
- * @param {Boolean} enabled - estado ON/OFF inicial da CGFlight
+ * @param {String} id - identificador da luz
+ * @param {Boolean} enabled - estado ON/OFF inicial da luz
  * @param {Array} position - vetor de coordenadas (x, y, z, w) da posição
  * @param {Array} ambient - vetor com componentes (r, g, b, a) da componente ambiente
  * @param {Array} diffuse - vetor com componentes (r, g, b, a) da componente difusa
@@ -199,7 +215,7 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 
 /**
  * altera o estado ON/OFF de uma CGFlight existente na cena
- * @param {Integer} id - índice da CGFlight no array de luzes da cena
+ * @param {Number} id - índice da CGFlight no array de luzes da cena
  * @param {Boolean} enabled - novo estado ON/OFF da CGFlight
  * @return {null}
  */
@@ -208,10 +224,11 @@ XMLscene.prototype.toggleLight = function(id, enabled) {
 };
 
 /**
- * callback executado quando é terminado o processamento do grafo de cena
+ * callback executado no final do processamento do MySceneGraph
  * @return {null}
  */
 XMLscene.prototype.onGraphLoaded = function() {	
+
 	// SET BACKGROUND
 	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
 					   this.defaultBackground[2], this.defaultBackground[3]);
@@ -242,7 +259,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 };
 
 /**
- * funçao de display da CGFscene
+ * callback executado periodicamente para atualizar a visualização da cena
  * @return {null}
  */
 XMLscene.prototype.display = function () {
@@ -251,8 +268,8 @@ XMLscene.prototype.display = function () {
 	this.shader.bind();
 
 	// Clear image and depth buffer everytime we update the scene
-    this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
 	// Initialize Model-View matrix as identity (no transformation)
 	this.updateProjectionMatrix();
