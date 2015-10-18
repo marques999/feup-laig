@@ -1357,27 +1357,11 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 	return null;
 };
 
-<<<<<<< HEAD
-=======
-MySceneGraph.prototype.parseSceneRotation = function(id, axis, angle, axisFound) {
-
-	if (axisFound[axis]) {
-		onMultipleAxis(axis);
-		return false;
-	}
-
-	axisFound[axis] = true;
-	this.scene.setRotation(id, axis, angle);
-
-	return true;
-};
-
 /**
  * Determinates the number of parents that each node as.
  * 1. for each descendant of each node increses its indegree by 1.  
  * @return {null} 
  */
->>>>>>> be2cea0865fa2d5536559d7e35a94c66615dc0d6
 MySceneGraph.prototype.resetIndegree = function() {
 	for (var node in this.nodes) {	
 		var children = this.nodes[node].children;	
