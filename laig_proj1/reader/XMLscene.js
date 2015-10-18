@@ -20,6 +20,7 @@ XMLscene.prototype.init = function(application) {
 
 	this.initCameras();
 	this.initDefaults();
+	this.enableTextures(true);
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(100.0);
 	this.gl.enable(this.gl.DEPTH_TEST);
@@ -27,10 +28,8 @@ XMLscene.prototype.init = function(application) {
 	this.gl.depthFunc(this.gl.LEQUAL);
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
-	this.enableTextures(true);
 
 	mat4.identity(this.defaultMatrix);
-
 };
 
 /**
@@ -85,7 +84,7 @@ XMLscene.prototype.initScale = function(matrix) {
 	this.defaultScale = matrix;
 };
 
-/*
+/**
  * altera as coordenadas da translação inicial da cena
  * @param {Array} matrix - vetor de coordenadas da translação
  * @return {null}
@@ -94,7 +93,7 @@ XMLscene.prototype.initTranslate = function(matrix) {
 	this.defaultTranslate = matrix;
 };
 
-/*
+/**
  * altera a CGFinterface associada a esta cena
  * @param {CGFinterface} guiInterface
  * @return {null}
@@ -119,7 +118,7 @@ XMLscene.prototype.getNumberLights = function() {
 	return this.lights.length;
 }
 
-/*
+/**
  * inicializa a aparência por omissão dos objetos
  * @return {null}
  */
@@ -130,7 +129,7 @@ XMLscene.prototype.setDefaultAppearance = function() {
 	this.setShininess(10.0);
 };
 
-/*
+/**
  * desenha uma primitiva na cena
  * @param {CGFobject} primitive
  * @return {null}
@@ -139,7 +138,7 @@ XMLscene.prototype.drawPrimitive = function(primitive) {
 	primitive.display();
 };
 
-/*
+/**
  * associa uma CGFappearance a esta cena
  * @param {CGFappearance} appearance
  * @return {null}
@@ -148,7 +147,7 @@ XMLscene.prototype.applyMaterial = function(appearance) {
 	appearance.apply();
 }
 
-/*
+/**
  * altera a componente de iluminação global ambiente da cena
  * @param {Array} rgba - vetor com as componentes (r, g, b, a) da iluminação ambiente
  * @return {null}
@@ -157,7 +156,7 @@ XMLscene.prototype.setAmbient = function(rgba) {
 	this.defaultAmbient = rgba;
 };
 
-/*
+/**
  * altera a cor de fundo da cena
  * @param {Array} rgba - vetor com as componentes (r, g, b, a) da cor de fundo
  * @return {null}
@@ -233,13 +232,12 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
 					   this.defaultBackground[2], this.defaultBackground[3]);
 
+	// SET AXIS
+	this.axis = new CGFaxis(this, this.defaultReference);
+	
 	// SET GLOBAL ILLUMINATION
 	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
 							   this.defaultAmbient[2], this.defaultAmbient[3]);
-
-	
-	// SET AXIS
-	this.axis = new CGFaxis(this, this.defaultReference);
 
 	// SET FRUSTUM
 	this.camera.far = this.frustumFar;
