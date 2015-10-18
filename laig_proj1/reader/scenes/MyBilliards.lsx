@@ -10,23 +10,23 @@
 	</INITIALS>
 
 	<ILLUMINATION>
-		<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
 
 	<LIGHTS>
 		<LIGHT id="l1">
-			<enable value ="1" />
+			<enable value="1" />
 			<position x="12.5" y="8.0" z="7.5" w="1.0" />
-			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
 		</LIGHT>
 
 		<LIGHT id="l2">
-			<enable value ="1" />
+			<enable value="1" />
 			<position x="4.5" y="8.0" z="7.5" w="1.0" />
-			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
 		</LIGHT>
@@ -59,8 +59,7 @@
 		</TEXTURE>
 	</TEXTURES>
 
-	<MATERIALS>
-		
+	<MATERIALS>	
 		<MATERIAL id="default">
 			<shininess value="5" />
 			<specular r="0.5" g="0.5" b="0.5" a="1.0" />
