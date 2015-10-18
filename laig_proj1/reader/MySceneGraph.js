@@ -1,7 +1,7 @@
 /**
  * construtor default da classe 'MySceneGraph'
  * @param {String} filename - caminho relativo do ficheiro LSX
- * @param {CGFscene} scene - apontador para uma XMLscene onde o grafo de cena será desenhado
+ * @param {XMLscene} scene - apontador para uma XMLscene onde o grafo de cena será desenhado
  * @constructor
  */
 function MySceneGraph(filename, scene) {
@@ -12,16 +12,17 @@ function MySceneGraph(filename, scene) {
 	
 	scene.graph = this;
 
-	this.lights = {};
-	this.textures = {};
-	this.materials = {};
 	this.leaves = {};
+	this.lights = {};
+	this.materials = {};	
 	this.nodes = {};
+	this.textures = {};
 
 	this.defaultMaterial = new CGFappearance(this.scene);
 	this.defaultMaterial.setAmbient(0.5, 0.5, 0.5, 1.0);
 	this.defaultMaterial.setDiffuse(0.5, 0.5, 0.5, 1.0);
 	this.defaultMaterial.setSpecular(0.5, 0.5, 0.5, 1.0);
+	this.defaultMaterial.setShininess(10);
 
 	this.reader = new CGFXMLreader();
 	this.sceneFile = 'scenes/' + filename;
@@ -149,14 +150,12 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 
 	this.scene.multMatrix(node.matrix);
 
-	for (var i = 0; i < node.children.length; i++) {			
-		
+	for (var i = 0; i < node.children.length; i++) {					
 		var nextId = node.children[i];	
 		var mId = materialId;
 		var tId = textureId;
 
 		if (this.leaves[nextId] != undefined) {
-
 			var leaf = this.leaves[nextId];	
 			var leafMaterial = this.defaultMaterial;
 			var leafTexture = null;
@@ -222,7 +221,6 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
    | | | |    | |   | |  | | |\/| | | | | . ` | / /\ \ | |    | || |  | | . ` |
   _| |_| |____| |___| |__| | |  | |_| |_| |\  |/ ____ \| |   _| || |__| | |\  |
  |_____|______|______\____/|_|  |_|_____|_| \_/_/    \_\_|  |_____\____/|_| \_|
-
 
 	<ILLUMINATION>
 		<ambient r="ff" g="ff" b="ff" a="ff" />
@@ -959,7 +957,6 @@ MySceneGraph.prototype.parseNode = function(id, root) {
  | |____ _| || |__| | |  | |  | |  ____) |
  |______|_____\_____|_|  |_|  |_| |_____/ 
 
-
 	<LIGHT id="ss">
 		<enable value ="tt" />
 		<position x="ff" y="ff" z="ff" w="ff" />
@@ -1062,15 +1059,14 @@ MySceneGraph.prototype.parseLight = function(id, root) {
  | |  | |/ ____ \| |  | |____| | \ \ _| |_ / ____ \| |____ ____) |
  |_|  |_/_/    \_\_|  |______|_|  \_\_____/_/    \_\______|_____/ 
 
- 
-	<MATERIAL id="ss">                                  
+	<MATERIAL id="ss">
 		<shininess value="ff" />
 		<specular r="ff" g="ff" b="ff" a="ff" />
 		<diffuse r="ff" g="ff" b="ff" a="ff" />
 		<ambient r="ff" g="ff" b="ff" a="ff" />
 		<emission r="ff" g="ff" b="ff" a="ff" />
 	</MATERIAL>
-  
+
 */
 
 /**
@@ -1169,13 +1165,12 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 	| |  |  __|   > <    | |  | |  | |  _  /|  __|  \___ \ 
 	| |  | |____ / . \   | |  | |__| | | \ \| |____ ____) |
 	|_|  |______/_/ \_\  |_|   \____/|_|  \_\______|_____/ 
-		 
-		 
+
 	<TEXTURE id="ss">
 		<file path="ss" />
 		<amplif_factor s="ff" t="ff" />
-	</TEXTURE>		
-	
+	</TEXTURE>
+
 */
 
 /**
@@ -1254,7 +1249,7 @@ MySceneGraph.prototype.parseTexture = function(id, root)
 	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" /> 
 	<LEAF id="ss" type="sphere" args="ff ii ii" />
 	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
-										   
+
 */
 
 /**
@@ -1324,7 +1319,7 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
  | | |_ | |   | |  | |  _ < / /\ \ | |     \___ \ 
  | |__| | |___| |__| | |_) / ____ \| |____ ____) |
   \_____|______\____/|____/_/    \_\______|_____/ 
-												 
+
 	<GLOBALS>
 		<frustum near="ff" far="ff" />	
 		<translation x="ff" y="ff" z="ff"/>
