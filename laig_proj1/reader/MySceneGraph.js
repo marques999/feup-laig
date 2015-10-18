@@ -14,7 +14,7 @@ function MySceneGraph(filename, scene) {
 
 	this.leaves = {};
 	this.lights = {};
-	this.materials = {};	
+	this.materials = {};
 	this.nodes = {};
 	this.textures = {};
 
@@ -50,7 +50,7 @@ function MySceneGraph(filename, scene) {
 MySceneGraph.prototype.onXMLReady = function() 
 {
 	var parent = 'SCENE';
-	var rootElement = this.reader.xmlDoc.documentElement;	
+	var rootElement = this.reader.xmlDoc.documentElement;
 
 	var rootTags = [
 		'INITIALS',
@@ -150,7 +150,7 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 
 	this.scene.multMatrix(node.matrix);
 
-	for (var i = 0; i < node.children.length; i++) {					
+	for (var i = 0; i < node.children.length; i++) {
 		var nextId = node.children[i];	
 		var mId = materialId;
 		var tId = textureId;
@@ -170,7 +170,7 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 			else {
 				leafTexture = this.textures[tId];
 				leaf.updateTexCoords(leafTexture.factorS, leafTexture.factorT);
-				leafMaterial.setTexture(leafTexture.tex);	
+				leafMaterial.setTexture(leafTexture.tex);
 			}
 			
 			this.scene.applyMaterial(leafMaterial);
@@ -259,7 +259,7 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 		printRGBA('background', globalBackground);
 	}
 	
-	return null;	
+	return null;
 };
 
 /*
@@ -304,14 +304,14 @@ MySceneGraph.prototype.parseNodeScale = function(root, node) {
  */
 MySceneGraph.prototype.parseNodeTranslation = function(root, node) {
 
-	var coords = this.parseNodeCoordinates(root, 'x', 'y', 'z');				
+	var coords = this.parseNodeCoordinates(root, 'x', 'y', 'z');
 	var error = checkValue(coords, 'coordinates', root.nodeName, node.id);
 	
 	if (error != null) {
 		return error;
 	}
 
-	node.translate(coords);		
+	node.translate(coords);
 
 	if (this.verbose) {
 		printXYZ('TRANSLATION', coords);
@@ -986,7 +986,7 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	}
 
 	if (this.scene.getActiveLights() == this.scene.getNumberLights()) {
-		return "maximum number of lights reached, the following lights will be ignored...";
+		return onMaximumLights(this.scene.getNumberLights());
 	}
 
 	if (id == 'null' || id == 'clear') {
@@ -1459,8 +1459,8 @@ MySceneGraph.prototype.parseGlobals = function(root) {
  * @return {null} 
  */
 MySceneGraph.prototype.resetIndegree = function() {
-	for (var node in this.nodes) {	
-		var children = this.nodes[node].children;	
+	for (var node in this.nodes) {
+		var children = this.nodes[node].children;
 		for (var i = 0; i < children.length; i++) {
 			if (children[i] in this.nodes) {
 				this.nodes[children[i]].indegree++;
@@ -1485,10 +1485,10 @@ MySceneGraph.prototype.validateNodes = function() {
 
 		ready = true;
 
-		for (var node in this.nodes) {	
+		for (var node in this.nodes) {
 
 			var children = this.nodes[node].children;
-			var nodeIndegree = this.nodes[node].indegree;		
+			var nodeIndegree = this.nodes[node].indegree;
 			this.onVisitNode(node, this.nodes[node].indegree);
 
 			if (nodeIndegree == 0 && node != this.graphRoot) {
@@ -1498,7 +1498,7 @@ MySceneGraph.prototype.validateNodes = function() {
 				continue;		
 			}
 
-			for (var n = 0; n < children.length; n++) {						
+			for (var n = 0; n < children.length; n++) {
 				if (!(children[n] in this.leaves) && !(children[n] in this.nodes) && children[n] != node) {	
 					this.onEraseChildren(children[n], node);
 					children.splice(n, 1);
@@ -1511,7 +1511,7 @@ MySceneGraph.prototype.validateNodes = function() {
 				this.onProcessNode("Erasing", node);
 				delete this.nodes[node];
 			}
-		}		
+		}
 	}
 };
 

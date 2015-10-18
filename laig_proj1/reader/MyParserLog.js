@@ -38,6 +38,10 @@ function onReservedId(id, root) {
 	return parent + " with id=" + id + " has a reserved ID ['null', 'clear'], skipping...";
 };
 
+function onMaximumLights(number) {
+	return "maximum number of " + number + " lights reached, the following lights will be ignored...";
+};
+
 function onMultipleElements(node, parent) {
 	console.warn("WARNING: either zero or more than one '" + node + "' elements found in <" + parent + ">!");
 };
