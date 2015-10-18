@@ -586,17 +586,17 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 
 MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coordC) {
 
-	if (!node[0].hasAttribute(coordA)) {
+	if (!node.hasAttribute(coordA)) {
 		onCoordinateMissing(coordA, node.nodeName);
 		return NaN;
 	}
 
-	if (!node[0].hasAttribute(coordB)) {
+	if (!node.hasAttribute(coordB)) {
 		onCoordinateMissing(coordB, node.nodeName);
 		return NaN;
 	}
 
-	if (!node[0].hasAttribute(coordC)) {
+	if (!node.hasAttribute(coordC)) {
 		onCoordinateMissing(coordC, node.nodeName);
 		return NaN;
 	}
@@ -756,14 +756,19 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 	for (var i = 0; i < childrenSize; i++) {
 		
 		var currentElement = rootElement.children[i];
+		var currentElementName = currentElement.nodeName;
 
-		if (currentElement.nodeName != nodeName) {
-			console.warn("WARNING: invalid tag found <" + currentElement.nodeName + "> found in <" + parent + ">, expected <" + nodeName + ">!");
+		if (currentElementName == 'ROOT') {
 			continue;
 		}
-		
+
+		if (currentElementName != nodeName) {
+			console.warn("WARNING: invalid tag found <" + currentElementName + "> found in <" + parent + ">, expected <" + nodeName + ">!");
+			continue;
+		}
+
 		if (!currentElement.hasAttribute('id')) {
-			console.warn("WARNING: <" + currentElement.nodeName + "> with index=" + i + " is missing ID!");
+			console.warn("WARNING: <" + currentElementName + "> with index=" + i + " is missing ID!");
 			continue;
 		}
 
