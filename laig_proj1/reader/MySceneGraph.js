@@ -40,7 +40,7 @@ function MySceneGraph(filename, scene) {
 */
 
 /**
- * chama as funçõnes de parsing uma a uma para processar os diferentes blocos existentes no ficheiro LSX,
+ * chama as funções de parsing uma a uma para processar os diferentes blocos existentes no ficheiro LSX,
  * apresentando uma mensagem de erro na ausência de um bloco ou na existência de blocos repetidos
  * valida todos os ós carregados do ficheiro LSX, verificando se o root node existe no grafo
  * chama a função onGraphLoaded() da XMLscene associada, preparando a cena com os valores iniciais
@@ -100,7 +100,7 @@ MySceneGraph.prototype.onXMLReady = function()
 		this.scene.onGraphLoaded();
 	}
 	else {
-		this.onXMLError("invalid graph root '" + this.graphRoot + "'' not found in <NODES>!");
+		this.onInvalidRoot(this.graphRoot);
 	}
 };
 
@@ -320,7 +320,7 @@ MySceneGraph.prototype.parseNodeTranslation = function(root, node) {
 	}
 
 	return null;
-}
+};
 
 /**
  * processa uma rotação presente num bloco <NODE>
@@ -362,7 +362,7 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node) {
 	}
 
 	return null;
-}
+};
 
 /*
   _____  _____  _____ __  __ _____ _______ _______      ________  _____ 
@@ -410,7 +410,7 @@ MySceneGraph.prototype.readRectangle = function(id, leafArgs) {
 	this.leaves[id] = new MyRectangle(this.scene, x1, y1, x2, y2);
 
 	return null;
-}
+};
 
 /**
  * processa uma primitiva do tipo "triangle" e acrescenta ao array de leaves do grafo
@@ -453,7 +453,7 @@ MySceneGraph.prototype.readTriangle = function(id, leafArgs) {
 	this.leaves[id] = new MyTriangle(this.scene, vec1, vec2, vec3);
 
 	return null;
-}
+};
 
 /**
  * processa uma primitiva do tipo "cylinder" e acrescenta ao array de leaves do grafo
@@ -510,7 +510,7 @@ MySceneGraph.prototype.readCylinder = function(id, leafArgs) {
 	this.leaves[id] = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
 
 	return null;
-}
+};
 
 /**
  * processa uma primitiva do tipo "sphere" e acrescenta ao array de leaves do grafo
@@ -553,7 +553,7 @@ MySceneGraph.prototype.readSphere = function(id, leafArgs) {
 	this.leaves[id] = new MySphere(this.scene, myRadius, myStacks, mySlices);
 
 	return null;
-}
+};
 
 /*
   _____        _____   _____ ______ _____   _____ 
@@ -584,11 +584,22 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 	var checkResult = this.reader.getBoolean(node[0], 'value', true);
 	
 	return checkResult == null ? NaN : checkResult;
-}
+};
 
 MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coordC) {
 
-	if (!node.hasAttribute(coordA) | !node.hasAttribute(coordB) || !node.hasAttribute(coordC)) {
+	if (!node[0].hasAttribute(coordA)) {
+		onCoordinateMissing(coordA, node.nodeName);
+		return NaN;
+	}
+
+	if (!node[0].hasAttribute(coordB)) {
+		onCoordinateMissing(coordB, node.nodeName);
+		return NaN;
+	}
+
+	if (!node[0].hasAttribute(coordC)) {
+		onCoordinateMissing(coordC, node.nodeName);
 		return NaN;
 	}
 
@@ -601,7 +612,7 @@ MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coo
 	}
 
 	return [ x, y, z ];
-}
+};
 
 /**
  * processa coordenadas genéricas para um vetor de tamanho variável
@@ -644,7 +655,7 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coords) {
 	}
 
 	return arr;
-}
+};
 
 /**
  * processa coordenadas na forma (r, g, b, a) para um vetor
@@ -653,7 +664,7 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coords) {
  */
 MySceneGraph.prototype.parseCoordinatesRGBA = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['r', 'g', 'b', 'a']);
-}
+};
 
 /**
  * processa coordenadas na forma (x, y, z) para um vetor
@@ -662,7 +673,7 @@ MySceneGraph.prototype.parseCoordinatesRGBA = function(root, attribute) {
  */
 MySceneGraph.prototype.parseCoordinatesXYZ = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z']);
-}
+};
 
 /**
  * processa coordenadas na forma (x, y, z, w) para um vetor
@@ -671,7 +682,7 @@ MySceneGraph.prototype.parseCoordinatesXYZ = function(root, attribute) {
  */
 MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z', 'w']);
-}
+};
 
 /**
  * processa coordenadas na forma (sx, sy, sz) para um vetor
@@ -680,7 +691,7 @@ MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
  */
 MySceneGraph.prototype.parseCoordinatesScale = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['sx', 'sy', 'sz']);
-}
+};
 
 /**
  * processa um número em vírgula flutuante
@@ -704,7 +715,7 @@ MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
 	}
 	
 	return null;
-}
+};
 
 MySceneGraph.prototype.parseString = function(root, name, attribute) {
 
@@ -723,7 +734,7 @@ MySceneGraph.prototype.parseString = function(root, name, attribute) {
 	}
 
 	return null;
-}
+};
 
 /*
 		   _____  _____        __     _______ 
@@ -767,7 +778,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 	}
 
 	return null;
-}
+};
 
 /*
   _   _  ____  _____  ______  _____ 
@@ -813,7 +824,7 @@ MySceneGraph.prototype.parseNodes = function (root) {
 	}
 
 	return this.parseArray(root, 'NODE', this.parseNode);
-}
+};
 
 MySceneGraph.prototype.parseNode = function(id, root) {
 
@@ -938,7 +949,7 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	this.nodes[id] = node;
 
 	return null;
-}
+};
 
 /*
   _      _____ _____ _    _ _______ _____ 
@@ -966,7 +977,7 @@ MySceneGraph.prototype.parseNode = function(id, root) {
  */
 MySceneGraph.prototype.parseLights = function(root) {
 	return this.parseArray(root, 'LIGHT', this.parseLight);
-}
+};
 
 MySceneGraph.prototype.parseLight = function(id, root) {
 
@@ -1041,7 +1052,7 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	}
 
 	return null;
-}
+};
 
 /*
   __  __       _______ ______ _____  _____          _       _____ 
@@ -1069,7 +1080,7 @@ MySceneGraph.prototype.parseLight = function(id, root) {
  */
 MySceneGraph.prototype.parseMaterials = function(root) {
 	return this.parseArray(root, 'MATERIAL', this.parseMaterial);
-}
+};
 
 MySceneGraph.prototype.parseMaterial = function(id, root) {
 
@@ -1174,7 +1185,7 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
  */
 MySceneGraph.prototype.parseTextures = function(rootElement) {
 	return this.parseArray(rootElement, 'TEXTURE', this.parseTexture);
-}
+};
 
 MySceneGraph.prototype.parseTexture = function(id, root)
 {
@@ -1519,6 +1530,10 @@ MySceneGraph.prototype.onProcessNode = function(message, id) {
 
 MySceneGraph.prototype.onVisitNode = function(node, indegree) {
 	this.verbose && console.log("[VALIDATE NODES] Processing: " + node + ", indegree=" + indegree);
+};
+
+MySceneGraph.prototype.onInvalidRoot = function(root) {
+	this.onXMLError("invalid graph root '" + root + "'' not found in <NODES>!");
 };
 
 MySceneGraph.prototype.onXMLError = function(message) {
