@@ -43,14 +43,14 @@ function MySceneGraph(filename, scene) {
 */
 
 /**
- * chama as funções de parsing uma a uma para processar os diferentes blocos existentes no ficheiro LSX,
+ * chama as funções de parsing uma a uma para processar os diferentes blocos do ficheiro LSX,
  * apresentando uma mensagem de erro na ausência de um bloco ou na existência de blocos repetidos
  * valida todos os nodes carregados do ficheiro LSX, verificando se o root node existe no grafo
  * chama a função onGraphLoaded() da XMLscene associada, preparando a cena com os valores iniciais
  * @return {null} 
  */
-MySceneGraph.prototype.onXMLReady = function() 
-{
+MySceneGraph.prototype.onXMLReady = function() {
+
 	var parent = 'SCENE';
 	var rootElement = this.reader.xmlDoc.documentElement;
 
@@ -153,7 +153,7 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 	this.scene.multMatrix(node.matrix);
 
 	for (var i = 0; i < node.children.length; i++) {
-		var nextId = node.children[i];	
+		var nextId = node.children[i];
 		var mId = materialId;
 		var tId = textureId;
 
@@ -174,13 +174,13 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 				leaf.updateTexCoords(leafTexture.factorS, leafTexture.factorT);
 				leafMaterial.setTexture(leafTexture.tex);
 			}
-			
+
 			this.scene.applyMaterial(leafMaterial);
 			this.scene.drawPrimitive(leaf);
 		}
 		else if (this.nodes[nextId] != undefined) {
 			var nextElement = this.nodes[nextId];
-			this.scene.pushMatrix();	
+			this.scene.pushMatrix();
 			this.processNodes(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
 			this.scene.popMatrix();
 		}
@@ -276,7 +276,7 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 
 /**
  * processa um escalamento presente num bloco <NODE>
- * @param {XMLelement} root - estrutura que dados XML que contém o atributo <scale>
+ * @param {XMLElement} root - estrutura que dados XML que contém o atributo <scale>
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
@@ -300,7 +300,7 @@ MySceneGraph.prototype.parseNodeScale = function(root, node) {
 
 /**
  * processa uma translação presente num bloco <NODE>
- * @param {XMLelement} root - estrutura que dados XML que contém o atributo <translation>
+ * @param {XMLElement} root - estrutura que dados XML que contém o atributo <translation>
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
@@ -596,7 +596,7 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 /**
  * processa coordenadas na forma (coordA, coordB, coordC) para um vetor
  * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @return {Number[]|NaN} - array com as coordenadas se estas forem válidas, caso contrário NaN
+ * @return {Number[]|NaN} - vetor com as coordenadas se estas forem válidas, caso contrário NaN
  */
 MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coordC) {
 
@@ -630,10 +630,10 @@ MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coo
 
 /**
  * processa coordenadas genéricas para um vetor de tamanho variável
- * @param {XMLElement} root - estrutura de dados XML que contém o atributo
- * @param {String} attribute - identificador do elemento XML que contém as coordenadas
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
+ * @param {String} attribute - identificador do atributo que contém as coordenadas
  * @param {Number[]} coords - vetor que contém o nome das coordenadas a serem processadas
- * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinates = function(root, attribute, coords) {
 
@@ -673,9 +673,9 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coords) {
 
 /**
  * processa coordenadas na forma (r, g, b, a) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o atributo
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
  * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesRGBA = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['r', 'g', 'b', 'a']);
@@ -683,9 +683,9 @@ MySceneGraph.prototype.parseCoordinatesRGBA = function(root, attribute) {
 
 /**
  * processa coordenadas na forma (x, y, z) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o atributo
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
  * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesXYZ = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z']);
@@ -693,9 +693,9 @@ MySceneGraph.prototype.parseCoordinatesXYZ = function(root, attribute) {
 
 /**
  * processa coordenadas na forma (x, y, z, w) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o atributo
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
  * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z', 'w']);
@@ -703,9 +703,9 @@ MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
 
 /**
  * processa coordenadas na forma (sx, sy, sz) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o atributo
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
  * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesScale = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['sx', 'sy', 'sz']);
@@ -714,7 +714,7 @@ MySceneGraph.prototype.parseCoordinatesScale = function(root, attribute) {
 /**
  * processa um número em vírgula flutuante contido num atributo de um elemento XML
  * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém o número
+ * @param {String} attribute - identificador do atributo que contém as coordenadas
  * @return {Number|NaN|null} - número em vírgula flutuante se este for válido, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
