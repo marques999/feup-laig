@@ -1,6 +1,9 @@
 /**
  * construtor default da classe 'XMLscene'
  * @constructor
+ * @augments CGFscene
+ * @author Carlos Samouco, Diogo Marques
+ * @return {null}
  */
 function XMLscene() {
 	CGFscene.call(this);
@@ -77,7 +80,7 @@ XMLscene.prototype.initFrustum = function(near, far) {
 
 /**
  * altera as coordenadas de escalamento inicial da cena
- * @param {Array} matrix - vetor de coordenadas do escalamento
+ * @param {Number[]} matrix - vetor de coordenadas do escalamento
  * @return {null}
  */
 XMLscene.prototype.initScale = function(matrix) {
@@ -86,7 +89,7 @@ XMLscene.prototype.initScale = function(matrix) {
 
 /**
  * altera as coordenadas da translação inicial da cena
- * @param {Array} matrix - vetor de coordenadas da translação
+ * @param {Number[]} matrix - vetor de coordenadas da translação
  * @return {null}
  */
 XMLscene.prototype.initTranslate = function(matrix) {
@@ -149,7 +152,7 @@ XMLscene.prototype.applyMaterial = function(appearance) {
 
 /**
  * altera a componente de iluminação global ambiente da cena
- * @param {Array} rgba - vetor com as componentes (r, g, b, a) da iluminação ambiente
+ * @param {Number[]} rgba - vetor com as componentes (r, g, b, a) da iluminação ambiente
  * @return {null}
  */
 XMLscene.prototype.setAmbient = function(rgba) {
@@ -158,7 +161,7 @@ XMLscene.prototype.setAmbient = function(rgba) {
 
 /**
  * altera a cor de fundo da cena
- * @param {Array} rgba - vetor com as componentes (r, g, b, a) da cor de fundo
+ * @param {Number[]} rgba - vetor com as componentes (r, g, b, a) da cor de fundo
  * @return {null}
  */
 XMLscene.prototype.setBackground = function(rgba) {
@@ -170,6 +173,7 @@ XMLscene.prototype.setBackground = function(rgba) {
  * @param {Number} id - ordem da rotação na cena
  * @param {Character} axis - eixo da rotação (x, y, z)
  * @param {Number} angle - ângulo da rotação (em graus)
+ * @return {null}
  */
 XMLscene.prototype.setRotation = function(id, axis, angle) {
 
@@ -190,10 +194,10 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
  * adiciona uma nova CGFlight ao array de luzes da cena
  * @param {String} id - identificador da luz
  * @param {Boolean} enabled - estado ON/OFF inicial da luz
- * @param {Array} position - vetor de coordenadas (x, y, z, w) da posição
- * @param {Array} ambient - vetor com componentes (r, g, b, a) da componente ambiente
- * @param {Array} diffuse - vetor com componentes (r, g, b, a) da componente difusa
- * @param {Array} specular - vetor com componentes (r, g, b, a) da componente especular
+ * @param {Number[]} position - vetor de coordenadas (x, y, z, w) da posição
+ * @param {Number[]} ambient - vetor com componentes (r, g, b, a) da componente ambiente
+ * @param {Number[]} diffuse - vetor com componentes (r, g, b, a) da componente difusa
+ * @param {Number[]} specular - vetor com componentes (r, g, b, a) da componente especular
  * @return {CGFlight}
  */
 XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse, specular) {

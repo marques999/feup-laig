@@ -1,10 +1,13 @@
 /**
  * construtor default da classe 'MyTriangle'
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Array} v1 - vetor de coordenadas (x, y, z) do vértice esquerdo da base do triângulo
- * @param {Array} v2 - vetor de coordenadas (x, y, z) do vértice direito da base do triângulo
- * @param {Array} v3 - vetor de coordenadas (x, y, z) do vértice de topo do triângulo
  * @constructor
+ * @augments MyPrimitive
+ * @author Diogo Marques
+ * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {Number[]} v1 - vetor de coordenadas (x, y, z) do vértice esquerdo da base do triângulo
+ * @param {Number[]} v2 - vetor de coordenadas (x, y, z) do vértice direito da base do triângulo
+ * @param {Number[]} v3 - vetor de coordenadas (x, y, z) do vértice de topo do triângulo
+ * @return {null}
  */
 function MyTriangle(scene, v1, v2, v3) {
 
@@ -76,6 +79,7 @@ MyTriangle.prototype.initBuffers = function() {
  * atualiza as coordenadas de textura do triângulo com os valores recebidos
  * @param {Number} ampS - factor de amplificação na coordenada S
  * @param {Number} ampT - factor de amplificação na coordenada T
+ * @override
  * @return {null}
  */
 MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {

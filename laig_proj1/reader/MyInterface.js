@@ -1,6 +1,9 @@
 /**
  * construtor default da classe 'MyInterface'
  * @constructor
+ * @augments CGFinterface
+ * @author Diogo Marques
+ * @return {null}
  */
 function MyInterface() {
 	CGFinterface.call(this);

@@ -1,15 +1,17 @@
 /**
  * construtor default da classe 'MySceneGraph'
+ * @constructor
+ * @author Carlos Samouco, Diogo Marques
  * @param {String} filename - caminho relativo do ficheiro LSX
  * @param {XMLscene} scene - apontador para uma XMLscene onde o grafo de cena será desenhado
- * @constructor
+ * @return {null}
  */
 function MySceneGraph(filename, scene) {
-	
+
 	this.loadedOk = null;
 	this.scene = scene;
 	this.verbose = true;
-	
+
 	scene.graph = this;
 
 	this.leaves = {};
@@ -43,7 +45,7 @@ function MySceneGraph(filename, scene) {
 /**
  * chama as funções de parsing uma a uma para processar os diferentes blocos existentes no ficheiro LSX,
  * apresentando uma mensagem de erro na ausência de um bloco ou na existência de blocos repetidos
- * valida todos os ós carregados do ficheiro LSX, verificando se o root node existe no grafo
+ * valida todos os nodes carregados do ficheiro LSX, verificando se o root node existe no grafo
  * chama a função onGraphLoaded() da XMLscene associada, preparando a cena com os valores iniciais
  * @return {null} 
  */
@@ -232,7 +234,7 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 /**
  * processa todas as entidades presentes no bloco <ILLUMINATION> do ficheiro LSX
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro 
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseIllumination = function(root) {
 
@@ -276,7 +278,7 @@ MySceneGraph.prototype.parseIllumination = function(root) {
  * processa um escalamento presente num bloco <NODE>
  * @param {XMLelement} root - estrutura que dados XML que contém o atributo <scale>
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseNodeScale = function(root, node) {
 
@@ -300,7 +302,7 @@ MySceneGraph.prototype.parseNodeScale = function(root, node) {
  * processa uma translação presente num bloco <NODE>
  * @param {XMLelement} root - estrutura que dados XML que contém o atributo <translation>
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseNodeTranslation = function(root, node) {
 
@@ -324,7 +326,7 @@ MySceneGraph.prototype.parseNodeTranslation = function(root, node) {
  * processa uma rotação presente num bloco <NODE>
  * @param {XMLelement} root - estrutura que dados XML que contém o atributo <rotation>
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseNodeRotation = function(root, node) {
 
@@ -375,8 +377,8 @@ MySceneGraph.prototype.parseNodeRotation = function(root, node) {
 /**
  * processa uma primitiva do tipo "rectangle" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {Array} leafArgs - array contendo os argumentos não processados desta primitiva (na forma de strings)
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.readRectangle = function(id, leafArgs) {
 
@@ -413,8 +415,8 @@ MySceneGraph.prototype.readRectangle = function(id, leafArgs) {
 /**
  * processa uma primitiva do tipo "triangle" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {Array} leafArgs - array contendo os argumentos não processados desta primitiva (na forma de strings)
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.readTriangle = function(id, leafArgs) {
 
@@ -456,8 +458,8 @@ MySceneGraph.prototype.readTriangle = function(id, leafArgs) {
 /**
  * processa uma primitiva do tipo "cylinder" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {Array} leafArgs - array contendo os argumentos não processados desta primitiva (na forma de strings)
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.readCylinder = function(id, leafArgs) {
 
@@ -513,8 +515,8 @@ MySceneGraph.prototype.readCylinder = function(id, leafArgs) {
 /**
  * processa uma primitiva do tipo "sphere" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {Array} leafArgs - array contendo os argumentos não processados desta primitiva (na forma de strings)
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.readSphere = function(id, leafArgs) {
 
@@ -563,6 +565,12 @@ MySceneGraph.prototype.readSphere = function(id, leafArgs) {
 												  
 */
 
+/**
+ * processa um valor booleano contido num atributo de um elemento XML
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
+ * @param {String} attribute - identificador do atributo que contém o valor booleano
+ * @return {Boolean|NaN|null} - valor booleano se este for válido, caso contrário NaN ou null
+ */
 MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 
 	var node = root.getElementsByTagName(attribute);
@@ -584,6 +592,12 @@ MySceneGraph.prototype.parseBoolean = function(root, attribute) {
 	return checkResult == null ? NaN : checkResult;
 };
 
+
+/**
+ * processa coordenadas na forma (coordA, coordB, coordC) para um vetor
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
+ * @return {Number[]|NaN} - array com as coordenadas se estas forem válidas, caso contrário NaN
+ */
 MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coordC) {
 
 	if (!node.hasAttribute(coordA)) {
@@ -591,18 +605,20 @@ MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coo
 		return NaN;
 	}
 
+	var x = this.reader.getFloat(node, coordA);
+
 	if (!node.hasAttribute(coordB)) {
 		onCoordinateMissing(coordB, node.nodeName);
 		return NaN;
 	}
+
+	var y = this.reader.getFloat(node, coordB);
 
 	if (!node.hasAttribute(coordC)) {
 		onCoordinateMissing(coordC, node.nodeName);
 		return NaN;
 	}
 
-	var x = this.reader.getFloat(node, coordA);
-	var y = this.reader.getFloat(node, coordB);
 	var z = this.reader.getFloat(node, coordC);
 
 	if (x != x || y != y || z != z) {
@@ -616,8 +632,8 @@ MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coo
  * processa coordenadas genéricas para um vetor de tamanho variável
  * @param {XMLElement} root - estrutura de dados XML que contém o atributo
  * @param {String} attribute - identificador do elemento XML que contém as coordenadas
- * @param {Array} coords - vetor que contém o nome das coordenadas a serem processadas
- * @return {Array} - array com as coordenadas se estas forem válidas, caso contrário NaN
+ * @param {Number[]} coords - vetor que contém o nome das coordenadas a serem processadas
+ * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinates = function(root, attribute, coords) {
 
@@ -659,6 +675,7 @@ MySceneGraph.prototype.parseCoordinates = function(root, attribute, coords) {
  * processa coordenadas na forma (r, g, b, a) para um vetor
  * @param {XMLElement} root - estrutura de dados XML que contém o atributo
  * @param {String} attribute - identificador do atributo que contém as coordenadas
+ * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesRGBA = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['r', 'g', 'b', 'a']);
@@ -668,6 +685,7 @@ MySceneGraph.prototype.parseCoordinatesRGBA = function(root, attribute) {
  * processa coordenadas na forma (x, y, z) para um vetor
  * @param {XMLElement} root - estrutura de dados XML que contém o atributo
  * @param {String} attribute - identificador do atributo que contém as coordenadas
+ * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesXYZ = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z']);
@@ -677,6 +695,7 @@ MySceneGraph.prototype.parseCoordinatesXYZ = function(root, attribute) {
  * processa coordenadas na forma (x, y, z, w) para um vetor
  * @param {XMLElement} root - estrutura de dados XML que contém o atributo
  * @param {String} attribute - identificador do atributo que contém as coordenadas
+ * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z', 'w']);
@@ -686,15 +705,17 @@ MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
  * processa coordenadas na forma (sx, sy, sz) para um vetor
  * @param {XMLElement} root - estrutura de dados XML que contém o atributo
  * @param {String} attribute - identificador do atributo que contém as coordenadas
+ * @return {Number[]|NaN|null} - array com as coordenadas se estas forem válidas, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseCoordinatesScale = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['sx', 'sy', 'sz']);
 };
 
 /**
- * processa um número em vírgula flutuante
- * @param {XMLElement} root - estrutura de dados XML que contém o atributo
- * @param {String} attribute - identificador do atributo que contém as coordenadas
+ * processa um número em vírgula flutuante contido num atributo de um elemento XML
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
+ * @param {String} attribute - identificador do atributo que contém o número
+ * @return {Number|NaN|null} - número em vírgula flutuante se este for válido, caso contrário NaN ou null
  */
 MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
 
@@ -715,6 +736,12 @@ MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
 	return null;
 };
 
+/**
+ * processa uma string contida num atributo de um elemento XML
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
+ * @param {String} attribute - identificador do atributo que contém a string
+ * @return {String|NaN|null} - string se esta for válida, caso contrário NaN ou null
+ */
 MySceneGraph.prototype.parseString = function(root, name, attribute) {
 
 	var node = root.getElementsByTagName(name);
@@ -808,7 +835,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 /** 
  * processa todas as entidades presentes no bloco <NODES> do ficheiro LSX
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <NODES>
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro 
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseNodes = function (root) {
 
@@ -829,6 +856,13 @@ MySceneGraph.prototype.parseNodes = function (root) {
 	return this.parseArray(root, 'NODE', this.parseNode);
 };
 
+/**
+ * processa uma entidade do tipo <NODE>, adicionando ao array de nodes do grafo
+ * verifica se existe um node com o mesmo identificador no array de nodes
+ * verifica ainda se os materiais e texturas referenciados pelo node são válidos (existem na cena)
+ * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <NODE>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.parseNode = function(id, root) {
 
 	var parent = root.nodeName;
@@ -975,12 +1009,18 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 /**
  * processa todas as entidades presentes no bloco <LIGHTS> do ficheiro LSX
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <LIGHTS>
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro 
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseLights = function(root) {
 	return this.parseArray(root, 'LIGHT', this.parseLight);
 };
 
+/**
+ * processa uma entidade do tipo <LIGHT>, adicionando ao array de luzes do grafo
+ * verifica ainda se existe uma luz com o mesmo identificador no array de luzes
+ * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <LIGHT>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.parseLight = function(id, root) {
 
 	var parseErrors = 0;
@@ -1077,12 +1117,18 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 /**
  * processa todas as entidades presentes no bloco <MATERIALS>
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <MATERIALS>
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro 
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseMaterials = function(root) {
 	return this.parseArray(root, 'MATERIAL', this.parseMaterial);
 };
 
+/**
+ * processa uma entidade do tipo <MATERIAL>, adicionando ao array de materiais do grafo
+ * verifica ainda se existe um material com o mesmo identificador no array de materiais
+ * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <MATERAIL>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.parseMaterial = function(id, root) {
 
 	var parent = root.nodeName;
@@ -1181,12 +1227,18 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 /**
  * processa todas as entidades presentes no bloco <TEXTURES>
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <TEXTURES>
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro 
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseTextures = function(rootElement) {
 	return this.parseArray(rootElement, 'TEXTURE', this.parseTexture);
 };
 
+/**
+ * processa uma entidade do tipo <TEXTURE>, adicionando ao array de texturas do grafo
+ * verifica ainda se existe uma textura com o mesmo identificador no array de texturas
+ * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <TEXTURE>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.parseTexture = function(id, root)
 {
 	var parent = root.nodeName;
@@ -1260,12 +1312,18 @@ MySceneGraph.prototype.parseTexture = function(id, root)
 /**
  * processa todas as entidades presentes no bloco <LEAVES>
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <LEAVES>
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro 
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseLeaves = function(root) {
 	return this.parseArray(root, 'LEAF', this.parseLeaf);
 };
 
+/**
+ * processa uma entidade do tipo <LEAF>, adicionando ao array de leaves do grafo
+ * verifica ainda se existe uma leaf com o mesmo identificador no array
+ * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <LEAF>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.parseLeaf = function(id, root) {
 
 	var parent = root.nodeName;
@@ -1340,7 +1398,7 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 /**
  * processa todas as entidades presentes no bloco <INITIALS>
  * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <INITIALS>
- * @return {String} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro 
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseGlobals = function(root) {
 

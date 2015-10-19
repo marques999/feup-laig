@@ -1,10 +1,13 @@
 /**
  * construtor default da classe 'MySphere'
+ * @constructor
+ * @augments MyPrimitive
+ * @author Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
  * @param {Number} radius - raio da esfera
  * @param {Number} stacks - número de secções da esfera em altura
  * @param {Number} slices - número de secçoes da esfera em torno do raio
- * @constructor
+ * @return {null}
  */
 function MySphere(scene, radius, stacks, slices) {
 

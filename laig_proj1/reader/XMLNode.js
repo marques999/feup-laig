@@ -1,9 +1,11 @@
 /**
  * construtor default da classe 'XMLnode'
+ * @constructor
+ * @author Carlos Samouco
  * @param {String} id - identificador do node
  * @param {String} textureId -  identificador da textura associada a este node
  * @param {String} materialId - identificador do material associado a este node
- * @constructor
+ * @return {null}
  */
 function XMLnode(id, textureId, materialId) {
 
@@ -50,7 +52,7 @@ XMLnode.prototype.rotate = function(axis, angle) {
 
 /**
  * multiplica a matriz de transformação deste node por uma matriz de escalamento
- * @param {Array} coords - vetor de coordenadas (x, y, z) do escalamento 
+ * @param {Number[]} coords - vetor de coordenadas (x, y, z) do escalamento 
  * @return {null} 
  */
 XMLnode.prototype.scale = function(coords) {
@@ -59,7 +61,7 @@ XMLnode.prototype.scale = function(coords) {
 
 /**
  * multiplica a matriz de transformação deste node por uma matriz de translação
- * @param {Array} coords - vetor de coordenadas (x, y, z) da translação
+ * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
  * @return {null} 
  */
 XMLnode.prototype.translate = function(coords) {

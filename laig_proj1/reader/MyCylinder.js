@@ -1,12 +1,15 @@
 /**
  * construtor default da classe 'MyCylinder'
+ * @constructor
+ * @augments MyPrimitive
+ * @author Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
  * @param {Number} height - altura do cilindro
  * @param {Number} radiusBottom - raio da base inferior do cilindro
  * @param {Number} radiusTop - radio da base superior do cilindro
  * @param {Number} stacks - número de secções do cilindro em altura
  * @param {Number} slices - número de secçoes do cilindro em torno dos raios
- * @constructor
+ * @return {null}
  */
 function MyCylinder(scene, height, radiusBottom, radiusTop, stacks, slices) {
 

@@ -108,12 +108,20 @@
 			<emission r="1.0" g="0.95" b="0.95" a="0.8" />
 		</MATERIAL>
 
-		<MATERIAL id="scene_white">
+		<MATERIAL id="lamp_white">
 		  <shininess value="1" />
 		  <specular r="0.0" g="0.0" b="0.0" a="0.0" />
 		  <diffuse r="0.5" g="0.5" b="0.5" a="0.5" />
 		  <ambient r="0.5" g="0.5" b="0.5" a="0.2" />
 		  <emission r="0.5" g="0.5" b="0.5" a="0.5" />
+		</MATERIAL>
+		
+		<MATERIAL id="scene_white">
+		  <shininess value="1" />
+		  <specular r="0.0" g="0.0" b="0.0" a="0.0" />
+		  <diffuse r="0.8" g="0.8" b="0.8" a="0.5" />
+		  <ambient r="0.8" g="0.8" b="0.8" a="0.2" />
+		  <emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 
 		<MATERIAL id="table_green">
@@ -249,7 +257,7 @@
 		</DESCENDANTS>
 	</NODE>
 	
-		<NODE id="cigarette">
+	<NODE id="cigarette">
 		<MATERIAL id="null" />
 		<TEXTURE id="null" />
 		<TRANSLATION x="0.4" y="0.7" z="-0.25" />
@@ -272,7 +280,7 @@
 	</NODE>
 
 	<NODE id="cigarette_baseP1">
-		<MATERIAL id="scene_yellow" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />		
 		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>	
 		<DESCENDANTS>
@@ -281,7 +289,7 @@
 	</NODE>
 
 	<NODE id="cigarette_baseP2">
-		<MATERIAL id="scene_yellow" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />				
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />																	
@@ -300,7 +308,7 @@
 	</NODE>
 
 	<NODE id="cigarette_topP1">
-		<MATERIAL id="scene_white" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />
 		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>
 		<DESCENDANTS>
@@ -309,7 +317,7 @@
 	</NODE>
 
 	<NODE id="cigarette_topP2">
-		<MATERIAL id="scene_white" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />		
 		<DESCENDANTS>
 			<DESCENDANT id="mycylinder" />																	
@@ -430,7 +438,7 @@
 	</NODE>
 
 	<NODE id="cueTopP1">
-		<MATERIAL id="rubber_red" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />	
 		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>								
 		<DESCENDANTS>
@@ -439,7 +447,7 @@
 	</NODE>
 
 	<NODE id="cueTopP2">
-		<MATERIAL id="rubber_red" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />							
 		<DESCENDANTS>
 			<DESCENDANT id="mycueTop" />																			
@@ -457,7 +465,7 @@
 	</NODE>
 
 	<NODE id="cueMidP1">
-		<MATERIAL id="wood_oak" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />
 		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>								
 		<DESCENDANTS>
@@ -466,7 +474,7 @@
 	</NODE>
 
 	<NODE id="cueMidP2">
-		<MATERIAL id="wood_oak" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />									
 		<DESCENDANTS>
 			<DESCENDANT id="mycueMid" />																			
@@ -484,7 +492,7 @@
 	</NODE>
 
 	<NODE id="cueDownP1">
-		<MATERIAL id="plastic_dark" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />
 		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>										
 		<DESCENDANTS>
@@ -493,7 +501,7 @@
 	</NODE>
 
 	<NODE id="cueDownP2">
-		<MATERIAL id="plastic_dark" />
+		<MATERIAL id="null" />
 		<TEXTURE id="null" />										
 		<DESCENDANTS>
 			<DESCENDANT id="mycueDown" />																			
@@ -581,7 +589,7 @@
 
 
 	<NODE id="sconce_border">
-		<MATERIAL id="scene_white" />
+		<MATERIAL id="lamp_white" />
 		<TEXTURE id="null" />	
 		<TRANSLATION x="0.0" y="-0.35" z="0.0" />	
 		<ROTATION axis="x" angle="-90" />						
@@ -592,7 +600,7 @@
 	</NODE>
 	
 	<NODE id="sconce_borderP1">
-		<MATERIAL id="scene_white" />
+		<MATERIAL id="lamp_white" />
 		<TEXTURE id="null" />								
 		<DESCENDANTS>
 			<DESCENDANT id="mysconce_chain" />														
@@ -601,7 +609,7 @@
 
 
 	<NODE id="sconce_borderP2">
-		<MATERIAL id="scene_white" />
+		<MATERIAL id="lamp_white" />
 		<TEXTURE id="null" />	
 		<SCALE sx="-1.0" sy="1.0" sz="1.0"/>									
 		<DESCENDANTS>
