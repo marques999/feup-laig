@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-method-setProperty'>/**
+</span> *
+ * @param object
+ * @param prop
+ * @param value
+ */
+function setProperty(object, prop, value) {
+    var fields = prop.split(/[\.\[\]]/).filter(function (elem) {
+        return elem.length &gt; 0;
+    })
+    var tempObj = object;
+    for (var i = 0; i &lt; fields.length - 1; ++i) {
+        if (tempObj[fields[i]] === undefined) {
+            tempObj[fields[i]] = {};
+        }
+        tempObj = tempObj[fields[i]];
+    }
+    tempObj[fields[fields.length - 1]] = value;
+}
+<span id='global-method-getStringFromUrl'>/**
+</span> *
+ * @param {string} url
+ * @returns {string}
+ */
+function getStringFromUrl(url) {
+    var xmlHttpReq = new XMLHttpRequest();
+    xmlHttpReq.open(&quot;GET&quot;, url, false);
+    xmlHttpReq.send();
+    return xmlHttpReq.responseText;
+}
+
+<span id='CGFshader-method-constructor'><span id='CGFshader'>/**
+</span></span> * CGFshader
+ * @param {WebGLRenderingContext} gl 
+ * @param {string} vertexURL
+ * @param {string} fragmentURL
+ * @constructor
+ */
+function CGFshader(gl, vertexURL, fragmentURL) {
+    this.gl = gl;
+
+<span id='CGFshader-property-uniforms'>    /**
+</span>     * @type {*}
+     */
+    this.uniforms = {};
+
+<span id='CGFshader-property-attributes'>    /**
+</span>     * @type {*}
+     */
+    this.attributes = {};
+    if (vertexURL != undefined &amp;&amp; fragmentURL != undefined) {
+        this.init(vertexURL, fragmentURL);
+    }
+}
+
+<span id='CGFshader-method-init'>/**
+</span> *
+ * @param vertexURL {string}
+ * @param fragmentURL {string}
+ */
+CGFshader.prototype.init = function (vertexURL, fragmentURL) {
+    var fgShaderSrc = getStringFromUrl(fragmentURL);
+    var vertexShaderSrc = getStringFromUrl(vertexURL);
+
+    var fgShader = this.createShaderFromSource(WebGLRenderingContext.FRAGMENT_SHADER, fgShaderSrc);
+    var vxShader = this.createShaderFromSource(WebGLRenderingContext.VERTEX_SHADER, vertexShaderSrc);
+
+    this.compile_program(vxShader, fgShader);
+};
+
+<span id='CGFshader-method-createShaderFromSource'>/**
+</span> *
+ * @param {number} type
+ * @param {string} shaderSource
+ * @returns {WebGLShader}
+ */
+CGFshader.prototype.createShaderFromSource = function (type, shaderSource) {
+    var shader = this.gl.createShader(type);
+
+    this.gl.shaderSource(shader, shaderSource);
+    this.gl.compileShader(shader);
+
+    if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+        alert(this.gl.getShaderInfoLog(shader));
+        return null;
+    }
+    return shader;
+};
+
+<span id='CGFshader-method-compile_program'>/**
+</span> *
+ * @param vertexShader {WebGLShader}
+ * @param fragmentShader {WebGLShader}
+ */
+CGFshader.prototype.compile_program = function (vertexShader, fragmentShader) {
+    var gl = this.gl;
+
+    var prg = gl.createProgram();
+    gl.attachShader(prg, vertexShader);
+    gl.attachShader(prg, fragmentShader);
+    gl.linkProgram(prg);
+
+    if (!gl.getProgramParameter(prg, gl.LINK_STATUS)) {
+        console.log(gl.getProgramInfoLog(prg));
+        alert('Could not initialise shaders');
+    }
+
+    this.program = prg;
+
+    gl.useProgram(prg);
+
+    this.uniforms = {};
+
+    var numUniforms = gl.getProgramParameter(prg, gl.ACTIVE_UNIFORMS);
+    for (var i = 0; i &lt; numUniforms; ++i) {
+        var uniformInfo = gl.getActiveUniform(prg, i);
+        var loc = gl.getUniformLocation(prg, uniformInfo.name);
+        setProperty(this.uniforms, uniformInfo.name, loc);
+    }
+
+    this.attributes = {};
+
+    var numAttributes = gl.getProgramParameter(prg, gl.ACTIVE_ATTRIBUTES);
+    for (var i = 0; i &lt; numAttributes; ++i) {
+        var attributeInfo = gl.getActiveAttrib(prg, i);
+        var loc = gl.getAttribLocation(prg, attributeInfo.name);
+        setProperty(this.attributes, attributeInfo.name, loc);
+    }
+};
+
+<span id='CGFshader-method-update'>/**
+</span> *
+ */
+CGFshader.prototype.update = function () {
+
+};
+
+<span id='CGFshader-method-bind'>/**
+</span> *
+ */
+CGFshader.prototype.bind = function () {
+    this.gl.useProgram(this.program);
+};
+
+<span id='CGFshader-method-unbind'>/**
+</span> *
+ */
+CGFshader.prototype.unbind = function () {
+    this.gl.useProgram(null);
+};
+
+
+<span id='global-method-copyValues'>/**
+</span> * Copies attributes and uniforms from another shader (only those that are common)
+ * Still under development.
+ * @ignore
+ */
+CGFshader.prototype.copyValues = function (src) {
+	// iterate over this shader's attributes, check if they exist on the source shader, aind if so copy them
+	for (a in this.attributes)
+		console.log(&quot;Attr: &quot;+a+&quot; - &quot;+this.attributes[a]);
+	//same thing for uniforms
+	iterateUniforms(this.uniforms, this.gl, this.program)
+
+};
+
+
+function iterateUniforms(uniforms, gl, srcProg)
+{
+	for (u in uniforms)
+	{
+		console.log(&quot;Uniform: &quot;+u+&quot; - &quot;+typeof uniforms[u]);
+		if (uniforms[u] instanceof WebGLUniformLocation)
+		{
+			console.log(&quot; - &quot;+gl.getUniform(srcProg, uniforms[u]));
+		}
+		else
+			iterateUniforms(uniforms[u], gl, srcProg)
+	};
+}
+</pre>
+</body>
+</html>

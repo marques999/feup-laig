@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='CGFappearance'>/**
+</span>* @class CGFappearance
+*
+* Structure that holds all properties needed to define a material.  
+* Calling #apply loads these properties to the #scene.
+*
+* By default uses these properties:  
+* - Ambient:  (0.2, 0.2, 0.2, 1.0)  
+* - Diffuse:  (0.5, 0.5, 0.5, 1.0)  
+* - Specular: (0.5, 0.5, 0.5, 1.0)  
+* - Shininess: 10.0  
+* - Emission: (0.0, 0.0, 0.0, 1.0)  
+*/
+
+<span id='CGFappearance-property-scene'>/** @property {CGFscene} scene Scene used to apply this appearance. */
+</span><span id='CGFappearance-property-ambient'>/** @property {vec4} ambient Ambient component of the appearance. */
+</span><span id='CGFappearance-property-diffuse'>/** @property {vec4} diffuse Diffuse component of the appearance. */
+</span><span id='CGFappearance-property-specular'>/** @property {vec4} specular Specular component of the appearance. */
+</span><span id='CGFappearance-property-shininess'>/** @property {Number} shininess Shininess of the appearance. */
+</span><span id='CGFappearance-property-emission'>/** @property {vec4} emission Emission component of the appearance. */
+</span>
+
+<span id='CGFappearance-method-CGFappearance'>/**
+</span> * @method CGFappearance
+ * @constructor
+ * Creates an appearance with the default values
+ * @param {CGFscene} scene Scene used to apply this appearance.
+ */
+function CGFappearance(scene) {
+
+	this.scene = scene;
+	
+	this.ambient = vec4.fromValues(0.2,0.2,0.2,1.0);
+	this.diffuse = vec4.fromValues(0.5,0.5,0.5,1.0);
+	this.specular = vec4.fromValues(0.5,0.5,0.5,1.0);
+	this.shininess = 10.0;
+	this.emission = vec4.fromValues(0,0,0,1);
+}
+
+CGFappearance.prototype.constructor = CGFappearance;
+
+<span id='CGFappearance-method-setAmbient'>/** @method setAmbient
+</span>* Setter for the ambient component of the material.
+* @param {Number} r Red value for the component
+* @param {Number} g Green value for the component
+* @param {Number} b Blue value for the component
+* @param {Number} a Alpha value for the component
+*/
+CGFappearance.prototype.setAmbient = function(r,g,b,a) { vec4.set(this.ambient, r,g,b,a); }
+
+<span id='CGFappearance-method-setDiffuse'>/** @method setDiffuse
+</span>* Setter for the diffuse component of the material.
+* @param {Number} r Red value for the component
+* @param {Number} g Green value for the component
+* @param {Number} b Blue value for the component
+* @param {Number} a Alpha value for the component
+*/
+CGFappearance.prototype.setDiffuse = function(r,g,b,a) { vec4.set(this.diffuse, r,g,b,a); }
+
+<span id='CGFappearance-method-setSpecular'>/** @method setSpecular
+</span>* Setter for the specular component of the material.
+* @param {Number} r Red value for the component
+* @param {Number} g Green value for the component
+* @param {Number} b Blue value for the component
+* @param {Number} a Alpha value for the component
+*/
+CGFappearance.prototype.setSpecular = function(r,g,b,a) { vec4.set(this.specular, r,g,b,a); }
+
+<span id='CGFappearance-method-setShininess'>/** @method setShininess
+</span>* Setter for the shininess of the material.
+* @param {Number} s Value for the shininess
+*/
+CGFappearance.prototype.setShininess = function(s) { this.shininess = s; }
+
+<span id='CGFappearance-method-setEmission'>/** @method setEmission
+</span>* Setter for the emission component of the material.
+* @param {Number} r Red value for the component
+* @param {Number} g Green value for the component
+* @param {Number} b Blue value for the component
+* @param {Number} a Alpha value for the component
+*/
+CGFappearance.prototype.setEmission = function(r,g,b,a) { vec4.set(this.emission, r,g,b,a); }
+
+
+// Didn't document this so that it isn't visible yet.
+// Will document later if it's found to be relevant.
+CGFappearance.prototype.setColor = function(r,g,b,a) {
+	this.setAmbient(r,g,b,a);
+	this.setDiffuse(r,g,b,a);
+}
+
+<span id='CGFappearance-method-apply'>/** @method apply
+</span>* Loads the stored material properties to the scene to be used.
+*/
+CGFappearance.prototype.apply = function() {
+	this.scene.setAmbient(this.ambient[0], this.ambient[1], this.ambient[2], this.ambient[3]);
+	this.scene.setDiffuse(this.diffuse[0], this.diffuse[1], this.diffuse[2], this.diffuse[3]);
+	this.scene.setSpecular(this.specular[0], this.specular[1], this.specular[2], this.specular[3]);
+	this.scene.setShininess(this.shininess);
+	this.scene.setEmission(this.emission[0], this.emission[1], this.emission[2], this.emission[3]);
+	if (this.texture)
+	{
+		
+		if (this.texture.bind() &amp;&amp; this.wrapS &amp;&amp; this.wrapT)
+		{
+			var gl=this.scene.gl;
+			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.wrapS);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.wrapT);
+			this.scene.activeTexture=this.texture;
+		}
+	}
+	else
+		this.scene.activeTexture=null;
+}
+
+
+<span id='CGFappearance-method-setTexture'>/** @method setTexture
+</span>* Associates a **previously loaded texture** with this appearance.
+* @param {CGFtexture} tex Texture object to be assigned. Use *null* to remove texture from appearance.
+*/
+CGFappearance.prototype.setTexture = function(tex) { this.texture=tex; }
+
+<span id='CGFappearance-method-loadTexture'>/** @method loadTexture
+</span>* Loads a new texturee given an URL and and associates it with this appearance.
+* @param {String} url The URL for the image file containing the texture.
+*/
+CGFappearance.prototype.loadTexture = function(url) { this.texture=new CGFtexture(this.scene,url); }
+
+<span id='CGFappearance-method-setTextureWrap'>/** @method setTextureWrap
+</span>* Sets the wrapping mode for the associated texture, in both S and T directions. 
+* Possible values for textures with dimensions that are a power of two are 'CLAMP_TO_EDGE', 'MIRRORED_REPEAT', or 'REPEAT'.
+* These can be different for each dimension (e.g. wrapS can be 'REPEAT' and wrapT can be 'CLAMP_TO_EDGE').
+* For non-power-of-two textures (NPOT), only 'CLAMP_TO_EDGE' must be used (it is the mode set by default when loading these textures).
+* @param {String} wrapS Wrapping mode for the S direction.
+* @param {String} wrapT Wrapping mode for the S direction.
+*/
+CGFappearance.prototype.setTextureWrap = function(wrapS, wrapT)
+{ 
+	this.wrapS=this.scene.gl[wrapS]; 
+	this.wrapT=this.scene.gl[wrapT]; 
+}
+</pre>
+</body>
+</html>

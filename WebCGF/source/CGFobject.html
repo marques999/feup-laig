@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='CGFobject'>/**
+</span> * @class CGFobject
+ * 
+ * Defines an object from which all objects in a scene should inherit.  
+ * By default this object is a centered square on the XY plane with unit length.
+ */
+ 
+<span id='CGFobject-property-vertices'>/** @property {Number[]} vertices 
+</span>* (To be set in #initBuffers) List of coordinates which constitute vertices of the object.   
+* Each consecutive trio of values constitutes a vertex. 
+*/
+
+<span id='CGFobject-property-indices'>/** @property {Number[]} indices 
+</span>* (To be set in #initBuffers) List of indices of vertices which will be interpreted into faces based on the chosen primitiveType. 
+*/
+
+<span id='CGFobject-property-normals'>/** @property {Number[]} normals 
+</span>* (To be set in #initBuffers) List of values which constitute normal vectors for each vertex.  
+* Each consecutive trio of values constitutes a normal vector. If not set the default value for the normal vector will be (1,1,1).
+*/
+
+<span id='CGFobject-property-texCoords'>/** @property {Number[]} texCoords 
+</span>* (To be set in #initBuffers) List of values which constitute texture coordinates for each vertex.  
+* Each consecutive pair of values constitutes a 2D texture coordinate. If not set, texturing will not be applied to the object.
+*/
+
+<span id='CGFobject-property-primitiveType'>/** @property primitiveType 
+</span>* The type of primitive used when rendering the object to interpret the #indices array.  
+* Primitives are defined in #scene .gl (Ex.: this.scene.gl.TRIANGLES).
+*/
+
+<span id='CGFobject-property-scene'>/** @property {CGFscene} scene 
+</span>* The scene to which this object belongs.
+* @readonly 
+*/
+
+<span id='CGFobject-property-inited'>/** @property {Boolean} inited 
+</span>* True if initGLBuffers has been called to set the buffers used by WebGL.
+* @readonly 
+*/
+
+<span id='CGFobject-method-CGFobject'>/**
+</span>* @method CGFobject
+* @param {CGFscene} scene the scene to which this object belongs.
+* @constructor
+* A basic constructor.
+*/
+function CGFobject(scene) {
+    this.scene = scene;
+	this.inited=false;
+	this.primitiveType=this.scene.gl.TRIANGLES;
+};
+
+CGFobject.prototype.constructor=CGFobject;
+
+<span id='CGFobject-method-display'>/**
+</span> * @method display
+ *
+ * This method should be called in the display function of the scene to render this object.  
+ * By default it only calls #drawElements with the current #primitiveType.
+ *
+ * @template
+ */
+CGFobject.prototype.display = function () {
+	this.drawElements(this.primitiveType);
+};
+
+<span id='CGFobject-method-initGLBuffers'>/**
+</span> * @method initGLBuffers
+ *
+ * Takes the data in vertices, indices and normals and puts it buffers to be used by WebGl.  
+ * If the normals array is not set, a default normal (1,1,1) is used.
+ * 
+ */
+CGFobject.prototype.initGLBuffers = function () {
+	var gl=this.scene.gl;
+	
+    this.vertsBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertsBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
+
+	// if normals are not defined use a default normal of (1,1,1)
+	if (!this.normals)
+		this.normals=Array.apply(null, new Array(this.vertices.length)).map(function(){return 1.0; });
+
+	this.normsBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, this.normsBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normals), gl.STATIC_DRAW);
+
+    this.indicesBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
+	
+	if (!this.texCoords)
+		this.hasTexCoords=false;
+	else
+	{
+		this.hasTexCoords=true;
+
+		this.texCoordsBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuffer);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.texCoords), gl.STATIC_DRAW);
+	};
+
+    this.indicesBuffer.numValues = this.indices.length;
+	
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+	
+	this.inited=true;
+};
+
+
+
+
+
+<span id='CGFobject-method-initBuffers'>/**
+</span>* @method initBuffers
+*
+* Method in which the geometry of the object should be defined.  
+* Should be reimplemented by descendants.  
+* In this method the #vertices and #indices arrays should be created, and the #primitiveType set.  
+* At the end of the method, #initGLBuffers should be called in order for the geometry to be placed in buffers to be rendered later.
+*
+* @template
+*/
+CGFobject.prototype.initBuffers = function () {
+	this.vertices = [
+
+            -0.5, -0.5, 0,
+            0.5, -0.5, 0,
+            -0.5, 0.5, 0,
+            0.5, 0.5, 0
+			];
+	this.indices = [
+            0, 1, 2, 3
+        ];
+		
+    this.normals = [
+            0.0, 0.0, 1.0,
+            0.0, 0.0, 1.0,
+            0.0, 0.0, 1.0,
+            0.0, 0.0, 1.0
+	];
+
+	this.primitiveType=this.scene.gl.TRIANGLE_STRIP;
+	this.initGLBuffers();
+};
+
+<span id='CGFobject-method-drawElements'>/**
+</span>* @method drawElements
+*
+* Method that actually renders the object using the information stored in buffers with #initBuffers.
+*
+*/
+CGFobject.prototype.drawElements = function (primitiveType) {
+		var nMatrix = mat4.create();
+		var shader=this.scene.shader;
+		var gl=this.scene.gl;
+		
+        mat4.copy(nMatrix, this.scene.activeMatrix);
+        mat4.invert(nMatrix, nMatrix);
+        mat4.transpose(nMatrix, nMatrix);
+
+		// update matrices on shader
+        gl.uniformMatrix4fv(shader.uniforms.uMVMatrix, false, this.scene.activeMatrix);
+		
+		// Position buffer
+		//  enable arrays
+        gl.enableVertexAttribArray(shader.attributes.aVertexPosition);
+		// bind the vertices buffer the active array buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertsBuffer);
+        
+		// assign the active buffer to the shader's vertex position attribute
+		gl.vertexAttribPointer(shader.attributes.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(shader.attributes.aVertexNormal);
+
+		// Normals buffer
+		gl.uniformMatrix4fv(shader.uniforms.uNMatrix, false, nMatrix);
+		// bind the normals buffer to the active array buffer
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.normsBuffer);
+		// assign the active buffer to the shader's vertex normals attribute
+		gl.vertexAttribPointer(shader.attributes.aVertexNormal, 3, gl.FLOAT, false, 0, 0);
+
+		// enable textures only if the object has texcoords and the scene has texturing enabled
+		var sceneTexturesEnabled=this.scene.texturesEnabled;
+		
+		if (this.hasTexCoords &amp;&amp; sceneTexturesEnabled &amp;&amp; this.scene.activeTexture)
+		{
+			gl.enableVertexAttribArray(shader.attributes.aTextureCoord);
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordsBuffer);
+			gl.vertexAttribPointer(shader.attributes.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+		}
+		else
+		{
+			this.scene.enableTextures(false);
+			gl.disableVertexAttribArray(shader.attributes.aTextureCoord);
+		};
+
+		
+		// bind the indices buffer to the active ELEMENT array buffer
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);		
+		// do the actual drawing, using the specified wireframe mode, and indicating the number of indices to be processed
+        gl.drawElements(primitiveType, this.indicesBuffer.numValues, gl.UNSIGNED_SHORT, 0);
+
+	
+		// unbind buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+		// restore scene texture mode
+		this.scene.enableTextures(sceneTexturesEnabled);
+		
+
+};
+
+
+</pre>
+</body>
+</html>

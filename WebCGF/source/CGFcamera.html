@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='CGFcameraAxis'>/**
+</span> * @enum CGFcameraAxis
+ * A enumeration of the 3d vectors that correspond to each axis.
+ * @readonly
+ */
+var CGFcameraAxis = Object.freeze({
+<span id='CGFcameraAxis-property-X'>    /** @property {vec3} X X axis */ X: vec3.fromValues(1.0, 0.0, 0.0),
+</span><span id='CGFcameraAxis-property-Y'>    /** @property {vec3} Y Y axis */ Y: vec3.fromValues(0.0, 1.0, 0.0),
+</span><span id='CGFcameraAxis-property-Z'>    /** @property {vec3} Z Z axis */ Z: vec3.fromValues(0.0, 0.0, 1.0)
+</span>});
+
+<span id='CGFcameraAxisID'>/**
+</span> * @enum CGFcameraAxisID
+ * A enumeration of the indices of each axis.
+ * @readonly
+ */
+var CGFcameraAxisID = Object.freeze({
+<span id='CGFcameraAxisID-property-X'>    /** @property {vec3} X X axis */ X: 0,
+</span><span id='CGFcameraAxisID-property-Y'>    /** @property {vec3} Y Y axis */ Y: 1,
+</span><span id='CGFcameraAxisID-property-Z'>    /** @property {vec3} Z Z axis */ Z: 2
+</span>});
+
+<span id='CGFcamera'>/**
+</span> * @class CGFcamera
+ *
+ * Class that represents the current view of a scene.
+ * 
+ * Includes utilities to move the camera like zoom, pan and orbit.
+ */
+ 
+ 
+<span id='CGFcamera-property-fov'>/** @property {Number} fov Field of view angle of the camera. */
+</span><span id='CGFcamera-property-near'>/** @property {Number} near Near clipping plane distance. Everything closer that this distance to the camera will not be rendered. */
+</span><span id='CGFcamera-property-far'>/** @property {Number} far Far clipping plane distance. Everything further that this distance to the camera will not be rendered. */
+</span><span id='CGFcamera-property-position'>/** @property {vec4} position Position of the camera. */
+</span><span id='CGFcamera-property-target'>/** @property {vec4} target Target of the camera. Point that the camera is looking at. */
+</span><span id='CGFcamera-property-direction'>/** @property {vec4} direction Target of the camera. Point that the camera is looking at. */
+</span>
+<span id='CGFcamera-property-_up'>/** @property {vec3} _up Vector that points up. @private */
+</span><span id='CGFcamera-property-_viewMatrix'>/** @property {mat4} _viewMatrix Transformation matrix that corresponds to the current view. @private */
+</span><span id='CGFcamera-property-_projectionMatrix'>/** @property {mat4} _projectionMatrix Transformation matrix that corresponds to the current projection. @private */
+</span> 
+<span id='CGFcamera-method-CGFscene'> /**
+</span> * @method CGFscene
+ * @param {Number} fov Field of view angle.
+ * @param {Number} near Near clipping plane distance.
+ * @param {Number} far Far clipping plane distance.
+ * @param {vec3} position Position of the camera.
+ * @param {vec3} target Target of the camera.
+ * @constructor
+ * Creates a new camera instance with the given settings.
+ */
+function CGFcamera(fov, near, far, position, target) {
+    this.fov = fov;
+    this.near = near;
+    this.far = far;
+    this.position = vec4.fromValues(position[0], position[1], position[2], 0.0);
+    this.target = vec4.fromValues(target[0], target[1], target[2], 0.0);
+    this.direction = this.calculateDirection();
+	
+    this._up = vec3.fromValues(0.0, 1.0, 0.0);
+    this._viewMatrix = mat4.create();
+    this._projectionMatrix = mat4.create();
+}
+
+<span id='CGFcamera-method-getViewMatrix'>/**
+</span> * @method getViewMatrix
+ * Calculates the current view matrix.
+ * @returns {mat4} The current view matrix.
+ */
+CGFcamera.prototype.getViewMatrix = function () {
+    mat4.lookAt(this._viewMatrix, this.position, this.target, this._up);
+    return this._viewMatrix;
+};
+
+<span id='CGFcamera-method-getProjectionMatrix'>/**
+</span> * @method getProjectionMatrix
+ * Returns the projection matrix for a given screen size.
+ * @param {number} width The width of the rendering screen.
+ * @param {number} height The height of the rendering screen.
+ * @returns {mat4} The current projection matrix for the given aspect ratio.
+ */
+CGFcamera.prototype.getProjectionMatrix = function (width, height) {
+    var aspect = width / height;
+    mat4.perspective(this._projectionMatrix, this.fov, aspect, this.near, this.far);
+    return this._projectionMatrix;
+};
+
+<span id='CGFcamera-method-calculateDirection'>/**
+</span> * @method calculateDirection
+ * Calculates the #direction vector based on the #position and #target.
+ * @returns {vec4} The current direction vector.
+ */
+CGFcamera.prototype.calculateDirection = function () {
+    return vec4.normalize(vec4.create(), vec4.subtract(vec4.create(), this.target, this.position));
+};
+
+<span id='CGFcamera-method-setPosition'>/**
+</span> * @method setPosition
+ * Setter for #position. Updates the #direction.
+ * @param {vec3} newPosition The new position for the camera.
+ */
+CGFcamera.prototype.setPosition = function (newPosition) {
+    vec3.copy(this.position, newPosition);
+    this.direction = this.calculateDirection();
+};
+
+<span id='CGFcamera-method-setTarget'>/**
+</span> * @method setTarget
+ * Setter for #target. Updates the #direction.
+ * @param {vec3} newTarget The new target for the camera.
+ */
+CGFcamera.prototype.setTarget = function (newTarget) {
+    vec3.copy(this.target, newTarget);
+    this.direction = this.calculateDirection();
+};
+
+<span id='CGFcamera-method-translate'>/**
+</span> * @method translate
+ * @param {vec3} vecValue
+ */
+CGFcamera.prototype.translate = function (vecValue) {
+    var tZ = vec4.scale(vec4.create(), this.direction, -vecValue[2]);
+    var tUp = vec4.fromValues(0.0, vecValue[1], 0.0, 0.0);
+    var temp = vec3.create();
+    vec3.scale(temp, vec3.cross(temp, vec3.fromValues(0, 1, 0), this.direction), vecValue[0]);
+    var tLeft = vec4.fromValues(temp[0], temp[1], temp[2], 0);
+    var temp1 = vec4.create();
+    temp1 = vec4.add(temp1, tZ, vec4.add(temp1, tUp, tLeft));
+    vec4.add(this.position, this.position, temp1);
+    vec4.add(this.target, this.position, this.direction);
+};
+
+<span id='CGFcamera-method-rotate'>/**
+</span> * @method rotate
+ * Rotates the camera in place a given angle along a given axis.
+ * @param {CGFcameraAxis} axis The axis along which to rotate.
+ * @param {number} angle The angle of rotation.
+ */
+CGFcamera.prototype.rotate = function (axis, angle) {
+    vec4.transformMat4(this.direction, this.direction, mat4.rotate(mat4.create(), mat4.create(), angle, axis));
+    vec4.add(this.target, this.position, this.direction);
+};
+
+<span id='CGFcamera-method-orbit'>/**
+</span> * @method orbit
+ * Rotates the camera a given angle, around its target, along a given axis.
+ * @param {CGFcameraAxis} axis The axis along which to rotate.
+ * @param {number} angle The angle of rotation.
+ */
+CGFcamera.prototype.orbit = function (axisID, angle) {
+
+	//get current look vector reversed.
+	var revLook=vec4.sub(vec4.create(),this.position, this.target);
+	revLook[3]=0;
+	
+	//get rotated reversed look vector by the correct angle/axis (if rotating &quot;horizontally&quot;, do it around up vector, if &quot;vertically&quot;, around normal to look and up vector)
+	var rotRevLook;
+
+	if (axisID==CGFcameraAxisID.X)
+	{
+		var rotAxis=vec3.create();
+		vec3.normalize(rotAxis, vec3.cross(rotAxis,revLook,this._up));
+		var rotMatrix=mat4.rotate(mat4.create(), mat4.create(), angle, rotAxis);
+		rotRevLook=vec4.transformMat4(vec4.create(), revLook, rotMatrix);
+		vec3.normalize(this._up,vec3.cross(this._up,rotAxis, rotRevLook))	; 
+	}
+	else
+		rotRevLook=vec4.transformMat4(vec4.create(), revLook, mat4.rotate(mat4.create(), mat4.create(), angle, this._up));
+
+	//get new position by adding rotated reversed look vector to target position
+	vec4.add(this.position, this.target, rotRevLook);
+	this.direction = this.calculateDirection();
+};
+
+<span id='CGFcamera-method-pan'>/**
+</span>* @method pan
+* Moves the camera along a plane perpendicular to the #direction
+* @param {vec3} vecValue Vector with the x and y offset in the perpendicular plane.
+*/
+CGFcamera.prototype.pan = function (vecValue) {
+	//compute scene scale factor based on position-target distance
+	var sscale=0.05*vec3.distance(this.target,this.position);
+	
+	var right=vec3.cross(vec3.create(),this.direction,this._up);
+	
+	var horVec=vec4.scale(vec4.create(),vec3.normalize(right,right),vecValue[0]*sscale);
+	horVec[3]=0;
+	var vertVec=vec4.scale(vec4.create(),this._up,vecValue[1]*sscale);
+	vertVec[3]=0;
+	
+	vec4.add(this.position, this.position, horVec);
+	vec4.add(this.target, this.target, horVec);
+
+	vec4.add(this.position, this.position, vertVec);
+	vec4.add(this.target, this.target, vertVec);	
+	
+};
+
+<span id='CGFcamera-method-zoom'>/**
+</span>* @method zoom
+* Moves the camera towards its #target.
+* @param {number} value Distance to move towards the #target.
+*/
+CGFcamera.prototype.zoom = function (value) {
+	// TODO: limit the zoom so that the position can't go past the target.
+	vec4.add(this.position, this.position, vec4.scale(vec4.create(),this.direction,value));
+};
+
+
+
+</pre>
+</body>
+</html>

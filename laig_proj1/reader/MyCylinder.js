@@ -42,7 +42,7 @@ MyCylinder.prototype.initBuffers = function() {
 	var texelIncrementS = 1.0 / this.slices;
 	var texelIncrementT = 1.0 / this.stacks;
 	var vertexNumber = 1;
-	var sCoord = 1.0;
+	var sCoord = 0.0;
 	var theta = 0;
 
 	for (var i = 0; i <= this.slices; i++) {
@@ -77,7 +77,7 @@ MyCylinder.prototype.initBuffers = function() {
 		}
 
 		theta += thetaIncrement;
-		sCoord -= texelIncrementS;
+		sCoord += texelIncrementS;
 	}
 
 	this.primitiveType = this.scene.gl.TRIANGLES;

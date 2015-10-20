@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='CGFXMLreader'>/**
+</span>* @class CGFXMLreader
+*
+* Structure that reads an xml file and calls method #onXMLReady or
+* method #onXMLError from a parserObj, depending whether the read operation was successfull.
+*
+*/
+var indexOf = function(needle) {
+	if(typeof Array.prototype.indexOf === 'function') {
+		indexOf = Array.prototype.indexOf;
+	} else {
+		indexOf = function(needle) {
+			var i = -1, index = -1;
+
+			for(i = 0; i &lt; this.length; i++) {
+				if(this[i] === needle) {
+					index = i;
+					break;
+				}
+			}
+
+			return index;
+		};
+	}
+	return indexOf.call(this, needle);
+};
+
+<span id='CGFXMLreader-property-xmlhttp'>/** @private @property {String} xmlhttp internal variable containg the http request. */
+</span><span id='CGFXMLreader-property-xmlDoc'>/** @private @property {request} xmlDoc the content that was read from the url resource. */
+</span><span id='CGFXMLreader-property-xmlfile'>/** @private @property {String} xmlfile the url of the resource (xml file) to read. */
+</span><span id='CGFXMLreader-property-parserObj'>/** @private @property {Object} parserObj an object that requires two methods: onXMLReady() and onXMLError(message) */
+</span><span id='CGFXMLreader-property-errorMessage'>/** @private @property {String} errorMessage an error message resulting from the read process. */
+</span>
+
+<span id='CGFXMLreader-method-CGFXMLreader'>/**
+</span> * @method CGFXMLreader
+ * @constructor
+ * Creates a XML Reader with the default values
+  */
+CGFXMLreader = function() {
+
+	this.xmlhttp = null;
+	this.xmlDoc = null;
+	this.xmlfile = null;
+	this.parserObj = null;
+	this.errorMessage = null;
+};
+
+CGFXMLreader.prototype.constructor = CGFXMLreader;
+
+<span id='CGFXMLreader-method-getErrorMessage'>/** @method getErrorMessage
+</span>* Getter of the error message string, if an error happend
+*/
+CGFXMLreader.prototype.getErrorMessage = function() {
+	return this.errorMessage;
+};
+
+<span id='CGFXMLreader-method-open'>/** @method open
+</span>* Opens the url resource from #xmlfile and reads its contents. On success calls the
+* method onXMLReady from the #parserObj. On error calls the method
+* onXMLError from the #parserObj.
+* @param {String} xmlfile the url of the resource (xml file) to be read
+* @param {Object} parserObj an object containing methods onXMLReady() and onXMLError(message)
+*/
+CGFXMLreader.prototype.open = function(xmlfile, parserObj) 
+{
+	this.xmlfile = xmlfile;
+	if (! parserObj.onXMLReady)
+		console.error(&quot;CGFXMLReader.open: onXMLReady handler not defined.&quot;);
+
+	if (! parserObj.onXMLError)
+		console.error(&quot;CGFXMLReader.open: onXMLError handler not defined.&quot;);
+	
+	this.parserObj = parserObj;
+
+	if (window.XMLHttpRequest) {
+		this.xmlhttp=new XMLHttpRequest();                            // For all modern browsers
+	} 
+	else if (window.ActiveXObject) {
+		this.xmlhttp=new ActiveXObject(&quot;Microsoft.XMLHTTP&quot;);   		// For (older) IE
+	}
+
+	if (this.xmlhttp != null)  {
+
+		this.xmlhttp.onload = this.onStateChange;
+		this.xmlhttp.reader = this;
+		this.xmlhttp.open(&quot;GET&quot;, xmlfile, true); //  (httpMethod,  URL,  asynchronous)			
+		this.xmlhttp.setRequestHeader(&quot;Content-Type&quot;, &quot;text/xml&quot;);
+		this.xmlhttp.send(null);
+	}
+	else {
+		reader.parserObj.onXMLError(&quot;The XMLHttpRequest is not supported&quot;);
+		return;
+	}
+};
+
+
+CGFXMLreader.prototype.onStateChange = function() {
+
+  if (this.readyState==4) {  // 4 =&gt; loaded complete
+	if (this.status==200) {  // HTTP status code  ( 200 =&gt; OK )
+		var parser = new window.DOMParser();
+		var reader = this.reader;
+		reader.xmlDoc = parser.parseFromString(this.response, &quot;text/xml&quot;);
+		
+		// CHANGE FUNCTION CALL TO YOUR  XML PARSER FUNCTION
+		reader.parserObj.onXMLReady();
+		
+		if (reader.getErrorMessage() != null) {
+			reader.parserObj.onXMLError(reader.getErrorMessage());
+			return;
+		}
+		
+	  } 
+	  else {
+		var reader = this.reader;
+		reader.parserObj.onXMLError(this.status + &quot;: &quot; + reader.xmlfile + &quot;, &quot; + this.statusText);
+	  } 
+   }  
+};
+
+<span id='CGFXMLreader-method-getRGBA'>/** @method getRGBA
+</span>* Given a DOM element and an attribute name, returns the RGB value corresponding to a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the RGB color
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getRGBA = function(element, attributeName, required) {
+	
+	if (required == undefined) required = true;
+	
+	if (element == null) {
+		console.error(&quot;element is null.&quot;); 
+		return null;
+	}
+	if (attributeName == null) {
+		console.error(&quot;color (rgba) attribute name is null.&quot;); 
+		return null;
+	}
+		
+	var value = element.getAttribute(attributeName);
+	if (value == null) {
+		if (required) {
+			console.error(&quot;color (rgba) value is null for attribute &quot; + attributeName + &quot;.&quot;); 
+		}
+		return null;
+	}
+	
+	var  temp = value.split(' ');
+	if (temp.length != 4) {
+		console.error(&quot;invalid &quot; + temp.length + &quot; number of color components for color (rgba) in attribute &quot; + attributeName + &quot;.&quot;); 
+		return null;
+	}
+	
+	var rgba = new Array();
+	for (var i=0; i&lt;4; i++) {
+		rgba.push(parseFloat(temp[i]));
+	}	
+	return rgba;
+};
+
+
+<span id='CGFXMLreader-method-getVector3'>/** @method getVector3
+</span>* Given a DOM element and an attribute name, returns an array of three floats corresponding to a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the vector
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getVector3 = function(element, attributeName, required) {
+	
+	if (required == undefined) required = true;
+	
+	if (element == null) {
+		console.error(&quot;element is null.&quot;); 
+		return null;
+	}
+	if (attributeName == null) {
+		console.error(&quot;vector3 attribute name is null.&quot;); 
+		return null;
+	}
+		
+	var value = element.getAttribute(attributeName);
+	if (value == null) {
+		if (required) {
+			console.error(&quot;vector3 value is null for attribute &quot; + attributeName + &quot;.&quot;); 
+		}
+		return null;
+	}
+	
+	var  temp = value.split(' ');
+	if (temp.length != 3) {
+		console.error(&quot;invalid &quot; + temp.length + &quot; number of components for a vector3, in attribute &quot; + attributeName + &quot;.&quot;); 
+		return null;
+	}
+	
+	var vector3 = new Array();
+	for (var i=0; i&lt;3; i++) {
+		 vector3.push(parseFloat(temp[i]));
+	}	
+	return vector3;
+};
+
+<span id='CGFXMLreader-method-getVector2'>/** @method getVector2
+</span>* Given a DOM element and an attribute name, returns an array of two floats corresponding to a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the vector
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getVector2 = function(element, attributeName, required) {
+	
+	if (required == undefined) required = true;
+	
+	if (element == null) {
+		console.error(&quot;element is null.&quot;); 
+		return null;
+	}
+	if (attributeName == null) {
+		console.error(&quot;vector3 attribute name is null.&quot;); 
+		return null;
+	}
+		
+	var value = element.getAttribute(attributeName);
+	if (value == null) {
+		if (required) {
+			console.error(&quot;vector2 value is null for attribute &quot; + attributeName + &quot;.&quot;); 
+		}
+		return null;
+	}
+	
+	var  temp = value.split(' ');
+	if (temp.length != 2) {
+		console.error(&quot;invalid &quot; + temp.length + &quot; number of components for a vector2, in attribute &quot; + attributeName + &quot;.&quot;); 
+		return null;
+	}
+	
+	var vector2 = new Array();
+	for (var i=0; i&lt;2; i++) {
+		 vector2.push(parseFloat(temp[i]));
+	}	
+	return vector2;
+};
+<span id='CGFXMLreader-method-getItem'>/** @method getItem
+</span>* Given a DOM element, an attribute name and an array of choices, returns an item value corresponding to a specified attribute name.
+* Validates if the item is contained in the list of choices.
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the vector
+* @param {Array} choices a list of items that contains all possible choices
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getItem  = function(element, attributeName, choices, required) {
+	
+	if (required == undefined) required = true;
+	
+	if (element == null) {
+		console.error(&quot;element is null.&quot;); 
+		return null;
+	}
+	if (attributeName == null) {
+		console.error(&quot;item attribute name is null.&quot;); 
+		return null;
+	}
+		
+	var value = element.getAttribute(attributeName);
+	if (value == null) {
+		if (required) {
+			console.error(&quot;item value is null for attribute &quot; + attributeName + &quot;.&quot;); 
+		}
+		return null;		
+	}
+	
+	value = value.toLowerCase();
+	var index = indexOf.call(choices, value);
+	if (index &lt; 0) {
+		console.error(&quot;value '&quot; + value + &quot;' is not a choice in [&quot; + choices.toString() + &quot;]&quot;); 
+		return null;
+	}
+	
+	return value;
+};
+
+<span id='CGFXMLreader-method-getString'>/** @method getString
+</span>* Given a DOM element returns the string value corresponding to a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the string value
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getString  = function(element, attributeName, required) {
+	
+	if (required == undefined) required = true;
+	
+	if (element == null) {
+		console.error(&quot;element is null.&quot;); 
+		return null;
+	}
+	if (attributeName == null) {
+		console.error(&quot;string attribute name is null.&quot;); 
+		return null;
+	}
+		
+	var value = element.getAttribute(attributeName);
+	if (value == null &amp;&amp; required) {
+		console.error(&quot;string value is null for attribute &quot; + attributeName + &quot;.&quot;); 
+		return null;
+	}
+	return value;
+};
+
+<span id='CGFXMLreader-method-hasAttribute'>/** @method hasAttribute
+</span>* Given a DOM element, verifies if the element contains a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the attribute name to check if it exists
+*/
+CGFXMLreader.prototype.hasAttribute  = function(element, attributeName) {
+	if (element == null) {
+		console.error(&quot;element is null.&quot;); 
+		return null;
+	}
+	if (attributeName == null) {
+		console.error(&quot;string attribute name is null.&quot;); 
+		return null;
+	}
+		
+	var value = element.getAttribute(attributeName);
+	return (value != null);
+};
+
+<span id='CGFXMLreader-method-getBoolean'>/** @method getBoolean
+</span>* Given a DOM element returns the boolean value corresponding to a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the boolean value
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getBoolean = function(element, attributeName, required) {
+	
+	if (required == undefined) required = true;
+	
+	var value = this.getItem(element, attributeName, [&quot;true&quot;, &quot;t&quot;, &quot;1&quot;, &quot;false&quot;, &quot;f&quot;, &quot;0&quot;], required);
+	if (value == null) {
+		return null;
+	}
+	if (value == &quot;1&quot; || value==&quot;true&quot; || value == &quot;t&quot;) return true;
+	return false;		
+};
+
+<span id='CGFXMLreader-method-getInteger'>/** @method getInteger
+</span>* Given a DOM element returns the integer value corresponding to a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the integer value
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getInteger = function(element, attributeName, required) {
+	
+	if (required == undefined) required = true;
+	
+	var value = this.getString(element, attributeName, required);
+	if (value == null) {
+		return null;
+	}
+	return parseInt(value);
+};
+
+<span id='CGFXMLreader-method-getFloat'>/** @method getFloat
+</span>* Given a DOM element returns the float value corresponding to a specified attribute name
+* @param {element} element a DOM element object
+* @param {String} attributeName the name of the attribute containing the float value
+* @param {Boolean} required outputs an error if the attribute name does not exist
+*/
+CGFXMLreader.prototype.getFloat = function(element, attributeName, required) {
+	
+	if (required == undefined) required = true;
+	
+	var value = this.getString(element, attributeName, required);
+	if (value == null) {
+		return null;
+	}
+	return parseFloat(value);
+};
+
+	
+	
+	</pre>
+</body>
+</html>

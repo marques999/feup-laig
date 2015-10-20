@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">//----------------------
+// Lights
+
+<span id='CGFlight'>/**
+</span>* @class CGFlight
+*
+* Defines the characteristics of a light, including ambient, diffuse and specular contributions,
+* and attenuation factors.
+* Notice that all color components (r, g, b, a) are normalized values between 0.0 and 1.0.
+*/
+
+<span id='CGFlight-method-constructor'><span id='CGFlight'>/**
+</span></span> * CGFlight
+ * @constructor
+ *
+ * Constructor.
+ * @param {CGFscene} scene the scene to which this object belongs.
+ * @param an id for the light to be created.
+ */
+ function CGFlight(scene, id)
+{
+ 	CGFobject.call(this,scene);
+
+	this.scene=scene;
+	this.uLight=scene.shader.uniforms.uLight[id];
+	console.log(&quot;Created Light &quot; + id);
+
+	this.setPosition(0,0,0,1);
+
+	this.setAmbient(0.1, 0.1, 0.1, 1.0);
+	this.setDiffuse(0.5, 0.5, 0.5, 1.0);
+	this.setSpecular(0.5, 0.5, 0.5, 1.0); 
+
+	this.setSpotDirection(0, -1, 0);
+	this.setSpotExponent(10);
+	this.setSpotCutOff(180);
+
+	this.setConstantAttenuation(1);
+	this.setLinearAttenuation(0);
+	this.setQuadraticAttenuation(0);
+	
+	this.visible=false;
+	
+ 	this.initBuffers();
+};
+
+CGFlight.prototype = Object.create(CGFobject.prototype);
+CGFlight.prototype.constructor = CGFlight;
+
+CGFlight.prototype.initBuffers = function() {
+ 	this.vertices = [
+ 	-0.5, 0, 0,
+ 	0, 0.5, 0,
+ 	0.5, 0, 0,
+ 	0, -0.5, 0,
+	0, 0, 0.5,
+	0, 0, -0.5
+ 	];
+
+ 	this.indices = [
+ 	1,  4, 0,
+	1,  2, 4,
+	1,  5, 2,
+	1,  0, 5,
+	3,  0, 4,
+	3,  4, 2,
+	3,  2, 5,
+	3,  5, 0
+ 	];
+
+	this.normals = [
+ 	1, 0, 0,
+ 	0, -1, 0,
+ 	-1, 0, 0,
+ 	0, 1, 0,
+	0, 0, -1,
+	0, 0, 1
+ 	];
+	
+ 	this.primitiveType = this.scene.gl.TRIANGLES;
+ 	this.initGLBuffers();
+ };
+
+
+<span id='CGFlight-method-enable'>/**
+</span> * @method enable
+ *
+ * Enables the light. 
+ * 
+ *
+ * 
+ */
+CGFlight.prototype.enable  = function () { this.enabled= true;  };
+
+<span id='CGFlight-method-disable'>/**
+</span> * @method disable
+ *
+ * Disables the light. 
+ * 
+ *
+ * 
+ */
+CGFlight.prototype.disable  = function () { this.enabled= false;  };
+
+<span id='CGFlight-method-setPosition'>/**
+</span> * @method setPosition
+ *
+ * Sets the light position
+ * 
+ * @param {Number} x the x coordinate value
+ * @param {Number} y the y coordinate value
+ * @param {Number} z the z coordinate value
+ * @param {Number} w the homogeneous coordinate value
+ * 
+ */
+CGFlight.prototype.setPosition  = function (x, y, z, w) { this.position=[x, y, z, w];  };
+
+<span id='CGFlight-method-setAmbient'>/**
+</span> * @method setAmbient
+ *
+ * Sets the Ambient component of the light
+ * 
+ * @param {Number} r the red component
+ * @param {Number} g the green component
+ * @param {Number} b the blue component
+ * @param {Number} a the alpha component
+ * 
+ */
+CGFlight.prototype.setAmbient = function (r, g, b, a) { this.ambient= [r, g, b, a]; }; 
+
+<span id='CGFlight-method-setDiffuse'>/**
+</span> * @method setDiffuse
+ *
+ * Sets the Diffuse component of the light
+ * 
+ * @param {Number} r the red component
+ * @param {Number} g the green component
+ * @param {Number} b the blue component
+ * @param {Number} a the alpha component 
+ * 
+ */
+CGFlight.prototype.setDiffuse = function (r, g, b, a) { this.diffuse= [r, g, b, a]; }; 
+
+<span id='CGFlight-method-setSpecular'>/**
+</span> * @method setSpecular
+ *
+ * Sets the Specular component of the light
+ * 
+ * @param {Number} r the red component
+ * @param {Number} g the green component
+ * @param {Number} b the blue component
+ * @param {Number} a the alpha component
+ * 
+ */
+CGFlight.prototype.setSpecular = function (r, g, b, a) { this.specular= [r, g, b, a]; }; 
+
+
+<span id='CGFlight-method-setSpotDirection'>/**
+</span> * @method setSpotDirection
+ *
+ * Sets the direction of the light
+ * 
+ * @param {Number} x the x coordinate value
+ * @param {Number} y the y coordinate value
+ * @param {Number} z the z coordinate value
+ * 
+ */
+CGFlight.prototype.setSpotDirection  = function (x, y, z) { this.spot_direction=[x,y,z]; };
+
+<span id='CGFlight-method-setSpotExponent'>/**
+</span> * @method setSpotExponent
+ *
+ * Sets the exponential decay of the light intensity
+ * 
+ * @param {Number} e the exponent
+ * 
+ */
+CGFlight.prototype.setSpotExponent  = function (e) { this.spot_exponent=e; };
+
+<span id='CGFlight-method-setSpotCutOff'>/**
+</span> * @method setSpotCutOff
+ *
+ * Sets the direction of the light
+ * 
+ * @param {Number} a the cutoff angle
+ * 
+ */
+CGFlight.prototype.setSpotCutOff  = function (a) { this.spot_cutoff=a; };
+
+<span id='CGFlight-method-setConstantAttenuation'>/**
+</span> * @method setConstantAttenuation
+ *
+ * Sets the constant attenuation factor for the light
+ * 
+ * @param {Number} kc the constant attenuation constant
+ * 
+ */
+CGFlight.prototype.setConstantAttenuation  = function (kc) { this.constant_attenuation=kc; };
+
+<span id='CGFlight-method-setLinearAttenuation'>/**
+</span> * @method setLinearAttenuation
+ *
+ * Sets the linear attenuation factor for the light
+ * 
+ * @param {Number} kl the linear attenuation constant
+ * 
+ */
+CGFlight.prototype.setLinearAttenuation  = function (kl) { this.linear_attenuation=kl; };
+
+<span id='CGFlight-method-setQuadraticAttenuation'>/**
+</span> * @method setQuadraticAttenuation
+ *
+ * Sets the quadratic attenuation factor for the light
+ * 
+ * @param {Number} kq the quadratic attenuation constant
+ * 
+ */
+CGFlight.prototype.setQuadraticAttenuation  = function (kq) { this.quadratic_attenuation=kq; };
+
+
+<span id='CGFlight-method-update'>/**
+</span>*
+* @method update
+*
+* Updates the position and direction of the corresponding light.
+* Has to be called so that a change ma 
+*
+*
+*/
+CGFlight.prototype.update = function ()
+{
+	var gl=this.scene.gl;
+	var uLight=this.uLight;
+	
+	var tPosition=[0,0,0,0];
+	var tDirection=[0,0,0];
+	vec4.transformMat4(tPosition,this.position,this.scene.activeMatrix);
+	vec3.transformMat4(tDirection,this.spot_direction,this.scene.activeMatrix);
+
+    gl.uniform1i (uLight.enabled , this.enabled);
+    //gl.uniform4fv(uLight.position, this.position);
+    gl.uniform4fv(uLight.position, tPosition);
+
+    gl.uniform4fv(uLight.ambient , this.ambient);
+    gl.uniform4fv(uLight.diffuse , this.diffuse);
+    gl.uniform4fv(uLight.specular, this.specular);
+    
+    //gl.uniform3fv(uLight.spot_direction, this.spot_direction);
+    gl.uniform3fv(uLight.spot_direction, tDirection);
+    gl.uniform1f (uLight.spot_exponent, this.spot_exponent);
+    gl.uniform1f (uLight.spot_cutoff, this.spot_cutoff);
+    
+    gl.uniform1f (uLight.constant_attenuation, this.constant_attenuation);
+    gl.uniform1f (uLight.linear_attenuation, this.linear_attenuation);
+    gl.uniform1f (uLight.quadratic_attenuation, this.quadratic_attenuation);
+	
+	if (this.visible)
+	{
+		this.scene.setDiffuse(0.5,0.5,0.5,1);
+		this.scene.pushMatrix();
+		this.scene.translate(this.position[0],this.position[1],this.position[2]);
+		this.scene.scale(0.3, 0.3, 0.3);
+		this.display();
+		this.scene.popMatrix();
+	};
+	
+
+	//this.scene.shader.unbind();
+	
+};
+
+<span id='CGFlight-method-setVisible'>/**
+</span>*
+* @method setVisible
+*
+* Indicates if the light should be represented in the scene or not.
+* Setting visible to true draws an object in the light's position.
+* It does not affect the light being enabled or not.
+*
+* @param {Boolean} v True if representing object is to be visible, false otherwise
+*/
+CGFlight.prototype.setVisible = function (v)
+{
+	this.visible=v;
+}
+
+</pre>
+</body>
+</html>

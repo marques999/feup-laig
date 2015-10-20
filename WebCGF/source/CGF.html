@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">CGFversion=&quot;0.14&quot;;
+CGFdate=&quot; (20150930)&quot;
+console.log(&quot;WebCGF - Library for Computer Graphics @ FEUP (WebGL) - v&quot;+CGFversion+CGFdate);
+
+serialInclude([
+	'../lib/Detector.js',
+	'../lib/gl-matrix.js', 
+	'../lib/dat.gui.min.js',
+	'../lib/CGF/CGFshader.js',
+	'../lib/CGF/CGFtexture.js',
+	'../lib/CGF/CGFappearance.js',
+	'../lib/CGF/CGFobject.js',
+	'../lib/CGF/CGFaxis.js',
+	'../lib/CGF/CGFinterface.js',
+	'../lib/CGF/CGFscene.js',
+	'../lib/CGF/CGFcamera.js',
+	'../lib/CGF/CGFinterfaceCamera.js',
+	'../lib/CGF/CGFlight.js',
+	'../lib/CGF/CGFapplication.js',
+	'../lib/CGF/Geometries/CGFplane.js',
+	'../lib/CGF/CGFXMLreader.js',
+	
+	function(){ 
+		console.log(&quot;WebCGF v&quot;+CGFversion+&quot; loaded!&quot;);
+	} ]
+);</pre>
+</body>
+</html>

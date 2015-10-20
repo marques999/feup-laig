@@ -170,7 +170,7 @@ XMLscene.prototype.setBackground = function(rgba) {
 
 /**
  * altera as coordenadas de rotação inicial da cena
- * @param {Number} id - ordem da rotação na cena
+ * @param {Number} id - ordem da rotação
  * @param {Character} axis - eixo da rotação (x, y, z)
  * @param {Number} angle - ângulo da rotação (em graus)
  * @return {null}
@@ -232,27 +232,27 @@ XMLscene.prototype.toggleLight = function(id, enabled) {
  */
 XMLscene.prototype.onGraphLoaded = function() {	
 
-	// SET BACKGROUND
-	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
-					   this.defaultBackground[2], this.defaultBackground[3]);
-
-	// SET AXIS
-	this.axis = new CGFaxis(this, this.defaultReference);
-	
-	// SET GLOBAL ILLUMINATION
-	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
-							   this.defaultAmbient[2], this.defaultAmbient[3]);
-
 	// SET FRUSTUM
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
 
+	// SET AXIS
+	this.axis = new CGFaxis(this, this.defaultReference);
+
+	// SET BACKGROUND
+	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
+					   this.defaultBackground[2], this.defaultBackground[3]);
+
+	// SET GLOBAL ILLUMINATION
+	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
+							   this.defaultAmbient[2], this.defaultAmbient[3]);
+
 	// SET TRANSFORMATIONS
-	mat4.scale(this.defaultMatrix, this.defaultMatrix, this.defaultScale);
+	mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);	
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[0], this.defaultRotationAxis[0]);
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[1], this.defaultRotationAxis[1]);
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[2], this.defaultRotationAxis[2]);
-	mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);
+	mat4.scale(this.defaultMatrix, this.defaultMatrix, this.defaultScale);
 
 	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {

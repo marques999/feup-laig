@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='CGFapplication-method-constructor'><span id='CGFapplication'>/**
+</span></span> * @constructor
+ * Creates a new application bound to an HTML element, and manages application's life cycle
+ * @param {HTMLElement} element 	A reference to the HTML element in which the WebGL canvas will be included.
+ * 
+ */
+function CGFapplication(element) {
+    this.element = element;
+    this.initialized = false;
+    this.gl = null;
+}
+
+<span id='CGFapplication-method-init'>/**
+</span> * @method init
+ * Initializes the WebGL context, as well as the ssociated instances of CGFscene and CGFinterface. 
+ * @returns {boolean}
+ */
+CGFapplication.prototype.init = function () {
+    if (this.initialized) {
+        return true;
+    }
+
+    if (!Detector.webgl) {
+        Detector.addGetWebGLMessage({parent: this.element});
+        return false;
+    }
+
+    var canvas = document.createElement(&quot;canvas&quot;);
+    this.gl = canvas.getContext(&quot;webgl&quot;, {antialias: true}) || canvas.getContext(&quot;experimental-webgl&quot;, {antialias: true});
+
+    if (!this.gl) {
+        Detector.addGetWebGLMessage({parent: this.element});
+        return false;
+    }
+
+    this.initialized = true;
+    this.element.appendChild(this.gl.canvas);
+
+    this.initScene();
+    this.initInterface();
+
+    window.addEventListener(&quot;resize&quot;, this.resizeCanvas(this.gl));
+    this.resizeCanvas(this.gl)();
+
+    return true;
+};
+
+<span id='CGFapplication-method-resizeCanvas'>/**
+</span> * @method resizeCanvas
+ * @private
+ * Handles changes in the shape and size of the canvas e.g. when the browser's window is resized.
+ * @param {WebGLRenderingContext} gl
+ */
+CGFapplication.prototype.resizeCanvas = function (gl) {
+    return function () {
+        console.log(&quot;resize&quot;);
+
+        if (!gl) return;
+
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        console.log(&quot;clientWidth: &quot; + width + &quot;, clientHeight: &quot; + height);
+        if (gl.canvas.width != width || gl.canvas.height != height) {
+            console.log(&quot;width: &quot; + gl.canvas.width + &quot;, height: &quot; + gl.canvas.height);
+            // Change the size of the canvas to match the size it's being displayed
+            gl.canvas.width = width;
+            gl.canvas.height = height;
+        }
+    }
+};
+
+<span id='CGFapplication-method-setScene'>/**
+</span> * @method setScene
+ * Makes a scene the active scene of this application
+ * @param {CGFscene} scene
+ */
+CGFapplication.prototype.setScene = function (scene) {
+    this.scene = scene;
+    if (this.initialized) {
+        this.scene.init(this);
+    }
+};
+
+<span id='CGFapplication-method-setInterface'>/**
+</span> * @method setInterface
+ * Makes an interface the active interface of this application
+ * @param {CGFinterface} iFace
+ */
+CGFapplication.prototype.setInterface = function (iFace) {
+    this.interface = iFace;
+    if (this.initialized) {
+        this.interface.init(this);
+    }
+};
+
+<span id='CGFapplication-method-initScene'>/**
+</span> * @method initScene
+ * Initializes the scene previously bound by #setScene
+ * @private
+ * @returns {boolean}
+ */
+CGFapplication.prototype.initScene = function () {
+    if (this.scene &amp;&amp; this.initialized) {
+        return this.scene.init(this);
+    }
+    return false;
+};
+
+<span id='CGFapplication-method-initInterface'>/**
+</span> * @method initInterface
+ * Initializes the interface previously bound by #setInterface
+ * @private
+ * @returns {boolean}
+ */
+CGFapplication.prototype.initInterface = function () {
+    if (this.interface &amp;&amp; this.initialized) {
+        return this.interface.init(this);
+    }
+    return false;
+};
+
+<span id='CGFapplication-method-run'>/**
+</span> * @method run
+ * Starts the application loop, after all has been initialized.
+ */
+CGFapplication.prototype.run = function () {
+    var self = this;
+
+    function renderLoop() {
+        requestAnimationFrame(renderLoop, self.gl.canvas);
+
+        if (self.interface) {
+            self.interface.update();
+        }
+
+        if (self.scene) {
+            self.scene.checkUpdate();
+            self.scene.display();
+        }
+    }
+
+    renderLoop();
+};</pre>
+</body>
+</html>

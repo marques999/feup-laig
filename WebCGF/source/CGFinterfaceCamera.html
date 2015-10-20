@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">
+function CGFinterfaceCamera(fov, near, far) {
+	CGFcamera.call(this, fov, near, far, [10,10,10], [0,0,0]);
+	this.translation = [0,0,0];
+	this.rotation = [0.52, 0.79, 0];
+	this.distance = 50;
+	this._positionMatrix = mat4.create();
+	this._invPositionMatrix = mat4.create();
+}
+
+CGFinterfaceCamera.prototype = Object.create(CGFcamera.prototype);
+CGFinterfaceCamera.prototype.constructor = CGFinterfaceCamera;
+
+
+CGFinterfaceCamera.prototype.getViewMatrix = function () {
+	
+	// Sets up a base camera at [0,0,distance] looking at the origin
+	vec4.set(this.position, 0,0,this.distance,1);
+	vec4.set(this.target, 0,0,0,1);
+	vec3.set(this._up, 0,1,0);
+	vec4.set(this.direction,0,0,-1,0);
+
+	mat4.lookAt(this._viewMatrix, this.position,this.target,this._up);
+	
+	// Rotates this camera using the stored rotation (inverse order)
+	mat4.identity(this._positionMatrix);
+	mat4.rotateZ(this._positionMatrix, this._positionMatrix, this.rotation[2]);
+	mat4.rotateX(this._positionMatrix, this._positionMatrix, this.rotation[0]);
+	mat4.rotateY(this._positionMatrix, this._positionMatrix, -this.rotation[1]);
+	
+	// Places the camera at stored translation (inverse order)
+	mat4.translate(this._positionMatrix, this._positionMatrix, this.translation);		
+	
+	// Stores inverted (normal order) camera position matrix, used to transform camera space into world space.
+	// Uses this matrix to calculate new position, target, direction and _up vector.
+	mat4.invert(this._invPositionMatrix, this._positionMatrix);
+	vec4.transformMat4(this.position, this.position, this._invPositionMatrix);
+	vec4.transformMat4(this.target, this.target, this._invPositionMatrix);
+	vec4.transformMat4(this.direction, this.direction, this._invPositionMatrix);
+	vec3.transformMat4(this._up, this._up, this._invPositionMatrix);
+	
+	
+	// Applies camera position matrix
+	mat4.multiply(this._viewMatrix, this._viewMatrix, this._positionMatrix);	
+	
+	return this._viewMatrix;	
+};
+
+CGFinterfaceCamera.prototype.setDistance = function(d) { 
+	this.distance = d;
+	this.clampDistance(); 
+}
+CGFinterfaceCamera.prototype.clampDistance = function() {
+	if (this.distance &lt; this.near) this.distance = this.near;
+	else if (this.distance &gt; this.far) this.distance = this.far;
+}
+
+CGFinterfaceCamera.prototype.roll = function(angle) {
+	this.rotate(CGFcameraAxis.Z, angle);
+}
+
+// ** Control functions inherited from CGFcamera ** //
+
+
+CGFinterfaceCamera.prototype.orbit = function(axisID, angle) {
+	this.rotation[axisID] += angle;
+};
+
+CGFinterfaceCamera.prototype.rotate = function(axisID, angle) {
+	this.rotation[axisID] += angle;
+};
+
+CGFinterfaceCamera.prototype.zoom = function (value) {
+	this.distance -= value;
+	this.clampDistance();
+};
+
+CGFinterfaceCamera.prototype.translate = function (vecValue) {
+	vec4.add(this.translation, this.translation, vecValue);
+}
+
+CGFinterfaceCamera.prototype.pan = function (vecValue) {
+	vecValue[3] = 0.0;
+	vec4.transformMat4(vecValue, vecValue, this._invPositionMatrix);
+	vec4.sub(this.translation, this.translation, vecValue);
+}</pre>
+</body>
+</html>
