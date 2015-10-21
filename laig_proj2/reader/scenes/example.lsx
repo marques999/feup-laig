@@ -1,0 +1,76 @@
+<SCENE>
+<INITIALS>
+	<frustum near="0.1" far="200"/> 			<!-- frustum planes-->
+	<translation x="0.0" y="0.0" z="0.0" />		<!-- initial translate -->
+	<rotation axis="y" angle="0.0" />			<!-- initial rotation 3 -->
+	<rotation axis="x" angle="0.0" />			<!-- initial rotation 2 -->
+	<rotation axis="z" angle="0.0" />			<!-- initial rotation 1 -->
+	<scale sx="1.0" sy="1.0" sz="1.0" />		<!-- initial scaling -->
+	<reference length="5.0" />					<!-- axis length; "0" means no axis-->
+</INITIALS>
+
+<ILLUMINATION>
+	<ambient r="0.0" g="1.0" b="0.5" a="1.0" />			<!-- global ambient -->
+	<background r="0.53" g="0.45" b="0.8" a="1.0" />	<!-- background color -->
+</ILLUMINATION>
+
+<LIGHTS>
+	<LIGHT id="ss">										<!-- light identifier -->
+		<enable asfa ="1" />							<!-- enable/disable -->
+		<position x="f" y="g" z="h" w="0.0" />			<!-- light position -->
+		<ambient r="0.5" g="0.0" b="0.5" a="1.0" />		<!-- ambient component -->
+		<diffuse r="0.7" g="0.0" b="0.7" a="1.0" />		<!-- diffuse component -->
+		<specular r="0.5" g="0.0" b="0.5" a="1.0" />	<!-- specular component -->
+	</LIGHT>
+</LIGHTS>
+
+<TEXTURES>
+	<TEXTURE id="ss">
+		<file path="floor.png" />						<!-- path to file -->
+		<amplif_factor s="2.0" t="2.0" />			<!-- x/s, y/t -->
+	</TEXTURE>
+	<TEXTURE id="tt">
+		<file path="floor.png" />						<!-- path to file -->
+		<amplif_factor s="2.0" t="2.0" />			<!-- x/s, y/t -->
+	</TEXTURE>
+</TEXTURES>
+
+<MATERIALS>
+	<MATERIAL id="ss">                                  
+		<shininess value="5" />
+		<specular r="0.6" g="0.6" b="1.0" a="0.5" />	<!-- specular reflection -->
+		<diffuse r="1.0" g="0.0" b="0.0" a="0.8" />		<!-- diffuse reflection -->
+		<ambient r="0.2" g="0.2" b="0.2" a="0.5" />		<!-- ambient reflection -->
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />	<!-- emission component -->
+	</MATERIAL>
+	<MATERIAL id="tt">                                  
+		<shininess value="5" />
+		<specular r="0.6" g="0.6" b="1.0" a="0.5" />	<!-- specular reflection -->
+		<diffuse r="1.0" g="0.0" b="0.0" a="0.8" />		<!-- diffuse reflection -->
+		<ambient r="0.2" g="0.2" b="0.2" a="0.5" />		<!-- ambient reflection -->
+		<emission r="0.0" g="0.0" b="0.0" a="0.0" />	<!-- emission component -->
+	</MATERIAL>
+</MATERIALS>
+
+<LEAVES>
+	<LEAF id="s1" type="triangle" args="-3.0 true 1.0 2.0 1.5 fff 1.0 4.0 -2.0" />
+</LEAVES>
+
+<NODES>
+	<ROOT id="s0" />	
+	<!-- identifier of root node of the scene graph; this node     -->
+	<!-- must be defined in one of the following NODE declarations -->
+	<NODE id="s0">
+	<!-- defines one intermediate node; may be repeated as necessary -->
+	<!-- next two lines are mandatory -->
+		<MATERIAL id="null" />      
+		<!-- declared material superimposes the material received from parent node -->
+		<!-- id="null" maintains material from parent node        -->
+		<TEXTURE id="null" />
+		<!-- declaring descendents, ate least one node or one leaf must be present -->
+		<DESCENDANTS>
+			<DESCENDANT id="s1" />
+		</DESCENDANTS>
+	</NODE>
+ </NODES>
+ </SCENE>
