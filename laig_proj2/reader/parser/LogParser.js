@@ -137,18 +137,7 @@ function printXYZW(attribute, xyzw) {
 																   
 */
 
-function checkReference(array, name, nodeId, objectId) {
 
-	if (objectId == 'null' || objectId == 'clear') {
-		return null;
-	}
-
-	if (!(objectId in array)) {
-		return "NODE with id=" + nodeId + " references " + name + " id=" + objectId +" which doesn't exist, reverting to defaults...";
-	}
-
-	return null;
-};
 
 function checkUrl(url) {
 

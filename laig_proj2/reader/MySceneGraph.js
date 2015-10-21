@@ -54,8 +54,15 @@ MySceneGraph.prototype.onXMLReady = function() {
 	var parent = 'SCENE';
 	var rootElement = this.reader.xmlDoc.documentElement;
 
-	this.leafParser = new Leaf(this.reader, this.scene);
-	
+	this.animationParser = new AnimationParser(this.reader, this.scene);
+	this.globalsParser = new GlobalsParser(this.reader, this.scene);
+	this.illuminationParser = new IlluminationParser(this.reader, this.scene);
+	this.leafParser = new LeafParser(this.reader, this.scene);
+	this.lightParser = new LightParser(this.reader, this.scene);
+	this.materialParser = new MaterialParser(this.reader, this.scene);
+	this.nodeParser = new NodeParser(this.reader, this.scene);
+	this.textureParser = new TextureParser(this.reader, this.scene, this.scenePath);
+
 	var rootTags = [
 		'INITIALS',
 		'ILLUMINATION',
@@ -218,345 +225,13 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 	return nextElement.materialId == 'null' ? currMaterialId : nextElement.materialId;
 };
 
-/*
-  _____ _      _     _    _ __  __ _____ _   _       _______ _____ ____  _   _ 
- |_   _| |    | |   | |  | |  \/  |_   _| \ | |   /\|__   __|_   _/ __ \| \ | |
-   | | | |    | |   | |  | | \  / | | | |  \| |  /  \  | |    | || |  | |  \| |
-   | | | |    | |   | |  | | |\/| | | | | . ` | / /\ \ | |    | || |  | | . ` |
-  _| |_| |____| |___| |__| | |  | |_| |_| |\  |/ ____ \| |   _| || |__| | |\  |
- |_____|______|______\____/|_|  |_|_____|_| \_/_/    \_\_|  |_____\____/|_| \_|
-
-	<ILLUMINATION>
-		<ambient r="ff" g="ff" b="ff" a="ff" />
-		<background r="ff" g="ff" b="ff" a="ff" />
-	</ILLUMINATION>	  
-
-*/
-
 /**
  * processa todas as entidades presentes no bloco <ILLUMINATION> do ficheiro LSX
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseIllumination = function(root) {
-
-	var globalAmbient = this.parseCoordinatesRGBA(root, 'ambient');	
-	var error = checkValue(globalAmbient, 'ambient', root.nodeName);
-
-	if (error != null) {
-		return error;
-	}
-
-	var globalBackground = this.parseCoordinatesRGBA(root, 'background');
-	error = checkValue(globalBackground, 'background', root.nodeName);
-	
-	if (error != null) {
-		return error;
-	}
-
-	this.scene.setAmbient(globalAmbient);
-	this.scene.setBackground(globalBackground);
-	
-	if (this.verbose) {
-		printHeader('ILLUMINATION');
-		printRGBA('ambient', globalAmbient);
-		printRGBA('background', globalBackground);
-	}
-	
-	return null;
-};
-
-/*
-  _______ _____            _   _  _____ ______ ____  _____  __  __ 
- |__   __|  __ \     /\   | \ | |/ ____|  ____/ __ \|  __ \|  \/  |
-	| |  | |__) |   /  \  |  \| | (___ | |__ | |  | | |__) | \  / |
-	| |  |  _  /   / /\ \ | . ` |\___ \|  __|| |  | |  _  /| |\/| |
-	| |  | | \ \  / ____ \| |\  |____) | |   | |__| | | \ \| |  | |
-	|_|  |_|  \_\/_/    \_\_| \_|_____/|_|    \____/|_|  \_\_|  |_|
-
-*/
-
-/**
- * processa um escalamento presente num bloco <NODE>
- * @param {XMLElement} root - estrutura que dados XML que contém o atributo <scale>
- * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseNodeScale = function(root, node) {
-
-	var coords = this.parseNodeCoordinates(root, 'sx', 'sy', 'sz');
-	var error = checkValue(coords, 'coordinates', root.nodeName, node.id);
-	
-	if (error != null) {
-		return error;
-	}
-
-	node.scale(coords);
-
-	if (this.verbose) {
-		printXYZ('SCALE', coords);
-	}
-
-	return null;
-};
-
-/**
- * processa uma translação presente num bloco <NODE>
- * @param {XMLElement} root - estrutura que dados XML que contém o atributo <translation>
- * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseNodeTranslation = function(root, node) {
-
-	var coords = this.parseNodeCoordinates(root, 'x', 'y', 'z');
-	var error = checkValue(coords, 'coordinates', root.nodeName, node.id);
-	
-	if (error != null) {
-		return error;
-	}
-
-	node.translate(coords);
-
-	if (this.verbose) {
-		printXYZ('TRANSLATION', coords);
-	}
-
-	return null;
-};
-
-/**
- * processa uma rotação presente num bloco <NODE>
- * @param {XMLelement} root - estrutura que dados XML que contém o atributo <rotation>
- * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseNodeRotation = function(root, node) {
-
-	var parent = root.nodeName;
-	var parseErrors = 0;
-	var axis = this.reader.getString(root, 'axis', true);
-	var error = checkValue(axis, 'axis', parent, node.id);
-	
-	if (error != null) {
-		return error;
-	}
-
-	if (axis != 'x' && axis != 'y' && axis != 'z') {
-		onUnknownAxis(axis, root.nodeName, 'NODE');
-	}
-
-	var angle = this.reader.getFloat(root, 'angle', true);
-	error = checkValue(angle, 'angle', parent, node.id);
-	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, node.id);
-	}
-	
-	node.rotate(axis, angle);
-
-	if (this.verbose) {
-		printValues('ROTATION', 'axis', axis, 'angle', angle);
-	}
-
-	return null;
-};
-
-/*
-  _____  _____  _____ __  __ _____ _______ _______      ________  _____ 
- |  __ \|  __ \|_   _|  \/  |_   _|__   __|_   _\ \    / /  ____|/ ____|
- | |__) | |__) | | | | \  / | | |    | |    | |  \ \  / /| |__  | (___  
- |  ___/|  _  /  | | | |\/| | | |    | |    | |   \ \/ / |  __|  \___ \ 
- | |    | | \ \ _| |_| |  | |_| |_   | |   _| |_   \  /  | |____ ____) |
- |_|    |_|  \_\_____|_|  |_|_____|  |_|  |_____|   \/   |______|_____/ 
-
-*/
-
-
-
-/*
-  _____        _____   _____ ______ _____   _____ 
- |  __ \ /\   |  __ \ / ____|  ____|  __ \ / ____|
- | |__) /  \  | |__) | (___ | |__  | |__) | (___  
- |  ___/ /\ \ |  _  / \___ \|  __| |  _  / \___ \ 
- | |  / ____ \| | \ \ ____) | |____| | \ \ ____) |
- |_| /_/    \_\_|  \_\_____/|______|_|  \_\_____/ 
-												  
-*/
-
-/**
- * processa um valor booleano contido num atributo de um elemento XML
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém o valor booleano
- * @return {Boolean|NaN|null} - valor booleano se este for válido, caso contrário NaN ou null
- */
-MySceneGraph.prototype.parseBoolean = function(root, attribute) {
-
-	var node = root.getElementsByTagName(attribute);
-
-	if (node == null || node.length == 0) {
-		return null;
-	}
-
-	if (node.length != 1) {
-		onMultipleDefinitions(attribute, root.nodeName);
-	}
-
-	if (!node[0].hasAttribute('value')) {
-		return null;
-	}
-
-	var checkResult = this.reader.getBoolean(node[0], 'value', true);
-	
-	return checkResult == null ? NaN : checkResult;
-};
-
-
-/**
- * processa coordenadas na forma (coordA, coordB, coordC) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @return {Number[]|NaN} - vetor com as coordenadas se estas forem válidas, caso contrário NaN
- */
-MySceneGraph.prototype.parseNodeCoordinates = function(node, coordA, coordB, coordC) {
-
-	if (!node.hasAttribute(coordA)) {
-		onCoordinateMissing(coordA, node.nodeName);
-		return NaN;
-	}
-
-	var x = this.reader.getFloat(node, coordA);
-
-	if (!node.hasAttribute(coordB)) {
-		onCoordinateMissing(coordB, node.nodeName);
-		return NaN;
-	}
-
-	var y = this.reader.getFloat(node, coordB);
-
-	if (!node.hasAttribute(coordC)) {
-		onCoordinateMissing(coordC, node.nodeName);
-		return NaN;
-	}
-
-	var z = this.reader.getFloat(node, coordC);
-
-	if (x != x || y != y || z != z) {
-		return NaN;
-	}
-
-	return [ x, y, z ];
-};
-
-/**
- * processa coordenadas genéricas para um vetor de tamanho variável
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @param {Number[]} coords - vetor que contém o nome das coordenadas a serem processadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
- */
-MySceneGraph.prototype.parseCoordinates = function(root, attribute, coords) {
-
-	var error = false;
-	var arr = [];
-	var node = root.getElementsByTagName(attribute);
-
-	if (node == null || node.length == 0) {
-		return null;
-	}
-
-	if (node.length != 1) {
-		onMultipleDefinitions(attribute, root.nodeName);
-	}
-
-	for (var i = 0; i < coords.length; i++) {
-
-		var coordName = coords[i];
-
-		if (!node[0].hasAttribute(coordName)) {
-			onCoordinateMissing(coordName, attribute);
-			return NaN;
-		}
-
-		var coordValue = this.reader.getFloat(node[0], coordName);
-
-		if (coordValue != coordValue) {
-			onCoordinateInvalid(coordName, attribute);
-			return NaN;
-		}
-
-		arr.push(coordValue);
-	}
-
-	return arr;
-};
-
-/**
- * processa coordenadas na forma (r, g, b, a) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
- */
-MySceneGraph.prototype.parseCoordinatesRGBA = function(root, attribute) {
-	return this.parseCoordinates(root, attribute, ['r', 'g', 'b', 'a']);
-};
-
-/**
- * processa coordenadas na forma (x, y, z) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
- */
-MySceneGraph.prototype.parseCoordinatesXYZ = function(root, attribute) {
-	return this.parseCoordinates(root, attribute, ['x', 'y', 'z']);
-};
-
-/**
- * processa coordenadas na forma (x, y, z, w) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
- */
-MySceneGraph.prototype.parseCoordinatesXYZW = function(root, attribute) {
-	return this.parseCoordinates(root, attribute, ['x', 'y', 'z', 'w']);
-};
-
-/**
- * processa coordenadas na forma (sx, sy, sz) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
- */
-MySceneGraph.prototype.parseCoordinatesScale = function(root, attribute) {
-	return this.parseCoordinates(root, attribute, ['sx', 'sy', 'sz']);
-};
-
-/**
- * processa um número em vírgula flutuante contido num atributo de um elemento XML
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number|NaN|null} - número em vírgula flutuante se este for válido, caso contrário NaN ou null
- */
-MySceneGraph.prototype.parseFloat = function(root, name, attribute) {
-
-	var node = root.getElementsByTagName(name);
-	
-	if (node == null || node.length == 0) {
-		return null;
-	}
-
-	if (node.length != 1) {
-		onMultipleDefinitions(name, root.nodeName);
-	}
-
-	if (node[0].hasAttribute(attribute)) {
-		return this.reader.getFloat(node[0], attribute);
-	}
-	
-	return null;
+	return this.illuminationParser.parse(root, 0);
 };
 
 /**
@@ -633,28 +308,6 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 	return null;
 };
 
-/*
-  _   _  ____  _____  ______  _____ 
- | \ | |/ __ \|  __ \|  ____|/ ____|
- |  \| | |  | | |  | | |__  | (___  
- | . ` | |  | | |  | |  __|  \___ \ 
- | |\  | |__| | |__| | |____ ____) |
- |_| \_|\____/|_____/|______|_____/ 
-	  
-	<NODE id="ss">
-
-		<MATERIAL id="ss" />
-		<TEXTURE id="ss" />
-		<TRANSLATION x="ff" y="ff" z="ff" />
-		<ROTATION axis="cc" angle="ff" />
-		<SCALE sx="ff" sy="ff" sz="ff" />
-		<DESCENDANTS>
-			<DESCENDANT id="ss" />
-		</DESCENDANTS>
-
-	</NODE>	  
-*/
-
 /** 
  * processa todas as entidades presentes no bloco <NODES> do ficheiro LSX
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <NODES>
@@ -679,6 +332,32 @@ MySceneGraph.prototype.parseNodes = function (root) {
 	return this.parseArray(root, 'NODE', this.parseNode);
 };
 
+MySceneGraph.prototype.checkMaterialReference = function(nodeId, objectId) {
+
+	if (objectId == 'null' || objectId == 'clear') {
+		return null;
+	}
+
+	if (this.materials[objectId] == undefined) {
+		return "NODE with id=" + nodeId + " references <MATERIAL> id=" + objectId + " which doesn't exist, reverting to defaults...";
+	}
+
+	return null;
+};
+
+MySceneGraph.prototype.checkTextureReference = function(nodeId, objectId) {
+
+	if (objectId == 'null' || objectId == 'clear') {
+		return null;
+	}
+
+	if (this.textures[objectId] == undefined) {
+		return "NODE with id=" + nodeId + " references <TEXTURE> id=" + objectId + " which doesn't exist, reverting to defaults...";
+	}
+
+	return null;
+};
+
 /**
  * processa uma entidade do tipo <NODE>, adicionando ao array de nodes do grafo
  * verifica se existe um node com o mesmo identificador no array de nodes
@@ -688,146 +367,34 @@ MySceneGraph.prototype.parseNodes = function (root) {
  */
 MySceneGraph.prototype.parseNode = function(id, root) {
 
-	var parent = root.nodeName;
-	var parseErrors = 0;
-	var nodeMaterial = null;
-	var nodeTexture = null;
-
 	if (this.nodes[id] != undefined) {
-		return onElementDuplicate(parent, id);
+		return onElementDuplicate(root.nodeName, id);
 	}
 
-	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
+	var error = this.nodeParser.parse(root, id);
+	if (error != null) {
+		return error;
 	}
-
-	if (root.children[0].nodeName != 'MATERIAL') {
-		return onUnexpectedTag(root.children[0].nodeName, 'MATERIAL', parent, id);
-	}
-
-	nodeMaterial = this.reader.getString(root.children[0], 'id');
 	
-	if (nodeMaterial == null) {
-		return onAttributeMissing('MATERIAL', id, parent);
-	}
-
-	var error = checkReference(this.materials, 'MATERIAL', id, nodeMaterial);	
+	var newNode = this.nodeParser.result;
+	var error = this.checkMaterialReference(id, newNode.materialId);		
 	
 	if (error != null) {
-		nodeMaterial = null;
+		newNode.materialId = null;
 		onXMLWarning(error);
 	}
-
-	if (root.children[1].nodeName != 'TEXTURE') {
-		return onUnexpectedTag(root.children[0].nodeName, 'TEXTURE', parent, id);
-	}
-
-	nodeTexture = this.reader.getString(root.children[1], 'id');
 	
-	if (nodeTexture == null) {
-		return onAttributeMissing('TEXTURE', id, parent);
-	}
-
-	error = checkReference(this.textures, 'TEXTURE', id, nodeTexture);	
+	error = this.checkTextureReference(id, newNode.textureId);	
 	
 	if (error != null) {
-		nodeTexture = null;
+		newNode.textureId = null;
 		onXMLWarning(error);
 	}
-
-	if (this.verbose) {
-		printHeader(parent, id);
-		printValues('MATERIAL', 'id', nodeMaterial);
-		printValues('TEXTURE', 'id', nodeTexture);
-	}
-
-	var node = new XMLnode(id, nodeTexture, nodeMaterial);
-	var node_sz = root.children.length;
-
-	for (var i = 2; i < node_sz; i++) {
 	
-		var child = root.children[i];
-		var error = null;
-
-		if (child.nodeName == 'TRANSLATION') {
-			error = this.parseNodeTranslation(child, node);
-		}
-		else if (child.nodeName == 'ROTATION') {
-			error = this.parseNodeRotation(child, node);
-		}
-		else if (child.nodeName == 'SCALE') {
-			error = this.parseNodeScale(child, node);
-		}
-		else if (child.nodeName == 'DESCENDANTS') {
-			break;
-		}
-		else {
-			error = onUnexpectedTag(child.nodeName, 'TRANSLATION/ROTATION/SCALE/DESCENDANTS', parent, id);
-		}
-
-		if (error != null) {
-			onXMLWarning(error);
-		}
-	}
-
-	var nodeDescendants = root.getElementsByTagName('DESCENDANTS');
-
-	if (nodeDescendants == null || nodeDescendants.length == 0) {
-		return onAttributeMissing('DESCENDANTS', id, parent);
-	}
-
-	if (nodeDescendants.length != 1) {
-		onMultipleElements('DESCENDANTS', parent);
-	}
-
-	nodeDescendants = nodeDescendants[0].children;
+	this.nodes[id] = newNode;
 	
-	if (nodeDescendants.length == 0) {
-		return "<NODE> with id=" + id + " has zero descendants, skipping...";
-	}
-
-	if (this.verbose) {
-		console.log("\t\tDESCENDANTS:");
-	}
-
-	for (var i = 0; i < nodeDescendants.length; i++) {
-		
-		var childId = this.reader.getString(nodeDescendants[i], 'id', true);
-		
-		if (childId == null) {
-			onXMLWarning(onAttributeMissing('id', id, parent));
-			continue;
-		}
-
-		node.addChild(childId);
-		
-		if (this.verbose) {
-			console.log("\t\t\t id=" + childId);
-		}
-	}
-
-	this.nodes[id] = node;
-
 	return null;
 };
-
-/*
-  _      _____ _____ _    _ _______ _____ 
- | |    |_   _/ ____| |  | |__   __/ ____|
- | |      | || |  __| |__| |  | | | (___  
- | |      | || | |_ |  __  |  | |  \___ \ 
- | |____ _| || |__| | |  | |  | |  ____) |
- |______|_____\_____|_|  |_|  |_| |_____/ 
-
-	<LIGHT id="ss">
-		<enable value ="tt" />
-		<position x="ff" y="ff" z="ff" w="ff" />
-		<ambient r="ff" g="ff" b="ff" a="ff" />
-		<diffuse r="ff" g="ff" b="ff" a="ff" />
-		<specular r="ff" g="ff" b="ff" a="ff" />
-	</LIGHT>
-
-*/
 
 /**
  * processa todas as entidades presentes no bloco <LIGHTS> do ficheiro LSX
@@ -846,96 +413,23 @@ MySceneGraph.prototype.parseLights = function(root) {
  */
 MySceneGraph.prototype.parseLight = function(id, root) {
 
-	var parseErrors = 0;
-	var parent = root.nodeName;
-
 	if (this.lights[id] != undefined) {
-		return onElementDuplicate(parent, id);
+		return onElementDuplicate(root.nodeName, id);
 	}
 
 	if (this.scene.getActiveLights() == this.scene.getNumberLights()) {
 		return onMaximumLights(this.scene.getNumberLights());
 	}
 
-	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
-	}
-
-	var lightEnabled = this.parseBoolean(root, 'enable');
-	var error = checkValue(lightEnabled, 'enable', parent, id);
-	
+	var error = this.lightParser.parse(root, id);
 	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
+		return error;
 	}
-
-	var lightPosition = this.parseCoordinatesXYZW(root, 'position');
-	error = checkValue(lightPosition, 'position', parent, id);
 	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	var lightAmbient = this.parseCoordinatesRGBA(root, 'ambient');
-	error = checkValue(lightAmbient, 'ambient', parent, id);
+	this.lights[id] = this.lightParser.result;
 	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	var lightDiffuse = this.parseCoordinatesRGBA(root, 'diffuse');
-	error = checkValue(lightDiffuse, 'diffuse', parent, id);
-	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	var lightSpecular = this.parseCoordinatesRGBA(root, 'specular');
-	error = checkValue(lightSpecular, 'specular', parent, id);
-	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
-	}
-
-	this.lights[id] = this.scene.pushLight(id, lightEnabled, lightPosition, lightAmbient, lightDiffuse, lightSpecular);
-
-	if (this.verbose) {
-		printHeader('LIGHT', id);
-		printValues('enable', 'value', lightEnabled);
-		printXYZW('position', lightPosition);
-		printRGBA('ambient', lightAmbient);
-		printRGBA('diffuse', lightDiffuse);
-		printRGBA('specular', lightSpecular);
-	}
-
 	return null;
 };
-
-/*
-  __  __       _______ ______ _____  _____          _       _____ 
- |  \/  |   /\|__   __|  ____|  __ \|_   _|   /\   | |     / ____|
- | \  / |  /  \  | |  | |__  | |__) | | |    /  \  | |    | (___  
- | |\/| | / /\ \ | |  |  __| |  _  /  | |   / /\ \ | |     \___ \ 
- | |  | |/ ____ \| |  | |____| | \ \ _| |_ / ____ \| |____ ____) |
- |_|  |_/_/    \_\_|  |______|_|  \_\_____/_/    \_\______|_____/ 
-
-	<MATERIAL id="ss">
-		<shininess value="ff" />
-		<specular r="ff" g="ff" b="ff" a="ff" />
-		<diffuse r="ff" g="ff" b="ff" a="ff" />
-		<ambient r="ff" g="ff" b="ff" a="ff" />
-		<emission r="ff" g="ff" b="ff" a="ff" />
-	</MATERIAL>
-
-*/
 
 /**
  * processa todas as entidades presentes no bloco <MATERIALS>
@@ -954,98 +448,19 @@ MySceneGraph.prototype.parseMaterials = function(root) {
  */
 MySceneGraph.prototype.parseMaterial = function(id, root) {
 
-	var parent = root.nodeName;
-	var parseErrors = 0;
-
 	if (this.materials[id] != undefined) {
-		return onElementDuplicate(parent, id);
+		return onElementDuplicate(root.nodeName, id);
 	}
-
-	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
-	}
-
-	var materialShininess = this.parseFloat(root, 'shininess', 'value');
-	var error = checkValue(materialShininess, 'shininess', parent, id);
 	
+	var error = this.materialParser.parse(root, id);
 	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
+		return error;
 	}
-
-	var materialSpecular = this.parseCoordinatesRGBA(root, 'specular');
-	error = checkValue(materialSpecular, 'specular', parent, id);
 	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	var materialDiffuse = this.parseCoordinatesRGBA(root, 'diffuse');
-	error = checkValue(materialDiffuse, 'diffuse', parent, id);
+	this.materials[id] = this.materialParser.result;
 	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	var materialAmbient = this.parseCoordinatesRGBA(root, 'ambient');
-	error = checkValue(materialAmbient, 'ambient', parent, id);
-	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	var materialEmission = this.parseCoordinatesRGBA(root, 'emission');
-	error = checkValue(materialEmission, 'emission', parent, id);
-	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
-	}
-
-	var myMaterial = new CGFappearance(this.scene);
-
-	myMaterial.setAmbient(materialAmbient[0], materialAmbient[1], materialAmbient[2], materialAmbient[3]);
-	myMaterial.setDiffuse(materialDiffuse[0], materialDiffuse[1], materialDiffuse[2], materialDiffuse[3]);
-	myMaterial.setEmission(materialEmission[0], materialEmission[1], materialEmission[2], materialEmission[3]);
-	myMaterial.setSpecular(materialSpecular[0], materialSpecular[1], materialSpecular[2], materialSpecular[3]);
-	myMaterial.setShininess(materialShininess);
-	myMaterial.setTextureWrap("REPEAT", "REPEAT");
-
-	this.materials[id] = myMaterial;
-
-	if (this.verbose) {
-		printHeader('MATERIAL', id);
-		printValues('shininess', 'value', materialShininess);
-		printRGBA('specular', materialSpecular);
-		printRGBA('diffuse', materialDiffuse);
-		printRGBA('ambient', materialAmbient);
-		printRGBA('emission', materialEmission);
-	}
-
 	return null;
 };
-
-/*
-  _______ ________   _________ _    _ _____  ______  _____ 
- |__   __|  ____\ \ / /__   __| |  | |  __ \|  ____|/ ____|
-	| |  | |__   \ V /   | |  | |  | | |__) | |__  | (___  
-	| |  |  __|   > <    | |  | |  | |  _  /|  __|  \___ \ 
-	| |  | |____ / . \   | |  | |__| | | \ \| |____ ____) |
-	|_|  |______/_/ \_\  |_|   \____/|_|  \_\______|_____/ 
-
-	<TEXTURE id="ss">
-		<file path="ss" />
-		<amplif_factor s="ff" t="ff" />
-	</TEXTURE>
-
-*/
 
 /**
  * processa todas as entidades presentes no bloco <TEXTURES>
@@ -1062,75 +477,21 @@ MySceneGraph.prototype.parseTextures = function(rootElement) {
  * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <TEXTURE>
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-MySceneGraph.prototype.parseTexture = function(id, root)
-{
-	var parent = root.nodeName;
-	var parseErrors = 0;
+MySceneGraph.prototype.parseTexture = function(id, root) {
 
-	if (this.textures[id] != undefined) {
-		return onElementDuplicate(parent, id);
+	if (this.leaves[id] != undefined) {
+		return onElementDuplicate(root.nodeName, id);
 	}
-
-	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);;
-	}
-
-	var texturePath = this.parseString(root, 'file', 'path');
 	
-	if (texturePath == null) {
-		return onAttributeMissing('file', id, parent);
-	}
-
-	if (!checkUrl(this.scenePath + texturePath)) {
-		return onURLInvalid('file', id, parent);
-	}
-
-	var textureS = this.parseFloat(root, 'amplif_factor', 's');
-	var error = checkValue(textureS, 'amplification factor S', parent, id);
-	
+	var error = this.textureParser.parse(root, id);
 	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
+		return error;
 	}
-
-	var textureT = this.parseFloat(root, 'amplif_factor', 't');
-	var error = checkValue(textureT, 'amplification factor T', parent, id);
 	
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
-	}
-
-	var textureObject = new CGFtexture(this.scene, this.scenePath + texturePath);
-	this.textures[id] = new XMLtexture(textureObject, textureS, textureT);
-
-	if (this.verbose) {
-		printHeader('TEXTURE', id);
-		printValues('file', 'path', texturePath);
-		printValues('amplif_factor', 's', textureS, 't', textureT);
-	}
-
+	this.textures[id] = this.textureParser.result;
+	
 	return null;
 };
-
-/*
-  _      ______     __      ________  _____ 
- | |    |  ____|   /\ \    / /  ____|/ ____|
- | |    | |__     /  \ \  / /| |__  | (___  
- | |    |  __|   / /\ \ \/ / |  __|  \___ \ 
- | |____| |____ / ____ \  /  | |____ ____) |
- |______|______/_/    \_\/   |______|_____/ 
- 
-	<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
-	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" /> 
-	<LEAF id="ss" type="sphere" args="ff ii ii" />
-	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
-
-*/
 
 /**
  * processa todas as entidades presentes no bloco <LEAVES>
@@ -1158,30 +519,10 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 		return error;
 	}
 	
-	this.leaves[id] = this.leafParser.get();
+	this.leaves[id] = this.leafParser.result;
 	
 	return null;
 };
-
-/*
-   _____ _      ____  ____          _       _____ 
-  / ____| |    / __ \|  _ \   /\   | |     / ____|
- | |  __| |   | |  | | |_) | /  \  | |    | (___  
- | | |_ | |   | |  | |  _ < / /\ \ | |     \___ \ 
- | |__| | |___| |__| | |_) / ____ \| |____ ____) |
-  \_____|______\____/|____/_/    \_\______|_____/ 
-
-	<GLOBALS>
-		<frustum near="ff" far="ff" />	
-		<translation x="ff" y="ff" z="ff"/>
-		<rotation axis="x" angle="ff" />
-		<rotation axis="y" angle="ff" />
-		<rotation axis="z" angle="ff" />
-		<scale sx="ff" sy="ff" sz="ff" />
-		<reference length="ff" />
-	</GLOBALS>
-
-*/
 
 /**
  * processa todas as entidades presentes no bloco <INITIALS>
@@ -1189,119 +530,7 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseGlobals = function(root) {
-
-	var parent = root.nodeName;
-	var parseErrors = 0;
-	
-	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
-	var error = checkValue(globalFrustumNear, 'near', 'frustum');
-	if (error != null) {
-		return error;
-	}
-
-	var globalFrustumFar = this.parseFloat(root, 'frustum', 'far');
-	error = checkValue(globalFrustumFar, 'far', 'frustum');
-	if (error != null) {
-		return error;
-	}
-
-	var globalReference = this.parseFloat(root, 'reference', 'length');
-	error = checkValue(globalReference, 'length', 'reference');
-	if (error != null) {
-		return error;
-	}
-
-	var globalScale = this.parseCoordinatesScale(root, 'scale');
-	error = checkValue(globalScale, 'scale', parent);
-	if (error != null) {
-		return error;
-	}
-
-	var globalTranslate = this.parseCoordinatesXYZ(root, 'translation');
-	error = checkValue(globalTranslate, 'translation', parent);
-	if (error != null) {
-		return error;
-	}
-	
-	var node = root.getElementsByTagName('rotation');
-	var node_sz = node.length;
-
-	if (node == null || node_sz == 0) {
-		return this.onElementMissing('rotation', parent);
-	}
-
-	if (node_sz > 3) {
-		console.warn("WARNING: more than three rotations found in <INITIALS>.");
-	}
-	
-	var axisFound = {
-		'x': false, 
-		'y': false,
-		'z': false
-	};
-
-	var j = 0;
-
-	for (var i = 0; i < node_sz; i++) {
-
-		var axis = this.reader.getString(node[i], 'axis');
-		error = checkValue(axis, 'rotation axis', parent);
-		
-		if (error != null) {
-			return error;
-		}
-
-		if (axis != 'x' && axis != 'y' && axis != 'z') {
-			onUnknownAxis(axis, node[i].nodeName, parent);
-			continue;
-		}
-
-		if (axisFound[axis]) {
-			onMultipleAxis(axis);
-			continue;
-		}
-
-		var angle = this.reader.getFloat(node[i], 'angle');
-		error = checkValue(angle, 'rotation angle', parent);
-
-		if (error != null) {
-			return error;
-		}
-
-		axisFound[axis] = true;
-
-		this.scene.setRotation(j++, axis, angle);
-	}
-
-	if (!axisFound['x']) {
-		return "X axis rotation is missing from <INITIALS>";
-	}
-
-	if (!axisFound['y']) {
-		return "Y axis rotation is missing from <INITIALS>";
-	}
-
-	if (!axisFound['z']) {
-		return "Z axis rotation is missing from <INITIALS>";
-	}
-
-	this.scene.initAxis(globalReference);
-	this.scene.initFrustum(globalFrustumNear, globalFrustumFar);
-	this.scene.initScale(globalScale);
-	this.scene.initTranslate(globalTranslate);
-
-	if (this.verbose) {
-		printHeader('INITIALS');
-		printValues('frustum', 'near', globalFrustumNear, 'far', globalFrustumFar);
-		printXYZ('translate', globalTranslate);
-		printValues('rotation', 'axis', this.scene.defaultRotationAxis[0], 'angle', this.scene.defaultRotationAngle[0]);
-		printValues('rotation', 'axis', this.scene.defaultRotationAxis[1], 'angle', this.scene.defaultRotationAngle[1]);
-		printValues('rotation', 'axis', this.scene.defaultRotationAxis[2], 'angle', this.scene.defaultRotationAngle[2]);
-		printXYZ('scale', globalScale);
-		printValues('reference', 'length', globalReference);
-	}
-	
-	return null;
+	return this.globalsParser.parse(root, 0);
 };
 
 /**

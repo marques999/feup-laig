@@ -1,5 +1,20 @@
+/*
+  _      ______     __      ________  _____ 
+ | |    |  ____|   /\ \    / /  ____|/ ____|
+ | |    | |__     /  \ \  / /| |__  | (___  
+ | |    |  __|   / /\ \ \/ / |  __|  \___ \ 
+ | |____| |____ / ____ \  /  | |____ ____) |
+ |______|______/_/    \_\/   |______|_____/ 
+ 
+	<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
+	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" /> 
+	<LEAF id="ss" type="sphere" args="ff ii ii" />
+	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
+
+*/
+
 /**
- * construtor default da classe 'Leaf'
+ * construtor default da classe 'LeafParser'
  * @constructor
  * @author Diogo Marques
  * @param {String} id - identificador do node
@@ -7,19 +22,17 @@
  * @param {String} materialId - identificador do material associado a este node
  * @return {null}
  */
-function Leaf(reader, scene) {
-	this.reader = reader;
-	this.scene = scene;
-	this.primitive = null;
+function LeafParser(reader, scene) {
+	BaseParser.call(this, reader, scene);
 };
 
-Leaf.prototype = Object.create(Object.prototype);
-Leaf.prototype.constructor = Leaf;
+LeafParser.prototype = Object.create(BaseParser.prototype);
+LeafParser.prototype.constructor = LeafParser;
 
-Leaf.prototype.parse = function(root, id) {
+LeafParser.prototype.parse = function(root, id) {
 
 	var parent = root.nodeName;
-	this.primitive = null;
+	this.result = null;
 
 	if (!root.hasAttribute('type')) {
 		return onAttributeMissing('type', this.id, parent);
@@ -57,24 +70,22 @@ Leaf.prototype.parse = function(root, id) {
 	if (error != null) {
 		return error;
 	}
-
-	printHeader("LEAF", id);
-	printValues(null, 'type', leafType, 'args', leafArgs);
-
+	
+	if (this.verbose) {
+		printHeader("LEAF", id);
+		printValues(null, 'type', leafType, 'args', leafArgs);
+	}
+	
 	return null;
-};
-
-Leaf.prototype.get = function() {
-	return this.primitive;
 };
 
 /**
  * processa uma primitiva do tipo "rectangle" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {Number} id - identificador da LeafParser/primitiva atual
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-Leaf.prototype.readRectangle = function(id, leafArgs) {
+LeafParser.prototype.readRectangle = function(id, leafArgs) {
 
 	if (leafArgs.length != 4) {
 		return onInvalidArguments(id, leafArgs.length, 4);
@@ -101,18 +112,17 @@ Leaf.prototype.readRectangle = function(id, leafArgs) {
 		return onParseError('RECTANGLE', parseErrors, id);
 	}
 
-	this.primitive = new MyRectangle(this.scene, x1, y1, x2, y2);
-
+	this.result = new MyRectangle(this.scene, x1, y1, x2, y2);
 	return null;
 };
 
 /**
  * processa uma primitiva do tipo "triangle" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {Number} id - identificador da LeafParser/primitiva atual
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-Leaf.prototype.readTriangle = function(id, leafArgs) {
+LeafParser.prototype.readTriangle = function(id, leafArgs) {
 
 	if (leafArgs.length != 9) {
 		return onInvalidArguments(id, leafArgs.length, 9);
@@ -144,18 +154,17 @@ Leaf.prototype.readTriangle = function(id, leafArgs) {
 		return onParseError('TRIANGLE', parseErrors, id);
 	}
 
-	this.primitive = new MyTriangle(this.scene, vec1, vec2, vec3);
-
+	this.result = new MyTriangle(this.scene, vec1, vec2, vec3);
 	return null;
 };
 
 /**
  * processa uma primitiva do tipo "plane" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {Number} id - identificador da LeafParser/primitiva atual
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-Leaf.prototype.readPlane = function(id, leafArgs) {
+LeafParser.prototype.readPlane = function(id, leafArgs) {
 
 	if (leafArgs.length != 1) {
 		return onInvalidArguments(id, leafArgs.length, 1);
@@ -173,18 +182,17 @@ Leaf.prototype.readPlane = function(id, leafArgs) {
 		return onParseError('PLANE', parseErrors, id);
 	}
 
-	this.primitive = new MyPlane(this.scene, myDivisions);
-
+	this.result = new MyPlane(this.scene, myDivisions);
 	return null;
 };
 
 /**
  * processa uma primitiva do tipo "cylinder" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {Number} id - identificador da LeafParser/primitiva atual
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-Leaf.prototype.readCylinder = function(id, leafArgs) {
+LeafParser.prototype.readCylinder = function(id, leafArgs) {
 
 	if (leafArgs.length != 5) {
 		return onInvalidArguments(id, leafArgs.length, 5);
@@ -230,18 +238,17 @@ Leaf.prototype.readCylinder = function(id, leafArgs) {
 		return onParseError('CYLINDER', parseErrors, id);
 	}
 
-	this.primitive = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
-
+	this.result = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
 	return null;
 };
 
 /**
  * processa uma primitiva do tipo "sphere" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {Number} id - identificador da LeafParser/primitiva atual
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-Leaf.prototype.readSphere = function(id, leafArgs) {
+LeafParser.prototype.readSphere = function(id, leafArgs) {
 
 	if (leafArgs.length != 3) {
 		return onInvalidArguments(id, leafArgs.length, 3);
@@ -273,7 +280,6 @@ Leaf.prototype.readSphere = function(id, leafArgs) {
 		return onParseError('SPHERE', parseErrors, id);
 	}
 
-	this.primitive = new MySphere(this.scene, myRadius, myStacks, mySlices);
-
+	this.result = new MySphere(this.scene, myRadius, myStacks, mySlices);
 	return null;
 };
