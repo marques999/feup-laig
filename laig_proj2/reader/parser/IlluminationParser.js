@@ -9,8 +9,7 @@
 	<ILLUMINATION>
 		<ambient r="ff" g="ff" b="ff" a="ff" />
 		<background r="ff" g="ff" b="ff" a="ff" />
-	</ILLUMINATION>	  
-
+	</ILLUMINATION>
 */
 
 /**

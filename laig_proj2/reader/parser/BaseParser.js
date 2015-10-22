@@ -39,7 +39,7 @@ BaseParser.prototype.parseBoolean = function(root, attribute) {
 	}
 
 	var checkResult = this.reader.getBoolean(node[0], 'value', true);
-	
+
 	return checkResult == null ? NaN : checkResult;
 };
 
@@ -52,11 +52,11 @@ BaseParser.prototype.parseBoolean = function(root, attribute) {
 BaseParser.prototype.parseFloat = function(root, name, attribute) {
 
 	var node = root;
-	
+
 	if (name != null) {
-		
+
 		node = root.getElementsByTagName(name);
-	
+
 		if (node == null || node.length == 0) {
 			return null;
 		}
@@ -64,14 +64,14 @@ BaseParser.prototype.parseFloat = function(root, name, attribute) {
 		if (node.length != 1) {
 			onMultipleDefinitions(name, root.nodeName);
 		}
-		
+
 		node = node[0];
 	}
-	
+
 	if (node.hasAttribute(attribute)) {
 		return this.reader.getFloat(node, attribute);
 	}
-	
+
 	return null;
 };
 
@@ -84,11 +84,11 @@ BaseParser.prototype.parseFloat = function(root, name, attribute) {
 BaseParser.prototype.parseString = function(root, name, attribute) {
 
 	var node = root;
-	
+
 	if (name != null) {
-		
+
 		node = root.getElementsByTagName(name);
-		
+
 		if (node == null || node.length == 0) {
 			return null;
 		}
@@ -96,10 +96,10 @@ BaseParser.prototype.parseString = function(root, name, attribute) {
 		if (node.length != 1) {
 			onMultipleDefinitions(name, root.nodeName);
 		}
-		
+
 		node = node[0];
 	}
-	
+
 	if (node.hasAttribute(attribute)) {
 		return this.reader.getString(node, attribute);
 	}
@@ -118,22 +118,22 @@ BaseParser.prototype.parseCoordinates = function(root, attribute, coords) {
 
 	var arr = [];
 	var node = root;
-	
+
 	if (attribute != null) {
-		
-		var tempNode = root.getElementsByTagName(attribute);
-		
-		if (tempNode == null || tempNode.length == 0) {
+
+		node = root.getElementsByTagName(attribute);
+
+		if (node == null || node.length == 0) {
 			return null;
 		}
 
-		if (tempNode.length != 1) {
+		if (node.length != 1) {
 			onMultipleDefinitions(attribute, root.nodeName);
 		}
-		
-		node = tempNode[0];
+
+		node = node[0];
 	}
-	
+
 	for (var i = 0; i < coords.length; i++) {
 
 		var coordName = coords[i];

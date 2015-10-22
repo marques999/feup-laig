@@ -7,7 +7,6 @@
  |_| \_|\____/|_____/|______|_____/ 
 	  
 	<NODE id="ss">
-
 		<MATERIAL id="ss" />
 		<TEXTURE id="ss" />
 		<TRANSLATION x="ff" y="ff" z="ff" />
@@ -16,7 +15,6 @@
 		<DESCENDANTS>
 			<DESCENDANT id="ss" />
 		</DESCENDANTS>
-
 	</NODE>	  
 */
 
@@ -136,42 +134,8 @@ NodeParser.prototype.parse = function(root, id) {
 	}
 
 	this.result = node;
+
 	return null;
-};
-
-/**
- * processa coordenadas na forma (coordA, coordB, coordC) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @return {Number[]|NaN} - vetor com as coordenadas se estas forem válidas, caso contrário NaN
- */
-NodeParser.prototype.parseCoordinates = function(node, coordA, coordB, coordC) {
-
-	if (!node.hasAttribute(coordA)) {
-		onCoordinateMissing(coordA, node.nodeName);
-		return NaN;
-	}
-
-	var x = this.reader.getFloat(node, coordA);
-
-	if (!node.hasAttribute(coordB)) {
-		onCoordinateMissing(coordB, node.nodeName);
-		return NaN;
-	}
-
-	var y = this.reader.getFloat(node, coordB);
-
-	if (!node.hasAttribute(coordC)) {
-		onCoordinateMissing(coordC, node.nodeName);
-		return NaN;
-	}
-
-	var z = this.reader.getFloat(node, coordC);
-
-	if (x != x || y != y || z != z) {
-		return NaN;
-	}
-
-	return [ x, y, z ];
 };
 
 /**
@@ -182,9 +146,9 @@ NodeParser.prototype.parseCoordinates = function(node, coordA, coordB, coordC) {
  */
 NodeParser.prototype.parseScale = function(root, node) {
 
-	var coords = this.parseCoordinates(root, 'sx', 'sy', 'sz');
+	var coords = this.parseCoordinatesScale(root, null);
 	var error = checkValue(coords, 'coordinates', root.nodeName, node.id);
-	
+
 	if (error != null) {
 		return error;
 	}
@@ -206,9 +170,9 @@ NodeParser.prototype.parseScale = function(root, node) {
  */
 NodeParser.prototype.parseTranslation = function(root, node) {
 
-	var coords = this.parseCoordinates(root, 'x', 'y', 'z');
+	var coords = this.parseCoordinatesXYZ(root, null);
 	var error = checkValue(coords, 'coordinates', root.nodeName, node.id);
-	
+
 	if (error != null) {
 		return error;
 	}
@@ -234,7 +198,7 @@ NodeParser.prototype.parseRotation = function(root, node) {
 	var parseErrors = 0;
 	var axis = this.reader.getString(root, 'axis', true);
 	var error = checkValue(axis, 'axis', parent, node.id);
-	
+
 	if (error != null) {
 		return error;
 	}
@@ -245,7 +209,7 @@ NodeParser.prototype.parseRotation = function(root, node) {
 
 	var angle = this.reader.getFloat(root, 'angle', true);
 	error = checkValue(angle, 'angle', parent, node.id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);

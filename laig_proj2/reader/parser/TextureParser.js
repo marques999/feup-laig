@@ -10,7 +10,6 @@
 		<file path="ss" />
 		<amplif_factor s="ff" t="ff" />
 	</TEXTURE>
-
 */
 
 /**
@@ -20,9 +19,7 @@
  * @return {null}
  */
 function TextureParser(reader, scene, path) {
-
 	BaseParser.call(this, reader, scene);
-
 	this.path = path;
 };
 
@@ -32,15 +29,15 @@ TextureParser.prototype.constructor = TextureParser;
 TextureParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-
-	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);;
-	}
-	
 	var parent = root.nodeName;
 	var parseErrors = 0;
+
+	if (id == 'null' || id == 'clear') {
+		return onReservedId(parent, id);
+	}
+
 	var texturePath = this.parseString(root, 'file', 'path');
-	
+
 	if (texturePath == null) {
 		return onAttributeMissing('file', id, parent);
 	}
@@ -51,7 +48,7 @@ TextureParser.prototype.parse = function(root, id) {
 
 	var textureS = this.parseFloat(root, 'amplif_factor', 's');
 	var error = checkValue(textureS, 'amplification factor S', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -59,7 +56,7 @@ TextureParser.prototype.parse = function(root, id) {
 
 	var textureT = this.parseFloat(root, 'amplif_factor', 't');
 	var error = checkValue(textureT, 'amplification factor T', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);

@@ -5,10 +5,7 @@
  * @return {null}
  */
 function AnimationParser(reader, scene) {
-	this.reader = reader;
-	this.scene = scene;
-	this.animationSpan = 0.0;
-	this.animationType = 'unknown';
+	BaseParser.call(this, reader, scene);
 };
 
 AnimationParser.prototype = Object.create(BaseParser.prototype);
@@ -16,9 +13,17 @@ AnimationParser.prototype.constructor = AnimationParser;
 
 AnimationParser.prototype.parse = function(root, id) {
 
+	this.animationSpan = 0.0;
+	this.animationType = 'unknown';
 	this.result = null;
+
 	var parent = root.nodeName;
 	var parseErrors = 0;
+
+	if (id == 'null' || id == 'clear') {
+		return onReservedId(parent, id);
+	}
+
 	this.animationSpan = this.reader.getFloat(root, 'span');
 	var error = checkValue(animationSpan, 'span', parent);
 

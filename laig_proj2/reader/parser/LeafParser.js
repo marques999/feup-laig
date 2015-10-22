@@ -10,7 +10,6 @@
 	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" /> 
 	<LEAF id="ss" type="sphere" args="ff ii ii" />
 	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
-
 */
 
 /**
@@ -113,6 +112,7 @@ LeafParser.prototype.readRectangle = function(id, leafArgs) {
 	}
 
 	this.result = new MyRectangle(this.scene, x1, y1, x2, y2);
+
 	return null;
 };
 
@@ -155,6 +155,7 @@ LeafParser.prototype.readTriangle = function(id, leafArgs) {
 	}
 
 	this.result = new MyTriangle(this.scene, vec1, vec2, vec3);
+
 	return null;
 };
 
@@ -169,20 +170,21 @@ LeafParser.prototype.readPlane = function(id, leafArgs) {
 	if (leafArgs.length != 1) {
 		return onInvalidArguments(id, leafArgs.length, 1);
 	}
-	
+
 	var parseErrors = 0;
 	var myDivisions = parseInt(leafArgs[0]);
 
 	if (myDivisions != myDivisions) {
-		onAttributeInvalid('number of divisions', id, 'CYLINDER');
+		onAttributeInvalid('number of divisions', id, 'PLANE');
 		parseErrors++;
 	}
-	
+
 	if (parseErrors != 0) {
 		return onParseError('PLANE', parseErrors, id);
 	}
 
 	this.result = new MyPlane(this.scene, myDivisions);
+
 	return null;
 };
 
@@ -239,6 +241,7 @@ LeafParser.prototype.readCylinder = function(id, leafArgs) {
 	}
 
 	this.result = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
+
 	return null;
 };
 
@@ -263,14 +266,14 @@ LeafParser.prototype.readSphere = function(id, leafArgs) {
 	}
 
 	var myStacks = parseInt(leafArgs[1]);
-	
+
 	if (myStacks != myStacks) {
 		onAttributeInvalid('number of stacks', id, 'SPHERE');
 		parseErrors++;
 	}
-	
+
 	var mySlices = parseInt(leafArgs[2]);
-	
+
 	if (mySlices != mySlices) {
 		onAttributeInvalid('number of slices', id, 'SPHERE');
 		parseErrors++;
@@ -281,5 +284,6 @@ LeafParser.prototype.readSphere = function(id, leafArgs) {
 	}
 
 	this.result = new MySphere(this.scene, myRadius, myStacks, mySlices);
+
 	return null;
 };

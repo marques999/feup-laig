@@ -1191,4 +1191,8 @@
 		</DESCENDANTS>
     </NODE>
   </NODES>
+	<ANIMATIONS>
+		<ANIMATION id="ss" span="5.5" type=”circular” center="-1.0 -2.0 5.0" radius="2.0" startang="30" rotang="50">
+		</ANIMATION>
+	</ANIMATIONS>
 </SCENE>

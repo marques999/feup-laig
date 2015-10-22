@@ -15,7 +15,6 @@
 		<scale sx="ff" sy="ff" sz="ff" />
 		<reference length="ff" />
 	</INITIALS>
-
 */
 
 /**
@@ -32,10 +31,10 @@ GlobalsParser.prototype = Object.create(BaseParser.prototype);
 GlobalsParser.prototype.constructor = GlobalsParser;
 
 GlobalsParser.prototype.parse = function(root, id) {
-	
+
 	var parent = root.nodeName;
 	var parseErrors = 0;
-	
+
 	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
 	var error = checkValue(globalFrustumNear, 'near', 'frustum');	
 	if (error != null) {
@@ -65,7 +64,7 @@ GlobalsParser.prototype.parse = function(root, id) {
 	if (error != null) {
 		return error;
 	}
-	
+
 	var node = root.getElementsByTagName('rotation');
 	var node_sz = node.length;
 
@@ -76,7 +75,7 @@ GlobalsParser.prototype.parse = function(root, id) {
 	if (node_sz > 3) {
 		console.warn("WARNING: more than three rotations found in <INITIALS>.");
 	}
-	
+
 	var axisFound = {
 		'x': false, 
 		'y': false,
@@ -89,7 +88,7 @@ GlobalsParser.prototype.parse = function(root, id) {
 
 		var axis = this.reader.getString(node[i], 'axis');
 		error = checkValue(axis, 'rotation axis', parent);
-		
+
 		if (error != null) {
 			return error;
 		}
@@ -143,6 +142,6 @@ GlobalsParser.prototype.parse = function(root, id) {
 		printXYZ('scale', globalScale);
 		printValues('reference', 'length', globalReference);
 	}
-	
+
 	return null;
 };

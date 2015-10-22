@@ -13,7 +13,6 @@
 		<ambient r="ff" g="ff" b="ff" a="ff" />
 		<emission r="ff" g="ff" b="ff" a="ff" />
 	</MATERIAL>
-
 */
 
 /**
@@ -32,16 +31,16 @@ MaterialParser.prototype.constructor = MaterialParser;
 MaterialParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-	
+	var parent = root.nodeName;
+	var parseErrors = 0;
+
 	if (id == 'null' || id == 'clear') {
 		return onReservedId(parent, id);
 	}
 
-	var parent = root.nodeName;
-	var parseErrors = 0;
 	var materialShininess = this.parseFloat(root, 'shininess', 'value');
 	var error = checkValue(materialShininess, 'shininess', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -49,7 +48,7 @@ MaterialParser.prototype.parse = function(root, id) {
 
 	var materialSpecular = this.parseCoordinatesRGBA(root, 'specular');
 	error = checkValue(materialSpecular, 'specular', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -57,7 +56,7 @@ MaterialParser.prototype.parse = function(root, id) {
 
 	var materialDiffuse = this.parseCoordinatesRGBA(root, 'diffuse');
 	error = checkValue(materialDiffuse, 'diffuse', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -65,7 +64,7 @@ MaterialParser.prototype.parse = function(root, id) {
 
 	var materialAmbient = this.parseCoordinatesRGBA(root, 'ambient');
 	error = checkValue(materialAmbient, 'ambient', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -73,7 +72,7 @@ MaterialParser.prototype.parse = function(root, id) {
 
 	var materialEmission = this.parseCoordinatesRGBA(root, 'emission');
 	error = checkValue(materialEmission, 'emission', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);

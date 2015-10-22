@@ -14,6 +14,7 @@ function MySceneGraph(filename, scene) {
 
 	scene.graph = this;
 
+	this.animations = {};
 	this.leaves = {};
 	this.lights = {};
 	this.materials = {};
@@ -71,6 +72,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 		'TEXTURES',
 		'LEAVES',
 		'NODES',
+		'ANIMATIONS',
 	];
 
 	var rootParsers = [
@@ -80,7 +82,8 @@ MySceneGraph.prototype.onXMLReady = function() {
 		this.parseMaterials,
 		this.parseTextures,
 		this.parseLeaves,
-		this.parseNodes
+		this.parseNodes,
+		this.parseAnimations,
 	];
 
 	for (var i = 0; i < rootTags.length; i++) {
@@ -274,9 +277,9 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 	var childrenSize = rootElement.children.length;
 	var parent = rootElement.nodeName;
 
-	if (childrenSize == 0) {
-		return "<" + parent + "> is empty.";
-	}
+//	if (childrenSize == 0) {
+//		return "<" + parent + "> is empty.";
+//	}
 
 	for (var i = 0; i < childrenSize; i++) {
 		
@@ -427,6 +430,37 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	}
 	
 	this.lights[id] = this.lightParser.result;
+	
+	return null;
+};
+
+/**
+ * processa todas as entidades presentes no bloco <ANIMATIONS> do ficheiro LSX
+ * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <ANIMATIONS>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseAnimations = function(root) {
+	return this.parseArray(root, 'ANIMATION', this.parseAnimation);
+};
+
+/**
+ * processa uma entidade do tipo <ANIMATION>, adicionando ao array de animações do grafo
+ * verifica ainda se existe uma animação com o mesmo identificador no array de animações
+ * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <ANIMATION>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseAnimation = function(id, root) {
+
+	if (this.animations[id] != undefined) {
+		return onElementDuplicate(root.nodeName, id);
+	}
+
+	var error = this.animationParser.parse(root, id);
+	if (error != null) {
+		return error;
+	}
+	
+	this.animations[id] = this.animationParser.result;
 	
 	return null;
 };

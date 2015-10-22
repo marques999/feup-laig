@@ -13,7 +13,6 @@
 		<diffuse r="ff" g="ff" b="ff" a="ff" />
 		<specular r="ff" g="ff" b="ff" a="ff" />
 	</LIGHT>
-
 */
 
 /**
@@ -32,13 +31,13 @@ LightParser.prototype.constructor = LightParser;
 LightParser.prototype.parse = function(root, id) {
 
 	this.result = null;
+	var parent = root.nodeName;
+	var parseErrors = 0;
 
 	if (id == 'null' || id == 'clear') {
 		return onReservedId(parent, id);
 	}
 
-	var parent = root.nodeName;
-	var parseErrors = 0;
 	var lightEnabled = this.parseBoolean(root, 'enable');
 	var error = checkValue(lightEnabled, 'enable', parent, id);
 	
