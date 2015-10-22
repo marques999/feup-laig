@@ -215,7 +215,7 @@
 			"file": "reader/parser/AnimationParser.js",
 			"settings":
 			{
-				"buffer_size": 3420,
+				"buffer_size": 3655,
 				"line_ending": "Windows"
 			}
 		},
@@ -232,14 +232,6 @@
 			"settings":
 			{
 				"buffer_size": 3845,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "reader/parser/LogParser.js",
-			"settings":
-			{
-				"buffer_size": 4691,
 				"line_ending": "Windows"
 			}
 		},
@@ -294,6 +286,7 @@
 	],
 	"file_history":
 	[
+		"/C/Users/MARQUES/Documents/GitHub/feup-laig/laig_proj2/reader/parser/LogParser.js",
 		"/C/Users/MARQUES/Documents/GitHub/feup-laig/laig_proj2/reader/parser/AnimationParser.js",
 		"/C/Users/MARQUES/Documents/GitHub/feup-laig/laig_proj2/reader/parser/NodeParser.js",
 		"/C/Users/MARQUES/Documents/GitHub/feup-laig/laig_proj2/reader/parser/IlluminationParser.js",
@@ -548,7 +541,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -576,7 +569,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -691,24 +684,24 @@
 						"translation.y": 261.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 5,
 					"file": "reader/parser/AnimationParser.js",
-					"semi_transient": true,
+					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3420,
+						"buffer_size": 3655,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								200,
-								200
+								2153,
+								2153
 							]
 						],
 						"settings":
@@ -717,10 +710,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1083.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -749,7 +742,7 @@
 						"translation.y": 7820.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -778,40 +771,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"file": "reader/parser/LogParser.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4691,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								273,
-								273
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
 					"file": "reader/XMLnode.js",
 					"semi_transient": false,
 					"settings":
@@ -836,7 +800,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]

@@ -115,6 +115,10 @@ function printValues() {
 	console.log(string);
 };
 
+function printSingle(attribute, value) {
+	console.log("\t\t" + attribute + ": " + value);
+};
+
 function printXYZ(attribute, xyz) {
 	console.log("\t\t" + attribute + ": { x=" + xyz[0] + ", y=" + xyz[1] + ", z=" + xyz[2] + " }");
 };

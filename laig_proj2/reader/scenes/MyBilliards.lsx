@@ -1192,7 +1192,12 @@
     </NODE>
   </NODES>
 	<ANIMATIONS>
-		<ANIMATION id="ss" span="5.5" type=”circular” center="-1.0 -2.0 5.0" radius="2.0" startang="30" rotang="50">
+		<ANIMATION id="tt" span="2.0" type="linear">
+			<controlpoint x="-1.5" y="3.0" z="2.0" />
+			<controlpoint x="3.0" y="1.5" z="-2.0" />
+			<controlpoint x="2.0" y="-2.0" z="1.5" />
+		</ANIMATION>
+		<ANIMATION id="ss" span="5.5" type="circular" center="-1.0 -2.0 5.0" radius="2.0" startang="30" rotang="50">
 		</ANIMATION>
 	</ANIMATIONS>
 </SCENE>

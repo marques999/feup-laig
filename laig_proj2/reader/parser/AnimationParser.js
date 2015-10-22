@@ -25,7 +25,7 @@ AnimationParser.prototype.parse = function(root, id) {
 	}
 
 	this.animationSpan = this.reader.getFloat(root, 'span');
-	var error = checkValue(animationSpan, 'span', parent);
+	var error = checkValue(this.animationSpan, 'span', parent);
 
 	if (error != null) {
 		parseErrors++;
@@ -33,12 +33,12 @@ AnimationParser.prototype.parse = function(root, id) {
 	}
 
 	this.animationType = this.reader.getString(root, 'type');
-	var error = checkValue(animationType, 'type', parent);
+	var error = checkValue(this.animationType, 'type', parent);
 
-	if (animationType == 'linear') {
+	if (this.animationType == 'linear') {
 		error = this.readLinear(root, id);
 	}
-	else if (animationType == 'circular') {
+	else if (this.animationType == 'circular') {
 		error = this.readCircular(root, id);
 	}
 	else {
@@ -49,9 +49,6 @@ AnimationParser.prototype.parse = function(root, id) {
 		return error;
 	}
 
-	printHeader("ANIMATION", id);
-	printValues(null, 'span', animationSpan, 'type', animationType);
-
 	return null;
 };
 
@@ -60,7 +57,7 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	var parent = root.nodeName;
 	var parseErrors = 0;
 	var animationPoints = [];
-	var controlPoints = root.getElementsByTagName('controlpoints');
+	var controlPoints = root.getElementsByTagName('controlpoint');
 	var controlPointsSize = controlPoints.length;
 	
 	if (controlPointsSize == null || controlPointsSize == 0) {
@@ -78,12 +75,19 @@ AnimationParser.prototype.readLinear = function(root, id) {
 		} 
 		else {
 			animationPoints.push(newCoordinates);
-			printXYZ('center', animationCenter);
 		}	
 	}
 	
 	if (parseErrors != 0) {
 		return onParseError(parent, parseErrors, id);
+	}
+
+	printHeader("ANIMATION", id);
+	printSingle('span', this.animationSpan);
+	printSingle('type', this.animationType);
+
+	for (var i = 0; i < animationPoints.length; i++) {
+		printXYZ('control point ' + i, animationPoints[i]);
 	}
 
 	this.result = new LinearAnimation(id, this.animationSpan, animationPoints);
@@ -131,10 +135,13 @@ AnimationParser.prototype.readCircular = function(root, id) {
 		return onParseError(parent, parseErrors, id);
 	}
 	
+	printHeader("ANIMATION", id);
+	printSingle('span', this.animationSpan);
+	printSingle('type', this.animationType);
 	printXYZ('center', animationCenter);
-	printValues(null, 'radius', animationRadius,
-				'startang', animationStart, 
-				'rotang', animationAngle);
+	printSingle('radius', animationRadius);
+	printSingle('startang', animationStart);
+	printSingle('rotang', animationAngle);
 	
 	this.result = new CircularAnimation(id, this.animationSpan,
 		animationCenter, animationRadius, 
