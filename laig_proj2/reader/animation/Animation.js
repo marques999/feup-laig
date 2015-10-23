@@ -9,9 +9,19 @@
 function Animation(id, span) {
 	this.id = id;
 	this.span = span;
+	this.active = false;
+	this.matrix = mat4.create();
 };
 
 Animation.prototype = Object.create(Object.prototype);
 Animation.prototype.constructor = Animation;
 Animation.prototype.apply = function() {};
 Animation.prototype.step = function() {};
+
+Animation.prototype.start = function() {
+	this.active = true;
+};
+
+Animation.prototype.stop = function() {
+	this.active = false;
+};

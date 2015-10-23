@@ -14,6 +14,8 @@ function XMLnode(id, textureId, materialId) {
 	this.textureId = textureId;
 	this.materialId = materialId;
 	this.matrix = mat4.create();
+	this.animations = [];
+	this.animationNumber = 0;
 	this.children = [];
 
 	mat4.identity(this.matrix);
@@ -29,6 +31,17 @@ XMLnode.prototype.constructor = XMLnode;
  */
 XMLnode.prototype.addChild = function(child) {
 	this.children.push(child);
+};
+
+/**
+ * acrescenta uma animação no final da lista de animações deste node
+ * @param {Animation} animation - estrutura de dados contendo uma animação
+ * @return {null}
+ */
+XMLnode.prototype.addAnimation = function(animation) {
+	animation.start();
+	this.animations.push(animation);
+	console.log(this.animations);
 };
 
 /**
@@ -66,4 +79,39 @@ XMLnode.prototype.scale = function(coords) {
  */
 XMLnode.prototype.translate = function(coords) {
 	mat4.translate(this.matrix, this.matrix, coords);
+};
+
+/**
+ * multiplica a matriz de transformação deste node por uma matriz de translação
+ * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
+ * @return {null} 
+ */
+XMLnode.prototype.updateAnimation = function(deltaTime) {
+
+	var currentAnimation = this.animations[this.animationNumber];
+	
+	if (currentAnimation == null) {
+		return;
+	}
+	
+	if (currentAnimation.active) {
+		this.animations[this.animationNumber].step(deltaTime);
+	}
+	else {
+		this.animationNumber = (this.animationNumber + 1) % this.animations.length;
+	}
+};
+
+/**
+ * multiplica a matriz de transformação deste node por uma matriz de translação
+ * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
+ * @return {null} 
+ */
+XMLnode.prototype.applyAnimation = function() {
+
+	var currentAnimation = this.animations[this.animationNumber];
+	
+	if (currentAnimation != null && currentAnimation.active) {
+		return currentAnimation.update();
+	}
 };

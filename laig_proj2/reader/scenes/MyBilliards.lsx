@@ -1,7 +1,7 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="-6.0" y="-1.0" z="5.0" />
+		<translation x="-15.0" y="-9.0" z="-7.0" />
 		<rotation axis="y" angle="45.0" />
 		<rotation axis="x" angle="-25.0" />
 		<rotation axis="z" angle="0.0" />
@@ -164,6 +164,20 @@
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 	</MATERIALS>
+	
+	<ANIMATIONS>
+		<ANIMATION id="tt" span="2.0" type="linear">
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="5.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="5.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="5.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+		</ANIMATION>
+			<ANIMATION id="ss" span="1.8" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="0" rotang="360">
+		</ANIMATION>
+	</ANIMATIONS>
 
 	<LEAVES>
 		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />
@@ -236,6 +250,8 @@
 	<NODE id="table">
       <MATERIAL id="null" />
       <TEXTURE id="null" />
+      <ANIMATION id="ss" />
+	  <ANIMATION id="tt" />
       <TRANSLATION x="3.5" y="0.0" z="4.5" />
       <DESCENDANTS>
         <DESCENDANT id="table_legs" />
@@ -1191,13 +1207,4 @@
 		</DESCENDANTS>
     </NODE>
   </NODES>
-	<ANIMATIONS>
-		<ANIMATION id="tt" span="2.0" type="linear">
-			<controlpoint x="-1.5" y="3.0" z="2.0" />
-			<controlpoint x="3.0" y="1.5" z="-2.0" />
-			<controlpoint x="2.0" y="-2.0" z="1.5" />
-		</ANIMATION>
-		<ANIMATION id="ss" span="5.5" type="circular" center="-1.0 -2.0 5.0" radius="2.0" startang="30" rotang="50">
-		</ANIMATION>
-	</ANIMATIONS>
 </SCENE>

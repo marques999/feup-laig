@@ -31,6 +31,8 @@ XMLscene.prototype.init = function(application) {
 	this.gl.depthFunc(this.gl.LEQUAL);
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
+	this.lastUpdate = 0.0;
+	this.setUpdatePeriod(1000/60);
 
 	mat4.identity(this.defaultMatrix);
 };
@@ -258,6 +260,19 @@ XMLscene.prototype.onGraphLoaded = function() {
 	if (this.activeLights == 0) {
 		this.pushLight('default', true, [2, 3, 3, 1], [0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0], [0.1, 0.1, 0.1, 1.0]);
 	}
+};
+
+XMLscene.prototype.update = function(currTime) {
+
+	if (!this.graph.loadedOk) {
+		return;
+	}
+
+	if (this.lastUpdate > 0) {
+		this.graph.processAnimations((currTime - this.lastUpdate) * 0.001);
+	}
+	
+	this.lastUpdate = currTime;
 };
 
 /**

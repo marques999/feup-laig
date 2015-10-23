@@ -24,8 +24,8 @@
  * @author Diogo Marques
  * @return {null}
  */
-function NodeParser(reader, scene) {
-	BaseParser.call(this, reader, scene);
+function NodeParser(reader, graph) {
+	BaseParser.call(this, reader, graph);
 };
 
 NodeParser.prototype = Object.create(BaseParser.prototype);
@@ -34,6 +34,7 @@ NodeParser.prototype.constructor = NodeParser;
 NodeParser.prototype.parse = function(root, id) {
 	
 	var parent = root.nodeName;
+	var xmlIndex = 2;
 	var parseErrors = 0;
 	var nodeMaterial = null;
 	var nodeTexture = null;
@@ -61,7 +62,7 @@ NodeParser.prototype.parse = function(root, id) {
 	if (nodeTexture == null) {
 		return onAttributeMissing('TEXTURE', id, parent);
 	}
-	
+
 	if (this.verbose) {
 		printHeader(parent, id);
 		printValues('MATERIAL', 'id', nodeMaterial);
@@ -70,10 +71,26 @@ NodeParser.prototype.parse = function(root, id) {
 
 	var node = new XMLnode(id, nodeTexture, nodeMaterial);
 	var node_sz = root.children.length;
-
-	for (var i = 2; i < node_sz; i++) {
 	
-		var child = root.children[i];
+	for (; xmlIndex < node_sz; xmlIndex++) {
+	
+		var child = root.children[xmlIndex];
+		var error = null;
+		
+		if (child.nodeName != 'ANIMATION') {
+			break;
+		}
+		
+		error = this.parseAnimation(child, node);
+		
+		if (error != null) {
+			onXMLWarning(error);
+		}
+	}
+
+	for (; xmlIndex < node_sz; xmlIndex++) {
+	
+		var child = root.children[xmlIndex];
 		var error = null;
 
 		if (child.nodeName == 'TRANSLATION') {
@@ -139,10 +156,44 @@ NodeParser.prototype.parse = function(root, id) {
 };
 
 /**
+ * processa uma animação presente num bloco <NODE>
+ * @param {XMLElement} root - estrutura que dados XML que contém o atributo <animation>
+ * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+NodeParser.prototype.parseAnimation = function(root, node) {
+
+	if (!root.hasAttribute('id')) {
+		return onAttributeMissing('type', node.id, root.nodeName);
+	}
+	
+	var nodeAnimation = this.reader.getString(root, 'id');
+	var error = checkValue(nodeAnimation, 'id', root.nodeName, node.id);
+
+	if (error != null) {
+		return error;
+	}
+
+	error = this.scene.checkAnimationReference(node.id, nodeAnimation);	
+	
+	if (error != null) {
+		return error;
+	}
+
+	node.addAnimation(this.scene.animations[nodeAnimation]);
+	
+	if (this.verbose) {
+		printValues('ANIMATION', 'id', nodeAnimation);
+	}
+
+	return null;
+};
+
+/**
  * processa um escalamento presente num bloco <NODE>
  * @param {XMLElement} root - estrutura que dados XML que contém o atributo <scale>
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @return {String|null} - ll se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 NodeParser.prototype.parseScale = function(root, node) {
 

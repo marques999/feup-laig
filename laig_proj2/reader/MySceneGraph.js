@@ -61,7 +61,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 	this.leafParser = new LeafParser(this.reader, this.scene);
 	this.lightParser = new LightParser(this.reader, this.scene);
 	this.materialParser = new MaterialParser(this.reader, this.scene);
-	this.nodeParser = new NodeParser(this.reader, this.scene);
+	this.nodeParser = new NodeParser(this.reader, this);
 	this.textureParser = new TextureParser(this.reader, this.scene, this.scenePath);
 
 	var rootTags = [
@@ -70,9 +70,9 @@ MySceneGraph.prototype.onXMLReady = function() {
 		'LIGHTS',
 		'MATERIALS',
 		'TEXTURES',
+		'ANIMATIONS',
 		'LEAVES',
 		'NODES',
-		'ANIMATIONS',
 	];
 
 	var rootParsers = [
@@ -81,9 +81,9 @@ MySceneGraph.prototype.onXMLReady = function() {
 		this.parseLights,
 		this.parseMaterials,
 		this.parseTextures,
+		this.parseAnimations,
 		this.parseLeaves,
 		this.parseNodes,
-		this.parseAnimations,
 	];
 
 	for (var i = 0; i < rootTags.length; i++) {
@@ -162,7 +162,16 @@ MySceneGraph.prototype.display = function() {
  */
 MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 
-	this.scene.multMatrix(node.matrix);
+	var nodeMatrix = node.applyAnimation();
+	
+	if (nodeMatrix != null) {
+		mat4.multiply(nodeMatrix, nodeMatrix, node.matrix)
+	}
+	else {
+		nodeMatrix = node.matrix
+	}
+	
+	this.scene.multMatrix(nodeMatrix);
 
 	for (var i = 0; i < node.children.length; i++) {
 		var nextId = node.children[i];
@@ -226,6 +235,12 @@ MySceneGraph.prototype.getNodeTexture = function(currTextureId, nextElement) {
  */
 MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 	return nextElement.materialId == 'null' ? currMaterialId : nextElement.materialId;
+};
+
+MySceneGraph.prototype.processAnimations = function(deltaTime) {
+	for (var node in this.nodes) {
+		this.nodes[node].updateAnimation(deltaTime);
+	}
 };
 
 /**
@@ -333,6 +348,19 @@ MySceneGraph.prototype.parseNodes = function (root) {
 	}
 
 	return this.parseArray(root, 'NODE', this.parseNode);
+};
+
+MySceneGraph.prototype.checkAnimationReference = function(nodeId, objectId) {
+
+	if (objectId == 'null' || objectId == 'clear') {
+		return null;
+	}
+
+	if (this.animations[objectId] == undefined) {
+		return "NODE with id=" + nodeId + " references <ANIMATION> id=" + objectId + " which doesn't exist, reverting to defaults...";
+	}
+
+	return null;
 };
 
 MySceneGraph.prototype.checkMaterialReference = function(nodeId, objectId) {
