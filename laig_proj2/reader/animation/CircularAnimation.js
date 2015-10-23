@@ -43,8 +43,9 @@ CircularAnimation.prototype.step = function(updateInterval) {
 		return null;
 	}
 	
-	if (this.current < this.angleEnd) {
+	if (this.currentTime < this.span) {
 		this.current += this.velocity * updateInterval;
+		this.currentTime += updateInterval;
 	}
 	else {
 		this.stop();
@@ -53,5 +54,6 @@ CircularAnimation.prototype.step = function(updateInterval) {
 
 CircularAnimation.prototype.start = function() {
 	this.active = true;
+	this.currentTime = 0.0;
 	this.current = this.angleStart;
 };

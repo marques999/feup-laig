@@ -166,16 +166,15 @@
 	</MATERIALS>
 	
 	<ANIMATIONS>
-		<ANIMATION id="tt" span="2.0" type="linear">
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="0.0" y="5.0" z="0.0" />
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="0.0" y="5.0" z="0.0" />
+		<ANIMATION id="tt" span="0.7" type="linear">
 			<controlpoint x="0.0" y="0.0" z="0.0" />
 			<controlpoint x="0.0" y="5.0" z="0.0" />
 			<controlpoint x="0.0" y="0.0" z="0.0" />
 		</ANIMATION>
-			<ANIMATION id="ss" span="1.8" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="0" rotang="360">
+			<ANIMATION id="ss" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="0" rotang="180">
+		</ANIMATION>
+
+			<ANIMATION id="uu" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="160" rotang="20">
 		</ANIMATION>
 	</ANIMATIONS>
 
@@ -251,7 +250,6 @@
       <MATERIAL id="null" />
       <TEXTURE id="null" />
       <ANIMATION id="ss" />
-	  <ANIMATION id="tt" />
       <TRANSLATION x="3.5" y="0.0" z="4.5" />
       <DESCENDANTS>
         <DESCENDANT id="table_legs" />
@@ -724,6 +722,7 @@
 	<NODE id="table_balls">
 		<MATERIAL id="ball_red" />
 		<TEXTURE id="null" />
+			  <ANIMATION id="tt" />
 		<DESCENDANTS>
 			<DESCENDANT id="ball1" />
 			<DESCENDANT id="ball2" />
@@ -879,7 +878,8 @@
 
 	<NODE id="corner_hole">
 		<MATERIAL id="null" />
-		<TEXTURE id="null" />								
+		<TEXTURE id="null" />
+							
 		<DESCENDANTS>
 			<DESCENDANT id="corner_holeP1" />
 			<DESCENDANT id="corner_holeP2" />																
@@ -918,6 +918,7 @@
     <NODE id="table_side">
       <MATERIAL id="wood_cherry" />
       <TEXTURE id="table_wood" />
+      		 <ANIMATION id="uu"/>	
       <DESCENDANTS>
 	  	<DESCENDANT id="table_side_cl" />
 		<DESCENDANT id="table_side_rl" />	

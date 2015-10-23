@@ -41,7 +41,6 @@ XMLnode.prototype.addChild = function(child) {
 XMLnode.prototype.addAnimation = function(animation) {
 	animation.start();
 	this.animations.push(animation);
-	console.log(this.animations);
 };
 
 /**
@@ -99,6 +98,7 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 	}
 	else {
 		this.animationNumber = (this.animationNumber + 1) % this.animations.length;
+		this.animations[this.animationNumber].start();
 	}
 };
 
@@ -111,7 +111,7 @@ XMLnode.prototype.applyAnimation = function() {
 
 	var currentAnimation = this.animations[this.animationNumber];
 	
-	if (currentAnimation != null && currentAnimation.active) {
+	if (currentAnimation != null && currentAnimation != undefined) {
 		return currentAnimation.update();
 	}
 };
