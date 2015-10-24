@@ -26,7 +26,7 @@ function onElementMissing(node, parent) {
 	return node + " attribute is missing from <" + parent + ">.";
 };
 
-function onInvalidArguments(id, argsGot, argsExpected) {	
+function onInvalidArguments(id, argsGot, argsExpected) {
 	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + "...";
 };
 
@@ -63,7 +63,7 @@ function onUnknownAxis(axis, node, parent) {
 };
 
 function onXMLWarning(message) {
-	console.warn("WARNING: " + message);	
+	console.warn("WARNING: " + message);
 };
 
 function onParseError(parent, nerr, id) {
@@ -75,14 +75,14 @@ function onParseError(parent, nerr, id) {
 	return nerr + " errors found while parsing <" + parent + "> with id=" + id + "...";
 };
 
-/*       
-  _      ____   _____  _____ _____ _   _  _____ 
+/*
+  _      ____   _____  _____ _____ _   _  _____
  | |    / __ \ / ____|/ ____|_   _| \ | |/ ____|
- | |   | |  | | |  __| |  __  | | |  \| | |  __ 
+ | |   | |  | | |  __| |  __  | | |  \| | |  __
  | |   | |  | | | |_ | | |_ | | | | . ` | | |_ |
  | |___| |__| | |__| | |__| |_| |_| |\  | |__| |
  |______\____/ \_____|\_____|_____|_| \_|\_____|
-								  
+
 */
 
 function printHeader(attribute, id) {
@@ -132,16 +132,14 @@ function printXYZW(attribute, xyzw) {
 };
 
 /*
- __      __     _      _____ _____       _______ _____ ____  _   _ 
+ __      __     _      _____ _____       _______ _____ ____  _   _
  \ \    / /\   | |    |_   _|  __ \   /\|__   __|_   _/ __ \| \ | |
   \ \  / /  \  | |      | | | |  | | /  \  | |    | || |  | |  \| |
    \ \/ / /\ \ | |      | | | |  | |/ /\ \ | |    | || |  | | . ` |
 	\  / ____ \| |____ _| |_| |__| / ____ \| |   _| || |__| | |\  |
 	 \/_/    \_\______|_____|_____/_/    \_\_|  |_____\____/|_| \_|
-																   
+
 */
-
-
 
 function checkUrl(url) {
 

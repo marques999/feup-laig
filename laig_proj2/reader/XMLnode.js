@@ -47,7 +47,7 @@ XMLnode.prototype.addAnimation = function(animation) {
  * multiplica a matriz de transformação deste node por uma matriz de rotação
  * @param {String} axis - vetor de coordenadas do eixo de rotação (x, y, z)
  * @param {Number} angle - ângulo da rotação (em graus)
- * @return {null} 
+ * @return {null}
  */
 XMLnode.prototype.rotate = function(axis, angle) {
 
@@ -64,8 +64,8 @@ XMLnode.prototype.rotate = function(axis, angle) {
 
 /**
  * multiplica a matriz de transformação deste node por uma matriz de escalamento
- * @param {Number[]} coords - vetor de coordenadas (x, y, z) do escalamento 
- * @return {null} 
+ * @param {Number[]} coords - vetor de coordenadas (x, y, z) do escalamento
+ * @return {null}
  */
 XMLnode.prototype.scale = function(coords) {
 	mat4.scale(this.matrix, this.matrix, coords);
@@ -74,7 +74,7 @@ XMLnode.prototype.scale = function(coords) {
 /**
  * multiplica a matriz de transformação deste node por uma matriz de translação
  * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
- * @return {null} 
+ * @return {null}
  */
 XMLnode.prototype.translate = function(coords) {
 	mat4.translate(this.matrix, this.matrix, coords);
@@ -83,16 +83,16 @@ XMLnode.prototype.translate = function(coords) {
 /**
  * multiplica a matriz de transformação deste node por uma matriz de translação
  * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
- * @return {null} 
+ * @return {null}
  */
 XMLnode.prototype.updateAnimation = function(deltaTime) {
 
 	var currentAnimation = this.animations[this.animationNumber];
-	
+
 	if (currentAnimation == null) {
 		return;
 	}
-	
+
 	if (currentAnimation.active) {
 		this.animations[this.animationNumber].step(deltaTime);
 	}
@@ -105,12 +105,12 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 /**
  * multiplica a matriz de transformação deste node por uma matriz de translação
  * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
- * @return {null} 
+ * @return {null}
  */
 XMLnode.prototype.applyAnimation = function() {
 
 	var currentAnimation = this.animations[this.animationNumber];
-	
+
 	if (currentAnimation != null && currentAnimation != undefined) {
 		return currentAnimation.update();
 	}

@@ -1,13 +1,13 @@
 /*
-  _      ______     __      ________  _____ 
+  _      ______     __      ________  _____
  | |    |  ____|   /\ \    / /  ____|/ ____|
- | |    | |__     /  \ \  / /| |__  | (___  
- | |    |  __|   / /\ \ \/ / |  __|  \___ \ 
+ | |    | |__     /  \ \  / /| |__  | (___
+ | |    |  __|   / /\ \ \/ / |  __|  \___ \
  | |____| |____ / ____ \  /  | |____ ____) |
- |______|______/_/    \_\/   |______|_____/ 
- 
+ |______|______/_/    \_\/   |______|_____/
+
 	<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
-	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" /> 
+	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" />
 	<LEAF id="ss" type="sphere" args="ff ii ii" />
 	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
 */
@@ -69,12 +69,12 @@ LeafParser.prototype.parse = function(root, id) {
 	if (error != null) {
 		return error;
 	}
-	
+
 	if (this.verbose) {
 		printHeader("LEAF", id);
 		printValues(null, 'type', leafType, 'args', leafArgs);
 	}
-	
+
 	return null;
 };
 
@@ -127,24 +127,24 @@ LeafParser.prototype.readTriangle = function(id, leafArgs) {
 	if (leafArgs.length != 9) {
 		return onInvalidArguments(id, leafArgs.length, 9);
 	}
-	
+
 	var parseErrors = 0;
 	var vec1 = [leafArgs[0], leafArgs[1], leafArgs[2]].map(parseFloat);
-	
+
 	if (vec1[0] != vec1[0] || vec1[1] != vec1[1] || vec1[2] != vec1[2]) {
 		onAttributeInvalid('first triangle vertex', id, 'TRIANGLE');
 		parseErrors++;
 	}
 
 	var vec2 = [leafArgs[3], leafArgs[4], leafArgs[5]].map(parseFloat);
-	
+
 	if (vec2[0] != vec2[0] || vec2[1] != vec2[1] || vec2[2] != vec2[2]) {
 		onAttributeInvalid('second triangle vertex', id, 'TRIANGLE');
 		parseErrors++;
 	}
 
 	var vec3 = [leafArgs[6], leafArgs[7], leafArgs[8]].map(parseFloat);
-	
+
 	if (vec3[0] != vec3[0] || vec3[1] != vec3[1] || vec3[2] != vec3[2]) {
 		onAttributeInvalid('third triangle vertex', id, 'TRIANGLE');
 		parseErrors++;
@@ -228,7 +228,7 @@ LeafParser.prototype.readCylinder = function(id, leafArgs) {
 		onAttributeInvalid('number of stacks', id, 'CYLINDER');
 		parseErrors++;
 	}
-	
+
 	var mySlices = parseInt(leafArgs[4]);
 
 	if (mySlices != mySlices) {

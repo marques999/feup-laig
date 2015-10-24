@@ -1,10 +1,10 @@
 /*
-  _      _____ _____ _    _ _______ _____ 
+  _      _____ _____ _    _ _______ _____
  | |    |_   _/ ____| |  | |__   __/ ____|
- | |      | || |  __| |__| |  | | | (___  
- | |      | || | |_ |  __  |  | |  \___ \ 
+ | |      | || |  __| |__| |  | | | (___
+ | |      | || | |_ |  __  |  | |  \___ \
  | |____ _| || |__| | |  | |  | |  ____) |
- |______|_____\_____|_|  |_|  |_| |_____/ 
+ |______|_____\_____|_|  |_|  |_| |_____/
 
 	<LIGHT id="ss">
 		<enable value ="tt" />
@@ -40,7 +40,7 @@ LightParser.prototype.parse = function(root, id) {
 
 	var lightEnabled = this.parseBoolean(root, 'enable');
 	var error = checkValue(lightEnabled, 'enable', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -48,7 +48,7 @@ LightParser.prototype.parse = function(root, id) {
 
 	var lightPosition = this.parseCoordinatesXYZW(root, 'position');
 	error = checkValue(lightPosition, 'position', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -56,7 +56,7 @@ LightParser.prototype.parse = function(root, id) {
 
 	var lightAmbient = this.parseCoordinatesRGBA(root, 'ambient');
 	error = checkValue(lightAmbient, 'ambient', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -64,7 +64,7 @@ LightParser.prototype.parse = function(root, id) {
 
 	var lightDiffuse = this.parseCoordinatesRGBA(root, 'diffuse');
 	error = checkValue(lightDiffuse, 'diffuse', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
@@ -72,7 +72,7 @@ LightParser.prototype.parse = function(root, id) {
 
 	var lightSpecular = this.parseCoordinatesRGBA(root, 'specular');
 	error = checkValue(lightSpecular, 'specular', parent, id);
-	
+
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);

@@ -1,11 +1,11 @@
 /*
-  _   _  ____  _____  ______  _____ 
+  _   _  ____  _____  ______  _____
  | \ | |/ __ \|  __ \|  ____|/ ____|
- |  \| | |  | | |  | | |__  | (___  
- | . ` | |  | | |  | |  __|  \___ \ 
+ |  \| | |  | | |  | | |__  | (___
+ | . ` | |  | | |  | |  __|  \___ \
  | |\  | |__| | |__| | |____ ____) |
- |_| \_|\____/|_____/|______|_____/ 
-	  
+ |_| \_|\____/|_____/|______|_____/
+
 	<NODE id="ss">
 		<MATERIAL id="ss" />
 		<TEXTURE id="ss" />
@@ -15,7 +15,7 @@
 		<DESCENDANTS>
 			<DESCENDANT id="ss" />
 		</DESCENDANTS>
-	</NODE>	  
+	</NODE>
 */
 
 /**
@@ -32,7 +32,7 @@ NodeParser.prototype = Object.create(BaseParser.prototype);
 NodeParser.prototype.constructor = NodeParser;
 
 NodeParser.prototype.parse = function(root, id) {
-	
+
 	var parent = root.nodeName;
 	var xmlIndex = 2;
 	var parseErrors = 0;
@@ -48,7 +48,7 @@ NodeParser.prototype.parse = function(root, id) {
 	}
 
 	nodeMaterial = this.reader.getString(root.children[0], 'id');
-	
+
 	if (nodeMaterial == null) {
 		return onAttributeMissing('MATERIAL', id, parent);
 	}
@@ -58,7 +58,7 @@ NodeParser.prototype.parse = function(root, id) {
 	}
 
 	nodeTexture = this.reader.getString(root.children[1], 'id');
-	
+
 	if (nodeTexture == null) {
 		return onAttributeMissing('TEXTURE', id, parent);
 	}
@@ -71,25 +71,25 @@ NodeParser.prototype.parse = function(root, id) {
 
 	var node = new XMLnode(id, nodeTexture, nodeMaterial);
 	var node_sz = root.children.length;
-	
+
 	for (; xmlIndex < node_sz; xmlIndex++) {
-	
+
 		var child = root.children[xmlIndex];
 		var error = null;
-		
+
 		if (child.nodeName != 'ANIMATION') {
 			break;
 		}
-		
+
 		error = this.parseAnimation(child, node);
-		
+
 		if (error != null) {
 			onXMLWarning(error);
 		}
 	}
 
 	for (; xmlIndex < node_sz; xmlIndex++) {
-	
+
 		var child = root.children[xmlIndex];
 		var error = null;
 
@@ -125,7 +125,7 @@ NodeParser.prototype.parse = function(root, id) {
 	}
 
 	nodeDescendants = nodeDescendants[0].children;
-	
+
 	if (nodeDescendants.length == 0) {
 		return "<NODE> with id=" + id + " has zero descendants, skipping...";
 	}
@@ -135,16 +135,16 @@ NodeParser.prototype.parse = function(root, id) {
 	}
 
 	for (var i = 0; i < nodeDescendants.length; i++) {
-		
+
 		var childId = this.reader.getString(nodeDescendants[i], 'id', true);
-		
+
 		if (childId == null) {
 			onXMLWarning(onAttributeMissing('id', id, parent));
 			continue;
 		}
 
 		node.addChild(childId);
-		
+
 		if (this.verbose) {
 			console.log("\t\t\t id=" + childId);
 		}
@@ -166,7 +166,7 @@ NodeParser.prototype.parseAnimation = function(root, node) {
 	if (!root.hasAttribute('id')) {
 		return onAttributeMissing('type', node.id, root.nodeName);
 	}
-	
+
 	var nodeAnimation = this.reader.getString(root, 'id');
 	var error = checkValue(nodeAnimation, 'id', root.nodeName, node.id);
 
@@ -174,14 +174,14 @@ NodeParser.prototype.parseAnimation = function(root, node) {
 		return error;
 	}
 
-	error = this.scene.checkAnimationReference(node.id, nodeAnimation);	
-	
+	error = this.scene.checkAnimationReference(node.id, nodeAnimation);
+
 	if (error != null) {
 		return error;
 	}
 
 	node.addAnimation(this.scene.animations[nodeAnimation]);
-	
+
 	if (this.verbose) {
 		printValues('ANIMATION', 'id', nodeAnimation);
 	}
@@ -269,7 +269,7 @@ NodeParser.prototype.parseRotation = function(root, node) {
 	if (parseErrors != 0) {
 		return onParseError(parent, parseErrors, node.id);
 	}
-	
+
 	node.rotate(axis, angle);
 
 	if (this.verbose) {

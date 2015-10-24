@@ -17,7 +17,7 @@ MyInterface.prototype.constructor = MyInterface;
  * @return {Boolean}
  */
 MyInterface.prototype.init = function(application) {
-	
+
 	CGFinterface.prototype.init.call(this, application);
 
 	this.gui = new dat.GUI();
@@ -36,7 +36,7 @@ MyInterface.prototype.init = function(application) {
  * @return {null}
  */
 MyInterface.prototype.pushLight = function(name, id, enabled) {
-	
+
 	var self = this;
 	this.lights[name] = enabled;
 	this.group.add(this.lights, name).onChange(function(value) {

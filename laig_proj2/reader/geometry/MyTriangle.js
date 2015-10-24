@@ -54,7 +54,7 @@ MyTriangle.prototype.constructor = MyTriangle;
  * @return {null}
  */
 MyTriangle.prototype.initBuffers = function() {
-	
+
 	this.vertices = [
 		this.v1[0], this.v1[1], this.v1[2],
 		this.v2[0], this.v2[1], this.v2[2],
@@ -79,7 +79,6 @@ MyTriangle.prototype.initBuffers = function() {
  * atualiza as coordenadas de textura do triângulo com os valores recebidos
  * @param {Number} ampS - factor de amplificação na coordenada S
  * @param {Number} ampT - factor de amplificação na coordenada T
- * @override
  * @return {null}
  */
 MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {

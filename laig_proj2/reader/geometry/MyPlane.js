@@ -1,5 +1,5 @@
-function MyPlane(scene, nrDivs, minS, maxS, minT, maxT) 
-{
+function MyPlane(scene, nrDivs, minS, maxS, minT, maxT) {
+
 	CGFobject.call(this, scene);
 
 	this.nrDivs = nrDivs;
@@ -19,11 +19,11 @@ MyPlane.prototype.initBuffers = function() {
 	var tCoord = 1.0;
 
 	for (var j = 0; j <= this.nrDivs; j++) {
-	
+
 		var xCoord = 0.0;
 
 		for (var i = 0; i <= this.nrDivs; i++) {
-		
+
 			this.vertices.push(xCoord, yCoord, 0);
 			this.texCoords.push(xCoord, tCoord);
 			this.normals.push(0, 0, 1);
@@ -40,7 +40,7 @@ MyPlane.prototype.initBuffers = function() {
 	var ind = 0;
 
 	for (var j = 0; j < this.nrDivs; j++) {
-	
+
 		for (var i = 0; i <= this.nrDivs; i++) {
 			this.indices.push(ind);
 			this.indices.push(ind++ + this.nrDivs + 1);

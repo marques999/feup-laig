@@ -59,25 +59,25 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	var animationPoints = [];
 	var controlPoints = root.getElementsByTagName('controlpoint');
 	var controlPointsSize = controlPoints.length;
-	
+
 	if (controlPointsSize == null || controlPointsSize == 0) {
 		return onAttributeMissing('controlpoint', id, parent);
 	}
 
 	for (var i = 0; i < controlPointsSize; i++) {
-		
+
 		var newCoordinates = this.parseCoordinatesXYZ(controlPoints[i], null);
 		var error = checkValue(newCoordinates, 'controlpoint', parent);
-		
+
 		if (error != null) {
 			onXMLWarning(error);
 			parseErrors++;
-		} 
+		}
 		else {
 			animationPoints.push(newCoordinates);
-		}	
+		}
 	}
-	
+
 	if (parseErrors != 0) {
 		return onParseError(parent, parseErrors, id);
 	}
@@ -91,7 +91,7 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	}
 
 	this.result = new LinearAnimation(id, this.animationSpan, animationPoints);
-	
+
 	return null;
 };
 
@@ -106,7 +106,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
-	
+
 	var animationRadius = this.reader.getFloat(root, 'radius');
 	error = checkValue(animationRadius, 'radius', parent);
 
@@ -122,7 +122,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
-	
+
 	var animationAngle = this.reader.getFloat(root, 'rotang');
 	error = checkValue(animationAngle, 'rotang', parent);
 
@@ -130,11 +130,11 @@ AnimationParser.prototype.readCircular = function(root, id) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
-	
+
 	if (parseErrors != 0) {
 		return onParseError(parent, parseErrors, id);
 	}
-	
+
 	printHeader("ANIMATION", id);
 	printSingle('span', this.animationSpan);
 	printSingle('type', this.animationType);
@@ -142,10 +142,10 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	printSingle('radius', animationRadius);
 	printSingle('startang', animationStart);
 	printSingle('rotang', animationAngle);
-	
+
 	this.result = new CircularAnimation(id, this.animationSpan,
-		animationCenter, animationRadius, 
+		animationCenter, animationRadius,
 		animationStart, animationAngle);
-	
+
 	return null;
 };

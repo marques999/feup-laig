@@ -203,9 +203,9 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
  * @return {CGFlight}
  */
 XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse, specular) {
-	
+
 	var currentLight = this.lights[this.activeLights];
-	
+
 	currentLight.setPosition(position[0], position[1], position[2], position[3]);
 	currentLight.setAmbient(ambient[0], ambient[1], ambient[2], ambient[3]);
 	currentLight.setDiffuse(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
@@ -214,7 +214,7 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 
 	this.toggleLight(this.activeLights, enabled);
 	this.guiInterface.pushLight(id, this.activeLights++, enabled);
-	
+
 	return currentLight;
 };
 
@@ -232,7 +232,7 @@ XMLscene.prototype.toggleLight = function(id, enabled) {
  * callback executado no final do processamento do MySceneGraph
  * @return {null}
  */
-XMLscene.prototype.onGraphLoaded = function() {	
+XMLscene.prototype.onGraphLoaded = function() {
 
 	// SET FRUSTUM
 	this.camera.far = this.frustumFar;
@@ -242,15 +242,15 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.axis = new CGFaxis(this, this.defaultReference);
 
 	// SET BACKGROUND
-	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1], 
+	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1],
 					   this.defaultBackground[2], this.defaultBackground[3]);
 
 	// SET GLOBAL ILLUMINATION
-	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
+	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1],
 							   this.defaultAmbient[2], this.defaultAmbient[3]);
 
 	// SET TRANSFORMATIONS
-	mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);	
+	mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[0], this.defaultRotationAxis[0]);
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[1], this.defaultRotationAxis[1]);
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[2], this.defaultRotationAxis[2]);
@@ -271,7 +271,7 @@ XMLscene.prototype.update = function(currTime) {
 	if (this.lastUpdate > 0) {
 		this.graph.processAnimations((currTime - this.lastUpdate) * 0.001);
 	}
-	
+
 	this.lastUpdate = currTime;
 };
 

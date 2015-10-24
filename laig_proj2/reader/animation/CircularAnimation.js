@@ -29,20 +29,20 @@ CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
 CircularAnimation.prototype.update = function() {
-	
+
 	mat4.copy(this.matrix, this.initial);
 	mat4.rotateY(this.matrix, this.matrix, this.current);
 	mat4.translate(this.matrix, this.matrix, [this.radius, 0.0, 0.0]);
-	
+
 	return this.matrix;
 };
 
 CircularAnimation.prototype.step = function(updateInterval) {
-	
+
 	if (!this.active) {
 		return null;
 	}
-	
+
 	if (this.currentTime < this.span) {
 		this.current += this.velocity * updateInterval;
 		this.currentTime += updateInterval;

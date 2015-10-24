@@ -34,7 +34,7 @@ serialInclude(['../lib/CGF.js',
 				'parser/MaterialParser.js',
 				'parser/NodeParser.js',
 				'parser/TextureParser.js',
-				'XMLscene.js', 
+				'XMLscene.js',
 				'MySceneGraph.js',
 
 main=function()

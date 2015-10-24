@@ -67,7 +67,6 @@ MyRectangle.prototype.initBuffers = function() {
  * atualiza as coordenadas de textura do retângulo com os valores recebidos
  * @param {Number} ampS - factor de amplificação na coordenada S
  * @param {Number} ampT - factor de amplificação na coordenada T
- * @override
  * @return {null}
  */
 MyRectangle.prototype.updateTexCoords = function(ampS, ampT) {

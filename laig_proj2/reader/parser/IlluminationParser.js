@@ -1,5 +1,5 @@
 /**
-  _____ _      _     _    _ __  __ _____ _   _       _______ _____ ____  _   _ 
+  _____ _      _     _    _ __  __ _____ _   _       _______ _____ ____  _   _
  |_   _| |    | |   | |  | |  \/  |_   _| \ | |   /\|__   __|_   _/ __ \| \ | |
    | | | |    | |   | |  | | \  / | | | |  \| |  /  \  | |    | || |  | |  \| |
    | | | |    | |   | |  | | |\/| | | | | . ` | / /\ \ | |    | || |  | | . ` |
@@ -27,7 +27,7 @@ IlluminationParser.prototype.constructor = IlluminationParser;
 
 IlluminationParser.prototype.parse = function(root, id) {
 
-	var globalAmbient = this.parseCoordinatesRGBA(root, 'ambient');	
+	var globalAmbient = this.parseCoordinatesRGBA(root, 'ambient');
 	var error = checkValue(globalAmbient, 'ambient', root.nodeName);
 
 	if (error != null) {

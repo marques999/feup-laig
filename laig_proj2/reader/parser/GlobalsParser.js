@@ -1,13 +1,13 @@
 /*
-   _____ _      ____  ____          _       _____ 
+   _____ _      ____  ____          _       _____
   / ____| |    / __ \|  _ \   /\   | |     / ____|
- | |  __| |   | |  | | |_) | /  \  | |    | (___  
- | | |_ | |   | |  | |  _ < / /\ \ | |     \___ \ 
+ | |  __| |   | |  | | |_) | /  \  | |    | (___
+ | | |_ | |   | |  | |  _ < / /\ \ | |     \___ \
  | |__| | |___| |__| | |_) / ____ \| |____ ____) |
-  \_____|______\____/|____/_/    \_\______|_____/ 
+  \_____|______\____/|____/_/    \_\______|_____/
 
 	<INITIALS>
-		<frustum near="ff" far="ff" />	
+		<frustum near="ff" far="ff" />
 		<translation x="ff" y="ff" z="ff"/>
 		<rotation axis="x" angle="ff" />
 		<rotation axis="y" angle="ff" />
@@ -36,13 +36,13 @@ GlobalsParser.prototype.parse = function(root, id) {
 	var parseErrors = 0;
 
 	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
-	var error = checkValue(globalFrustumNear, 'near', 'frustum');	
+	var error = checkValue(globalFrustumNear, 'near', 'frustum');
 	if (error != null) {
 		return error;
 	}
 
 	var globalFrustumFar = this.parseFloat(root, 'frustum', 'far');
-	error = checkValue(globalFrustumFar, 'far', 'frustum');	
+	error = checkValue(globalFrustumFar, 'far', 'frustum');
 	if (error != null) {
 		return error;
 	}
@@ -77,7 +77,7 @@ GlobalsParser.prototype.parse = function(root, id) {
 	}
 
 	var axisFound = {
-		'x': false, 
+		'x': false,
 		'y': false,
 		'z': false
 	};

@@ -34,12 +34,12 @@ function MySceneGraph(filename, scene) {
 };
 
 /*
-  _____ _   _ _____ _______ 
+  _____ _   _ _____ _______
  |_   _| \ | |_   _|__   __|
-   | | |  \| | | |    | |   
-   | | | . ` | | |    | |   
-  _| |_| |\  |_| |_   | |   
- |_____|_| \_|_____|  |_|   
+   | | |  \| | | |    | |
+   | | | . ` | | |    | |
+  _| |_| |\  |_| |_   | |
+ |_____|_| \_|_____|  |_|
 
 */
 
@@ -48,7 +48,7 @@ function MySceneGraph(filename, scene) {
  * apresentando uma mensagem de erro na ausência de um bloco ou na existência de blocos repetidos
  * valida todos os nodes carregados do ficheiro LSX, verificando se o root node existe no grafo
  * chama a função onGraphLoaded() da XMLscene associada, preparando a cena com os valores iniciais
- * @return {null} 
+ * @return {null}
  */
 MySceneGraph.prototype.onXMLReady = function() {
 
@@ -109,7 +109,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 	this.resetIndegree();
 	this.validateNodes();
-	
+
 	if (this.nodes[this.graphRoot] != undefined) {
 		this.loadedOk = true;
 		this.scene.onGraphLoaded();
@@ -122,28 +122,28 @@ MySceneGraph.prototype.onXMLReady = function() {
 /*
   _____ _____  _____ _____  _           __     __
  |  __ \_   _|/ ____|  __ \| |        /\\ \   / /
- | |  | || | | (___ | |__) | |       /  \\ \_/ / 
- | |  | || |  \___ \|  ___/| |      / /\ \\   /  
- | |__| || |_ ____) | |    | |____ / ____ \| |   
- |_____/_____|_____/|_|    |______/_/    \_\_|   
-												 
+ | |  | || | | (___ | |__) | |       /  \\ \_/ /
+ | |  | || |  \___ \|  ___/| |      / /\ \\   /
+ | |__| || |_ ____) | |    | |____ / ____ \| |
+ |_____/_____|_____/|_|    |______/_/    \_\_|
+
 /**
  * aplica os materiais e texturas associados ao root node na XMLscene
  * chama a função de processamento e visualização dos restantes nós partindo do root node
- * @return {null} 
+ * @return {null}
  */
 MySceneGraph.prototype.display = function() {
 
 	var rootNode = this.nodes[this.graphRoot];
 	var rootMaterial = this.defaultMaterial;
 	this.scene.pushMatrix();
-	
+
 	if (rootNode.materialId != null && rootNode.materialId != 'null') {
 		rootMaterial = this.materials[rootNode.materialId];
 	}
 
 	if (rootNode.textureId != null && rootNode.textureId != 'null' && rootNode.textureId != 'clear') {
-		rootMaterial.setTexture(this.textures[rootNode.textureId].tex);	
+		rootMaterial.setTexture(this.textures[rootNode.textureId].tex);
 	}
 
 	this.scene.applyMaterial(rootMaterial);
@@ -163,14 +163,14 @@ MySceneGraph.prototype.display = function() {
 MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 
 	var nodeMatrix = node.applyAnimation();
-	
+
 	if (nodeMatrix != null) {
 		mat4.multiply(nodeMatrix, node.matrix, nodeMatrix)
 	}
 	else {
 		nodeMatrix = node.matrix
 	}
-	
+
 	this.scene.multMatrix(nodeMatrix);
 
 	for (var i = 0; i < node.children.length; i++) {
@@ -179,7 +179,7 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 		var tId = textureId;
 
 		if (this.leaves[nextId] != undefined) {
-			var leaf = this.leaves[nextId];	
+			var leaf = this.leaves[nextId];
 			var leafMaterial = this.defaultMaterial;
 			var leafTexture = null;
 
@@ -202,7 +202,7 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 		else if (this.nodes[nextId] != undefined) {
 			var nextElement = this.nodes[nextId];
 			this.scene.pushMatrix();
-			this.processNodes(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));			
+			this.processNodes(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));
 			this.scene.popMatrix();
 		}
 	}
@@ -261,7 +261,7 @@ MySceneGraph.prototype.parseIllumination = function(root) {
 MySceneGraph.prototype.parseString = function(root, name, attribute) {
 
 	var node = root.getElementsByTagName(name);
-	
+
 	if (node == null || node.length == 0) {
 		return null;
 	}
@@ -278,13 +278,13 @@ MySceneGraph.prototype.parseString = function(root, name, attribute) {
 };
 
 /*
-		   _____  _____        __     _______ 
+		   _____  _____        __     _______
 	 /\   |  __ \|  __ \     /\\ \   / / ____|
-	/  \  | |__) | |__) |   /  \\ \_/ / (___  
-   / /\ \ |  _  /|  _  /   / /\ \\   / \___ \ 
+	/  \  | |__) | |__) |   /  \\ \_/ / (___
+   / /\ \ |  _  /|  _  /   / /\ \\   / \___ \
   / ____ \| | \ \| | \ \  / ____ \| |  ____) |
- /_/    \_\_|  \_\_|  \_\/_/    \_\_| |_____/ 
-											  
+ /_/    \_\_|  \_\_|  \_\/_/    \_\_| |_____/
+
 */
 
 MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
@@ -297,7 +297,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 //	}
 
 	for (var i = 0; i < childrenSize; i++) {
-		
+
 		var currentElement = rootElement.children[i];
 		var currentElementName = currentElement.nodeName;
 
@@ -326,7 +326,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 	return null;
 };
 
-/** 
+/**
  * processa todas as entidades presentes no bloco <NODES> do ficheiro LSX
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <NODES>
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
@@ -335,7 +335,7 @@ MySceneGraph.prototype.parseNodes = function (root) {
 
 	var globalRoot = this.parseString(root, 'ROOT', 'id');
 	var error = checkValue(globalRoot, 'root', root.nodeName);
-	
+
 	if (error != null) {
 		return error;
 	}
@@ -406,24 +406,24 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	if (error != null) {
 		return error;
 	}
-	
+
 	var newNode = this.nodeParser.result;
-	var error = this.checkMaterialReference(id, newNode.materialId);		
-	
+	var error = this.checkMaterialReference(id, newNode.materialId);
+
 	if (error != null) {
 		newNode.materialId = null;
 		onXMLWarning(error);
 	}
-	
-	error = this.checkTextureReference(id, newNode.textureId);	
-	
+
+	error = this.checkTextureReference(id, newNode.textureId);
+
 	if (error != null) {
 		newNode.textureId = null;
 		onXMLWarning(error);
 	}
-	
+
 	this.nodes[id] = newNode;
-	
+
 	return null;
 };
 
@@ -456,9 +456,9 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	if (error != null) {
 		return error;
 	}
-	
+
 	this.lights[id] = this.lightParser.result;
-	
+
 	return null;
 };
 
@@ -487,9 +487,9 @@ MySceneGraph.prototype.parseAnimation = function(id, root) {
 	if (error != null) {
 		return error;
 	}
-	
+
 	this.animations[id] = this.animationParser.result;
-	
+
 	return null;
 };
 
@@ -513,14 +513,14 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 	if (this.materials[id] != undefined) {
 		return onElementDuplicate(root.nodeName, id);
 	}
-	
+
 	var error = this.materialParser.parse(root, id);
 	if (error != null) {
 		return error;
 	}
-	
+
 	this.materials[id] = this.materialParser.result;
-	
+
 	return null;
 };
 
@@ -544,14 +544,14 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 	if (this.leaves[id] != undefined) {
 		return onElementDuplicate(root.nodeName, id);
 	}
-	
+
 	var error = this.textureParser.parse(root, id);
 	if (error != null) {
 		return error;
 	}
-	
+
 	this.textures[id] = this.textureParser.result;
-	
+
 	return null;
 };
 
@@ -571,18 +571,18 @@ MySceneGraph.prototype.parseLeaves = function(root) {
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseLeaf = function(id, root) {
-	
+
 	if (this.leaves[id] != undefined) {
 		return onElementDuplicate(root.nodeName, id);
 	}
-	
-	var error = this.leafParser.parse(root, id);	
+
+	var error = this.leafParser.parse(root, id);
 	if (error != null) {
 		return error;
 	}
-	
+
 	this.leaves[id] = this.leafParser.result;
-	
+
 	return null;
 };
 
@@ -598,7 +598,7 @@ MySceneGraph.prototype.parseGlobals = function(root) {
 /**
  * determina o número de arestas incidentes em cada nó do grafo de cena
  * visita todos os nós existentes no grafo, incrementando em uma unidade o indegree dos seus descendentes
- * @return {null} 
+ * @return {null}
  */
 MySceneGraph.prototype.resetIndegree = function() {
 	for (var node in this.nodes) {
@@ -617,7 +617,7 @@ MySceneGraph.prototype.resetIndegree = function() {
  * 2. procura todos os nós por descendentes com referências a nós inválidos e remove-os do grafo
  * 3. procura por nós sem um único descendente (com children.length == 0) e remove-os do grafo
  * (repete enquanto houver nós isolados ou nós com referências inválidas causadas por apagar nós anteriormente)
- * @return {null} 
+ * @return {null}
  */
 MySceneGraph.prototype.validateNodes = function() {
 
@@ -634,14 +634,14 @@ MySceneGraph.prototype.validateNodes = function() {
 			this.onVisitNode(node, this.nodes[node].indegree);
 
 			if (nodeIndegree == 0 && node != this.graphRoot) {
-				ready = false;	
-				this.onProcessNode("Deleting", node);	
+				ready = false;
+				this.onProcessNode("Deleting", node);
 				delete this.nodes[node];
-				continue;		
+				continue;
 			}
 
 			for (var n = 0; n < children.length; n++) {
-				if (!(children[n] in this.leaves) && !(children[n] in this.nodes) && children[n] != node) {	
+				if (!(children[n] in this.leaves) && !(children[n] in this.nodes) && children[n] != node) {
 					this.onEraseChildren(children[n], node);
 					children.splice(n, 1);
 					n--;
@@ -674,6 +674,6 @@ MySceneGraph.prototype.onInvalidRoot = function(root) {
 };
 
 MySceneGraph.prototype.onXMLError = function(message) {
-	console.error("XML Loading ERROR: " + message);	
+	console.error("XML Loading ERROR: " + message);
 	this.loadedOk = false;
 };
