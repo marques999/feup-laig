@@ -39,7 +39,6 @@ XMLnode.prototype.addChild = function(child) {
  * @return {null}
  */
 XMLnode.prototype.addAnimation = function(animation) {
-	animation.start();
 	this.animations.push(animation);
 };
 
@@ -82,7 +81,7 @@ XMLnode.prototype.translate = function(coords) {
 
 /**
  * multiplica a matriz de transformação deste node por uma matriz de translação
- * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
+ * @param {Number} deltaTime - intervalo de tempo decorrido desde o último update
  * @return {null}
  */
 XMLnode.prototype.updateAnimation = function(deltaTime) {
@@ -103,9 +102,8 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 };
 
 /**
- * multiplica a matriz de transformação deste node por uma matriz de translação
- * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
- * @return {null}
+ * aplica a matriz de transformação da animação corrente
+ * @return {Mat4|null} - null se o node não tiver animações ou estas tiverem já terminado
  */
 XMLnode.prototype.applyAnimation = function() {
 

@@ -69,23 +69,16 @@ NodeParser.prototype.parse = function(root, id) {
 		printValues('TEXTURE', 'id', nodeTexture);
 	}
 
+	if (root.children[2].nodeName == 'ANIMATIONS') {
+		xmlIndex++;
+	}
+
 	var node = new XMLnode(id, nodeTexture, nodeMaterial);
 	var node_sz = root.children.length;
+	var error = this.parseAnimations(root, node);
 
-	for (; xmlIndex < node_sz; xmlIndex++) {
-
-		var child = root.children[xmlIndex];
-		var error = null;
-
-		if (child.nodeName != 'ANIMATION') {
-			break;
-		}
-
-		error = this.parseAnimation(child, node);
-
-		if (error != null) {
-			onXMLWarning(error);
-		}
+	if (error != null) {
+		return error;
 	}
 
 	for (; xmlIndex < node_sz; xmlIndex++) {
@@ -114,44 +107,13 @@ NodeParser.prototype.parse = function(root, id) {
 		}
 	}
 
-	var nodeDescendants = root.getElementsByTagName('DESCENDANTS');
+	error = this.parseDescendants(root, node);
 
-	if (nodeDescendants == null || nodeDescendants.length == 0) {
-		return onAttributeMissing('DESCENDANTS', id, parent);
-	}
-
-	if (nodeDescendants.length != 1) {
-		onMultipleElements('DESCENDANTS', parent);
-	}
-
-	nodeDescendants = nodeDescendants[0].children;
-
-	if (nodeDescendants.length == 0) {
-		return "<NODE> with id=" + id + " has zero descendants, skipping...";
-	}
-
-	if (this.verbose) {
-		console.log("\t\tDESCENDANTS:");
-	}
-
-	for (var i = 0; i < nodeDescendants.length; i++) {
-
-		var childId = this.reader.getString(nodeDescendants[i], 'id', true);
-
-		if (childId == null) {
-			onXMLWarning(onAttributeMissing('id', id, parent));
-			continue;
-		}
-
-		node.addChild(childId);
-
-		if (this.verbose) {
-			console.log("\t\t\t id=" + childId);
-		}
+	if (error != null) {
+		return error;
 	}
 
 	this.result = node;
-
 	return null;
 };
 
@@ -161,29 +123,57 @@ NodeParser.prototype.parse = function(root, id) {
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-NodeParser.prototype.parseAnimation = function(root, node) {
+NodeParser.prototype.parseAnimations = function(root, node) {
 
-	if (!root.hasAttribute('id')) {
-		return onAttributeMissing('type', node.id, root.nodeName);
+	var nodeAnimation = root.getElementsByTagName('ANIMATIONS');
+
+	if (nodeAnimation == null || nodeAnimation.length == 0) {
+		return null;
 	}
 
-	var nodeAnimation = this.reader.getString(root, 'id');
-	var error = checkValue(nodeAnimation, 'id', root.nodeName, node.id);
-
-	if (error != null) {
-		return error;
+	if (nodeAnimation.length != 1) {
+		onMultipleElements('ANIMATIONS', parent);
 	}
 
-	error = this.scene.checkAnimationReference(node.id, nodeAnimation);
+	nodeAnimation = nodeAnimation[0].children;
 
-	if (error != null) {
-		return error;
+	if (nodeAnimation.length == 0) {
+		return null;
 	}
-
-	node.addAnimation(this.scene.animations[nodeAnimation]);
 
 	if (this.verbose) {
-		printValues('ANIMATION', 'id', nodeAnimation);
+		console.log("\t\tANIMATIONS:");
+	}
+
+	for (var i = 0; i < nodeAnimation.length; i++) {
+
+		var thisAnimation = nodeAnimation[i];
+
+		if (!thisAnimation.hasAttribute('id')) {
+			onXMLWarning(onAttributeMissing('animation id', node.id, root.nodeName));
+			continue;
+		}
+
+		var animationId = this.reader.getString(thisAnimation, 'id');
+		var error = checkValue(animationId, 'id', thisAnimation.nodeName, node.id);
+
+		if (error != null) {
+			onXMLWarning(error);
+			continue;
+		}
+
+		error = this.scene.checkAnimationReference(node.id, animationId);
+
+		if (error != null) {
+			onXMLWarning(error);
+			continue;
+		}
+
+		node.addAnimation(this.scene.animations[animationId]);
+
+		if (this.verbose) {
+			console.log("\t\t\t id=" + animationId);
+		}
 	}
 
 	return null;
@@ -236,6 +226,45 @@ NodeParser.prototype.parseTranslation = function(root, node) {
 
 	return null;
 };
+
+NodeParser.prototype.parseDescendants = function(root, node) {
+
+	var nodeDescendants = root.getElementsByTagName('DESCENDANTS');
+
+	if (nodeDescendants == null || nodeDescendants.length == 0) {
+		return onAttributeMissing('DESCENDANTS', id, parent);
+	}
+
+	if (nodeDescendants.length != 1) {
+		onMultipleElements('DESCENDANTS', parent);
+	}
+
+	nodeDescendants = nodeDescendants[0].children;
+
+	if (nodeDescendants.length == 0) {
+		return "<NODE> with id=" + id + " has zero descendants, skipping...";
+	}
+
+	if (this.verbose) {
+		console.log("\t\tDESCENDANTS:");
+	}
+
+	for (var i = 0; i < nodeDescendants.length; i++) {
+
+		var childId = this.reader.getString(nodeDescendants[i], 'id', true);
+
+		if (childId == null) {
+			onXMLWarning(onAttributeMissing('id', id, parent));
+			continue;
+		}
+
+		node.addChild(childId);
+
+		if (this.verbose) {
+			console.log("\t\t\t id=" + childId);
+		}
+	}
+}
 
 /**
  * processa uma rotação presente num bloco <NODE>

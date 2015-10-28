@@ -37,15 +37,15 @@ CircularAnimation.prototype.update = function() {
 	return this.matrix;
 };
 
-CircularAnimation.prototype.step = function(updateInterval) {
+CircularAnimation.prototype.step = function(deltaTime) {
 
 	if (!this.active) {
 		return null;
 	}
 
 	if (this.currentTime < this.span) {
-		this.current += this.velocity * updateInterval;
-		this.currentTime += updateInterval;
+		this.current += this.velocity * deltaTime;
+		this.currentTime += deltaTime;
 	}
 	else {
 		this.stop();

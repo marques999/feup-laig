@@ -173,7 +173,6 @@
 		</ANIMATION>
 			<ANIMATION id="ss" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="0" rotang="180">
 		</ANIMATION>
-
 			<ANIMATION id="uu" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="160" rotang="20">
 		</ANIMATION>
 	</ANIMATIONS>
@@ -246,16 +245,18 @@
 		</NODE>
 
 		<NODE id="table">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <ANIMATION id="ss" />
-		  <TRANSLATION x="3.5" y="0.0" z="4.5" />
-		  <DESCENDANTS>
-			<DESCENDANT id="table_legs" />
-			<DESCENDANT id="table_top" />
-			<DESCENDANT id="cues" />
-			<DESCENDANT id="ashtray" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<ANIMATIONS>
+				<ANIMATION id="ss" />
+			</ANIMATIONS>
+			<TRANSLATION x="3.5" y="0.0" z="4.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="table_legs" />
+				<DESCENDANT id="table_top" />
+				<DESCENDANT id="cues" />
+				<DESCENDANT id="ashtray" />
+			</DESCENDANTS>
 		</NODE>
 
 		<NODE id="ashtray">
@@ -721,7 +722,9 @@
 		<NODE id="table_balls">
 			<MATERIAL id="ball_red" />
 			<TEXTURE id="null" />
-				  <ANIMATION id="tt" />
+			<ANIMATIONS>
+				<ANIMATION id="tt" />
+			</ANIMATIONS>
 			<DESCENDANTS>
 				<DESCENDANT id="ball1" />
 				<DESCENDANT id="ball2" />
@@ -917,7 +920,9 @@
 		<NODE id="table_side">
 		  <MATERIAL id="wood_cherry" />
 		  <TEXTURE id="table_wood" />
-				 <ANIMATION id="uu"/>
+			<ANIMATIONS>
+				<ANIMATION id="uu"/>
+			</ANIMATIONS>
 		  <DESCENDANTS>
 			<DESCENDANT id="table_side_cl" />
 			<DESCENDANT id="table_side_rl" />
@@ -951,13 +956,13 @@
 		</NODE>
 
 		<NODE id="table_side_rl">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="0.75" y="2.4" z="0.0" />
-		  <SCALE sx="4.025" sy="0.5" sz="0.45" />
-		  <DESCENDANTS>
-			<DESCENDANT id="primitive_cube" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.75" y="2.4" z="0.0" />
+			<SCALE sx="4.025" sy="0.5" sz="0.45" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
 		</NODE>
 
 		<NODE id="table_side_rr">

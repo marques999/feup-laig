@@ -86,11 +86,22 @@ MySceneGraph.prototype.onXMLReady = function() {
 		this.parseNodes,
 	];
 
+	var requiredElements = [
+		true, // INITIALS
+		true, // ILLUMINATION
+		true, // LIGHTS
+		false, // MATERIALS
+		false, // TEXTURES
+		false, // ANIMATIONS
+		true, // LEAVES
+		true, // NODES
+	];
+
 	for (var i = 0; i < rootTags.length; i++) {
 
 		var currentElement = rootElement.getElementsByTagName(rootTags[i]);
 
-		if (currentElement == null || currentElement.length == 0) {
+		if (requiredElements[i] && (currentElement == null || currentElement.length == 0)) {
 			this.onXMLError(onElementMissing(rootTags[i], parent));
 			return;
 		}
@@ -237,6 +248,11 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 	return nextElement.materialId == 'null' ? currMaterialId : nextElement.materialId;
 };
 
+/**
+ *
+ * @param {Number} deltaTime - intervalo de tempo decorrido desde o último update
+ * @return {null}
+ */
 MySceneGraph.prototype.processAnimations = function(deltaTime) {
 	for (var node in this.nodes) {
 		this.nodes[node].updateAnimation(deltaTime);
@@ -245,7 +261,7 @@ MySceneGraph.prototype.processAnimations = function(deltaTime) {
 
 /**
  * processa todas as entidades presentes no bloco <ILLUMINATION> do ficheiro LSX
- * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.parseIllumination = function(root) {
@@ -291,10 +307,6 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 
 	var childrenSize = rootElement.children.length;
 	var parent = rootElement.nodeName;
-
-//	if (childrenSize == 0) {
-//		return "<" + parent + "> is empty.";
-//	}
 
 	for (var i = 0; i < childrenSize; i++) {
 
@@ -350,6 +362,12 @@ MySceneGraph.prototype.parseNodes = function (root) {
 	return this.parseArray(root, 'NODE', this.parseNode);
 };
 
+/**
+ * verifica se uma determinada animação existe no array de animações
+ * @param {Number} nodeId - identificador do node que referencia a animação
+ * @param {Number} objectId - identificador da animação
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.checkAnimationReference = function(nodeId, objectId) {
 
 	if (objectId == 'null' || objectId == 'clear') {
@@ -363,6 +381,12 @@ MySceneGraph.prototype.checkAnimationReference = function(nodeId, objectId) {
 	return null;
 };
 
+/**
+ * verifica se um determinado material existe no array de materiais
+ * @param {Number} nodeId - identificador do node que referencia o material
+ * @param {Number} objectId - identificador do material
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.checkMaterialReference = function(nodeId, objectId) {
 
 	if (objectId == 'null' || objectId == 'clear') {
@@ -376,6 +400,12 @@ MySceneGraph.prototype.checkMaterialReference = function(nodeId, objectId) {
 	return null;
 };
 
+/**
+ * verifica se uma determinada textura existe no array de texturas
+ * @param {Number} nodeId - identificador do node que referencia a textura
+ * @param {Number} objectId - identificador da textura
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.checkTextureReference = function(nodeId, objectId) {
 
 	if (objectId == 'null' || objectId == 'clear') {

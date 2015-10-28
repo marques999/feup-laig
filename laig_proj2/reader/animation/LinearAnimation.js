@@ -25,7 +25,7 @@ function LinearAnimation(id, span, points) {
 	// CALCULA DISTÂNCIAS PARCIAIS ENTRE PONTOS DE CONTROLO
 	var totalDistance = 0.0;
 	for (var i = 1; i < this.sections; i++) {
-		totalDistance += vec3.dist(this.points[i], this.points[i-1]);
+		totalDistance += vec3.dist(this.points[i], this.points[i - 1]);
 	}
 
 	// CALCULA DELTAS E ORIENTAÇÕES PARA RESTANTES PONTOS
@@ -96,13 +96,13 @@ LinearAnimation.prototype.update = function() {
 	return this.matrix;
 };
 
-LinearAnimation.prototype.step = function(updateInterval) {
+LinearAnimation.prototype.step = function(deltaTime) {
 
 	if (!this.active) {
 		return;
 	}
 
-	this.currentTime += updateInterval;
+	this.currentTime += deltaTime;
 
 	if (this.currentTime > this.duration[this.currentSection]) {
 		if (++this.currentSection == this.sections) {
@@ -111,6 +111,6 @@ LinearAnimation.prototype.step = function(updateInterval) {
 		}
 	}
 
-	vec3.scale(this.currentDelta, this.delta[this.currentSection], updateInterval);
+	vec3.scale(this.currentDelta, this.delta[this.currentSection], deltaTime);
 	vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
 };

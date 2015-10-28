@@ -9,6 +9,7 @@
 	<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
 	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" />
 	<LEAF id="ss" type="sphere" args="ff ii ii" />
+	<LEAF id="ss" type="plane" args="ii" />
 	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
 */
 
@@ -56,6 +57,9 @@ LeafParser.prototype.parse = function(root, id) {
 	else if (leafType == 'plane') {
 		error = this.readPlane(id, leafArgs);
 	}
+	else if (leafType == 'patch') {
+		error = this.readPatch(id, leafArgs, root);
+	}
 	else if (leafType == 'cylinder') {
 		error = this.readCylinder(id, leafArgs);
 	}
@@ -72,7 +76,8 @@ LeafParser.prototype.parse = function(root, id) {
 
 	if (this.verbose) {
 		printHeader("LEAF", id);
-		printValues(null, 'type', leafType, 'args', leafArgs);
+		printSingle('type', leafType);
+		printSingle('args', leafArgs);
 	}
 
 	return null;
@@ -161,7 +166,7 @@ LeafParser.prototype.readTriangle = function(id, leafArgs) {
 
 /**
  * processa uma primitiva do tipo "plane" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da LeafParser/primitiva atual
+ * @param {Number} id - identificador da primitiva
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
@@ -189,8 +194,98 @@ LeafParser.prototype.readPlane = function(id, leafArgs) {
 };
 
 /**
+ * processa uma primitiva do tipo "patch" e acrescenta ao array de leaves do grafo
+ * @param {Number} id - identificador da primitiva
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+LeafParser.prototype.readPatch = function(id, root) {
+
+	if (leafArgs.length != 2) {
+		return onInvalidArguments(id, leafArgs.length, 2);
+	}
+
+	var parseErrors = 0;
+	var myDegreeU = parseInt(leafArgs[0]);
+
+	if (myDegreeU != myDegreeU) {
+		onAttributeInvalid('surface degree on U', id, 'PATCH');
+		parseErrors++;
+	}
+
+	var myDegreeV = parseInt(leafArgs[1]);
+
+	if (myDegreeV != myDegreeV) {
+		onAttributeInvalid('surface degree on V', id, 'PATCH');
+		parseErrors++;
+	}
+
+	if (parseErrors != 0) {
+		return onParseError('PATCH', parseErrors, id);
+	}
+
+	var node_sz = root.children.length;
+	var uLength = myDegree + 1;
+	var controlpoints = [];
+
+	if (node_sz != 2 + uLength) {
+		return onParseError('PATCH', parseErrors, id);
+	}
+
+	var knots1Node = root.children[0];
+	var knots2Node = root.children[1];
+
+	if (knots1Node.nodeName != "knots1") {
+			return "unexpected tagname, expected knots1";
+
+	}
+
+	if (knots2Node.nodeName != "knots2") {
+			return "unexpected tagname, expected knots2";
+	}
+
+	for (var i = 0; i < children_sz; i++) {
+
+		var uCoordinates = root.children[i];
+		var vLength = myDegreeV + 1;
+
+		if (uCoordinates.nodeName != 'U') {
+			console.log("unexpected tagname, expected U");
+			continue;
+		}
+
+		if (uCoordinates.length != vLength) {
+			console.log("control points for surface at U=" + i + " expected to be " + vLength);
+			continue;
+		}
+
+		for (var j = 0; j < uCoordinates.length; j++) {
+
+			var vCoordinates = uCoordinates.children[j];
+
+			if (vCoordinates.nodeName != 'V') {
+				console.log("unexpected tagname, expected V");
+				continue;
+			}
+
+			var newVec4 = this.parseVector4(vCoordinates);
+
+			if (newVec4 == null) {
+				break;
+			}
+
+			controlpoints[i][j] = newVec4;
+		}
+	}
+
+//	this.result = new MyPlane(this.scene, myDivisions);
+
+	return null;
+};
+
+/**
  * processa uma primitiva do tipo "cylinder" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da LeafParser/primitiva atual
+ * @param {Number} id - identificador da primitiva atual
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
