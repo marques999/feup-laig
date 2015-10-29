@@ -20,18 +20,18 @@ function LinearAnimation(id, span, points) {
 	// CALCULA ORIENTAÇÃO INICIAL
 	this.delta[0] = vec3.create();
 	this.duration[0] = 0.0;
-	this.orientation[0] = vec3.fromValues(1.0, 0.0, 0.0);
+	this.orientation[0] = 0.0;
 
 	// CALCULA DISTÂNCIAS PARCIAIS ENTRE PONTOS DE CONTROLO
 	var totalDistance = 0.0;
 	for (var i = 1; i < this.sections; i++) {
-		totalDistance += vec3.dist(this.points[i], this.points[i - 1]);
+		totalDistance += vec3.dist(this.points[i - 1], this.points[i]);
 	}
 
 	// CALCULA DELTAS E ORIENTAÇÕES PARA RESTANTES PONTOS
 	for (var i = 1; i < this.sections; i++) {
 
-		var orientation = 0;
+		var orientation = 0.0;
 		var direction = vec3.create();
 		var distance = vec3.dist(this.points[i], this.points[i - 1]);
 		var relative = (distance / totalDistance) * this.span;
@@ -39,7 +39,7 @@ function LinearAnimation(id, span, points) {
 		this.duration[i] = this.duration[i - 1] + relative;
 		this.delta[i] = vec3.create();
 
-		if (relative > 0) {
+		if (distance > 0) {
 			vec3.subtract(direction, this.points[i], this.points[i - 1]);
 			vec3.scale(this.delta[i], direction, 1.0 / relative);
 			orientation = this.orientate(direction);
@@ -102,15 +102,15 @@ LinearAnimation.prototype.step = function(deltaTime) {
 		return;
 	}
 
+	vec3.scale(this.currentDelta, this.delta[this.currentSection], deltaTime);
+	vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
+
 	this.currentTime += deltaTime;
 
 	if (this.currentTime > this.duration[this.currentSection]) {
-		if (++this.currentSection == this.sections) {
-			this.currentSection--;
-			this.stop();
-		}
+	    if (++this.currentSection == this.sections) {
+	        this.currentSection = 0;
+	        this.stop();
+	    }
 	}
-
-	vec3.scale(this.currentDelta, this.delta[this.currentSection], deltaTime);
-	vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
 };

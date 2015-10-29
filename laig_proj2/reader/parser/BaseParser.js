@@ -19,7 +19,7 @@ BaseParser.prototype.constructor = BaseParser;
 /**
  * processa um valor booleano contido num atributo de um elemento XML
  * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém o valor booleano
+ * @param {String} attribute - identificador do atributo que cont?m o valor booleano
  * @return {Boolean|NaN|null} - valor booleano se este for válido, caso contrário NaN ou null
  */
 BaseParser.prototype.parseBoolean = function(root, attribute) {
@@ -44,20 +44,20 @@ BaseParser.prototype.parseBoolean = function(root, attribute) {
 };
 
 /**
- * processa um número em vírgula flutuante contido num elemento XML
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number|NaN|null} - número em vírgula flutuante se este for válido, caso contrário NaN ou null
+ * processa um n?mero em v?rgula flutuante contido num elemento XML
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String} attribute - identificador do atributo que cont?m as coordenadas
+ * @return {Number|NaN|null} - n?mero em v?rgula flutuante se este for v?lido, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseFloat = function(root, name, attribute) {
 	return this.parseGeneric(root, name, attribute, this.reader.getFloat);
 };
 
 /**
- * processa um vetor de três dimensões contido num elemento XML
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String|null} attribute - identificador do atributo que contém as coordenadas
- * @return {Number|NaN|null} - vetor de três dimensões se este for válido, caso contrário NaN ou null
+ * processa um vetor de tr?s dimens?es contido num elemento XML
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String|null} attribute - identificador do atributo que cont?m as coordenadas
+ * @return {Number|NaN|null} - vetor de tr?s dimens?es se este for v?lido, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseVector3 = function(root, name, attribute) {
 	return this.parseGeneric(root, name, attribute, this.reader.getVector3)
@@ -65,20 +65,20 @@ BaseParser.prototype.parseVector3 = function(root, name, attribute) {
 
 /**
  * processa uma string contida num atributo de um elemento XML
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String|null} attribute - identificador do atributo que contém a string
- * @return {String|NaN|null} - string se esta for válida, caso contrário NaN ou null
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String|null} attribute - identificador do atributo que cont?m a string
+ * @return {String|NaN|null} - string se esta for v?lida, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseString = function(root, name, attribute) {
 	return this.parseGeneric(root, name, attribute, this.reader.getString);
 };
 
 /**
- * processa um valor genérico contido num nlemento XML
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String|null} attribute - identificador do atributo que contém o valor
- * @param {Object} parser - apontador para uma função de leitura
- * @return {String|NaN|null} - string se esta for válida, caso contrário NaN ou null
+ * processa um valor gen?rico contido num nlemento XML
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String|null} attribute - identificador do atributo que cont?m o valor
+ * @param {Object} parser - apontador para uma fun??o de leitura
+ * @return {String|NaN|null} - string se esta for v?lida, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseGeneric = function(root, name, attribute, parser) {
 
@@ -107,11 +107,11 @@ BaseParser.prototype.parseGeneric = function(root, name, attribute, parser) {
 };
 
 /**
- * processa coordenadas genéricas para um vetor de tamanho variável
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String|null attribute - identificador do atributo que contém as coordenadas
- * @param {Number[]} coords - vetor que contém o nome das coordenadas a serem processadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * processa coordenadas gen?ricas para um vetor de tamanho vari?vel
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String|null attribute - identificador do atributo que cont?m as coordenadas
+ * @param {Number[]} coords - vetor que cont?m o nome das coordenadas a serem processadas
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem v?lidas, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseCoordinates = function(root, attribute, coords) {
 
@@ -155,38 +155,40 @@ BaseParser.prototype.parseCoordinates = function(root, attribute, coords) {
 	return arr;
 };
 
-BaseParser.prototype.parseVector4 = function(root) {
+BaseParser.prototype.parseVector4 = function(root, length) {
 
-	var arr = [];
-	var parseErrors = 0;
 	var unprocessedArgs = this.reader.getString(root, 'coords');
 	var vectorArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
+	var arr = vectorArgs.map(parseFloat);
 
-	for (var i = 0; i < vectorArgs.length; i++) {
-
-		var newVector = parseFloat(vectorArgs[i]);
-
-		if (newVector != newVector) {
-			onAttributeInvalid('coordinate', id, 'PATCH');
-			parseErrors++;
-		}
-		else {
-			arr.push(coordValue);
-		}
+	if (arr[0] != arr[0] || arr[1] != arr[1] || arr[2] != arr[2] || arr[3] != arr[3]) {
+		return NaN;
 	}
 
-	if (parseErrors != 0) {
-		return null;
-	}
-
-	return vec4.fromValues(arr[0], arr[1], arr[2], arr[3]);
+	return arr;
 };
+
+BaseParser.prototype.parseFloatArray = function(root, attribute, length) {
+
+	var unprocessedArgs = this.reader.getString(root, attribute);
+	var vectorArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
+	var arr = vectorArgs.map(parseFloat);
+
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i] != arr[i]) {
+			return NaN;
+		}
+	}
+
+	return arr;
+}
+
 
 /**
  * processa coordenadas na forma (r, g, b, a) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String} attribute - identificador do atributo que cont?m as coordenadas
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem v?lidas, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseCoordinatesRGBA = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['r', 'g', 'b', 'a']);
@@ -194,9 +196,9 @@ BaseParser.prototype.parseCoordinatesRGBA = function(root, attribute) {
 
 /**
  * processa coordenadas na forma (x, y, z) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String} attribute - identificador do atributo que cont?m as coordenadas
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem v?lidas, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseCoordinatesXYZ = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z']);
@@ -204,9 +206,9 @@ BaseParser.prototype.parseCoordinatesXYZ = function(root, attribute) {
 
 /**
  * processa coordenadas na forma (x, y, z, w) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String} attribute - identificador do atributo que cont?m as coordenadas
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem v?lidas, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseCoordinatesXYZW = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['x', 'y', 'z', 'w']);
@@ -214,9 +216,9 @@ BaseParser.prototype.parseCoordinatesXYZW = function(root, attribute) {
 
 /**
  * processa coordenadas na forma (sx, sy, sz) para um vetor
- * @param {XMLElement} root - estrutura de dados XML que contém o elemento
- * @param {String} attribute - identificador do atributo que contém as coordenadas
- * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem válidas, caso contrário NaN ou null
+ * @param {XMLElement} root - estrutura de dados XML que cont?m o elemento
+ * @param {String} attribute - identificador do atributo que cont?m as coordenadas
+ * @return {Number[]|NaN|null} - vetor com as coordenadas se estas forem v?lidas, caso contr?rio NaN ou null
  */
 BaseParser.prototype.parseCoordinatesScale = function(root, attribute) {
 	return this.parseCoordinates(root, attribute, ['sx', 'sy', 'sz']);

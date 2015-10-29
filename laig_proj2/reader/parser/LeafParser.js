@@ -58,7 +58,7 @@ LeafParser.prototype.parse = function(root, id) {
 		error = this.readPlane(id, leafArgs);
 	}
 	else if (leafType == 'patch') {
-		error = this.readPatch(id, leafArgs, root);
+		error = this.readPatch(id, leafArgs, root.children);
 	}
 	else if (leafType == 'cylinder') {
 		error = this.readCylinder(id, leafArgs);
@@ -86,8 +86,8 @@ LeafParser.prototype.parse = function(root, id) {
 /**
  * processa uma primitiva do tipo "rectangle" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da LeafParser/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contr?rio retorna uma mensagem de erro
  */
 LeafParser.prototype.readRectangle = function(id, leafArgs) {
 
@@ -124,8 +124,8 @@ LeafParser.prototype.readRectangle = function(id, leafArgs) {
 /**
  * processa uma primitiva do tipo "triangle" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da LeafParser/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
+ * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
  */
 LeafParser.prototype.readTriangle = function(id, leafArgs) {
 
@@ -167,8 +167,8 @@ LeafParser.prototype.readTriangle = function(id, leafArgs) {
 /**
  * processa uma primitiva do tipo "plane" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da primitiva
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
+ * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
  */
 LeafParser.prototype.readPlane = function(id, leafArgs) {
 
@@ -196,24 +196,48 @@ LeafParser.prototype.readPlane = function(id, leafArgs) {
 /**
  * processa uma primitiva do tipo "patch" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da primitiva
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
+ * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
  */
-LeafParser.prototype.readPatch = function(id, root) {
+LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 
 	if (leafArgs.length != 2) {
 		return onInvalidArguments(id, leafArgs.length, 2);
 	}
 
 	var parseErrors = 0;
-	var myDegreeU = parseInt(leafArgs[0]);
+	var myDivsU = parseInt(leafArgs[0]);
+
+	if (myDivsU != myDivsU) {
+		onAttributeInvalid('surface divisions on U', id, 'PATCH');
+		parseErrors++;
+	}
+
+	var myDivsV = parseInt(leafArgs[1]);
+
+	if (myDivsV != myDivsV) {
+		onAttributeInvalid('surface divisions on V', id, 'PATCH');
+		parseErrors++;
+	}
+
+	if (root[0].nodeName != "UPATCH") {
+		return "unexpected tagname, expected <UPATCH>";
+	}
+
+	var myDegreeU = this.parseFloat(root[0], null, 'degree');
+	var uLength = myDegreeU + 1;
 
 	if (myDegreeU != myDegreeU) {
 		onAttributeInvalid('surface degree on U', id, 'PATCH');
 		parseErrors++;
 	}
 
-	var myDegreeV = parseInt(leafArgs[1]);
+	if (root[1].nodeName != "VPATCH") {
+		return "unexpected tagname, expected <VPATCH>";
+	}
+
+	var myDegreeV = this.parseFloat(root[1], null, 'degree');
+	var vLength = myDegreeV + 1;
 
 	if (myDegreeV != myDegreeV) {
 		onAttributeInvalid('surface degree on V', id, 'PATCH');
@@ -224,61 +248,67 @@ LeafParser.prototype.readPatch = function(id, root) {
 		return onParseError('PATCH', parseErrors, id);
 	}
 
-	var node_sz = root.children.length;
-	var uLength = myDegree + 1;
 	var controlpoints = [];
+	var knots1 = this.parseFloatArray(root[0], 'knots');
 
-	if (node_sz != 2 + uLength) {
-		return onParseError('PATCH', parseErrors, id);
+	if (knots1.length != uLength * 2) {
+		return "knots 1 length invalid";
 	}
 
-	var knots1Node = root.children[0];
-	var knots2Node = root.children[1];
+	var knots2 = this.parseFloatArray(root[1], 'knots');
 
-	if (knots1Node.nodeName != "knots1") {
-			return "unexpected tagname, expected knots1";
-
+	if (knots2.length != vLength * 2) {
+		return "knots 2 length invalid";
 	}
 
-	if (knots2Node.nodeName != "knots2") {
-			return "unexpected tagname, expected knots2";
+	printSingle('knots1', knots1);
+	printSingle('knots2', knots2);
+
+	if (root.length != uLength + 2) {
+		console.log("invalid number of control points for surface, expected " + uLength);
 	}
 
-	for (var i = 0; i < children_sz; i++) {
+	for (var currentU = 0; currentU < root.length - 2; currentU++) {
 
-		var uCoordinates = root.children[i];
-		var vLength = myDegreeV + 1;
+		var uTagName = 'U' + currentU;
+		var uCoordinates = root[currentU + 2];
+		var child_sz = uCoordinates.children.length;
 
-		if (uCoordinates.nodeName != 'U') {
-			console.log("unexpected tagname, expected U");
+		controlpoints[currentU] = [];
+
+		if (uCoordinates.nodeName != uTagName) {
+			console.log("unexpected tagname found, expected " + uTagName);
 			continue;
 		}
 
-		if (uCoordinates.length != vLength) {
-			console.log("control points for surface at U=" + i + " expected to be " + vLength);
+		if (child_sz != vLength) {
+			console.log("invalid number of control points for surface at U=" + currentU + ", expected " + vLength);
 			continue;
 		}
 
-		for (var j = 0; j < uCoordinates.length; j++) {
+		for (var currentV = 0; currentV < child_sz; currentV++) {
 
-			var vCoordinates = uCoordinates.children[j];
+			var vTagName = 'V' + currentV;
+			var vCoordinates = uCoordinates.children[currentV];
 
-			if (vCoordinates.nodeName != 'V') {
-				console.log("unexpected tagname, expected V");
+			if (vCoordinates.nodeName != vTagName) {
+				console.log("invalid tag found, expected " + vTagName);
 				continue;
 			}
 
 			var newVec4 = this.parseVector4(vCoordinates);
 
-			if (newVec4 == null) {
-				break;
+			if (newVec4 == NaN) {
+				continue;
 			}
 
-			controlpoints[i][j] = newVec4;
+			controlpoints[currentU][currentV] = newVec4;
 		}
 	}
 
-//	this.result = new MyPlane(this.scene, myDivisions);
+	console.log(controlpoints);
+
+	this.result = new MyPatch(this.scene, myDegreeU, myDegreeV, knots1, knots2, controlpoints);
 
 	return null;
 };
@@ -286,8 +316,8 @@ LeafParser.prototype.readPatch = function(id, root) {
 /**
  * processa uma primitiva do tipo "cylinder" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
+ * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
  */
 LeafParser.prototype.readCylinder = function(id, leafArgs) {
 
@@ -343,8 +373,8 @@ LeafParser.prototype.readCylinder = function(id, leafArgs) {
 /**
  * processa uma primitiva do tipo "sphere" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da LeafParser/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
+ * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
  */
 LeafParser.prototype.readSphere = function(id, leafArgs) {
 

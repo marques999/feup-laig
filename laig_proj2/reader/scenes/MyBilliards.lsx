@@ -722,9 +722,6 @@
 		<NODE id="table_balls">
 			<MATERIAL id="ball_red" />
 			<TEXTURE id="null" />
-			<ANIMATIONS>
-				<ANIMATION id="tt" />
-			</ANIMATIONS>
 			<DESCENDANTS>
 				<DESCENDANT id="ball1" />
 				<DESCENDANT id="ball2" />
@@ -921,6 +918,7 @@
 		  <MATERIAL id="wood_cherry" />
 		  <TEXTURE id="table_wood" />
 			<ANIMATIONS>
+				<ANIMATION id="tt"/>
 				<ANIMATION id="uu"/>
 			</ANIMATIONS>
 		  <DESCENDANTS>

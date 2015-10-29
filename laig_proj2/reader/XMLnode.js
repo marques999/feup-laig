@@ -109,7 +109,7 @@ XMLnode.prototype.applyAnimation = function() {
 
 	var currentAnimation = this.animations[this.animationNumber];
 
-	if (currentAnimation != null && currentAnimation != undefined) {
+	if (currentAnimation != null && currentAnimation.active) {
 		return currentAnimation.update();
 	}
 };

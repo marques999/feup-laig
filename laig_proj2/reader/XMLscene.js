@@ -32,6 +32,7 @@ XMLscene.prototype.init = function(application) {
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
 	this.lastUpdate = 0.0;
+	this.wireframe = false;
 	this.setUpdatePeriod(1000/60);
 
 	mat4.identity(this.defaultMatrix);
@@ -281,8 +282,6 @@ XMLscene.prototype.update = function(currTime) {
  */
 XMLscene.prototype.display = function () {
 
-	// ---- BEGIN Background, camera and axis setup
-	this.shader.bind();
 
 	// Clear image and depth buffer everytime we update the scene
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
@@ -310,6 +309,4 @@ XMLscene.prototype.display = function () {
 
 		this.graph.display();
 	}
-
-	this.shader.unbind();
 };
