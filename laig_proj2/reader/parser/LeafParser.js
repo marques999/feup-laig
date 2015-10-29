@@ -48,6 +48,12 @@ LeafParser.prototype.parse = function(root, id) {
 	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 	var error = null;
 
+	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', leafType);
+		printSingle('args', leafArgs);
+	}
+
 	if (leafType == 'rectangle') {
 		error = this.readRectangle(id, leafArgs);
 	}
@@ -72,12 +78,6 @@ LeafParser.prototype.parse = function(root, id) {
 
 	if (error != null) {
 		return error;
-	}
-
-	if (this.verbose) {
-		printHeader("LEAF", id);
-		printSingle('type', leafType);
-		printSingle('args', leafArgs);
 	}
 
 	return null;
@@ -261,9 +261,6 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 		return "knots 2 length invalid";
 	}
 
-	printSingle('knots1', knots1);
-	printSingle('knots2', knots2);
-
 	if (root.length != uLength + 2) {
 		console.log("invalid number of control points for surface, expected " + uLength);
 	}
@@ -306,9 +303,10 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 		}
 	}
 
-	console.log(controlpoints);
+	printValues('upatch', 'degree', myDegreeU, 'knots', knots1);
+	printValues('vpatch', 'degree', myDegreeV, 'knots', knots2);
 
-	this.result = new MyPatch(this.scene, myDegreeU, myDegreeV, knots1, knots2, controlpoints);
+	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, knots1, knots2, controlpoints);
 
 	return null;
 };

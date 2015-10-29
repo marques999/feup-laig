@@ -11,7 +11,7 @@
  * @param {Number[][]} controlvertexes - vértices de controlo da superfície NURBS
  * @return {null}
  */
-function MyPatch(scene, degree1, degree2, knots1, knots2, controlvertexes) {
+function MyPatch(scene, udivs, vdivs, degree1, degree2, knots1, knots2, controlvertexes) {
 
 	CGFobject.call(this, scene);
 
@@ -21,7 +21,7 @@ function MyPatch(scene, degree1, degree2, knots1, knots2, controlvertexes) {
 		return nurbsSurface.getPoint(u, v);
 	};
 
-	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, 20, 20);
+	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, udivs, vdivs);
 	this.nurbsObject.initBuffers();
 };
 
