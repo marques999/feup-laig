@@ -15,8 +15,14 @@ function Animation(id, span) {
 
 Animation.prototype = Object.create(Object.prototype);
 Animation.prototype.constructor = Animation;
-Animation.prototype.apply = function() {};
-Animation.prototype.step = function() {};
+
+Animation.prototype.step = function(deltaTime) {
+	return null;
+};
+
+Animation.prototype.update = function() {
+	return null;
+};
 
 Animation.prototype.start = function() {
 	this.active = true;
