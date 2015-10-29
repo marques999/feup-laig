@@ -1,5 +1,5 @@
 function onAttributeMissing(node, id, parent) {
-	return parent + " with id=" + id + " is missing attribute <" + node + ">!";
+	return "<" + parent + "> with id=" + id + " is missing attribute '" + node + "'!";
 };
 
 function onAttributeInvalid(node, id, parent) {
@@ -25,6 +25,14 @@ function onElementInvalid(node, parent) {
 function onElementMissing(node, parent) {
 	return node + " attribute is missing from <" + parent + ">.";
 };
+
+function onInvalidPoints(id, lenghtExpected) {
+	return "invalid number of control points for surface with id=" + id + ", expected " + lenghtExpected;
+}
+
+function onInvalidKnots(id, attribute, lenghtExpected) {
+	return "invalid number of " + attribute + " for surface with id=" + id + ", expected " + lenghtExpected;
+}
 
 function onInvalidArguments(id, argsGot, argsExpected) {
 	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + "...";

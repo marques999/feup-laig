@@ -157,6 +157,10 @@ BaseParser.prototype.parseCoordinates = function(root, attribute, coords) {
 
 BaseParser.prototype.parseVector4 = function(root, length) {
 
+	if (!root.hasAttribute('coords')) {
+		return null;
+	}
+
 	var unprocessedArgs = this.reader.getString(root, 'coords');
 	var vectorArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 	var arr = vectorArgs.map(parseFloat);
@@ -170,6 +174,10 @@ BaseParser.prototype.parseVector4 = function(root, length) {
 
 BaseParser.prototype.parseFloatArray = function(root, attribute, length) {
 
+	if (!root.hasAttribute(attribute)) {
+		return null;
+	}
+
 	var unprocessedArgs = this.reader.getString(root, attribute);
 	var vectorArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 	var arr = vectorArgs.map(parseFloat);
@@ -182,7 +190,6 @@ BaseParser.prototype.parseFloatArray = function(root, attribute, length) {
 
 	return arr;
 }
-
 
 /**
  * processa coordenadas na forma (r, g, b, a) para um vetor

@@ -30,9 +30,9 @@ LeafParser.prototype = Object.create(BaseParser.prototype);
 LeafParser.prototype.constructor = LeafParser;
 
 LeafParser.prototype.parse = function(root, id) {
-
-	var parent = root.nodeName;
+	
 	this.result = null;
+	var parent = root.nodeName;
 
 	if (!root.hasAttribute('type')) {
 		return onAttributeMissing('type', this.id, parent);
@@ -201,68 +201,73 @@ LeafParser.prototype.readPlane = function(id, leafArgs) {
  */
 LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 
+	var error = null;
+	var parseErrors = 0;
+
 	if (leafArgs.length != 2) {
 		return onInvalidArguments(id, leafArgs.length, 2);
 	}
 
-	var parseErrors = 0;
 	var myDivsU = parseInt(leafArgs[0]);
-
-	if (myDivsU != myDivsU) {
-		onAttributeInvalid('surface divisions on U', id, 'PATCH');
-		parseErrors++;
-	}
-
 	var myDivsV = parseInt(leafArgs[1]);
 
-	if (myDivsV != myDivsV) {
-		onAttributeInvalid('surface divisions on V', id, 'PATCH');
+	if (myDivsU != myDivsU) {
+		onAttributeInvalid('surface divisions U', id, 'PATCH');
 		parseErrors++;
 	}
 
-	if (root[0].nodeName != "UPATCH") {
-		return "unexpected tagname, expected <UPATCH>";
+	if (myDivsV != myDivsV) {
+		onAttributeInvalid('surface divisions V', id, 'PATCH');
+		parseErrors++;
+	}
+
+	if (root[0].nodeName != 'UPATCH') {
+		return onUnexpectedTag(root[0].nodeName, 'UPATCH', 'PATCH', id);
+	}
+
+	if (root[1].nodeName != 'VPATCH') {
+		return onUnexpectedTag(root[1].nodeName, 'VPATCH', 'PATCH', id);
 	}
 
 	var myDegreeU = this.parseFloat(root[0], null, 'degree');
-	var uLength = myDegreeU + 1;
-
-	if (myDegreeU != myDegreeU) {
-		onAttributeInvalid('surface degree on U', id, 'PATCH');
-		parseErrors++;
-	}
-
-	if (root[1].nodeName != "VPATCH") {
-		return "unexpected tagname, expected <VPATCH>";
-	}
-
 	var myDegreeV = this.parseFloat(root[1], null, 'degree');
+
+	error = checkValue(myDegreeU, 'surface U degree', 'PATCH', id);
+	if (error != null) {
+		return error;
+	}
+
+	error = checkValue(myDegreeV, 'surface V degree', 'PATCH', id);
+	if (error != null) {
+		return error;
+	}
+
+	var uLength = myDegreeU + 1;
 	var vLength = myDegreeV + 1;
+	var myPoints = [];
+	var myKnotsU = this.parseFloatArray(root[0], 'knots');
+	var myKnotsV = this.parseFloatArray(root[1], 'knots');
 
-	if (myDegreeV != myDegreeV) {
-		onAttributeInvalid('surface degree on V', id, 'PATCH');
-		parseErrors++;
+	error = checkValue(myKnotsU, 'U knots', 'PATCH', id);
+	if (error != null) {
+		return error;
 	}
 
-	if (parseErrors != 0) {
-		return onParseError('PATCH', parseErrors, id);
+	error = checkValue(myKnotsV, 'V knots', 'PATCH', id);
+	if (error != null) {
+		return error;
 	}
 
-	var controlpoints = [];
-	var knots1 = this.parseFloatArray(root[0], 'knots');
-
-	if (knots1.length != uLength * 2) {
-		return "knots 1 length invalid";
+	if (myKnotsU.length != uLength * 2) {
+		return onInvalidKnots(id, 'U knots', uLength * 2);
 	}
 
-	var knots2 = this.parseFloatArray(root[1], 'knots');
-
-	if (knots2.length != vLength * 2) {
-		return "knots 2 length invalid";
+	if (myKnotsV.length != vLength * 2) {
+		return onInvalidKnots(id, 'V knots', vLength * 2);
 	}
 
 	if (root.length != uLength + 2) {
-		console.log("invalid number of control points for surface, expected " + uLength);
+		return onInvalidPoints(id, uLength);
 	}
 
 	for (var currentU = 0; currentU < root.length - 2; currentU++) {
@@ -271,15 +276,17 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 		var uCoordinates = root[currentU + 2];
 		var child_sz = uCoordinates.children.length;
 
-		controlpoints[currentU] = [];
+		myPoints[currentU] = [];
 
 		if (uCoordinates.nodeName != uTagName) {
-			console.log("unexpected tagname found, expected " + uTagName);
+			onXMLWarning(onUnexpectedTag(uCoordinates.nodeName, uTagName, 'PATCH', id));
+			parseErrors++;
 			continue;
 		}
 
 		if (child_sz != vLength) {
-			console.log("invalid number of control points for surface at U=" + currentU + ", expected " + vLength);
+			onXMLWarning(onInvalidPoints(id, vLength));
+			parseErrors++;
 			continue;
 		}
 
@@ -289,24 +296,34 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 			var vCoordinates = uCoordinates.children[currentV];
 
 			if (vCoordinates.nodeName != vTagName) {
-				console.log("invalid tag found, expected " + vTagName);
+				onXMLWarning(onUnexpectedTag(vCoordinates.nodeName, vTagName, 'PATCH', id));
+				parseErrors++;
 				continue;
 			}
 
-			var newVec4 = this.parseVector4(vCoordinates);
+			var myVertex = this.parseVector4(vCoordinates);
+			var error = checkValue(myVertex, 'control vertex', 'PATCH', id);
 
-			if (newVec4 == NaN) {
+			if (error != null) {
+				onXMLWarning(warning);
+				parseErrors++;
 				continue;
 			}
 
-			controlpoints[currentU][currentV] = newVec4;
+			myPoints[currentU][currentV] = myVertex;
 		}
 	}
 
-	printValues('upatch', 'degree', myDegreeU, 'knots', knots1);
-	printValues('vpatch', 'degree', myDegreeV, 'knots', knots2);
+	if (parseErrors != 0) {
+		return onParseError('PATCH', parseErrors, id);
+	}
 
-	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, knots1, knots2, controlpoints);
+	if (this.verbose) {
+		printValues('upatch', 'degree', myDegreeU, 'knots', myKnotsU);
+		printValues('vpatch', 'degree', myDegreeV, 'knots', myKnotsV);
+	}
+
+	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, myKnotsU, myKnotsV, myPoints);
 
 	return null;
 };
