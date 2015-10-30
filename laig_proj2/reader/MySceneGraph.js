@@ -252,15 +252,6 @@ MySceneGraph.prototype.processAnimations = function(deltaTime) {
 };
 
 /**
- * processa todas as entidades presentes no bloco <ILLUMINATION> do ficheiro LSX
- * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseIllumination = function(root) {
-	return this.illuminationParser.parse(root, 0);
-};
-
-/**
  * processa uma string contida num atributo de um elemento XML
  * @param {XMLElement} root - estrutura de dados XML que contém o elemento
  * @param {String} attribute - identificador do atributo que contém a string
@@ -405,6 +396,69 @@ MySceneGraph.prototype.checkTextureReference = function(nodeId, objectId) {
 };
 
 /**
+ * processa todas as entidades presentes no bloco <ANIMATIONS> do ficheiro LSX
+ * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <ANIMATIONS>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseAnimations = function(root) {
+	return this.parseArray(root, 'ANIMATION', this.parseAnimation);
+};
+
+/**
+ * processa todas as entidades presentes no bloco <INITIALS>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <INITIALS>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseGlobals = function(root) {
+	return this.globalsParser.parse(root, 0);
+};
+
+/**
+ * processa todas as entidades presentes no bloco <ILLUMINATION> do ficheiro LSX
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseIllumination = function(root) {
+	return this.illuminationParser.parse(root, 0);
+};
+
+/**
+ * processa todas as entidades presentes no bloco <LEAVES>
+ * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <LEAVES>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseLeaves = function(root) {
+	return this.parseArray(root, 'LEAF', this.parseLeaf);
+};
+
+/**
+ * processa todas as entidades presentes no bloco <LIGHTS> do ficheiro LSX
+ * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <LIGHTS>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseLights = function(root) {
+	return this.parseArray(root, 'LIGHT', this.parseLight);
+};
+
+/**
+ * processa todas as entidades presentes no bloco <MATERIALS>
+ * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <MATERIALS>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseMaterials = function(root) {
+	return this.parseArray(root, 'MATERIAL', this.parseMaterial);
+};
+
+/**
+ * processa todas as entidades presentes no bloco <TEXTURES>
+ * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <TEXTURES>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseTextures = function(rootElement) {
+	return this.parseArray(rootElement, 'TEXTURE', this.parseTexture);
+};
+
+/**
  * processa uma entidade do tipo <NODE>, adicionando ao array de nodes do grafo
  * verifica se existe um node com o mesmo identificador no array de nodes
  * verifica ainda se os materiais e texturas referenciados pelo node são válidos (existem na cena)
@@ -443,15 +497,6 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 };
 
 /**
- * processa todas as entidades presentes no bloco <LIGHTS> do ficheiro LSX
- * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <LIGHTS>
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseLights = function(root) {
-	return this.parseArray(root, 'LIGHT', this.parseLight);
-};
-
-/**
  * processa uma entidade do tipo <LIGHT>, adicionando ao array de luzes do grafo
  * verifica ainda se existe uma luz com o mesmo identificador no array de luzes
  * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <LIGHT>
@@ -478,15 +523,6 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 };
 
 /**
- * processa todas as entidades presentes no bloco <ANIMATIONS> do ficheiro LSX
- * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <ANIMATIONS>
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseAnimations = function(root) {
-	return this.parseArray(root, 'ANIMATION', this.parseAnimation);
-};
-
-/**
  * processa uma entidade do tipo <ANIMATION>, adicionando ao array de animações do grafo
  * verifica ainda se existe uma animação com o mesmo identificador no array de animações
  * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <ANIMATION>
@@ -506,15 +542,6 @@ MySceneGraph.prototype.parseAnimation = function(id, root) {
 	this.animations[id] = this.animationParser.result;
 
 	return null;
-};
-
-/**
- * processa todas as entidades presentes no bloco <MATERIALS>
- * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <MATERIALS>
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseMaterials = function(root) {
-	return this.parseArray(root, 'MATERIAL', this.parseMaterial);
 };
 
 /**
@@ -540,15 +567,6 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 };
 
 /**
- * processa todas as entidades presentes no bloco <TEXTURES>
- * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <TEXTURES>
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseTextures = function(rootElement) {
-	return this.parseArray(rootElement, 'TEXTURE', this.parseTexture);
-};
-
-/**
  * processa uma entidade do tipo <TEXTURE>, adicionando ao array de texturas do grafo
  * verifica ainda se existe uma textura com o mesmo identificador no array de texturas
  * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <TEXTURE>
@@ -571,15 +589,6 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 };
 
 /**
- * processa todas as entidades presentes no bloco <LEAVES>
- * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <LEAVES>
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseLeaves = function(root) {
-	return this.parseArray(root, 'LEAF', this.parseLeaf);
-};
-
-/**
  * processa uma entidade do tipo <LEAF>, adicionando ao array de leaves do grafo
  * verifica ainda se existe uma leaf com o mesmo identificador no array
  * @param {XMLelement} root - estrutura de dados XML que contém os atributos de <LEAF>
@@ -599,15 +608,6 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 	this.leaves[id] = this.leafParser.result;
 
 	return null;
-};
-
-/**
- * processa todas as entidades presentes no bloco <INITIALS>
- * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <INITIALS>
- * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
- */
-MySceneGraph.prototype.parseGlobals = function(root) {
-	return this.globalsParser.parse(root, 0);
 };
 
 /**
