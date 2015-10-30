@@ -38,7 +38,7 @@ LeafParser.prototype.constructor = LeafParser;
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.parse = function(root, id) {
-	
+
 	this.result = null;
 	var parent = root.nodeName;
 

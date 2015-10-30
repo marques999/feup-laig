@@ -1,10 +1,10 @@
 /*
-           _   _ _____ __  __       _______ _____ ____  _   _  _____ 
+           _   _ _____ __  __       _______ _____ ____  _   _  _____
      /\   | \ | |_   _|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
-    /  \  |  \| | | | | \  / |  /  \  | |    | || |  | |  \| | (___  
-   / /\ \ | . ` | | | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \ 
+    /  \  |  \| | | | | \  / |  /  \  | |    | || |  | |  \| | (___
+   / /\ \ | . ` | | | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \
   / ____ \| |\  |_| |_| |  | |/ ____ \| |   _| || |__| | |\  |____) |
- /_/    \_\_| \_|_____|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/ 
+ /_/    \_\_| \_|_____|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/
 
 	<ANIMATIONS>
 		<ANIMATION id="ss" span="ff" type="linear">
@@ -172,7 +172,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	printSingle('radius', this.radius);
 	printSingle('startang', this.startang);
 	printSingle('rotang', this.rotang);
-	
+
 	this.result = new CircularAnimation(id, this.span, this.center, this.radius, this.startang, this.rotang);
 
 	return null;
