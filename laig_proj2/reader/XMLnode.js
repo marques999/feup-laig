@@ -87,13 +87,13 @@ XMLnode.prototype.translate = function(coords) {
 XMLnode.prototype.updateAnimation = function(deltaTime) {
 
 	var currentAnimation = this.animations[this.animationNumber];
-
-	if (currentAnimation == null) {
+	if (currentAnimation == null || currentAnimation == undefined) {
 		return;
 	}
 
 	if (currentAnimation.active) {
-		this.animations[this.animationNumber].step(deltaTime);
+		currentAnimation.step(deltaTime);
+		currentAnimation.update();
 	}
 	else {
 		this.animationNumber = (this.animationNumber + 1) % this.animations.length;
@@ -106,10 +106,8 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
  * @return {Mat4|null} - null se o node não tiver animações ou estas tiverem já terminado
  */
 XMLnode.prototype.applyAnimation = function() {
-
 	var currentAnimation = this.animations[this.animationNumber];
-
-	if (currentAnimation != null && currentAnimation.active) {
-		return currentAnimation.update();
+	if (currentAnimation != null) {
+		return currentAnimation.matrix;
 	}
 };

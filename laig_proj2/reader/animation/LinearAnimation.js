@@ -65,24 +65,32 @@ LinearAnimation.prototype.orientate = function(vector) {
 		vector[2] /= N;
 	}
 
+	if (vector[0] == 0) {
+		return 3 * Math.PI / 2 + Math.acos(vector[2]);
+	}
+	
+	if (vector[0] < 0) {
+		return 3 * Math.PI / 2 - Math.acos(vector[2]);
+	}
+	
+	if (vector[2] <= 0) {
+		return Math.acos(vector[0]);
+	}
+	
 	if (vector[2] > 0 && vector[0] > 0) {
-		 return Math.acos(vector[0]) - Math.PI / 2;
+		return 3 * Math.PI / 2 + Math.acos(vector[2]);
 	}
 
-	if (vector[2] > 0 && vector[0] < 0) {
-		return Math.acos(vector[0]) + Math.PI / 2;
-	}
-
-	return Math.acos(vector[0]);
+	return 3 * Math.PI / 2 + Math.acos(vector[0]);
 }
 
 LinearAnimation.prototype.start = function() {
 
 	this.active = true;
-	this.currentTime = 0;
+	this.currentTime = 0.0;
 	this.currentDelta = vec3.create();
 	this.currentPosition = vec3.create();
-	this.currentSection = 0;
+	this.currentSection = 1;
 
 	vec3.copy(this.currentPosition, this.points[0]);
 };
@@ -109,7 +117,7 @@ LinearAnimation.prototype.step = function(deltaTime) {
 
 	if (this.currentTime > this.duration[this.currentSection]) {
 	    if (++this.currentSection == this.sections) {
-	        this.currentSection = 0;
+	        this.currentSection--;
 	        this.stop();
 	    }
 	}
