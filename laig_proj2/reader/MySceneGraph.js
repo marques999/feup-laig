@@ -3,7 +3,7 @@
  * @constructor
  * @author Carlos Samouco, Diogo Marques
  * @param {String} filename - caminho relativo do ficheiro LSX
- * @param {XMLscene} scene - apontador para uma XMLscene onde o grafo de cena será desenhado
+ * @param {XMLscene} scene - apontador para uma XMLscene onde o grafo será apresentado
  * @return {null}
  */
 function MySceneGraph(filename, scene) {
@@ -64,53 +64,42 @@ MySceneGraph.prototype.onXMLReady = function() {
 	this.nodeParser = new NodeParser(this.reader, this);
 	this.textureParser = new TextureParser(this.reader, this.scene, this.scenePath);
 
-	var rootTags = [
-		'INITIALS',
-		'ILLUMINATION',
-		'LIGHTS',
-		'MATERIALS',
-		'TEXTURES',
-		'ANIMATIONS',
-		'LEAVES',
-		'NODES',
-	];
+	var rootParsers = {
+		'INITIALS': this.parseGlobals,
+		'ILLUMINATION': this.parseIllumination,
+		'LIGHTS': this.parseLights,
+		'MATERIALS': this.parseMaterials,
+		'TEXTURES': this.parseTextures,
+		'ANIMATIONS': this.parseAnimations,
+		'LEAVES': this.parseLeaves,
+		'NODES': this.parseNodes,
+	};
 
-	var rootParsers = [
-		this.parseGlobals,
-		this.parseIllumination,
-		this.parseLights,
-		this.parseMaterials,
-		this.parseTextures,
-		this.parseAnimations,
-		this.parseLeaves,
-		this.parseNodes,
-	];
+	var requiredElements = {
+		'INITIALS': true,
+		'ILLUMINATION': true,
+		'LIGHTS': true,
+		'MATERIALS': false,
+		'TEXUTRES': false,
+		'ANIMATIONS': false,
+		'LEAVES': true,
+		'NODES': true,
+	};
 
-	var requiredElements = [
-		true, // INITIALS
-		true, // ILLUMINATION
-		true, // LIGHTS
-		false, // MATERIALS
-		false, // TEXTURES
-		false, // ANIMATIONS
-		true, // LEAVES
-		true, // NODES
-	];
+	for (var current in rootParsers) {
 
-	for (var i = 0; i < rootTags.length; i++) {
+		var currentElement = rootElement.getElementsByTagName(current);
 
-		var currentElement = rootElement.getElementsByTagName(rootTags[i]);
-
-		if (requiredElements[i] && (currentElement == null || currentElement.length == 0)) {
-			this.onXMLError(onElementMissing(rootTags[i], parent));
+		if (requiredElements[current] && (currentElement == null || currentElement.length == 0)) {
+			this.onXMLError(onElementMissing(current, parent));
 			return;
 		}
 
 		if (currentElement.length != 1) {
-			onMultipleElements(rootTags[i], parent);
+			onMultipleElements(current, parent);
 		}
 
-		var error = rootParsers[i].call(this, currentElement[0]);
+		var error = rootParsers[current].call(this, currentElement[0]);
 
 		if (error != null) {
 			this.onXMLError(error);
@@ -147,6 +136,7 @@ MySceneGraph.prototype.display = function() {
 
 	var rootNode = this.nodes[this.graphRoot];
 	var rootMaterial = this.defaultMaterial;
+
 	this.scene.pushMatrix();
 
 	if (rootNode.materialId != null && rootNode.materialId != 'null') {
@@ -185,11 +175,13 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 	this.scene.multMatrix(nodeMatrix);
 
 	for (var i = 0; i < node.children.length; i++) {
+
 		var nextId = node.children[i];
 		var mId = materialId;
 		var tId = textureId;
 
 		if (this.leaves[nextId] != undefined) {
+
 			var leaf = this.leaves[nextId];
 			var leafMaterial = this.defaultMaterial;
 			var leafTexture = null;
@@ -249,7 +241,7 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
 };
 
 /**
- *
+ * atualiza o estado das animações associadas aos nodes do grafo
  * @param {Number} deltaTime - intervalo de tempo decorrido desde o último update
  * @return {null}
  */
@@ -343,7 +335,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
  * @param {XMLelement} root - estrutura de dados XML que contém as entidades descendentes de <NODES>
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-MySceneGraph.prototype.parseNodes = function (root) {
+MySceneGraph.prototype.parseNodes = function(root) {
 
 	var globalRoot = this.parseString(root, 'ROOT', 'id');
 	var error = checkValue(globalRoot, 'root', root.nodeName);
@@ -363,23 +355,34 @@ MySceneGraph.prototype.parseNodes = function (root) {
 };
 
 /**
+ * verifica se um determinado elemento existe num array associativo
+ * @param {Number} nodeId - identificador do node que referencia esse elemento
+ * @param {Number} objectId - identificador do elemento
+ * @param {Number} parent - tipo de dados do elemento
+ * @param {Object[]} myArray - array associativo a ser pesquisado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.checkReference = function(nodeId, objectId, parent, myArray) {
+
+	if (objectId == 'null' || objectId == 'clear') {
+		return null;
+	}
+
+	if (myArray[objectId] == undefined) {
+		return "<NODE> with id=" + nodeId + " references <" + parent + "> id=" + objectId + " which doesn't exist, reverting to defaults...";
+	}
+
+	return null;
+}
+/**
  * verifica se uma determinada animação existe no array de animações
  * @param {Number} nodeId - identificador do node que referencia a animação
  * @param {Number} objectId - identificador da animação
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.checkAnimationReference = function(nodeId, objectId) {
-
-	if (objectId == 'null' || objectId == 'clear') {
-		return null;
-	}
-
-	if (this.animations[objectId] == undefined) {
-		return "NODE with id=" + nodeId + " references <ANIMATION> id=" + objectId + " which doesn't exist, reverting to defaults...";
-	}
-
-	return null;
-};
+	return this.checkReference(nodeId, objectId, 'ANIMATION', this.animations);
+}
 
 /**
  * verifica se um determinado material existe no array de materiais
@@ -388,16 +391,7 @@ MySceneGraph.prototype.checkAnimationReference = function(nodeId, objectId) {
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.checkMaterialReference = function(nodeId, objectId) {
-
-	if (objectId == 'null' || objectId == 'clear') {
-		return null;
-	}
-
-	if (this.materials[objectId] == undefined) {
-		return "NODE with id=" + nodeId + " references <MATERIAL> id=" + objectId + " which doesn't exist, reverting to defaults...";
-	}
-
-	return null;
+	return this.checkReference(nodeId, objectId, 'MATERIAL', this.materials);
 };
 
 /**
@@ -407,16 +401,7 @@ MySceneGraph.prototype.checkMaterialReference = function(nodeId, objectId) {
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 MySceneGraph.prototype.checkTextureReference = function(nodeId, objectId) {
-
-	if (objectId == 'null' || objectId == 'clear') {
-		return null;
-	}
-
-	if (this.textures[objectId] == undefined) {
-		return "NODE with id=" + nodeId + " references <TEXTURE> id=" + objectId + " which doesn't exist, reverting to defaults...";
-	}
-
-	return null;
+	return this.checkReference(nodeId, objectId, 'TEXUTRE', this.textures);
 };
 
 /**

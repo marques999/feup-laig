@@ -18,9 +18,11 @@
 */
 
 /**
- * construtor default da classe 'GlobalsParser'
+ * construtor por omissão da classe 'GlobalsParser'
  * @constructor
  * @author Diogo Marques
+ * @param {CGFxmlReader} reader
+ * @param {CGFscene} scene
  * @return {null}
  */
 function GlobalsParser(reader, scene) {
@@ -30,37 +32,47 @@ function GlobalsParser(reader, scene) {
 GlobalsParser.prototype = Object.create(BaseParser.prototype);
 GlobalsParser.prototype.constructor = GlobalsParser;
 
+/**
+ * processa todas as entidades presentes no bloco <INITIALS>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <INITIALS>
+ * @param {Number} id - identificador do elemento a ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 GlobalsParser.prototype.parse = function(root, id) {
 
 	var parent = root.nodeName;
 	var parseErrors = 0;
-
 	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
 	var error = checkValue(globalFrustumNear, 'near', 'frustum');
+
 	if (error != null) {
 		return error;
 	}
 
 	var globalFrustumFar = this.parseFloat(root, 'frustum', 'far');
 	error = checkValue(globalFrustumFar, 'far', 'frustum');
+
 	if (error != null) {
 		return error;
 	}
 
 	var globalReference = this.parseFloat(root, 'reference', 'length');
 	error = checkValue(globalReference, 'length', 'reference');
+
 	if (error != null) {
 		return error;
 	}
 
 	var globalScale = this.parseCoordinatesScale(root, 'scale');
 	error = checkValue(globalScale, 'scale', parent);
+
 	if (error != null) {
 		return error;
 	}
 
 	var globalTranslate = this.parseCoordinatesXYZ(root, 'translation');
 	error = checkValue(globalTranslate, 'translation', parent);
+
 	if (error != null) {
 		return error;
 	}
@@ -111,7 +123,6 @@ GlobalsParser.prototype.parse = function(root, id) {
 		}
 
 		axisFound[axis] = true;
-
 		this.scene.setRotation(j++, axis, angle);
 	}
 

@@ -16,9 +16,11 @@
 */
 
 /**
- * construtor default da classe 'LightParser'
+ * construtor por omissão da classe 'LightParser'
  * @constructor
  * @author Diogo Marques
+ * @param {CGFxmlReader} reader
+ * @param {CGFscene} scene
  * @return {null}
  */
 function LightParser(reader, scene) {
@@ -28,9 +30,16 @@ function LightParser(reader, scene) {
 LightParser.prototype = Object.create(BaseParser.prototype);
 LightParser.prototype.constructor = LightParser;
 
+/**
+ * processa uma determinada entidade presente no bloco <LIGHTS>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <LIGHTS>
+ * @param {Number} id - identificador do elemento a ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 LightParser.prototype.parse = function(root, id) {
 
 	this.result = null;
+
 	var parent = root.nodeName;
 	var parseErrors = 0;
 

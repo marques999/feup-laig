@@ -6,20 +6,22 @@
  | |____| |____ / ____ \  /  | |____ ____) |
  |______|______/_/    \_\/   |______|_____/
 
-	<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
-	<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" />
-	<LEAF id="ss" type="sphere" args="ff ii ii" />
-	<LEAF id="ss" type="plane" args="ii" />
-	<LEAF id="ss" type="triangle" args="ff ff ff  ff ff ff  ff ff ff" />
+	<LEAVES>
+		<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
+		<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" />
+		<LEAF id="ss" type="sphere" args="ff ii ii" />
+		<LEAF id="ss" type="triangle" args="ff ff ff ff ff ff ff ff ff" />
+		<LEAF id="ss" type="plane" args="ii" />
+		<LEAF id="ss" type="patch" args="ii ii" />
+	</LEAVES>
 */
 
 /**
- * construtor default da classe 'LeafParser'
+ * construtor por omissão da classe 'LeafParser'
  * @constructor
  * @author Diogo Marques
- * @param {String} id - identificador do node
- * @param {String} textureId -  identificador da textura associada a este node
- * @param {String} materialId - identificador do material associado a este node
+ * @param {CGFxmlReader} reader
+ * @param {CGFscene} scene
  * @return {null}
  */
 function LeafParser(reader, scene) {
@@ -29,6 +31,12 @@ function LeafParser(reader, scene) {
 LeafParser.prototype = Object.create(BaseParser.prototype);
 LeafParser.prototype.constructor = LeafParser;
 
+/**
+ * processa uma determinada entidade presente no bloco <LEAVES>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <LEAVES>
+ * @param {Number} id - identificador do elemento a ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 LeafParser.prototype.parse = function(root, id) {
 	
 	this.result = null;
@@ -85,9 +93,9 @@ LeafParser.prototype.parse = function(root, id) {
 
 /**
  * processa uma primitiva do tipo "rectangle" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da LeafParser/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
- * @return {String|null} - null se a função terminar com sucesso, caso contr?rio retorna uma mensagem de erro
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readRectangle = function(id, leafArgs) {
 
@@ -123,9 +131,9 @@ LeafParser.prototype.readRectangle = function(id, leafArgs) {
 
 /**
  * processa uma primitiva do tipo "triangle" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da LeafParser/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
- * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readTriangle = function(id, leafArgs) {
 
@@ -166,9 +174,9 @@ LeafParser.prototype.readTriangle = function(id, leafArgs) {
 
 /**
  * processa uma primitiva do tipo "plane" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da primitiva
- * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
- * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readPlane = function(id, leafArgs) {
 
@@ -195,9 +203,9 @@ LeafParser.prototype.readPlane = function(id, leafArgs) {
 
 /**
  * processa uma primitiva do tipo "patch" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da primitiva
- * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
- * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 
@@ -330,9 +338,9 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 
 /**
  * processa uma primitiva do tipo "cylinder" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
- * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readCylinder = function(id, leafArgs) {
 
@@ -387,9 +395,9 @@ LeafParser.prototype.readCylinder = function(id, leafArgs) {
 
 /**
  * processa uma primitiva do tipo "sphere" e acrescenta ao array de leaves do grafo
- * @param {Number} id - identificador da LeafParser/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos n?o processados desta primitiva
- * @return {String|null} - null se a fun??o terminar com sucesso, caso contr?rio retorna uma mensagem de erro
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readSphere = function(id, leafArgs) {
 

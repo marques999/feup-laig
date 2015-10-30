@@ -16,9 +16,11 @@
 */
 
 /**
- * construtor default da classe 'MaterialParser'
+ * construtor por omissão da classe 'MaterialParser'
  * @constructor
  * @author Diogo Marques
+ * @param {CGFxmlReader} reader
+ * @param {CGFscene} scene
  * @return {null}
  */
 function MaterialParser(reader, scene) {
@@ -28,9 +30,16 @@ function MaterialParser(reader, scene) {
 MaterialParser.prototype = Object.create(BaseParser.prototype);
 MaterialParser.prototype.constructor = MaterialParser;
 
+/**
+ * processa uma determinada entidade presente no bloco <MATERIALS>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <MATERIALS>
+ * @param {Number} id - identificador do elemento a ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MaterialParser.prototype.parse = function(root, id) {
 
 	this.result = null;
+
 	var parent = root.nodeName;
 	var parseErrors = 0;
 

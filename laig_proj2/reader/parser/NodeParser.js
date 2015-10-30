@@ -19,9 +19,11 @@
 */
 
 /**
- * construtor default da classe 'NodeParser'
+ * construtor por omissão da classe 'NodeParser'
  * @constructor
  * @author Diogo Marques
+ * @param {CGFxmlReader} reader
+ * @param {CGFscene} scene
  * @return {null}
  */
 function NodeParser(reader, graph) {
@@ -31,6 +33,12 @@ function NodeParser(reader, graph) {
 NodeParser.prototype = Object.create(BaseParser.prototype);
 NodeParser.prototype.constructor = NodeParser;
 
+/**
+ * processa uma determinada entidade presente no bloco <NODES>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <NODES>
+ * @param {Number} id - identificador do elemento a ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 NodeParser.prototype.parse = function(root, id) {
 
 	var parent = root.nodeName;
@@ -183,7 +191,7 @@ NodeParser.prototype.parseAnimations = function(root, node) {
  * processa um escalamento presente num bloco <NODE>
  * @param {XMLElement} root - estrutura que dados XML que contém o atributo <scale>
  * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
- * @return {String|null} - ll se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 NodeParser.prototype.parseScale = function(root, node) {
 
@@ -227,6 +235,12 @@ NodeParser.prototype.parseTranslation = function(root, node) {
 	return null;
 };
 
+/**
+ * processa todos os descendentes presentes num bloco <NODE>
+ * @param {XMLElement} root - estrutura que dados XML que contém o atributo <DESCENDANTS>
+ * @param {XMLnode} node - estrutura de dados que contém as informações do nó atual
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 NodeParser.prototype.parseDescendants = function(root, node) {
 
 	var nodeDescendants = root.getElementsByTagName('DESCENDANTS');

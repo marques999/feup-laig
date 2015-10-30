@@ -13,9 +13,11 @@
 */
 
 /**
- * construtor default da classe 'IlluminationParser'
+ * construtor por omissão da classe 'IlluminationParser'
  * @constructor
  * @author Diogo Marques
+ * @param {CGFxmlReader} reader
+ * @param {CGFscene} scene
  * @return {null}
  */
 function IlluminationParser(reader, scene) {
@@ -25,6 +27,12 @@ function IlluminationParser(reader, scene) {
 IlluminationParser.prototype = Object.create(BaseParser.prototype);
 IlluminationParser.prototype.constructor = IlluminationParser;
 
+/**
+ * processa todas as entidades presentes no bloco <ILLUMINATION>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
+ * @param {Number} id - identificador do elemento a ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 IlluminationParser.prototype.parse = function(root, id) {
 
 	var globalAmbient = this.parseCoordinatesRGBA(root, 'ambient');

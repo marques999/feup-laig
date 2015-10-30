@@ -1,7 +1,28 @@
+/*
+           _   _ _____ __  __       _______ _____ ____  _   _  _____ 
+     /\   | \ | |_   _|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
+    /  \  |  \| | | | | \  / |  /  \  | |    | || |  | |  \| | (___  
+   / /\ \ | . ` | | | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \ 
+  / ____ \| |\  |_| |_| |  | |/ ____ \| |   _| || |__| | |\  |____) |
+ /_/    \_\_| \_|_____|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/ 
+
+	<ANIMATIONS>
+		<ANIMATION id="ss" span="ff" type="linear">
+			<controlpoint x="ff" y="ff" z="ff" />
+			<controlpoint x="ff" y="ff" z="ff" />
+			<controlpoint x="ff" y="ff" z="ff" />
+		</ANIMATION>
+		<ANIMATION id="ss" span="ff" type="circular" center="ff ff ff" radius="ff" startang="ff" rotang="ff">
+		</ANIMATION>
+	</ANIMATIONS>
+*/
+
 /**
- * construtor default da classe 'AnimationParser'
+ * construtor por omissão da classe 'AnimationParser'
  * @constructor
  * @author Diogo Marques
+ * @param {CGFxmlReader} reader
+ * @param {CGFscene} scene
  * @return {null}
  */
 function AnimationParser(reader, scene) {
@@ -11,9 +32,16 @@ function AnimationParser(reader, scene) {
 AnimationParser.prototype = Object.create(BaseParser.prototype);
 AnimationParser.prototype.constructor = AnimationParser;
 
+/**
+ * processa uma determinada entidade presente no bloco <ANIMATIONS>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <ANIMATIONS>
+ * @param {Number} id - identificador do elemento a ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 AnimationParser.prototype.parse = function(root, id) {
 
 	this.result = null;
+
 	var parent = root.nodeName;
 	var parseErrors = 0;
 
@@ -65,13 +93,12 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	var parseErrors = 0;
 	var animationPoints = [];
 	var controlPoints = root.getElementsByTagName('controlpoint');
-	var controlPointsSize = controlPoints.length;
 
-	if (controlPointsSize == null || controlPointsSize == 0) {
+	if (controlPoints.length == null || controlPoints.length == 0) {
 		return onAttributeMissing('controlpoint', id, parent);
 	}
 
-	for (var i = 0; i < controlPointsSize; i++) {
+	for (var i = 0; i < controlPoints.length; i++) {
 
 		var newCoordinates = this.parseCoordinatesXYZ(controlPoints[i], null);
 		var error = checkValue(newCoordinates, 'controlpoint', parent);
@@ -136,9 +163,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	printSingle('radius', this.radius);
 	printSingle('startang', this.startang);
 	printSingle('rotang', this.rotang);
-
-	this.result = new CircularAnimation(id, this.span,
-		this.center, this.radius, this.startang, this.rotang);
+	this.result = new CircularAnimation(id, this.span, this.center, this.radius, this.startang, this.rotang);
 
 	return null;
 };
