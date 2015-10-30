@@ -41,7 +41,6 @@ AnimationParser.prototype.constructor = AnimationParser;
 AnimationParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-
 	var parent = root.nodeName;
 	var parseErrors = 0;
 
@@ -87,6 +86,12 @@ AnimationParser.prototype.parse = function(root, id) {
 	return null;
 };
 
+/**
+ * processa uma animação do tipo "linear" e acrescenta ao array de animações do grafo
+ * @param {XMLElement} root - estrutura de dados XML que contém os atributos desta animação
+ * @param {Number} id - identificador da animação atual
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 AnimationParser.prototype.readLinear = function(root, id) {
 
 	var parent = 'LINEAR ANIMATION';
@@ -129,11 +134,15 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	return null;
 };
 
+/**
+ * processa uma animação do tipo "circular" e acrescenta ao array de animações do grafo
+ * @param {XMLElement} root - estrutura de dados XML que contém os atributos desta animação
+ * @param {Number} id - identificador da animação atual
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 AnimationParser.prototype.readCircular = function(root, id) {
 
-	var parent = 'CIRCULAR ANIMATION';
 	var parseErrors = 0;
-
 	var parseAttributes = {
 		'center': this.parseVector3,
 		'radius': this.parseFloat,
@@ -144,7 +153,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	for (var attribute in parseAttributes) {
 
 		this[attribute] = parseAttributes[attribute].call(this, root, null, attribute);
-		var error = checkValue(this[attribute], attribute, parent);
+		var error = checkValue(this[attribute], attribute, 'CIRCULAR ANIMATION');
 
 		if (error != null) {
 			parseErrors++;
@@ -153,7 +162,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
+		return onParseError('CIRCULAR ANIMATION', parseErrors, id);
 	}
 
 	printHeader("ANIMATION", id);
@@ -163,6 +172,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	printSingle('radius', this.radius);
 	printSingle('startang', this.startang);
 	printSingle('rotang', this.rotang);
+	
 	this.result = new CircularAnimation(id, this.span, this.center, this.radius, this.startang, this.rotang);
 
 	return null;

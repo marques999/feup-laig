@@ -38,7 +38,6 @@ TextureParser.prototype.constructor = TextureParser;
 TextureParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-
 	var parent = root.nodeName;
 	var parseErrors = 0;
 
@@ -77,7 +76,6 @@ TextureParser.prototype.parse = function(root, id) {
 	}
 
 	var textureObject = new CGFtexture(this.scene, this.path + texturePath);
-
 	this.result = new XMLtexture(textureObject, textureS, textureT);
 
 	if (this.verbose) {
