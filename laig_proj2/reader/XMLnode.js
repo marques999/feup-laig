@@ -88,7 +88,7 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 
 	var currentAnimation = this.animations[this.animationNumber];
 	if (currentAnimation == null || currentAnimation == undefined) {
-		return;
+		return null;
 	}
 
 	if (currentAnimation.active) {

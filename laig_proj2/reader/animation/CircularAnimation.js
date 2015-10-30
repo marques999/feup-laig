@@ -2,23 +2,23 @@
  * construtor default da classe 'CircularAnimation'
  * @constructor
  * @author Diogo Marques
- * @param {String} id - identificador da animaÁ„o
- * @param {Number} span - duraÁ„o da animaÁ„o (em segundos)
- * @param {Number[]} center - centro de rotaÁ„o
- * @param {Number} radius - raio da rotaÁ„o em relaÁ„o ao seu centro
- * @param {Number} start - ‚ngulo inicial da rotaÁ„o
- * @param {Number} angle - ‚ngulo final da rotaÁ„o
+ * @param {String} id - identificador da anima√ß√£o
+ * @param {Number} span - dura√ß√£o da anima√ß√£o (em segundos)
+ * @param {Number[]} center - centro de rota√ß√£o
+ * @param {Number} radius - raio da rota√ß√£o em rela√ß√£o ao seu centro
+ * @param {Number} start - √¢ngulo inicial da rota√ß√£o
+ * @param {Number} angle - √¢ngulo final da rota√ß√£o
  * @return {null}
  */
-function CircularAnimation(id, span, center, radius, start, angle) {
+function CircularAnimation(id, span, center, radius, startang, rotang) {
 
 	Animation.call(this, id, span);
 
 	this.initial = mat4.create();
 	this.center = center;
 	this.radius = radius;
-	this.angleStart = start * Math.PI / 180;
-	this.angleEnd = angle * Math.PI / 180;
+	this.angleStart = startang * Math.PI / 180;
+	this.angleEnd = rotang * Math.PI / 180;
 	this.velocity = (this.angleEnd - this.angleStart) / this.span;
 
 	mat4.identity(this.initial);
@@ -28,15 +28,31 @@ function CircularAnimation(id, span, center, radius, start, angle) {
 CircularAnimation.prototype = Object.create(Animation.prototype);
 CircularAnimation.prototype.constructor = CircularAnimation;
 
-CircularAnimation.prototype.update = function() {
+/**
+ * inicializa a anima√ß√£o com os valores por omiss√£o
+ * @return {null}
+ */
+CircularAnimation.prototype.start = function() {
+	this.active = true;
+	this.current = this.angleStart;
+	this.currentTime = 0.0;
+};
 
+/**
+ * calcula a matriz da anima√ß√£o para os novos valores
+ * @return {null}
+ */
+CircularAnimation.prototype.update = function() {
 	mat4.copy(this.matrix, this.initial);
 	mat4.rotateY(this.matrix, this.matrix, this.current);
 	mat4.translate(this.matrix, this.matrix, [this.radius, 0.0, 0.0]);
-
-	return this.matrix;
 };
 
+/**
+ * avan√ßa a anima√ß√£o em deltaTime unidades de tempo, caso esta se encontre ativa
+ * @param {Number} deltaTime - tempo decorrido desde a √∫ltima verifica√ß√£o
+ * @return {null}
+ */
 CircularAnimation.prototype.step = function(deltaTime) {
 
 	if (!this.active) {
@@ -50,10 +66,4 @@ CircularAnimation.prototype.step = function(deltaTime) {
 	else {
 		this.stop();
 	}
-};
-
-CircularAnimation.prototype.start = function() {
-	this.active = true;
-	this.currentTime = 0.0;
-	this.current = this.angleStart;
 };
