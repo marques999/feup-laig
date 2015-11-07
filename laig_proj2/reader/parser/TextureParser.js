@@ -38,25 +38,24 @@ TextureParser.prototype.constructor = TextureParser;
 TextureParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-	var parent = root.nodeName;
 	var parseErrors = 0;
 
 	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
+		return onReservedId(root.nodeName, id);
 	}
 
 	var texturePath = this.parseString(root, 'file', 'path');
 
 	if (texturePath == null) {
-		return onAttributeMissing('file', id, parent);
+		return onAttributeMissing('file', id, root.nodeName);
 	}
 
 	if (!checkUrl(this.path + texturePath)) {
-		return onURLInvalid('file', id, parent);
+		return onURLInvalid('file', id, root.nodeName);
 	}
 
 	var textureS = this.parseFloat(root, 'amplif_factor', 's');
-	var error = checkValue(textureS, 'amplification factor S', parent, id);
+	var error = checkValue(textureS, 'amplification factor S', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -64,7 +63,7 @@ TextureParser.prototype.parse = function(root, id) {
 	}
 
 	var textureT = this.parseFloat(root, 'amplif_factor', 't');
-	var error = checkValue(textureT, 'amplification factor T', parent, id);
+	var error = checkValue(textureT, 'amplification factor T', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -72,7 +71,7 @@ TextureParser.prototype.parse = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
+		return onParseError(root.nodeName, parseErrors, id);
 	}
 
 	var textureObject = new CGFtexture(this.scene, this.path + texturePath);
@@ -83,6 +82,4 @@ TextureParser.prototype.parse = function(root, id) {
 		printValues('file', 'path', texturePath);
 		printValues('amplif_factor', 's', textureS, 't', textureT);
 	}
-
-	return null;
 };

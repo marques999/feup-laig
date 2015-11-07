@@ -62,9 +62,8 @@
 	</ANIMATIONS>
 
 	<LEAVES>
-		<LEAF id="curve1" type="patch" args="20 20">
-			<UPATCH degree="1" knots="0.0 0.0 1.0 1.0"/>
-			<VPATCH degree="1" knots="0.0 0.0 1.0 1.0"/>
+		<LEAF id="plane1" type="plane" parts="16"/>
+		<LEAF id="curve1" type="patch" partsU="20" partsV="20" orderU="1" orderV="1">
 			<U0>
 				<V0 coords="-2.0 -2.0 0.0 1.0"/>
 				<V1 coords="-2.0 2.0 0.0 1.0"/>
@@ -74,9 +73,7 @@
 				<V1 coords="2.0 2.0 0.0 1.0"/>
 			</U1>
 		</LEAF>
-		<LEAF id="curve2" type="patch" args="20 20">
-			<UPATCH degree="2" knots="0.0 0.0 0.0 1.0 1.0 1.0"/>
-			<VPATCH degree="1" knots="0.0 0.0 1.0 1.0"/>
+		<LEAF id="curve2" type="patch" partsU="20" partsV="20" orderU="2" orderV="1">
 			<U0>
 				<V0 coords="-1.5 -1.5 0.0 1.0"/>
 				<V1 coords="-1.5 1.5 0.0 1.0"/>
@@ -90,9 +87,7 @@
 				<V1 coords="1.5 1.5 0.0 1.0"/>
 			</U2>
 		</LEAF>
-		<LEAF id="curve3" type="patch" args="20 20">
-			<UPATCH degree="2" knots="0.0 0.0 0.0 1.0 1.0 1.0"/>
-			<VPATCH degree="3" knots="0.0 0.0 0.0 0.0 1.0 1.0 1.0 1.0"/>
+		<LEAF id="curve3" type="patch" partsU="20" partsV="20" orderU="2" orderV="3">
 			<U0>
 				<V0 coords="-1.5 -1.5 0.0 1.0"/>
 				<V1 coords="-2.0 -2.0 2.0 1.0"/>
@@ -112,9 +107,7 @@
 				<V3 coords="1.5 1.5 0.0 1.0"/>		
 			</U2>
 		</LEAF>
-		<LEAF id="curve4" type="patch" args="20 20">
-			<UPATCH degree="2" knots="0.0 0.0 0.0 1.0 1.0 1.0"/>
-			<VPATCH degree="3" knots="0.0 0.0 0.0 0.0 1.0 1.0 1.0 1.0"/>
+		<LEAF id="curve4" type="patch" partsU="20" partsV="20" orderU="2" orderV="3">
 			<U0>
 				<V0 coords="-2.0 -2.0 1.0 1.0"/>
 				<V1 coords="-2.0 -1.0 -2.0 1.0"/>
@@ -143,7 +136,7 @@
 			<MATERIAL id="default" />
 			<TEXTURE id="colors" />
 			<DESCENDANTS>
-				<DESCENDANT id="nurbs1" />
+				<DESCENDANT id="plane1" />
 				<DESCENDANT id="nurbs2" />
 				<DESCENDANT id="nurbs3" />
 				<DESCENDANT id="nurbs4" />

@@ -14,7 +14,7 @@ MyInterface.prototype.constructor = MyInterface;
 
 /**
  * inicializa a interface gráfica do utilizador
- * @return {Boolean}
+ * @return {null}
  */
 MyInterface.prototype.init = function(application) {
 
@@ -29,8 +29,6 @@ MyInterface.prototype.init = function(application) {
 	this.group = this.gui.addFolder("Lights");
 	this.group.open();
 	this.lights = {};
-
-	return true;
 };
 
 /**

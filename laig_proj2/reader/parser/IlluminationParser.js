@@ -43,7 +43,7 @@ IlluminationParser.prototype.parse = function(root, id) {
 	}
 
 	var globalBackground = this.parseCoordinatesRGBA(root, 'background');
-	error = checkValue(globalBackground, 'background', root.nodeName);
+	var error = checkValue(globalBackground, 'background', root.nodeName);
 
 	if (error != null) {
 		return error;
@@ -57,6 +57,4 @@ IlluminationParser.prototype.parse = function(root, id) {
 		printRGBA('ambient', globalAmbient);
 		printRGBA('background', globalBackground);
 	}
-
-	return null;
 };

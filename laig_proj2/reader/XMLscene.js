@@ -31,7 +31,6 @@ XMLscene.prototype.init = function(application) {
 	this.gl.depthFunc(this.gl.LEQUAL);
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
-	this.lastUpdate = 0.0;
 	this.wireframe = false;
 	this.setUpdatePeriod(1000/60);
 
@@ -265,15 +264,9 @@ XMLscene.prototype.onGraphLoaded = function() {
 
 XMLscene.prototype.update = function(currTime) {
 
-	if (!this.graph.loadedOk) {
-		return;
-	}
-
-	if (this.lastUpdate > 0) {
+	if (this.graph.loadedOk) {
 		this.graph.processAnimations((currTime - this.lastUpdate) * 0.001);
 	}
-
-	this.lastUpdate = currTime;
 };
 
 /**
@@ -282,24 +275,14 @@ XMLscene.prototype.update = function(currTime) {
  */
 XMLscene.prototype.display = function () {
 
-
-	// Clear image and depth buffer everytime we update the scene
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-
-	// Initialize Model-View matrix as identity (no transformation)
 	this.updateProjectionMatrix();
 	this.loadIdentity();
-
-	// Apply transformations corresponding to the camera position relative to the origin
 	this.applyViewMatrix();
 	this.multMatrix(this.defaultMatrix);
-
-	// Draw axis
 	this.axis.display();
 	this.setDefaultAppearance();
-
-	// ---- END Background, camera and axis setup
 
 	if (this.graph.loadedOk) {
 

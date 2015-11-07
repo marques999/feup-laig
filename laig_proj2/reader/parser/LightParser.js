@@ -39,16 +39,14 @@ LightParser.prototype.constructor = LightParser;
 LightParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-
-	var parent = root.nodeName;
 	var parseErrors = 0;
 
 	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
+		return onReservedId(root.nodeName, id);
 	}
 
 	var lightEnabled = this.parseBoolean(root, 'enable');
-	var error = checkValue(lightEnabled, 'enable', parent, id);
+	var error = checkValue(lightEnabled, 'enable', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -56,7 +54,7 @@ LightParser.prototype.parse = function(root, id) {
 	}
 
 	var lightPosition = this.parseCoordinatesXYZW(root, 'position');
-	error = checkValue(lightPosition, 'position', parent, id);
+	var error = checkValue(lightPosition, 'position', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -64,7 +62,7 @@ LightParser.prototype.parse = function(root, id) {
 	}
 
 	var lightAmbient = this.parseCoordinatesRGBA(root, 'ambient');
-	error = checkValue(lightAmbient, 'ambient', parent, id);
+	var error = checkValue(lightAmbient, 'ambient', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -72,7 +70,7 @@ LightParser.prototype.parse = function(root, id) {
 	}
 
 	var lightDiffuse = this.parseCoordinatesRGBA(root, 'diffuse');
-	error = checkValue(lightDiffuse, 'diffuse', parent, id);
+	var error = checkValue(lightDiffuse, 'diffuse', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -80,7 +78,7 @@ LightParser.prototype.parse = function(root, id) {
 	}
 
 	var lightSpecular = this.parseCoordinatesRGBA(root, 'specular');
-	error = checkValue(lightSpecular, 'specular', parent, id);
+	var error = checkValue(lightSpecular, 'specular', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -88,7 +86,7 @@ LightParser.prototype.parse = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
+		return onParseError(root.nodeName, parseErrors, id);
 	}
 
 	this.result = this.scene.pushLight(id, lightEnabled, lightPosition, lightAmbient, lightDiffuse, lightSpecular);
@@ -101,6 +99,4 @@ LightParser.prototype.parse = function(root, id) {
 		printRGBA('diffuse', lightDiffuse);
 		printRGBA('specular', lightSpecular);
 	}
-
-	return null;
 };

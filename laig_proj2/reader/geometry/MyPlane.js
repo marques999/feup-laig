@@ -4,66 +4,35 @@
  * @augments MyPrimitive
  * @author Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Number} nrDivs - número de divisões do plano em comprimento e largura
+ * @param {Number} nrDivs - número de divisões do plano em partes por eixo
  * @return {null}
  */
 function MyPlane(scene, nrDivs) {
 
 	CGFobject.call(this, scene);
 
-	this.nrDivs = nrDivs;
-	this.patchLength = 1.0 / nrDivs;
-	this.indices = [];
-	this.normals = [];
-	this.texCoords = [];
-	this.vertices = [];
-	this.initBuffers();
+	var controlPoints = [
+		[[-0.5, 0.0, 0.5, 1.0], [-0.5, 0.0, -0.5, 1.0]],
+		[[0.5, 0.0, 0.5, 1.0], [0.5, 0.0, -0.5, 1.0]]
+	];
+
+	var nurbsSurface = new CGFnurbsSurface(1, 1, [0, 0, 1, 1], [0, 0, 1, 1], controlPoints);
+
+	function getSurfacePoint(u, v) {
+		return nurbsSurface.getPoint(u, v);
+	};
+
+	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, nrDivs, nrDivs);
+	this.nurbsObject.initBuffers();
 };
 
 MyPlane.prototype = Object.create(MyPrimitive.prototype);
 MyPlane.prototype.constructor = MyPlane;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyPlane'
+ * desenha a primitva 'MyPlane' na CGFscene correspondente
  * @return {null}
  */
-MyPlane.prototype.initBuffers = function() {
-
-	var yCoord = 0.0;
-	var tCoord = 1.0;
-
-	for (var j = 0; j <= this.nrDivs; j++) {
-
-		var xCoord = 0.0;
-
-		for (var i = 0; i <= this.nrDivs; i++) {
-
-			this.vertices.push(xCoord, yCoord, 0.0);
-			this.texCoords.push(xCoord, tCoord);
-			this.normals.push(0.0, 0.0, 1.0);
-
-			xCoord += this.patchLength;
-		}
-
-		yCoord += this.patchLength;
-		tCoord -= this.patchLength;
-	}
-
-	var vertexNumber = 0;
-
-	for (var j = 0; j < this.nrDivs; j++) {
-
-		for (var i = 0; i <= this.nrDivs; i++) {
-			this.indices.push(vertexNumber);
-			this.indices.push(vertexNumber++ + this.nrDivs + 1);
-		}
-
-		if (j + 1 < this.nrDivs) {
-			this.indices.push(vertexNumber + this.nrDivs);
-			this.indices.push(vertexNumber);
-		}
-	}
-
-	this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
-	this.initGLBuffers();
+MyPlane.prototype.display = function() {
+	this.nurbsObject.display();
 };

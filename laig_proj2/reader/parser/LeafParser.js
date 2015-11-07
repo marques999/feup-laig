@@ -39,68 +39,79 @@ LeafParser.prototype.constructor = LeafParser;
  */
 LeafParser.prototype.parse = function(root, id) {
 
-	this.result = null;
-	var parent = root.nodeName;
-
 	if (!root.hasAttribute('type')) {
-		return onAttributeMissing('type', this.id, parent);
+		return onAttributeMissing('type', id, root.nodeName);
 	}
 
+	this.result = null;
 	var leafType = this.reader.getString(root, 'type');
-
-	if (!root.hasAttribute('args')) {
-		return onAttributeMissing('args', id, parent);
-	}
-
-	var unprocessedArgs = this.reader.getString(root, 'args');
-	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
-	var error = null;
-
-	if (this.verbose) {
-		printHeader("LEAF", id);
-		printSingle('type', leafType);
-		printSingle('args', leafArgs);
-	}
-
-	if (leafType == 'rectangle') {
-		error = this.readRectangle(id, leafArgs);
-	}
-	else if (leafType == 'triangle') {
-		error = this.readTriangle(id, leafArgs);
-	}
-	else if (leafType == 'plane') {
-		error = this.readPlane(id, leafArgs);
-	}
-	else if (leafType == 'patch') {
-		error = this.readPatch(id, leafArgs, root.children);
-	}
-	else if (leafType == 'cylinder') {
-		error = this.readCylinder(id, leafArgs);
-	}
-	else if (leafType == 'sphere') {
-		error = this.readSphere(id, leafArgs);
-	}
-	else {
-		return onAttributeInvalid('type', id, parent);
-	}
+	var error = this.readType(id, root, leafType);
 
 	if (error != null) {
 		return error;
 	}
 
-	return null;
+	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', leafType);
+	}
 };
 
+LeafParser.prototype.readType = function(id, root, leafType) {
+
+	var error = null;
+
+	if (leafType == 'rectangle') {
+		error = this.readRectangle(id, root);
+	}
+	else if (leafType == 'triangle') {
+		error = this.readTriangle(id, root);
+	}
+	else if (leafType == 'patch') {
+		error = this.readPatch(id, root);
+	}
+	else if (leafType == 'cylinder') {
+		error = this.readCylinder(id, root);
+	}
+	else if (leafType == 'sphere') {
+		error = this.readSphere(id, root);
+	}
+	else if (leafType == 'terrain') {
+		error = this.readTerrain(id,  root);
+	}
+	else if (leafType == 'vehicle') {
+		this.result = new MyVehicle(this.scene);
+	}
+	else if (leafType == 'plane') {
+		error = this.readPlane(id, root);
+	}
+	else {
+		return onAttributeInvalid('type', id, parent);
+	}
+
+	return error;
+}
 /**
  * processa uma primitiva do tipo "rectangle" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-LeafParser.prototype.readRectangle = function(id, leafArgs) {
+LeafParser.prototype.readRectangle = function(id, root) {
+
+	if (!root.hasAttribute('args')) {
+		return onAttributeMissing('args', id, 'RECTANGLE');
+	}
+
+	var unprocessedArgs = this.reader.getString(root, 'args');
+	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 
 	if (leafArgs.length != 4) {
 		return onInvalidArguments(id, leafArgs.length, 4);
+	}
+
+	if (this.verbose) {
+		printSingle('args', leafArgs);
 	}
 
 	var parseErrors = 0;
@@ -125,8 +136,6 @@ LeafParser.prototype.readRectangle = function(id, leafArgs) {
 	}
 
 	this.result = new MyRectangle(this.scene, x1, y1, x2, y2);
-
-	return null;
 };
 
 /**
@@ -135,10 +144,21 @@ LeafParser.prototype.readRectangle = function(id, leafArgs) {
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-LeafParser.prototype.readTriangle = function(id, leafArgs) {
+LeafParser.prototype.readTriangle = function(id, root) {
+
+	if (!root.hasAttribute('args')) {
+		return onAttributeMissing('args', id, 'TRIANGLE');
+	}
+
+	var unprocessedArgs = this.reader.getString(root, 'args');
+	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 
 	if (leafArgs.length != 9) {
 		return onInvalidArguments(id, leafArgs.length, 9);
+	}
+
+	if (this.verbose) {
+		printSingle('args', leafArgs);
 	}
 
 	var parseErrors = 0;
@@ -168,8 +188,6 @@ LeafParser.prototype.readTriangle = function(id, leafArgs) {
 	}
 
 	this.result = new MyTriangle(this.scene, vec1, vec2, vec3);
-
-	return null;
 };
 
 /**
@@ -178,17 +196,14 @@ LeafParser.prototype.readTriangle = function(id, leafArgs) {
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-LeafParser.prototype.readPlane = function(id, leafArgs) {
-
-	if (leafArgs.length != 1) {
-		return onInvalidArguments(id, leafArgs.length, 1);
-	}
+LeafParser.prototype.readPlane = function(id, root) {
 
 	var parseErrors = 0;
-	var myDivisions = parseInt(leafArgs[0]);
+	var myDivisions = this.parseInteger(root, null, 'parts')
+	var error = checkValue(myDivisions, 'number of divisions', 'PLANE', id);
 
-	if (myDivisions != myDivisions) {
-		onAttributeInvalid('number of divisions', id, 'PLANE');
+	if (error != null) {
+		onXMLWarning(error);
 		parseErrors++;
 	}
 
@@ -197,8 +212,46 @@ LeafParser.prototype.readPlane = function(id, leafArgs) {
 	}
 
 	this.result = new MyPlane(this.scene, myDivisions);
+};
 
-	return null;
+/**
+ * processa uma primitiva do tipo "terrain" e acrescenta ao array de leaves do grafo
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+LeafParser.prototype.readTerrain = function(id, root) {
+
+	var parseErrors = 0;
+	var myTexture = this.getString(root, null, 'texture');
+	var error = checkValue(myTexture, 'texture path', 'TERRAIN', id);
+
+	if (error != null) {
+		onXMLWarning(error);
+		parseErrors++;
+	}
+
+	if (!checkUrl(myTexture)) {
+		return onURLInvalid('texture path', id, root.nodeName);
+	}
+
+	var myHeightmap = this.getString(root, null, 'heightmap');
+	var error = checkValue(myHeightmap, 'texture heightmap path', 'TERRAIN', id);
+
+	if (error != null) {
+		onXMLWarning(error);
+		parseErrors++;
+	}
+
+	if (!checkUrl(myHeightmap)) {
+		return onURLInvalid('texture heightmap path', id, 'TERRAIN');
+	}
+
+	if (parseErrors != 0) {
+		return onParseError('TERRAIN', parseErrors, id);
+	}
+
+	this.result = new MyTerrain(this.scene, myTexture, myHeightmap);
 };
 
 /**
@@ -207,81 +260,59 @@ LeafParser.prototype.readPlane = function(id, leafArgs) {
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-LeafParser.prototype.readPatch = function(id, leafArgs, root) {
+LeafParser.prototype.readPatch = function(id, root) {
 
-	var error = null;
 	var parseErrors = 0;
+	var myDivsU = this.parseInteger(root, null, 'partsU');
+	var error = checkValue(myDivsU, 'surface U divisions', 'PATCH', id);
 
-	if (leafArgs.length != 2) {
-		return onInvalidArguments(id, leafArgs.length, 2);
-	}
-
-	var myDivsU = parseInt(leafArgs[0]);
-	var myDivsV = parseInt(leafArgs[1]);
-
-	if (myDivsU != myDivsU) {
-		onAttributeInvalid('surface divisions U', id, 'PATCH');
+	if (error != null) {
+		onXMLWarning(error);
 		parseErrors++;
 	}
 
-	if (myDivsV != myDivsV) {
-		onAttributeInvalid('surface divisions V', id, 'PATCH');
+	var myDivsV = this.parseInteger(root, null, 'partsV');
+	var error = checkValue(myDivsV, 'surface V divisions', 'PATCH', id);
+
+	if (error != null) {
+		onXMLWarning(error);
 		parseErrors++;
 	}
 
-	if (root[0].nodeName != 'UPATCH') {
-		return onUnexpectedTag(root[0].nodeName, 'UPATCH', 'PATCH', id);
-	}
+	var myDegreeU = this.parseInteger(root, null, 'orderU');
+	var error = checkValue(myDegreeU, 'surface U degree', 'PATCH', id);
 
-	if (root[1].nodeName != 'VPATCH') {
-		return onUnexpectedTag(root[1].nodeName, 'VPATCH', 'PATCH', id);
-	}
-
-	var myDegreeU = this.parseFloat(root[0], null, 'degree');
-	var myDegreeV = this.parseFloat(root[1], null, 'degree');
-
-	error = checkValue(myDegreeU, 'surface U degree', 'PATCH', id);
 	if (error != null) {
-		return error;
+		onXMLWarning(error);
+		parseErrors++;
 	}
 
-	error = checkValue(myDegreeV, 'surface V degree', 'PATCH', id);
+	var myDegreeV = this.parseInteger(root, null, 'orderV');
+	var error = checkValue(myDegreeV, 'surface V degree', 'PATCH', id);
+
 	if (error != null) {
-		return error;
+		onXMLWarning(error);
+		parseErrors++;
 	}
+
+	if (parseErrors != 0) {
+		return onParseError('PATCH', parseErrors, id);
+	}
+
+	root = root.children;
 
 	var uLength = myDegreeU + 1;
 	var vLength = myDegreeV + 1;
 	var myPoints = [];
-	var myKnotsU = this.parseFloatArray(root[0], 'knots');
-	var myKnotsV = this.parseFloatArray(root[1], 'knots');
 
-	error = checkValue(myKnotsU, 'U knots', 'PATCH', id);
-	if (error != null) {
-		return error;
-	}
-
-	error = checkValue(myKnotsV, 'V knots', 'PATCH', id);
-	if (error != null) {
-		return error;
-	}
-
-	if (myKnotsU.length != uLength * 2) {
-		return onInvalidKnots(id, 'U knots', uLength * 2);
-	}
-
-	if (myKnotsV.length != vLength * 2) {
-		return onInvalidKnots(id, 'V knots', vLength * 2);
-	}
-
-	if (root.length != uLength + 2) {
+	if (root.length != uLength) {
 		return onInvalidPoints(id, uLength);
 	}
 
-	for (var currentU = 0; currentU < root.length - 2; currentU++) {
+	for (var currentU = 0; currentU < uLength; currentU++) {
 
 		var uTagName = 'U' + currentU;
-		var uCoordinates = root[currentU + 2];
+		var uCoordinates = root[currentU];
 		var child_sz = uCoordinates.children.length;
 
 		myPoints[currentU] = [];
@@ -298,7 +329,7 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 			continue;
 		}
 
-		for (var currentV = 0; currentV < child_sz; currentV++) {
+		for (var currentV = 0; currentV < vLength; currentV++) {
 
 			var vTagName = 'V' + currentV;
 			var vCoordinates = uCoordinates.children[currentV];
@@ -326,14 +357,12 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
 		return onParseError('PATCH', parseErrors, id);
 	}
 
+	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, myPoints);
+
 	if (this.verbose) {
-		printValues('upatch', 'degree', myDegreeU, 'knots', myKnotsU);
-		printValues('vpatch', 'degree', myDegreeV, 'knots', myKnotsV);
+		printValues('upatch', 'degree', myDegreeU);
+		printValues('vpatch', 'degree', myDegreeV);
 	}
-
-	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, myKnotsU, myKnotsV, myPoints);
-
-	return null;
 };
 
 /**
@@ -342,7 +371,14 @@ LeafParser.prototype.readPatch = function(id, leafArgs, root) {
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-LeafParser.prototype.readCylinder = function(id, leafArgs) {
+LeafParser.prototype.readCylinder = function(id, root) {
+
+	if (!root.hasAttribute('args')) {
+		return onAttributeMissing('args', id, 'CYLINDER');
+	}
+
+	var unprocessedArgs = this.reader.getString(root, 'args');
+	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 
 	if (leafArgs.length != 5) {
 		return onInvalidArguments(id, leafArgs.length, 5);
@@ -390,7 +426,9 @@ LeafParser.prototype.readCylinder = function(id, leafArgs) {
 
 	this.result = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
 
-	return null;
+	if (this.verbose) {
+		printSingle('args', leafArgs);
+	}
 };
 
 /**
@@ -399,7 +437,14 @@ LeafParser.prototype.readCylinder = function(id, leafArgs) {
  * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-LeafParser.prototype.readSphere = function(id, leafArgs) {
+LeafParser.prototype.readSphere = function(id, root) {
+
+	if (!root.hasAttribute('args')) {
+		return onAttributeMissing('args', id, 'SPHERE');
+	}
+
+	var unprocessedArgs = this.reader.getString(root, 'args');
+	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
 
 	if (leafArgs.length != 3) {
 		return onInvalidArguments(id, leafArgs.length, 3);
@@ -433,5 +478,7 @@ LeafParser.prototype.readSphere = function(id, leafArgs) {
 
 	this.result = new MySphere(this.scene, myRadius, myStacks, mySlices);
 
-	return null;
+	if (this.verbose) {
+		printSingle('args', leafArgs);
+	}
 };

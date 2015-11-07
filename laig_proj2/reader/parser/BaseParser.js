@@ -56,7 +56,7 @@ BaseParser.prototype.parseBoolean = function(root, attribute) {
 		return null;
 	}
 
-	var checkResult = this.reader.getBoolean(node[0], 'value', true);
+	var checkResult = this.reader.getBoolean(node[0], 'value');
 
 	return checkResult == null ? NaN : checkResult;
 };
@@ -69,6 +69,16 @@ BaseParser.prototype.parseBoolean = function(root, attribute) {
  */
 BaseParser.prototype.parseFloat = function(root, name, attribute) {
 	return this.parseGeneric(root, name, attribute, this.reader.getFloat);
+};
+
+/**
+ * processa um número inteiro contido num elemento XML
+ * @param {XMLElement} root - estrutura de dados XML que contém o elemento
+ * @param {String} attribute - identificador do atributo que contém o número inteiro
+ * @return {Number|NaN|null} - número número inteiro se este for válido, caso contrário NaN ou null
+ */
+BaseParser.prototype.parseInteger = function(root, name, attribute) {
+	return this.parseGeneric(root, name, attribute, this.reader.getInteger);
 };
 
 /**

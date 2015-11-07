@@ -122,7 +122,6 @@ NodeParser.prototype.parse = function(root, id) {
 	}
 
 	this.result = node;
-	return null;
 };
 
 /**
@@ -183,8 +182,6 @@ NodeParser.prototype.parseAnimations = function(root, node) {
 			console.log("\t\t\t id=" + animationId);
 		}
 	}
-
-	return null;
 };
 
 /**
@@ -207,8 +204,6 @@ NodeParser.prototype.parseScale = function(root, node) {
 	if (this.verbose) {
 		printXYZ('SCALE', coords);
 	}
-
-	return null;
 };
 
 /**
@@ -231,8 +226,6 @@ NodeParser.prototype.parseTranslation = function(root, node) {
 	if (this.verbose) {
 		printXYZ('TRANSLATION', coords);
 	}
-
-	return null;
 };
 
 /**
@@ -302,7 +295,7 @@ NodeParser.prototype.parseRotation = function(root, node) {
 	}
 
 	var angle = this.reader.getFloat(root, 'angle', true);
-	error = checkValue(angle, 'angle', parent, node.id);
+	var error = checkValue(angle, 'angle', parent, node.id);
 
 	if (error != null) {
 		parseErrors++;
@@ -318,6 +311,4 @@ NodeParser.prototype.parseRotation = function(root, node) {
 	if (this.verbose) {
 		printValues('ROTATION', 'axis', axis, 'angle', angle);
 	}
-
-	return null;
 };

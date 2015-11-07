@@ -1,7 +1,7 @@
 /*
-           _   _ _____ __  __       _______ _____ ____  _   _  _____
-     /\   | \ | |_   _|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
-    /  \  |  \| | | | | \  / |  /  \  | |    | || |  | |  \| | (___
+		   _   _ _____ __  __       _______ _____ ____  _   _  _____
+	 /\   | \ | |_   _|  \/  |   /\|__   __|_   _/ __ \| \ | |/ ____|
+	/  \  |  \| | | | | \  / |  /  \  | |    | || |  | |  \| | (___
    / /\ \ | . ` | | | | |\/| | / /\ \ | |    | || |  | | . ` |\___ \
   / ____ \| |\  |_| |_| |  | |/ ____ \| |   _| || |__| | |\  |____) |
  /_/    \_\_| \_|_____|_|  |_/_/    \_\_|  |_____\____/|_| \_|_____/
@@ -41,22 +41,21 @@ AnimationParser.prototype.constructor = AnimationParser;
 AnimationParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-	var parent = root.nodeName;
 	var parseErrors = 0;
 
 	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
+		return onReservedId(root.nodeName, id);
 	}
 
 	var parseAttributes = {
-		'span' : this.parseFloat,
-		'type' : this.parseString
+		'span': this.parseFloat,
+		'type': this.parseString
 	};
 
 	for (var attribute in parseAttributes) {
 
 		this[attribute] = parseAttributes[attribute].call(this, root, null, attribute);
-		var error = checkValue(this[attribute], attribute, parent);
+		var error = checkValue(this[attribute], attribute, root.nodeName);
 
 		if (error != null) {
 			parseErrors++;
@@ -71,7 +70,7 @@ AnimationParser.prototype.parse = function(root, id) {
 		error = this.readCircular(root, id);
 	}
 	else {
-		return onAttributeInvalid('type', id, parent);
+		return onAttributeInvalid('type', id, root.nodeName);
 	}
 
 	if (error != null) {
@@ -80,10 +79,8 @@ AnimationParser.prototype.parse = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
+		return onParseError(root.nodeName, parseErrors, id);
 	}
-
-	return null;
 };
 
 /**
@@ -94,19 +91,18 @@ AnimationParser.prototype.parse = function(root, id) {
  */
 AnimationParser.prototype.readLinear = function(root, id) {
 
-	var parent = 'LINEAR ANIMATION';
 	var parseErrors = 0;
 	var animationPoints = [];
 	var controlPoints = root.getElementsByTagName('controlpoint');
 
 	if (controlPoints.length == null || controlPoints.length == 0) {
-		return onAttributeMissing('controlpoint', id, parent);
+		return onAttributeMissing('controlpoint', id, 'LINEAR ANIMATION');
 	}
 
 	for (var i = 0; i < controlPoints.length; i++) {
 
 		var newCoordinates = this.parseCoordinatesXYZ(controlPoints[i], null);
-		var error = checkValue(newCoordinates, 'controlpoint', parent);
+		var error = checkValue(newCoordinates, 'controlpoint', 'LINEAR ANIMATION');
 
 		if (error != null) {
 			onXMLWarning(error);
@@ -118,20 +114,20 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
+		return onParseError('LINEAR ANIMATION', parseErrors, id);
 	}
 
-	printHeader("ANIMATION", id);
-	printSingle('span', this.span);
-	printSingle('type', this.type);
+	if (this.verbose) {
+		printHeader("ANIMATION", id);
+		printSingle('span', this.span);
+		printSingle('type', this.type);
+	}
 
 	for (var i = 0; i < animationPoints.length; i++) {
 		printXYZ('control point ' + i, animationPoints[i]);
 	}
 
 	this.result = new LinearAnimation(id, this.span, animationPoints);
-
-	return null;
 };
 
 /**
@@ -147,7 +143,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 		'center': this.parseVector3,
 		'radius': this.parseFloat,
 		'startang': this.parseFloat,
-		'rotang' : this.parseFloat
+		'rotang': this.parseFloat
 	};
 
 	for (var attribute in parseAttributes) {
@@ -165,15 +161,15 @@ AnimationParser.prototype.readCircular = function(root, id) {
 		return onParseError('CIRCULAR ANIMATION', parseErrors, id);
 	}
 
-	printHeader("ANIMATION", id);
-	printSingle('span', this.span);
-	printSingle('type', this.type);
-	printXYZ('center', this.center);
-	printSingle('radius', this.radius);
-	printSingle('startang', this.startang);
-	printSingle('rotang', this.rotang);
+	if (this.verbose) {
+		printHeader("ANIMATION", id);
+		printSingle('span', this.span);
+		printSingle('type', this.type);
+		printXYZ('center', this.center);
+		printSingle('radius', this.radius);
+		printSingle('startang', this.startang);
+		printSingle('rotang', this.rotang);
+	}
 
 	this.result = new CircularAnimation(id, this.span, this.center, this.radius, this.startang, this.rotang);
-
-	return null;
 };

@@ -40,7 +40,6 @@ GlobalsParser.prototype.constructor = GlobalsParser;
  */
 GlobalsParser.prototype.parse = function(root, id) {
 
-	var parent = root.nodeName;
 	var parseErrors = 0;
 	var globalFrustumNear = this.parseFloat(root, 'frustum', 'near');
 	var error = checkValue(globalFrustumNear, 'near', 'frustum');
@@ -50,28 +49,28 @@ GlobalsParser.prototype.parse = function(root, id) {
 	}
 
 	var globalFrustumFar = this.parseFloat(root, 'frustum', 'far');
-	error = checkValue(globalFrustumFar, 'far', 'frustum');
+	var error = checkValue(globalFrustumFar, 'far', 'frustum');
 
 	if (error != null) {
 		return error;
 	}
 
 	var globalReference = this.parseFloat(root, 'reference', 'length');
-	error = checkValue(globalReference, 'length', 'reference');
+	var error = checkValue(globalReference, 'length', 'reference');
 
 	if (error != null) {
 		return error;
 	}
 
 	var globalScale = this.parseCoordinatesScale(root, 'scale');
-	error = checkValue(globalScale, 'scale', parent);
+	var error = checkValue(globalScale, 'scale', root.nodeName);
 
 	if (error != null) {
 		return error;
 	}
 
 	var globalTranslate = this.parseCoordinatesXYZ(root, 'translation');
-	error = checkValue(globalTranslate, 'translation', parent);
+	var error = checkValue(globalTranslate, 'translation', root.nodeName);
 
 	if (error != null) {
 		return error;
@@ -81,7 +80,7 @@ GlobalsParser.prototype.parse = function(root, id) {
 	var node_sz = node.length;
 
 	if (node == null || node_sz == 0) {
-		return onElementMissing('rotation', parent);
+		return onElementMissing('rotation', root.nodeName);
 	}
 
 	if (node_sz > 3) {
@@ -99,14 +98,14 @@ GlobalsParser.prototype.parse = function(root, id) {
 	for (var i = 0; i < node_sz; i++) {
 
 		var axis = this.reader.getString(node[i], 'axis');
-		error = checkValue(axis, 'rotation axis', parent);
+		error = checkValue(axis, 'rotation axis', root.nodeName);
 
 		if (error != null) {
 			return error;
 		}
 
 		if (axis != 'x' && axis != 'y' && axis != 'z') {
-			onUnknownAxis(axis, node[i].nodeName, parent);
+			onUnknownAxis(axis, node[i].nodeName, root.nodeName);
 			continue;
 		}
 
@@ -116,7 +115,7 @@ GlobalsParser.prototype.parse = function(root, id) {
 		}
 
 		var angle = this.reader.getFloat(node[i], 'angle');
-		error = checkValue(angle, 'rotation angle', parent);
+		error = checkValue(angle, 'rotation angle', root.nodeName);
 
 		if (error != null) {
 			return error;
@@ -153,6 +152,4 @@ GlobalsParser.prototype.parse = function(root, id) {
 		printXYZ('scale', globalScale);
 		printValues('reference', 'length', globalReference);
 	}
-
-	return null;
 };

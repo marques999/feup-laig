@@ -1,0 +1,454 @@
+<SCENE>
+	<INITIALS>
+		<frustum near="10" far="1200" />                       <!-- frustum planes-->
+		<translation x="0" y="0" z="0" />                  <!-- initial translate -->
+		<rotation axis="x" angle="0.0" />                    <!-- initial rotation 3 -->
+		<rotation axis="y" angle="0.0" />                    <!-- initial rotation 2 -->
+		<rotation axis="z" angle="0.0" />                    <!-- initial rotation 1 -->
+		<scale sx="1" sy="1" sz="1" />                 	    <!-- initial scaling -->
+		<reference length="500" />                           <!-- axis length; "0" means no axis-->
+	</INITIALS>
+
+	<ILLUMINATION>
+		<ambient r="1" g="1" b="1" a="1" />            	    <!-- global ambient -->
+		<background r="0.5" g="0.5" b="0.8" a="1" />          <!-- background color -->
+	</ILLUMINATION>
+
+	<LIGHTS>
+		<LIGHT id="SOL1">                                    <!-- light identifier -->
+			<enable value ="1" />                         <!-- enable/disable -->
+			<position x="0" y="0" z="50" w="1" />       <!-- light position -->
+			<ambient r="0" g="0" b="0" a="1" />        <!-- ambient component -->
+			<diffuse r="1" g="1" b="1" a="0.2" />        <!-- diffuse component -->
+			<specular r="1" g="1" b="1" a="0.2" />       <!-- specular component -->
+		</LIGHT>
+		<LIGHT id="SOL6">                                    <!-- light identifier -->
+			<enable value ="1" />                         <!-- enable/disable -->
+			<position x="0" y="0" z="-50" w="1" />       <!-- light position -->
+			<ambient r="0" g="0" b="0" a="1" />        <!-- ambient component -->
+			<diffuse r="1" g="1" b="1" a="0.2" />        <!-- diffuse component -->
+			<specular r="1" g="1" b="1" a="0.2" />       <!-- specular component -->
+		</LIGHT>
+		<LIGHT id="SOL2">                                    <!-- light identifier -->
+			<enable value ="1" />                         <!-- enable/disable -->
+			<position x="-50" y="0" z="0" w="1" />       <!-- light position -->
+			<ambient r="0" g="0" b="0" a="1" />        <!-- ambient component -->
+			<diffuse r="1" g="1" b="1" a="0.2" />        <!-- diffuse component -->
+			<specular r="1" g="1" b="1" a="0.2" />       <!-- specular component -->
+		</LIGHT>
+		<LIGHT id="SOL3">                                    <!-- light identifier -->
+			<enable value ="1" />                         <!-- enable/disable -->
+			<position x="50" y="0" z="0" w="1" />      <!-- light position -->
+			<ambient r="0" g="0" b="0" a="1" />        <!-- ambient component -->
+			<diffuse r="1" g="1" b="1" a="0.2" />        <!-- diffuse component -->
+			<specular r="1" g="1" b="1" a="0.2" />       <!-- specular component -->
+		</LIGHT>
+		<LIGHT id="SOL4">                                    <!-- light identifier -->
+			<enable value ="1" />                         <!-- enable/disable -->
+			<position x="0" y="-50" z="0" w="1" />       <!-- light position -->
+			<ambient r="0" g="0" b="0" a="1" />        <!-- ambient component -->
+			<diffuse r="1" g="1" b="1" a="0.2" />        <!-- diffuse component -->
+			<specular r="1" g="1" b="1" a="0.2" />       <!-- specular component -->
+		</LIGHT>
+		<LIGHT id="SOL5">                                    <!-- light identifier -->
+			<enable value ="1" />                         <!-- enable/disable -->
+			<position x="0" y="50" z="0" w="1" />       <!-- light position -->
+			<ambient r="0" g="0" b="0" a="1" />        <!-- ambient component -->
+			<diffuse r="1" g="1" b="1" a="0.2" />        <!-- diffuse component -->
+			<specular r="1" g="1" b="1" a="0.2" />       <!-- specular component -->
+		</LIGHT>
+	</LIGHTS>
+
+	<TEXTURES>
+		<TEXTURE id="sun">
+			<file path="sun.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+
+		<TEXTURE id="mercurio">
+			<file path="mercury.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="venus">
+			<file path="venus.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="terra">
+			<file path="earth.png" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="mars">
+			<file path="mars.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="jupiter">
+			<file path="jupiter.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="saturno">
+			<file path="saturno.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="urano">
+			<file path="urano.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="neptune">
+			<file path="neptune.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+		<TEXTURE id="outerspace">
+			<file path="images/colors.jpg" />                             <!-- path to file -->
+			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
+		</TEXTURE>
+	</TEXTURES>
+
+	<MATERIALS>
+		<MATERIAL id="laranja">
+			<shininess value="1" />
+			<specular r="1" g="0.5" b="0" a="0.5" />       <!-- specular reflection -->
+			<diffuse r="1" g="0.5" b="0" a="0.5" />         <!-- diffuse reflection -->
+			<ambient r="0" g="0" b="0" a="0.5" />         <!-- ambient reflection -->
+			<emission r="0" g="0" b="0" a="0.5" />       <!-- emission component -->
+		</MATERIAL>
+		<MATERIAL id="outerspace">
+			<shininess value="1" />
+			<specular r="1" g="0.5" b="0" a="0.5" />       <!-- specular reflection -->
+			<diffuse r="1" g="0.5" b="0" a="0.5" />         <!-- diffuse reflection -->
+			<ambient r="1" g="1" b="1" a="0.5" />         <!-- ambient reflection -->
+			<emission r="1" g="1" b="1" a="1" />       <!-- emission component -->
+		</MATERIAL>
+		<MATERIAL id="preto">
+			<shininess value="60" />
+			<specular r="0" g="0" b="0" a="0.5" />       <!-- specular reflection -->
+			<diffuse r="0" g="0" b="0" a="0.5" />         <!-- diffuse reflection -->
+			<ambient r="0" g="0" b="0" a="0.5" />         <!-- ambient reflection -->
+			<emission r="0" g="0" b="0" a="0.5 " />       <!-- emission component -->
+		</MATERIAL>
+		<MATERIAL id="green">
+			<shininess value="60" />
+			<specular r="0.4" g="0.8" b="0.4" a="0.5" />       <!-- specular reflection -->
+			<diffuse r="0.4" g="0.8" b="0.4" a="0.5" />         <!-- diffuse reflection -->
+			<ambient r="0" g="0" b="0" a="0.5" />         <!-- ambient reflection -->
+			<emission r="0" g="0" b="0" a="0.5 " />       <!-- emission component -->
+		</MATERIAL>
+		<MATERIAL id="brown">
+			<shininess value="60" />
+			<specular r="0.65" g="0.49" b="0.18" a="0.5" />       <!-- specular reflection -->
+			<diffuse r="0.65" g="0.49" b="0.18" a="0.5" />         <!-- diffuse reflection -->
+			<ambient r="0" g="0" b="0" a="0.5" />         <!-- ambient reflection -->
+			<emission r="0" g="0" b="0" a="0.5 " />       <!-- emission component -->
+		</MATERIAL>
+		<MATERIAL id="branco">
+			<shininess value="120" />
+			<specular r="1" g="1" b="1" a="0.5" />       <!-- specular reflection -->
+			<diffuse r="1" g="1" b="1" a="0.5" />         <!-- diffuse reflection -->
+			<ambient r="0" g="0" b="0" a="0.5" />         <!-- ambient reflection -->
+			<emission r="0" g="0" b="0" a="0.5 " />       <!-- emission component -->
+		</MATERIAL>
+	</MATERIALS>
+
+	<LEAVES>
+		<LEAF id="l1t" type="triangle" args="1 0 0 -1 0 0 0 2 0" />
+		<LEAF id="l1e" type="rectangle" args="0 0 5 5" />
+		<LEAF id="l2e" type="rectangle" args="-0.5 0.5 0.5 -0.5" />
+		<LEAF id="l1c" type="cylinder" args="40 1 1 2 40" />
+		<LEAF id="l2c" type="cylinder" args="60 2 0 1 40" />
+		<LEAF id="l3c" type="cylinder" args="30 2 0 1 40" />
+		<LEAF id="l1s" type="sphere" args="1 40 40" />
+	</LEAVES>
+
+	<ANIMATIONS>
+		<ANIMATION id="MERCURIO" span="3" type="circular" center="0 0 0" radius="12" startang="0" rotang="360" />
+		<ANIMATION id="VENUS" span="6.5" type="circular" center="0 0 0" radius="16" startang="0" rotang="360" />
+		<ANIMATION id="TERRA" span="12.5" type="circular" center="0 0 0" radius="21" startang="0" rotang="360" />
+		<ANIMATION id="MARTE" span="25" type="circular" center="0 0 0" radius="26" startang="0" rotang="360" />
+		<ANIMATION id="JUPITER" span="50" type="circular" center="0 0 0" radius="36" startang="0" rotang="360" />
+		<ANIMATION id="SATURNO" span="120" type="circular" center="0 0 0" radius="46" startang="0" rotang="360" />
+		<ANIMATION id="URANO" span="200" type="circular" center="0 0 0" radius="56" startang="0" rotang="360" />
+		<ANIMATION id="NEPTUNO" span="240" type="circular" center="0 0 0" radius="66" startang="0" rotang="360" />
+	</ANIMATIONS>
+
+	<NODES>
+
+		<ROOT id="ROOT" />
+
+		<NODE id="ROOT">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<SCALE sx="5" sy="5" sz ="5" />
+			<DESCENDANTS>
+				<DESCENDANT id="SOL" />
+				<DESCENDANT id="MERCURIO" />
+				<DESCENDANT id="VENUS" />
+				<DESCENDANT id="TERRA" />
+				<DESCENDANT id="MARTE" />
+				<DESCENDANT id="JUPITER" />
+				<DESCENDANT id="SATURNO" />
+				<DESCENDANT id="URANO" />
+				<DESCENDANT id="NEPTUNO" />
+				<DESCENDANT id="OUTERSPACE" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="OUTERSPACE">
+			<MATERIAL id="outerspace" />
+			<TEXTURE id="outerspace" />
+			<SCALE sx="100" sy="-100" sz="100" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="SOL">
+			<MATERIAL id="null" />
+			<TEXTURE id="sun" />
+			<SCALE sx="5" sy="5" sz="5" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="MERCURIO">
+			<MATERIAL id="null" />
+			<TEXTURE id="mercurio" />
+			<ANIMATIONS>
+				<ANIMATION id="MERCURIO" />
+			</ANIMATIONS>
+			<TRANSLATION x="12" y="0" z="0" />
+			<SCALE sx="0.3" sy="0.3" sz="0.3" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="VENUS">
+			<MATERIAL id="laranja" />
+			<TEXTURE id="venus" />
+			<ANIMATIONS>
+				<ANIMATION id="VENUS" />
+			</ANIMATIONS>
+			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+			<TRANSLATION x="16" y="0" z="0" />
+			<SCALE sx="0.8" sy="0.8" sz="0.8" />
+			<!-- declaring descendents, ate least one node or one leaf must be present -->
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="TERRA">
+			<MATERIAL id="null" />
+			<TEXTURE id="terra" />
+			<ANIMATIONS>
+				<ANIMATION id="TERRA" />
+			</ANIMATIONS>
+			<TRANSLATION x="21" y="0" z="0" />
+			<SCALE sx="0.9" sy="0.9" sz="0.9" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="MARTE">
+			<MATERIAL id="null" />
+			<TEXTURE id="mars" />
+			<ANIMATIONS>
+				<ANIMATION id="MARTE" />
+			</ANIMATIONS>
+			<TRANSLATION x="26" y="0" z="0" />
+			<SCALE sx="0.6" sy="0.6" sz="0.6" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="JUPITER"> 
+			<MATERIAL id="null" /> 
+			<TEXTURE id="jupiter" />
+			<ANIMATIONS>
+				<ANIMATION id="JUPITER" />
+			</ANIMATIONS>
+			<TRANSLATION x="36" y="0" z="0" />
+			<SCALE sx="3" sy="3" sz="3" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="SATURNO">
+			<MATERIAL id="null" />
+			<TEXTURE id="saturno" />
+			<ANIMATIONS>
+				<ANIMATION id="SATURNO" />
+			</ANIMATIONS>
+			<TRANSLATION x="46" y="0" z="0" />
+			<SCALE sx="2.5" sy="2.5" sz="2.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="URANO">
+			<MATERIAL id="null" />
+			<TEXTURE id="urano" />
+			<ANIMATIONS>
+				<ANIMATION id="URANO" />
+			</ANIMATIONS>
+			<TRANSLATION x="56" y="0" z="0" />
+			<SCALE sx="1.8" sy="1.8" sz="1.8" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="NEPTUNO">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+			<!-- next two lines are mandatory -->
+			<MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
+									  <!-- id="null" maintains material from parent node        -->
+			<TEXTURE id="neptune" />       <!-- declared texture superimposes the texture received from parent node -->
+									  <!-- id="null" maintains texture from parent node       -->
+									  <!-- id="clear" clears texture declaration received from parent node      -->
+
+
+				<ANIMATIONS>
+			<ANIMATION id="NEPTUNO" />
+			</ANIMATIONS>
+			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+			<TRANSLATION x="66" y="0" z="0" />
+			<SCALE sx="2" sy="2" sz="2" />
+
+			<!-- declaring descendents, ate least one node or one leaf must be present -->
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="CUBE">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<DESCENDANTS>
+				<DESCENDANT id="FACE_CUBO_SUPERIOR" />
+				<DESCENDANT id="FACE_CUBO_INFERIOR" />
+				<DESCENDANT id="FACE_CUBO_DIREITA" />
+				<DESCENDANT id="FACE_CUBO_ESQUERDA" />
+				<DESCENDANT id="FACE_CUBO_POSTERIOR" />
+				<DESCENDANT id="FACE_CUBO_ANTERIOR" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="FACE_CUBO_SUPERIOR">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+			<!-- next two lines are mandatory -->
+			<MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
+									  <!-- id="null" maintains material from parent node        -->
+			<TEXTURE id="null" />       <!-- declared texture superimposes the texture received from parent node -->
+									  <!-- id="null" maintains texture from parent node       -->
+									  <!-- id="clear" clears texture declaration received from parent node      -->
+
+
+			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+			<ROTATION axis="x" angle="-90" />
+			<TRANSLATION x="0" y="0" z="0.5" />
+
+
+			<!-- declaring descendents, ate least one node or one leaf must be present -->
+			<DESCENDANTS>
+				<DESCENDANT id="l2e" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="FACE_CUBO_INFERIOR">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+			<!-- next two lines are mandatory -->
+			<MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
+									  <!-- id="null" maintains material from parent node        -->
+			<TEXTURE id="null" />       <!-- declared texture superimposes the texture received from parent node -->
+									  <!-- id="null" maintains texture from parent node       -->
+									  <!-- id="clear" clears texture declaration received from parent node      -->
+
+
+			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+			<ROTATION axis="x" angle="90" />
+			<TRANSLATION x="0" y="0" z="0.5" />
+
+
+			<!-- declaring descendents, ate least one node or one leaf must be present -->
+			<DESCENDANTS>
+				<DESCENDANT id="l2e" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="FACE_CUBO_DIREITA">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+			<!-- next two lines are mandatory -->
+			<MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
+									  <!-- id="null" maintains material from parent node        -->
+			<TEXTURE id="null" />       <!-- declared texture superimposes the texture received from parent node -->
+									  <!-- id="null" maintains texture from parent node       -->
+									  <!-- id="clear" clears texture declaration received from parent node      -->
+
+
+			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+			<TRANSLATION x="0.5" y="0" z="0" />
+			<ROTATION axis="y" angle="90" />
+
+
+			<!-- declaring descendents, ate least one node or one leaf must be present -->
+			<DESCENDANTS>
+				<DESCENDANT id="l2e" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="FACE_CUBO_ESQUERDA">       <!--   defines one intermediate node; may be repeated as necessary -->
+
+			<!-- next two lines are mandatory -->
+			<MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
+									  <!-- id="null" maintains material from parent node        -->
+			<TEXTURE id="null" />       <!-- declared texture superimposes the texture received from parent node -->
+									  <!-- id="null" maintains texture from parent node       -->
+									  <!-- id="clear" clears texture declaration received from parent node      -->
+
+
+			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+			<TRANSLATION x="-0.5" y="0" z="0" />
+			<ROTATION axis="y" angle="270" />
+
+
+
+			<!-- declaring descendents, ate least one node or one leaf must be present -->
+			<DESCENDANTS>
+				<DESCENDANT id="l2e" />
+			</DESCENDANTS>
+
+		</NODE>
+
+		<NODE id="FACE_CUBO_POSTERIOR">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0" y="0" z="0.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="l2e" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="FACE_CUBO_ANTERIOR">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<ROTATION axis="y" angle="180" />
+			<TRANSLATION x="0" y="0" z="0.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="l2e" />
+			</DESCENDANTS>
+		</NODE>
+	</NODES>
+</SCN>

@@ -39,16 +39,14 @@ MaterialParser.prototype.constructor = MaterialParser;
 MaterialParser.prototype.parse = function(root, id) {
 
 	this.result = null;
-
-	var parent = root.nodeName;
 	var parseErrors = 0;
 
 	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
+		return onReservedId(root.nodeName, id);
 	}
 
 	var materialShininess = this.parseFloat(root, 'shininess', 'value');
-	var error = checkValue(materialShininess, 'shininess', parent, id);
+	var error = checkValue(materialShininess, 'shininess', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -56,7 +54,7 @@ MaterialParser.prototype.parse = function(root, id) {
 	}
 
 	var materialSpecular = this.parseCoordinatesRGBA(root, 'specular');
-	error = checkValue(materialSpecular, 'specular', parent, id);
+	var error = checkValue(materialSpecular, 'specular', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -64,7 +62,7 @@ MaterialParser.prototype.parse = function(root, id) {
 	}
 
 	var materialDiffuse = this.parseCoordinatesRGBA(root, 'diffuse');
-	error = checkValue(materialDiffuse, 'diffuse', parent, id);
+	var error = checkValue(materialDiffuse, 'diffuse', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -72,7 +70,7 @@ MaterialParser.prototype.parse = function(root, id) {
 	}
 
 	var materialAmbient = this.parseCoordinatesRGBA(root, 'ambient');
-	error = checkValue(materialAmbient, 'ambient', parent, id);
+	var error = checkValue(materialAmbient, 'ambient', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -80,7 +78,7 @@ MaterialParser.prototype.parse = function(root, id) {
 	}
 
 	var materialEmission = this.parseCoordinatesRGBA(root, 'emission');
-	error = checkValue(materialEmission, 'emission', parent, id);
+	var error = checkValue(materialEmission, 'emission', root.nodeName, id);
 
 	if (error != null) {
 		parseErrors++;
@@ -88,7 +86,7 @@ MaterialParser.prototype.parse = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, id);
+		return onParseError(root.nodeName, parseErrors, id);
 	}
 
 	this.result = new CGFappearance(this.scene);
@@ -107,6 +105,4 @@ MaterialParser.prototype.parse = function(root, id) {
 		printRGBA('ambient', materialAmbient);
 		printRGBA('emission', materialEmission);
 	}
-
-	return null;
 };

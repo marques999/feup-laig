@@ -4,24 +4,31 @@
  * @augments MyPrimitive
  * @author Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Number} degree1 - grau da superfície NURBS na coordenada U
- * @param {Number} degree2 - grau da superfície NURBS na coordenada V
- * @param {Number[]} knots1 - knots da superfície NURBS na coordenada U
- * @param {Number[]} knots2 - knots da superfície NURBS na coordenada V
- * @param {Number[][]} controlvertexes - vértices de controlo da superfície NURBS
+ * @param {Number} uDivs - número de divisões da superfície NURBS na coordenada U
+ * @param {Number} vDivs - número de divisões da superfície NURBS na coordenada V
+ * @param {Number} uDegree - grau da superfície NURBS na coordenada U
+ * @param {Number} vDegree - grau da superfície NURBS na coordenada V
+ * @param {Number[][]} controlPoints - vértices de controlo da superfície NURBS
  * @return {null}
  */
-function MyPatch(scene, udivs, vdivs, degree1, degree2, knots1, knots2, controlvertexes) {
+function MyPatch(scene, uDivs, vDivs, uDegree, vDegree, controlPoints) {
 
 	CGFobject.call(this, scene);
 
-	var nurbsSurface = new CGFnurbsSurface(degree1, degree2, knots1, knots2, controlvertexes);
+	var knotsArray = [
+		[0, 0, 1, 1],
+		[0, 0, 0, 1, 1, 1],
+		[0, 0, 0, 0, 1, 1, 1, 1]
+	];
+
+	var nurbsSurface = new CGFnurbsSurface(uDegree, vDegree, 
+		knotsArray[uDegree - 1], knotsArray[vDegree - 1], controlPoints);
 
 	function getSurfacePoint(u, v) {
 		return nurbsSurface.getPoint(u, v);
 	};
 
-	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, udivs, vdivs);
+	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, uDivs, vDivs);
 	this.nurbsObject.initBuffers();
 };
 
@@ -29,7 +36,7 @@ MyPatch.prototype = Object.create(MyPrimitive.prototype);
 MyPatch.prototype.constructor = MyPatch;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyPatch'
+ * desenha a primitva 'MyPatch' na CGFscene correspondente
  * @return {null}
  */
 MyPatch.prototype.display = function() {

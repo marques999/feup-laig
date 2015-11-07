@@ -52,9 +52,7 @@ function MySceneGraph(filename, scene) {
  */
 MySceneGraph.prototype.onXMLReady = function() {
 
-	var parent = 'SCENE';
 	var rootElement = this.reader.xmlDoc.documentElement;
-
 	this.animationParser = new AnimationParser(this.reader, this.scene);
 	this.globalsParser = new GlobalsParser(this.reader, this.scene);
 	this.illuminationParser = new IlluminationParser(this.reader, this.scene);
@@ -91,19 +89,19 @@ MySceneGraph.prototype.onXMLReady = function() {
 		var currentElement = rootElement.getElementsByTagName(current);
 
 		if (requiredElements[current] && (currentElement == null || currentElement.length == 0)) {
-			this.onXMLError(onElementMissing(current, parent));
-			return;
+			this.onXMLError(onElementMissing(current, 'SCENE'));
+			return false;
 		}
 
 		if (currentElement.length != 1) {
-			onMultipleElements(current, parent);
+			onMultipleElements(current, 'SCENE');
 		}
 
 		var error = rootParsers[current].call(this, currentElement[0]);
 
 		if (error != null) {
 			this.onXMLError(error);
-			return;
+			return false;
 		}
 	}
 
@@ -163,16 +161,16 @@ MySceneGraph.prototype.display = function() {
  */
 MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 
-	var nodeMatrix = node.applyAnimation();
+	var animationMatrix = node.applyAnimation();
 
-	if (nodeMatrix != null) {
-		mat4.multiply(nodeMatrix, node.matrix, nodeMatrix)
+	if (animationMatrix != null) {
+		mat4.multiply(animationMatrix, animationMatrix, node.matrix);
 	}
 	else {
-		nodeMatrix = node.matrix
+		animationMatrix = node.matrix
 	}
 
-	this.scene.multMatrix(nodeMatrix);
+	this.scene.multMatrix(animationMatrix);
 
 	for (var i = 0; i < node.children.length; i++) {
 
@@ -272,8 +270,6 @@ MySceneGraph.prototype.parseString = function(root, name, attribute) {
 	if (node[0].hasAttribute(attribute)) {
 		return this.reader.getString(node[0], attribute);
 	}
-
-	return null;
 };
 
 /*
@@ -289,7 +285,6 @@ MySceneGraph.prototype.parseString = function(root, name, attribute) {
 MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 
 	var childrenSize = rootElement.children.length;
-	var parent = rootElement.nodeName;
 
 	for (var i = 0; i < childrenSize; i++) {
 
@@ -301,7 +296,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 		}
 
 		if (currentElementName != nodeName) {
-			console.warn("WARNING: invalid tag found <" + currentElementName + "> found in <" + parent + ">, expected <" + nodeName + ">!");
+			console.warn("WARNING: invalid tag found <" + currentElementName + "> found in <" + rootElement.nodeName + ">, expected <" + nodeName + ">!");
 			continue;
 		}
 
@@ -317,8 +312,6 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 			this.onXMLError(error);
 		}
 	}
-
-	return null;
 };
 
 /**
@@ -336,12 +329,6 @@ MySceneGraph.prototype.parseNodes = function(root) {
 	}
 
 	this.graphRoot = globalRoot;
-
-	if (this.verbose) {
-		printHeader("NODES");
-		printValues('root', 'id', globalRoot);
-	}
-
 	return this.parseArray(root, 'NODE', this.parseNode);
 };
 
@@ -355,15 +342,9 @@ MySceneGraph.prototype.parseNodes = function(root) {
  */
 MySceneGraph.prototype.checkReference = function(nodeId, objectId, parent, myArray) {
 
-	if (objectId == 'null' || objectId == 'clear') {
-		return null;
-	}
-
-	if (myArray[objectId] == undefined) {
+	if (objectId != 'null' && objectId != 'clear' && myArray[objectId] == undefined) {
 		return "<NODE> with id=" + nodeId + " references <" + parent + "> id=" + objectId + " which doesn't exist, reverting to defaults...";
 	}
-
-	return null;
 }
 /**
  * verifica se uma determinada animação existe no array de animações
@@ -492,8 +473,6 @@ MySceneGraph.prototype.parseNode = function(id, root) {
 	}
 
 	this.nodes[id] = newNode;
-
-	return null;
 };
 
 /**
@@ -518,8 +497,6 @@ MySceneGraph.prototype.parseLight = function(id, root) {
 	}
 
 	this.lights[id] = this.lightParser.result;
-
-	return null;
 };
 
 /**
@@ -540,8 +517,6 @@ MySceneGraph.prototype.parseAnimation = function(id, root) {
 	}
 
 	this.animations[id] = this.animationParser.result;
-
-	return null;
 };
 
 /**
@@ -562,8 +537,6 @@ MySceneGraph.prototype.parseMaterial = function(id, root) {
 	}
 
 	this.materials[id] = this.materialParser.result;
-
-	return null;
 };
 
 /**
@@ -584,8 +557,6 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 	}
 
 	this.textures[id] = this.textureParser.result;
-
-	return null;
 };
 
 /**
@@ -606,8 +577,6 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
 	}
 
 	this.leaves[id] = this.leafParser.result;
-
-	return null;
 };
 
 /**
@@ -619,7 +588,7 @@ MySceneGraph.prototype.resetIndegree = function() {
 	for (var node in this.nodes) {
 		var children = this.nodes[node].children;
 		for (var i = 0; i < children.length; i++) {
-			if (children[i] in this.nodes) {
+			if (this.nodes[children[i]] != undefined) {
 				this.nodes[children[i]].indegree++;
 			}
 		}
@@ -646,20 +615,19 @@ MySceneGraph.prototype.validateNodes = function() {
 
 			var children = this.nodes[node].children;
 			var nodeIndegree = this.nodes[node].indegree;
-			this.onVisitNode(node, this.nodes[node].indegree);
 
 			if (nodeIndegree == 0 && node != this.graphRoot) {
 				ready = false;
-				this.onProcessNode("Deleting", node);
+				this.onProcessNode("Erasing", node);
 				delete this.nodes[node];
 				continue;
 			}
 
 			for (var n = 0; n < children.length; n++) {
-				if (!(children[n] in this.leaves) && !(children[n] in this.nodes) && children[n] != node) {
-					this.onEraseChildren(children[n], node);
-					children.splice(n, 1);
-					n--;
+				var currentChild = children[n];
+				if (this.leaves[currentChild] == undefined && this.nodes[currentChild] == undefined && currentChild != node) {
+					this.onEraseChildren(currentChild, node);
+					children.splice(n--, 1);
 				}
 			}
 

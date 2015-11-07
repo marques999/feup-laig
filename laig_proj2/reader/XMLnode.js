@@ -93,7 +93,6 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 
 	if (currentAnimation.active) {
 		currentAnimation.step(deltaTime);
-		currentAnimation.update();
 	}
 	else {
 		this.animationNumber = (this.animationNumber + 1) % this.animations.length;
@@ -106,8 +105,9 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
  * @return {Mat4|null} - null se o node não tiver animações ou estas tiverem já terminado
  */
 XMLnode.prototype.applyAnimation = function() {
+
 	var currentAnimation = this.animations[this.animationNumber];
 	if (currentAnimation != null) {
-		return currentAnimation.matrix;
+		return currentAnimation.update();
 	}
 };

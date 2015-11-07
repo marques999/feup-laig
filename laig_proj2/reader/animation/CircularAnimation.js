@@ -14,15 +14,11 @@ function CircularAnimation(id, span, center, radius, startang, rotang) {
 
 	Animation.call(this, id, span);
 
-	this.initial = mat4.create();
 	this.center = center;
 	this.radius = radius;
 	this.angleStart = startang * Math.PI / 180;
-	this.angleEnd = rotang * Math.PI / 180;
-	this.velocity = (this.angleEnd - this.angleStart) / this.span;
-
-	mat4.identity(this.initial);
-	mat4.translate(this.initial, this.initial, this.center);
+	this.angleDelta = rotang * Math.PI / 180;
+	this.velocity = this.angleDelta / this.span;
 };
 
 CircularAnimation.prototype = Object.create(Animation.prototype);
@@ -34,18 +30,22 @@ CircularAnimation.prototype.constructor = CircularAnimation;
  */
 CircularAnimation.prototype.start = function() {
 	this.active = true;
-	this.current = this.angleStart;
+	this.currentAngle = this.angleStart;
 	this.currentTime = 0.0;
 };
 
 /**
- * calcula a matriz da animação para os novos valores
+ * calcula a matriz da animação com os novos valores
  * @return {null}
  */
 CircularAnimation.prototype.update = function() {
-	mat4.copy(this.matrix, this.initial);
-	mat4.rotateY(this.matrix, this.matrix, this.current);
+
+	mat4.identity(this.matrix);
+	mat4.translate(this.matrix, this.matrix, this.center);
+	mat4.rotateY(this.matrix, this.matrix, this.currentAngle);
 	mat4.translate(this.matrix, this.matrix, [this.radius, 0.0, 0.0]);
+
+	return this.matrix;
 };
 
 /**
@@ -55,15 +55,15 @@ CircularAnimation.prototype.update = function() {
  */
 CircularAnimation.prototype.step = function(deltaTime) {
 
-	if (!this.active) {
-		return null;
-	}
+	if (this.active) {
 
-	if (this.currentTime < this.span) {
-		this.current += this.velocity * deltaTime;
 		this.currentTime += deltaTime;
-	}
-	else {
-		this.stop();
+
+		if (this.currentTime < this.span) {
+			this.currentAngle += this.velocity * deltaTime;
+		}
+		else {
+			this.stop();
+		}
 	}
 };

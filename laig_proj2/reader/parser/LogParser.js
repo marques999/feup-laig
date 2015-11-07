@@ -150,12 +150,9 @@ function printXYZW(attribute, xyzw) {
 */
 
 function checkUrl(url) {
-
 	var http = new XMLHttpRequest();
-
 	http.open("HEAD", url, false);
 	http.send();
-
 	return http.status != 404;
 };
 

@@ -118,19 +118,18 @@ LinearAnimation.prototype.update = function() {
  */
 LinearAnimation.prototype.step = function(deltaTime) {
 
-	if (!this.active) {
-		return;
+	if (this.active) {
+
+		this.currentTime += deltaTime;
+
+		if (this.currentTime >= this.duration[this.currentSection]) {
+			if (++this.currentSection == this.sections) {
+				this.currentSection = 0;
+				this.stop();
+			}
+		}
+
+		vec3.scale(this.currentDelta, this.velocity[this.currentSection], deltaTime);
+		vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
 	}
-
-	this.currentTime += deltaTime;
-
-	if (this.currentTime >= this.duration[this.currentSection]) {
-	    if (++this.currentSection == this.sections) {
-	        this.currentSection--;
-	        this.stop();
-	    }
-	}
-
-	vec3.scale(this.currentDelta, this.velocity[this.currentSection], deltaTime);
-	vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
 };
