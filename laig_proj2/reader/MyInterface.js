@@ -22,10 +22,6 @@ MyInterface.prototype.init = function(application) {
 
 	var self = this;
 	this.gui = new dat.GUI();
-	this.gui.add(this.scene, 'wireframe').onChange(function(value) {
-		self.scene.updateWireframe(value);
-	});
-
 	this.group = this.gui.addFolder("Lights");
 	this.group.open();
 	this.lights = {};
