@@ -301,6 +301,11 @@ LeafParser.prototype.readPatch = function(id, root) {
 		onXMLWarning(error);
 		parseErrors++;
 	}
+	
+	if (myDegreeU > 3 || myDegreeV > 3) {
+		onDegreeOutOfRange(id);
+		parseErrors++;
+	}
 
 	if (parseErrors != 0) {
 		return onParseError('PATCH', parseErrors, id);

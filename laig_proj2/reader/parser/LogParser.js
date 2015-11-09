@@ -46,6 +46,10 @@ function onReservedId(id, root) {
 	return parent + " with id=" + id + " has a reserved ID ['null', 'clear'], skipping...";
 };
 
+function onDegreeOutOfRange(id) {
+	console.warn("WARNING: <PATCH> with id=" + id + " has invalid value for 'degree', must be between 1 and 3");
+}
+
 function onMaximumLights(number) {
 	return "maximum number of " + number + " lights reached, the following lights will be ignored...";
 };
