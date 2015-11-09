@@ -6,10 +6,10 @@
 		<rotation axis="x" angle="0.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
-		<reference length="5.0" />
+		<reference length="20.0" />
 	</INITIALS>
 	<ILLUMINATION>
-		<ambient r="0.5" g="1.0" b="0.5" a="1.0" />
+		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.53" g="0.45" b="0.8" a="1.0" />
 	</ILLUMINATION>
 	<LIGHTS>
@@ -29,7 +29,7 @@
 		</LIGHT>
 	</LIGHTS>
 	<MATERIALS>
-		<MATERIAL id="green">
+		<MATERIAL id="material_green">
 			<shininess value="5" />
 			<specular r="0.2" g="0.8" b="0.4" a="0.5" />
 			<diffuse r="0.2" g="0.8" b="0.4" a="0.8" />
@@ -54,9 +54,9 @@
 		<LEAF id="mytriangle" type="triangle" args="0.0 12.0 1.0 3.0 12.0 0.0 0.0 12.0 -1.0" />
 	</LEAVES>
 	<NODES>
-		<ROOT id="scene" />
-		<NODE id="scene">
-			<MATERIAL id="green" />
+		<ROOT id="node_scene" />
+		<NODE id="node_scene">
+			<MATERIAL id="null" />
 			<TEXTURE id="null" />
 			<DESCENDANTS>
 				<DESCENDANT id="node_terrain" />
@@ -72,7 +72,7 @@
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="node_vehicle">
-			<MATERIAL id="null" />
+			<MATERIAL id="material_green" />
 			<TEXTURE id="null" />
 			<ANIMATIONS>
 				<ANIMATION id="first"/>
