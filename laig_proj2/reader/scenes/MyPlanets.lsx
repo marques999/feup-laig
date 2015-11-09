@@ -98,7 +98,7 @@
 			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
 		</TEXTURE>
 		<TEXTURE id="outerspace">
-			<file path="images/colors.jpg" />                             <!-- path to file -->
+			<file path="outerspace.jpg" />                             <!-- path to file -->
 			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
 		</TEXTURE>
 	</TEXTURES>
@@ -451,4 +451,4 @@
 			</DESCENDANTS>
 		</NODE>
 	</NODES>
-</SCN>
+</SCENE>

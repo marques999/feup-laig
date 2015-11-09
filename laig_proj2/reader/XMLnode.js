@@ -40,6 +40,7 @@ XMLnode.prototype.addChild = function(child) {
  */
 XMLnode.prototype.addAnimation = function(animation) {
 	this.animations.push(animation);
+	this.animations[0].start();
 };
 
 /**
@@ -87,6 +88,7 @@ XMLnode.prototype.translate = function(coords) {
 XMLnode.prototype.updateAnimation = function(deltaTime) {
 
 	var currentAnimation = this.animations[this.animationNumber];
+	
 	if (currentAnimation == null || currentAnimation == undefined) {
 		return null;
 	}
@@ -107,7 +109,15 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 XMLnode.prototype.applyAnimation = function() {
 
 	var currentAnimation = this.animations[this.animationNumber];
-	if (currentAnimation != null) {
-		return currentAnimation.update();
+	
+	if (currentAnimation == null || currentAnimation == undefined) {
+		return null;
 	}
+
+	if (!currentAnimation.active) {
+		this.animationNumber = (this.animationNumber + 1) % this.animations.length;
+		this.animations[this.animationNumber].start();
+	}
+
+	return currentAnimation.update();
 };

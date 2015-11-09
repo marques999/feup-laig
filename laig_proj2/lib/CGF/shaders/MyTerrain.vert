@@ -1,4 +1,9 @@
+#ifdef GL_ES
+precision highp float;
+#endif
+
 uniform sampler2D heightmapTexture;
+uniform sampler2D terrainTexture;
 
 varying float vAmount;
 varying vec2 vUV;

@@ -12,15 +12,16 @@ function MyTerrain(scene, texturePath, heightmapPath) {
 
 	CGFobject.call(this, scene);
 
-	this.terrainShader = new CGFshader(this.scene.gl, "shaders/terrain.vert", "shaders/terain.frag");
-	this.terrainTexture = new CGFtexture(this.scene, texturePath);
-	this.heightmapTexture = new CGFtexture(this.scene, heightmapPath);
+	this.terrainShader = new CGFshader(scene.gl, "shaders/MyTerrain.vert", "shaders/MyTerrain.frag");
+	this.terrainTexture = new CGFtexture(scene, texturePath);
+	this.heightmapTexture = new CGFtexture(scene, heightmapPath);
 
 	this.terrainShader.setUniforms({
-		heightmapTexture: 1
+		terrainTexture: 0,
+		heightmapTexture: 1,
 	});
 
-	this.terrainPlane = new MyPlane(this.scene, 16);
+	this.terrainPlane = new MyPlane(scene, 16);
 	this.terrainPlane.initBuffers();
 };
 

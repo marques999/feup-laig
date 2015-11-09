@@ -50,95 +50,56 @@
 	</MATERIALS>
 
 	<ANIMATIONS>
-		<ANIMATION id="tt" span="0.7" type="linear">
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="0.0" y="5.0" z="0.0" />
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-		</ANIMATION>
-			<ANIMATION id="ss" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="0" rotang="180">
-		</ANIMATION>
-			<ANIMATION id="uu" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="160" rotang="20">
-		</ANIMATION>
 	</ANIMATIONS>
 
 	<LEAVES>
-		<LEAF id="curve1" type="patch" args="20 20">
-			<UPATCH degree="1" knots="0.0 0.0 1.0 1.0"/>
-			<VPATCH degree="1" knots="0.0 0.0 1.0 1.0"/>
-			<U0>
-				<V0 coords="-2.0 -2.0 0.0 1.0"/>
-				<V1 coords="-2.0 2.0 0.0 1.0"/>
-			</U0>
-			<U1>
-				<V0 coords="2.0 -2.0 0.0 1.0"/>
-				<V1 coords="2.0 2.0 0.0 1.0"/>
-			</U1>
+		<LEAF id="curve1" type="patch" partsU="20" partsV="20" orderU="1" orderV="1">
+			<controlpoint coords="-2.0 -2.0 0.0 1.0"/>
+			<controlpoint coords="-2.0 2.0 0.0 1.0"/>
+			<controlpoint coords="2.0 -2.0 0.0 1.0"/>
+			<controlpoint coords="2.0 2.0 0.0 1.0"/>
 		</LEAF>
-		<LEAF id="curve2" type="patch" args="20 20">
-			<UPATCH degree="2" knots="0.0 0.0 0.0 1.0 1.0 1.0"/>
-			<VPATCH degree="1" knots="0.0 0.0 1.0 1.0"/>
-			<U0>
-				<V0 coords="-1.5 -1.5 0.0 1.0"/>
-				<V1 coords="-1.5 1.5 0.0 1.0"/>
-			</U0>
-			<U1>
-				<V0 coords="0.0 -1.5 3.0 1.0"/>
-				<V1 coords="1.0 1.5 3.0 1.0"/>
-			</U1>
-			<U2>
-				<V0 coords="1.5 -1.5 0.0 1.0"/>
-				<V1 coords="1.5 1.5 0.0 1.0"/>
-			</U2>
+		<LEAF id="curve2" type="patch" partsU="20" partsV="20" orderU="2" orderV="1">
+			<controlpoint coords="-1.5 -1.5 0.0 1.0"/>
+			<controlpoint coords="-1.5 1.5 0.0 1.0"/>
+			<controlpoint coords="0.0 -1.5 3.0 1.0"/>
+			<controlpoint coords="1.0 1.5 3.0 1.0"/>
+			<controlpoint coords="1.5 -1.5 0.0 1.0"/>
+			<controlpoint coords="1.5 1.5 0.0 1.0"/>
 		</LEAF>
-		<LEAF id="curve3" type="patch" args="20 20">
-			<UPATCH degree="2" knots="0.0 0.0 0.0 1.0 1.0 1.0"/>
-			<VPATCH degree="3" knots="0.0 0.0 0.0 0.0 1.0 1.0 1.0 1.0"/>
-			<U0>
-				<V0 coords="-1.5 -1.5 0.0 1.0"/>
-				<V1 coords="-2.0 -2.0 2.0 1.0"/>
-				<V2 coords="-2.0 2.0 2.0 1.0"/>
-				<V3 coords="-1.5 1.5 0.0 1.0"/>		
-			</U0>
-			<U1>
-				<V0 coords="0.0 0.0 3.0 1.0"/>
-				<V1 coords="0.0 -2.0 3.0 5.0"/>
-				<V2 coords="0.0 2.0 3.0 5.0"/>
-				<V3 coords="0.0 0.0 3.0 1.0"/>		
-			</U1>
-			<U2>
-				<V0 coords="1.5 -1.5 0.0 1.0"/>
-				<V1 coords="2.0 -2.0 2.0 1.0"/>
-				<V2 coords="2.0 2.0 2.0 1.0"/>
-				<V3 coords="1.5 1.5 0.0 1.0"/>		
-			</U2>
+		<LEAF id="curve3" type="patch" partsU="20" partsV="20" orderU="2" orderV="3">
+			<controlpoint coords="-1.5 -1.5 0.0 1.0"/>
+			<controlpoint coords="-2.0 -2.0 2.0 1.0"/>
+			<controlpoint coords="-2.0 2.0 2.0 1.0"/>
+			<controlpoint coords="-1.5 1.5 0.0 1.0"/>
+			<controlpoint coords="0.0 0.0 3.0 1.0"/>
+			<controlpoint coords="0.0 -2.0 3.0 5.0"/>
+			<controlpoint coords="0.0 2.0 3.0 5.0"/>
+			<controlpoint coords="0.0 0.0 3.0 1.0"/>
+			<controlpoint coords="1.5 -1.5 0.0 1.0"/>
+			<controlpoint coords="2.0 -2.0 2.0 1.0"/>
+			<controlpoint coords="2.0 2.0 2.0 1.0"/>
+			<controlpoint coords="1.5 1.5 0.0 1.0"/>
 		</LEAF>
-		<LEAF id="curve4" type="patch" args="20 20">
-			<UPATCH degree="2" knots="0.0 0.0 0.0 1.0 1.0 1.0"/>
-			<VPATCH degree="3" knots="0.0 0.0 0.0 0.0 1.0 1.0 1.0 1.0"/>
-			<U0>
-				<V0 coords="-2.0 -2.0 1.0 1.0"/>
-				<V1 coords="-2.0 -1.0 -2.0 1.0"/>
-				<V2 coords="-2.0 1.0 5.0 1.0"/>
-				<V3 coords="-2.0 2.0 -1.0 1.0"/>		
-			</U0>
-			<U1>
-				<V0 coords="0.0 -2.0 0.0 1.0"/>
-				<V1 coords="0.0 -1.0 -1.0 5.0"/>
-				<V2 coords="0.0 1.0 1.5 5.0"/>
-				<V3 coords="0.0 2.0 0.0 1.0"/>		
-			</U1>
-			<U2>
-				<V0 coords="2.0 -2.0 -1.0 1.0"/>
-				<V1 coords="2.0 -1.0 2.0 1.0"/>
-				<V2 coords="2.0 1.0 -5.0 1.0"/>
-				<V3 coords="2.0 2.0 1.0 1.0"/>		
-			</U2>
+		<LEAF id="curve4" type="patch" partsU="20" partsV="20" orderU="2" orderV="3">
+			<controlpoint coords="-2.0 -2.0 1.0 1.0"/>
+			<controlpoint coords="-2.0 -1.0 -2.0 1.0"/>
+			<controlpoint coords="-2.0 1.0 5.0 1.0"/>
+			<controlpoint coords="-2.0 2.0 -1.0 1.0"/>
+			<controlpoint coords="0.0 -2.0 0.0 1.0"/>
+			<controlpoint coords="0.0 -1.0 -1.0 5.0"/>
+			<controlpoint coords="0.0 1.0 1.5 5.0"/>
+			<controlpoint coords="0.0 2.0 0.0 1.0"/>
+			<controlpoint coords="2.0 -2.0 -1.0 1.0"/>
+			<controlpoint coords="2.0 -1.0 2.0 1.0"/>
+			<controlpoint coords="2.0 1.0 -5.0 1.0"/>
+			<controlpoint coords="2.0 2.0 1.0 1.0"/>
 		</LEAF>
 	</LEAVES>
 
 	<NODES>
 		<ROOT id="scene" />
-		
+
 		<NODE id="scene">
 			<MATERIAL id="default" />
 			<TEXTURE id="colors" />
@@ -149,7 +110,7 @@
 				<DESCENDANT id="nurbs4" />
 			</DESCENDANTS>
 		</NODE>
-		
+
 		<NODE id="nurbs1">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
@@ -158,7 +119,7 @@
 				<DESCENDANT id="curve1" />
 			</DESCENDANTS>
 		</NODE>
-		
+
 		<NODE id="nurbs2">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
@@ -167,7 +128,7 @@
 				<DESCENDANT id="curve2" />
 			</DESCENDANTS>
 		</NODE>
-		
+
 		<NODE id="nurbs3">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
@@ -176,7 +137,7 @@
 				<DESCENDANT id="curve3" />
 			</DESCENDANTS>
 		</NODE>
-		
+
 		<NODE id="nurbs4">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />

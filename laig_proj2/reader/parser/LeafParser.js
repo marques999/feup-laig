@@ -11,8 +11,15 @@
 		<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" />
 		<LEAF id="ss" type="sphere" args="ff ii ii" />
 		<LEAF id="ss" type="triangle" args="ff ff ff ff ff ff ff ff ff" />
-		<LEAF id="ss" type="plane" args="ii" />
-		<LEAF id="ss" type="patch" args="ii ii" />
+		<LEAF id="ss" type="plane" parts="ii" />
+		<LEAF id="ss" type=”terrain” texture=”ss” heightmap=”ss”/>
+		<LEAF id="ss" type="vehicle"/>
+		<LEAF id="ss" type="patch" orderU=”ii” orderV=”ii” partsU=”ii” partsV=”ii”>
+			<controlpoint coords=”ff ff ff ff” />
+			<controlpoint coords=”ff ff ff ff” />
+			<controlpoint coords=”ff ff ff ff” />
+			<controlpoint coords=”ff ff ff ff” />
+		</LEAF>
 	</LEAVES>
 */
 
@@ -303,53 +310,38 @@ LeafParser.prototype.readPatch = function(id, root) {
 
 	var uLength = myDegreeU + 1;
 	var vLength = myDegreeV + 1;
+	var totalLength = uLength * vLength;
+	var currentPoint = 0;
 	var myPoints = [];
 
-	if (root.length != uLength) {
-		return onInvalidPoints(id, uLength);
+	if (root.length != totalLength) {
+		return onInvalidPoints(id, totalLength);
 	}
 
 	for (var currentU = 0; currentU < uLength; currentU++) {
 
-		var uTagName = 'U' + currentU;
-		var uCoordinates = root[currentU];
-		var child_sz = uCoordinates.children.length;
-
 		myPoints[currentU] = [];
-
-		if (uCoordinates.nodeName != uTagName) {
-			onXMLWarning(onUnexpectedTag(uCoordinates.nodeName, uTagName, 'PATCH', id));
-			parseErrors++;
-			continue;
-		}
-
-		if (child_sz != vLength) {
-			onXMLWarning(onInvalidPoints(id, vLength));
-			parseErrors++;
-			continue;
-		}
 
 		for (var currentV = 0; currentV < vLength; currentV++) {
 
-			var vTagName = 'V' + currentV;
-			var vCoordinates = uCoordinates.children[currentV];
+			var nodePoint = root[currentPoint++];
 
-			if (vCoordinates.nodeName != vTagName) {
-				onXMLWarning(onUnexpectedTag(vCoordinates.nodeName, vTagName, 'PATCH', id));
+			if (nodePoint.nodeName != 'controlpoint') {
+				onXMLWarning(onUnexpectedTag(nodePoint.nodeName, 'controlpoint', 'PATCH', id));
 				parseErrors++;
 				continue;
 			}
 
-			var myVertex = this.parseVector4(vCoordinates);
+			var myVertex = this.parseVector4(nodePoint);
 			var error = checkValue(myVertex, 'control vertex', 'PATCH', id);
 
-			if (error != null) {
+			if (error == null) {
+				myPoints[currentU][currentV] = myVertex;
+			}
+			else {
 				onXMLWarning(warning);
 				parseErrors++;
-				continue;
 			}
-
-			myPoints[currentU][currentV] = myVertex;
 		}
 	}
 

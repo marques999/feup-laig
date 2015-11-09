@@ -13,19 +13,15 @@ function LinearAnimation(id, span, points) {
 
 	this.points = points;
 	this.sections = points.length;
+	this.totalDistance = 0.0;
 	this.velocity = [];
 	this.duration = [];
 	this.orientation = [];
-
-	// CALCULA ORIENTAÇÃO INICIAL
-	this.velocity[0] = vec3.create();
 	this.duration[0] = 0.0;
-	this.orientation[0] = 0.0;
 
 	// CALCULA DISTÂNCIAS PARCIAIS ENTRE PONTOS DE CONTROLO
-	var totalDistance = 0.0;
 	for (var i = 1; i < this.sections; i++) {
-		totalDistance += vec3.dist(this.points[i - 1], this.points[i]);
+		this.totalDistance += vec3.dist(this.points[i - 1], this.points[i]);
 	}
 
 	// CALCULA VELOCIDADE, DURAÇÃO E ORIENTAÇÃO PARA RESTANTES PONTOS
@@ -34,7 +30,7 @@ function LinearAnimation(id, span, points) {
 		var sectionOrientation = 0.0;
 		var sectionDisplacement = vec3.create();
 		var sectionDistance = vec3.dist(this.points[i], this.points[i - 1]);
-		var sectionDuration = (sectionDistance / totalDistance) * this.span;
+		var sectionDuration = (sectionDistance / this.totalDistance) * this.span;
 
 		this.duration[i] = this.duration[i - 1] + sectionDuration;
 		this.velocity[i] = vec3.create();
@@ -47,6 +43,9 @@ function LinearAnimation(id, span, points) {
 
 		this.orientation[i] = sectionOrientation;
 	}
+
+	this.orientation[0] = this.orientation[1];
+	this.velocity[0] = vec3.create();
 }
 
 LinearAnimation.prototype = Object.create(Animation.prototype);
@@ -98,7 +97,7 @@ LinearAnimation.prototype.start = function() {
 	this.currentTime = 0.0;
 	this.currentDelta = vec3.create();
 	this.currentPosition = vec3.clone(this.points[0]);
-	this.currentSection = 0;
+	this.currentSection = 1;
 };
 
 /**
@@ -106,9 +105,12 @@ LinearAnimation.prototype.start = function() {
  * @return {null}
  */
 LinearAnimation.prototype.update = function() {
+
 	mat4.identity(this.matrix);
 	mat4.translate(this.matrix, this.matrix, this.currentPosition);
 	mat4.rotateY(this.matrix, this.matrix, this.orientation[this.currentSection]);
+
+	return this.matrix;
 };
 
 /**
@@ -124,7 +126,7 @@ LinearAnimation.prototype.step = function(deltaTime) {
 
 		if (this.currentTime >= this.duration[this.currentSection]) {
 			if (++this.currentSection == this.sections) {
-				this.currentSection = 0;
+				this.currentSection--;
 				this.stop();
 			}
 		}
