@@ -8,22 +8,19 @@
 		<scale sx="1.0" sy="1.0" sz="1.0" />
 		<reference length="4.0" />
 	</INITIALS>
-
 	<ILLUMINATION>
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
-
 	<LIGHTS>
-		<LIGHT id="l1">
+		<LIGHT id="luz1">
 			<enable value="1" />
 			<position x="12.5" y="8.0" z="7.5" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
 		</LIGHT>
-
-		<LIGHT id="l2">
+		<LIGHT id="luz2">
 			<enable value="1" />
 			<position x="4.5" y="8.0" z="7.5" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
@@ -31,14 +28,12 @@
 			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
 		</LIGHT>
 	</LIGHTS>
-
 	<TEXTURES>
 		<TEXTURE id="colors">
 			<file path="images/colors.jpg" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 	</TEXTURES>
-
 	<MATERIALS>
 		<MATERIAL id="default">
 			<shininess value="5" />
@@ -48,10 +43,6 @@
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 	</MATERIALS>
-
-	<ANIMATIONS>
-	</ANIMATIONS>
-
 	<LEAVES>
 		<LEAF id="curve1" type="patch" partsU="20" partsV="20" orderU="1" orderV="1">
 			<controlpoint coords="-2.0 -2.0 0.0 1.0"/>
@@ -96,10 +87,8 @@
 			<controlpoint coords="2.0 2.0 1.0 1.0"/>
 		</LEAF>
 	</LEAVES>
-
 	<NODES>
 		<ROOT id="scene" />
-
 		<NODE id="scene">
 			<MATERIAL id="default" />
 			<TEXTURE id="colors" />
@@ -110,7 +99,6 @@
 				<DESCENDANT id="nurbs4" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="nurbs1">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
@@ -119,7 +107,6 @@
 				<DESCENDANT id="curve1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="nurbs2">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
@@ -128,7 +115,6 @@
 				<DESCENDANT id="curve2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="nurbs3">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
@@ -137,7 +123,6 @@
 				<DESCENDANT id="curve3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="nurbs4">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />

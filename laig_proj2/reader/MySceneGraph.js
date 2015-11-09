@@ -88,8 +88,14 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 		var currentElement = rootElement.getElementsByTagName(current);
 
-		if (requiredElements[current] && (currentElement == null || currentElement.length == 0)) {
+		if (currentElement == null || currentElement.length == 0) {
+			
+			if (!requiredElements[current]) {
+				continue;
+			}
+
 			this.onXMLError(onElementMissing(current, 'SCENE'));
+			
 			return false;
 		}
 

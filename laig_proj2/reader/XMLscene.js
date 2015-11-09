@@ -293,3 +293,7 @@ XMLscene.prototype.display = function () {
 		this.graph.display();
 	}
 };
+
+XMLscene.prototype.resetActiveShader = function() {
+	this.setActiveShader(this.defaultShader);
+}

@@ -84,7 +84,7 @@ LeafParser.prototype.readType = function(id, root, leafType) {
 		error = this.readSphere(id, root);
 	}
 	else if (leafType == 'terrain') {
-		error = this.readTerrain(id,  root);
+		error = this.readTerrain(id, root);
 	}
 	else if (leafType == 'vehicle') {
 		this.result = new MyVehicle(this.scene);
@@ -230,7 +230,7 @@ LeafParser.prototype.readPlane = function(id, root) {
 LeafParser.prototype.readTerrain = function(id, root) {
 
 	var parseErrors = 0;
-	var myTexture = this.getString(root, null, 'texture');
+	var myTexture = this.parseString(root, null, 'texture');
 	var error = checkValue(myTexture, 'texture path', 'TERRAIN', id);
 
 	if (error != null) {
@@ -242,7 +242,7 @@ LeafParser.prototype.readTerrain = function(id, root) {
 		return onURLInvalid('texture path', id, root.nodeName);
 	}
 
-	var myHeightmap = this.getString(root, null, 'heightmap');
+	var myHeightmap = this.parseString(root, null, 'heightmap');
 	var error = checkValue(myHeightmap, 'texture heightmap path', 'TERRAIN', id);
 
 	if (error != null) {

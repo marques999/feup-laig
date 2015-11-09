@@ -8,12 +8,10 @@
 		<scale sx="1" sy="1" sz="1" />                 	    <!-- initial scaling -->
 		<reference length="500" />                           <!-- axis length; "0" means no axis-->
 	</INITIALS>
-
 	<ILLUMINATION>
 		<ambient r="1" g="1" b="1" a="1" />            	    <!-- global ambient -->
 		<background r="0.5" g="0.5" b="0.8" a="1" />          <!-- background color -->
 	</ILLUMINATION>
-
 	<LIGHTS>
 		<LIGHT id="SOL1">                                    <!-- light identifier -->
 			<enable value ="1" />                         <!-- enable/disable -->
@@ -58,13 +56,11 @@
 			<specular r="1" g="1" b="1" a="0.2" />       <!-- specular component -->
 		</LIGHT>
 	</LIGHTS>
-
 	<TEXTURES>
 		<TEXTURE id="sun">
 			<file path="sun.jpg" />                             <!-- path to file -->
 			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
 		</TEXTURE>
-
 		<TEXTURE id="mercurio">
 			<file path="mercury.jpg" />                             <!-- path to file -->
 			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
@@ -102,7 +98,6 @@
 			<amplif_factor s="1" t="1" />                <!-- x/s, y/t -->
 		</TEXTURE>
 	</TEXTURES>
-
 	<MATERIALS>
 		<MATERIAL id="laranja">
 			<shininess value="1" />
@@ -147,7 +142,6 @@
 			<emission r="0" g="0" b="0" a="0.5 " />       <!-- emission component -->
 		</MATERIAL>
 	</MATERIALS>
-
 	<LEAVES>
 		<LEAF id="l1t" type="triangle" args="1 0 0 -1 0 0 0 2 0" />
 		<LEAF id="l1e" type="rectangle" args="0 0 5 5" />
@@ -157,7 +151,6 @@
 		<LEAF id="l3c" type="cylinder" args="30 2 0 1 40" />
 		<LEAF id="l1s" type="sphere" args="1 40 40" />
 	</LEAVES>
-
 	<ANIMATIONS>
 		<ANIMATION id="MERCURIO" span="3" type="circular" center="0 0 0" radius="12" startang="0" rotang="360" />
 		<ANIMATION id="VENUS" span="6.5" type="circular" center="0 0 0" radius="16" startang="0" rotang="360" />
@@ -168,11 +161,8 @@
 		<ANIMATION id="URANO" span="200" type="circular" center="0 0 0" radius="56" startang="0" rotang="360" />
 		<ANIMATION id="NEPTUNO" span="240" type="circular" center="0 0 0" radius="66" startang="0" rotang="360" />
 	</ANIMATIONS>
-
 	<NODES>
-
 		<ROOT id="ROOT" />
-
 		<NODE id="ROOT">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -189,9 +179,7 @@
 				<DESCENDANT id="NEPTUNO" />
 				<DESCENDANT id="OUTERSPACE" />
 			</DESCENDANTS>
-
 		</NODE>
-
 		<NODE id="OUTERSPACE">
 			<MATERIAL id="outerspace" />
 			<TEXTURE id="outerspace" />
@@ -266,8 +254,8 @@
 			</DESCENDANTS>
 		</NODE>
 
-		<NODE id="JUPITER"> 
-			<MATERIAL id="null" /> 
+		<NODE id="JUPITER">
+			<MATERIAL id="null" />
 			<TEXTURE id="jupiter" />
 			<ANIMATIONS>
 				<ANIMATION id="JUPITER" />
@@ -303,31 +291,19 @@
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
 			</DESCENDANTS>
-
 		</NODE>
 
-		<NODE id="NEPTUNO">       <!--   defines one intermediate node; may be repeated as necessary -->
-
-			<!-- next two lines are mandatory -->
-			<MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
-									  <!-- id="null" maintains material from parent node        -->
-			<TEXTURE id="neptune" />       <!-- declared texture superimposes the texture received from parent node -->
-									  <!-- id="null" maintains texture from parent node       -->
-									  <!-- id="clear" clears texture declaration received from parent node      -->
-
-
-				<ANIMATIONS>
-			<ANIMATION id="NEPTUNO" />
+		<NODE id="NEPTUNO">
+			<MATERIAL id="null" />
+			<TEXTURE id="neptune" />
+			<ANIMATIONS>
+				<ANIMATION id="NEPTUNO" />
 			</ANIMATIONS>
-			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
 			<TRANSLATION x="66" y="0" z="0" />
 			<SCALE sx="2" sy="2" sz="2" />
-
-			<!-- declaring descendents, ate least one node or one leaf must be present -->
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
 			</DESCENDANTS>
-
 		</NODE>
 
 		<NODE id="CUBE">
@@ -356,9 +332,6 @@
 			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
 			<ROTATION axis="x" angle="-90" />
 			<TRANSLATION x="0" y="0" z="0.5" />
-
-
-			<!-- declaring descendents, ate least one node or one leaf must be present -->
 			<DESCENDANTS>
 				<DESCENDANT id="l2e" />
 			</DESCENDANTS>
@@ -378,9 +351,6 @@
 			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
 			<ROTATION axis="x" angle="90" />
 			<TRANSLATION x="0" y="0" z="0.5" />
-
-
-			<!-- declaring descendents, ate least one node or one leaf must be present -->
 			<DESCENDANTS>
 				<DESCENDANT id="l2e" />
 			</DESCENDANTS>
@@ -400,38 +370,19 @@
 			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
 			<TRANSLATION x="0.5" y="0" z="0" />
 			<ROTATION axis="y" angle="90" />
-
-
-			<!-- declaring descendents, ate least one node or one leaf must be present -->
 			<DESCENDANTS>
 				<DESCENDANT id="l2e" />
 			</DESCENDANTS>
-
 		</NODE>
-
-		<NODE id="FACE_CUBO_ESQUERDA">       <!--   defines one intermediate node; may be repeated as necessary -->
-
-			<!-- next two lines are mandatory -->
-			<MATERIAL id="null" />      <!-- declared material superimposes the material received from parent node -->
-									  <!-- id="null" maintains material from parent node        -->
-			<TEXTURE id="null" />       <!-- declared texture superimposes the texture received from parent node -->
-									  <!-- id="null" maintains texture from parent node       -->
-									  <!-- id="clear" clears texture declaration received from parent node      -->
-
-
-			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
+		<NODE id="FACE_CUBO_ESQUERDA">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
 			<TRANSLATION x="-0.5" y="0" z="0" />
 			<ROTATION axis="y" angle="270" />
-
-
-
-			<!-- declaring descendents, ate least one node or one leaf must be present -->
 			<DESCENDANTS>
 				<DESCENDANT id="l2e" />
 			</DESCENDANTS>
-
 		</NODE>
-
 		<NODE id="FACE_CUBO_POSTERIOR">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -440,7 +391,6 @@
 				<DESCENDANT id="l2e" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="FACE_CUBO_ANTERIOR">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />

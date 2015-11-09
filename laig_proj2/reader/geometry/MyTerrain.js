@@ -16,12 +16,12 @@ function MyTerrain(scene, texturePath, heightmapPath) {
 	this.terrainTexture = new CGFtexture(scene, texturePath);
 	this.heightmapTexture = new CGFtexture(scene, heightmapPath);
 
-	this.terrainShader.setUniforms({
+	this.terrainShader.setUniformsValues({
 		terrainTexture: 0,
-		heightmapTexture: 1,
+		heightmapTexture: 1
 	});
 
-	this.terrainPlane = new MyPlane(scene, 16);
+	this.terrainPlane = new MyPlane(scene, 64);
 	this.terrainPlane.initBuffers();
 };
 
