@@ -503,7 +503,7 @@ LeafParser.prototype.readSphere = function(id, root) {
 	if (this.verbose) {
 		printHeader("LEAF", id);
 		printSingle('type', 'sphere');
-		printSingle('radius', myRadiuss);
+		printSingle('radius', myRadius);
 		printSingle('stacks', myStacks);
 		printSingle('slices', mySlices);
 	}

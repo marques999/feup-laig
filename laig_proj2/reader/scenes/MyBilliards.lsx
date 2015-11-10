@@ -917,10 +917,10 @@
 		<NODE id="table_side">
 		  <MATERIAL id="wood_cherry" />
 		  <TEXTURE id="table_wood" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="tt"/>
 				<ANIMATION id="uu"/>
-			</ANIMATIONS>
+			</ANIMATIONREF>
 		  <DESCENDANTS>
 			<DESCENDANT id="table_side_cl" />
 			<DESCENDANT id="table_side_rl" />
