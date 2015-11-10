@@ -156,14 +156,14 @@ BaseParser.prototype.parseCoordinates = function(root, attribute, coords) {
 		var coordName = coords[i];
 
 		if (!node.hasAttribute(coordName)) {
-			onCoordinateMissing(coordName, attribute);
+			onCoordinateMissing(coordName, attribute == null ? root.nodeName : attribute);
 			return NaN;
 		}
 
 		var coordValue = this.reader.getFloat(node, coordName);
 
 		if (coordValue != coordValue) {
-			onCoordinateInvalid(coordName, attribute);
+			onCoordinateInvalid(coordName, attribute == null ? root.nodeName : attribute);
 			return NaN;
 		}
 

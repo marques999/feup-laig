@@ -52,12 +52,6 @@ LeafParser.prototype.parse = function(root, id) {
 
 	this.result = null;
 	var leafType = this.reader.getString(root, 'type');
-
-	if (this.verbose) {
-		printHeader("LEAF", id);
-		printSingle('type', leafType);
-	}
-
 	var error = this.readType(id, root, leafType);
 
 	if (error != null) {
@@ -123,7 +117,7 @@ LeafParser.prototype.readRectangle = function(id, root) {
 	var y1 = parseFloat(leafArgs[1]);
 
 	if (x1 != x1 || y1 != y1) {
-		onAttributeInvalid('top left vertex', id, 'RECTANGLE');
+		onAttributeInvalidWarn('top left vertex', id, 'RECTANGLE');
 		parseErrors++;
 	}
 
@@ -131,7 +125,7 @@ LeafParser.prototype.readRectangle = function(id, root) {
 	var y2 = parseFloat(leafArgs[3]);
 
 	if (x2 != x2 || y2 != y2) {
-		onAttributeInvalid('bottom right vertex', id, 'RECTANGLE');
+		onAttributeInvalidWarn('bottom right vertex', id, 'RECTANGLE');
 		parseErrors++;
 	}
 
@@ -142,6 +136,8 @@ LeafParser.prototype.readRectangle = function(id, root) {
 	this.result = new MyRectangle(this.scene, x1, y1, x2, y2);
 
 	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', 'rectangle');
 		printValues('vertex 1', 'x', x1, 'y', y1);
 		printValues('vertex 2', 'x', x2, 'y', y2);
 	}
@@ -170,21 +166,21 @@ LeafParser.prototype.readTriangle = function(id, root) {
 	var vec1 = [leafArgs[0], leafArgs[1], leafArgs[2]].map(parseFloat);
 
 	if (vec1[0] != vec1[0] || vec1[1] != vec1[1] || vec1[2] != vec1[2]) {
-		onAttributeInvalid('first triangle vertex', id, 'TRIANGLE');
+		onAttributeInvalidWarn('first triangle vertex', id, 'TRIANGLE');
 		parseErrors++;
 	}
 
 	var vec2 = [leafArgs[3], leafArgs[4], leafArgs[5]].map(parseFloat);
 
 	if (vec2[0] != vec2[0] || vec2[1] != vec2[1] || vec2[2] != vec2[2]) {
-		onAttributeInvalid('second triangle vertex', id, 'TRIANGLE');
+		onAttributeInvalidWarn('second triangle vertex', id, 'TRIANGLE');
 		parseErrors++;
 	}
 
 	var vec3 = [leafArgs[6], leafArgs[7], leafArgs[8]].map(parseFloat);
 
 	if (vec3[0] != vec3[0] || vec3[1] != vec3[1] || vec3[2] != vec3[2]) {
-		onAttributeInvalid('third triangle vertex', id, 'TRIANGLE');
+		onAttributeInvalidWarn('third triangle vertex', id, 'TRIANGLE');
 		parseErrors++;
 	}
 
@@ -195,6 +191,8 @@ LeafParser.prototype.readTriangle = function(id, root) {
 	this.result = new MyTriangle(this.scene, vec1, vec2, vec3);
 
 	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', 'triangle');
 		printXYZ('vertex 1', vec1);
 		printXYZ('vertex 2', vec2);
 		printXYZ('vertex 2', vec3);
@@ -211,7 +209,7 @@ LeafParser.prototype.readPlane = function(id, root) {
 
 	var parseErrors = 0;
 	var myDivisions = this.parseInteger(root, null, 'parts')
-	var error = checkValue(myDivisions, 'number of divisions', 'PLANE', id);
+	var error = checkValue(myDivisions, 'parts', 'PLANE', id);
 
 	if (error != null) {
 		onXMLWarning(error);
@@ -224,8 +222,10 @@ LeafParser.prototype.readPlane = function(id, root) {
 
 	this.result = new MyPlane(this.scene, myDivisions);
 
-	if (this.verbose) {
-		printSingle('divisions', myDivisions);
+	if (this.verbose) {	
+		printHeader("LEAF", id);
+		printSingle('type', 'plane');
+		printSingle('parts', myDivisions);
 	}
 };
 
@@ -239,7 +239,7 @@ LeafParser.prototype.readTerrain = function(id, root) {
 
 	var parseErrors = 0;
 	var myTexture = this.parseString(root, null, 'texture');
-	var error = checkValue(myTexture, 'texture path', 'TERRAIN', id);
+	var error = checkValue(myTexture, 'textureh', 'TERRAIN', id);
 
 	if (error != null) {
 		onXMLWarning(error);
@@ -252,7 +252,7 @@ LeafParser.prototype.readTerrain = function(id, root) {
 	}
 
 	var myHeightmap = this.parseString(root, null, 'heightmap');
-	var error = checkValue(myHeightmap, 'texture heightmap path', 'TERRAIN', id);
+	var error = checkValue(myHeightmap, 'heightmap', 'TERRAIN', id);
 
 	if (error != null) {
 		onXMLWarning(error);
@@ -271,6 +271,8 @@ LeafParser.prototype.readTerrain = function(id, root) {
 	this.result = new MyTerrain(this.scene, myTexture, myHeightmap);
 
 	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', 'terrain');
 		printSingle('texture', myTexture);
 		printSingle('heightmap', myHeightmap);
 	}
@@ -372,6 +374,8 @@ LeafParser.prototype.readPatch = function(id, root) {
 	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, myPoints);
 
 	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', 'patch');
 		printValues('u', 'divisions', myDivsU, 'degree', myDegreeU);
 		printValues('v', 'divisions', myDivsV, 'degree', myDegreeV);
 	}
@@ -407,28 +411,28 @@ LeafParser.prototype.readCylinder = function(id, root) {
 	var myRadiusBottom = parseFloat(leafArgs[1]);
 
 	if (myRadiusBottom != myRadiusBottom) {
-		onAttributeInvalid('bottom radius', id, 'CYLINDER');
+		onAttributeInvalidWarn('bottom radius', id, 'CYLINDER');
 		parseErrors++;
 	}
 
 	var myRadiusTop = parseFloat(leafArgs[2]);
 
 	if (myRadiusTop != myRadiusTop) {
-		onAttributeInvalid('top radius', id, 'CYLINDER');
+		onAttributeInvalidWarn('top radius', id, 'CYLINDER');
 		parseErrors++;
 	}
 
 	var myStacks = parseInt(leafArgs[3]);
 
 	if (myStacks != myStacks) {
-		onAttributeInvalid('number of stacks', id, 'CYLINDER');
+		onAttributeInvalidWarn('number of stacks', id, 'CYLINDER');
 		parseErrors++;
 	}
 
 	var mySlices = parseInt(leafArgs[4]);
 
 	if (mySlices != mySlices) {
-		onAttributeInvalid('number of slices', id, 'CYLINDER');
+		onAttributeInvalidWarn('number of slices', id, 'CYLINDER');
 		parseErrors++;
 	}
 
@@ -439,6 +443,8 @@ LeafParser.prototype.readCylinder = function(id, root) {
 	this.result = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
 
 	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', 'cylinder');
 		printSingle('height', myHeight);
 		printSingle('bottom radius', myRadiusBottom);
 		printSingle('top radius', myRadiusTop);
@@ -470,21 +476,21 @@ LeafParser.prototype.readSphere = function(id, root) {
 	var myRadius = parseFloat(leafArgs[0]);
 
 	if (myRadius != myRadius) {
-		onAttributeInvalid('sphere radius', id, 'SPHERE');
+		onAttributeInvalidWarn('sphere radius', id, 'SPHERE');
 		parseErrors++;
 	}
 
 	var myStacks = parseInt(leafArgs[1]);
 
 	if (myStacks != myStacks) {
-		onAttributeInvalid('number of stacks', id, 'SPHERE');
+		onAttributeInvalidWarn('number of stacks', id, 'SPHERE');
 		parseErrors++;
 	}
 
 	var mySlices = parseInt(leafArgs[2]);
 
 	if (mySlices != mySlices) {
-		onAttributeInvalid('number of slices', id, 'SPHERE');
+		onAttributeInvalidWarn('number of slices', id, 'SPHERE');
 		parseErrors++;
 	}
 
@@ -495,6 +501,8 @@ LeafParser.prototype.readSphere = function(id, root) {
 	this.result = new MySphere(this.scene, myRadius, myStacks, mySlices);
 
 	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', 'sphere');
 		printSingle('radius', myRadiuss);
 		printSingle('stacks', myStacks);
 		printSingle('slices', mySlices);

@@ -3,7 +3,11 @@ function onAttributeMissing(node, id, parent) {
 };
 
 function onAttributeInvalid(node, id, parent) {
-	console.warn("WARNING: " + parent + " with id=" + id + " has an invalid value for '" + node + "' attribute!");
+	return parent + " with id=" + id + " has an invalid value for '" + node + "' attribute!";
+};
+
+function onAttributeInvalidWarn(node, id, parent) {
+	console.warn("WARNING:" + parent + " with id=" + id + " has an invalid value for '" + node + "' attribute!");
 };
 
 function onCoordinateInvalid(coord, parent) {
@@ -23,7 +27,7 @@ function onElementInvalid(node, parent) {
 };
 
 function onElementMissing(node, parent) {
-	return node + " attribute is missing from <" + parent + ">.";
+	return node + " attribute is missing from <" + parent + ">";
 };
 
 function onInvalidPoints(id, lenghtExpected) {

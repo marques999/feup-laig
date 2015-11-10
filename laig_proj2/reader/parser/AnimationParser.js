@@ -63,6 +63,10 @@ AnimationParser.prototype.parse = function(root, id) {
 		}
 	}
 
+	if (parseErrors != 0) {
+		return onParseError('ANIMATION', parseErrors, id);
+	}
+
 	if (this.type == 'linear') {
 		error = this.readLinear(root, id);
 	}
@@ -74,12 +78,7 @@ AnimationParser.prototype.parse = function(root, id) {
 	}
 
 	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
-	}
-
-	if (parseErrors != 0) {
-		return onParseError(root.nodeName, parseErrors, id);
+		return error;
 	}
 };
 
@@ -96,13 +95,13 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	var controlPoints = root.getElementsByTagName('controlpoint');
 
 	if (controlPoints.length == null || controlPoints.length == 0) {
-		return onAttributeMissing('controlpoint', id, 'LINEAR ANIMATION');
+		return onAttributeMissing('controlpoint', id, 'ANIMATION');
 	}
 
 	for (var i = 0; i < controlPoints.length; i++) {
 
 		var newCoordinates = this.parseCoordinatesXYZ(controlPoints[i], null);
-		var error = checkValue(newCoordinates, 'controlpoint', 'LINEAR ANIMATION');
+		var error = checkValue(newCoordinates, 'controlpoint', 'ANIMATION');
 
 		if (error != null) {
 			onXMLWarning(error);
@@ -114,7 +113,7 @@ AnimationParser.prototype.readLinear = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError('LINEAR ANIMATION', parseErrors, id);
+		return onParseError('ANIMATION', parseErrors, id);
 	}
 
 	if (this.verbose) {
@@ -149,7 +148,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	for (var attribute in parseAttributes) {
 
 		this[attribute] = parseAttributes[attribute].call(this, root, null, attribute);
-		var error = checkValue(this[attribute], attribute, 'CIRCULAR ANIMATION');
+		var error = checkValue(this[attribute], attribute, 'ANIMATION');
 
 		if (error != null) {
 			parseErrors++;
@@ -158,7 +157,7 @@ AnimationParser.prototype.readCircular = function(root, id) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError('CIRCULAR ANIMATION', parseErrors, id);
+		return onParseError('ANIMATION', parseErrors, id);
 	}
 
 	if (this.verbose) {

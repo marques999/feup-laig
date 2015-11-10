@@ -39,10 +39,10 @@
 	</MATERIALS>
 	<ANIMATIONS>
 		<ANIMATION id="first" span="2.0" type="linear">
-			<controlpoint x="8.0" y="0.0" z="0.0" />
-			<controlpoint x="-2.0" y="0.0" z="0.0" />
+			<controlpoint y="0.0" z="0.0" />
+			<controlpoint x="-2.0" y="merda" z="0.0" />
 		</ANIMATION>
-		<ANIMATION id="second" span="1.0" type="circular" center="0.0 0.0 0.0" radius="2.0" startang="-180" rotang="90">
+		<ANIMATION id="second" span="caralhopa" asd="circular" center="0.0 0.0 0.0" radius="2.0" startang="-180" rotang="90">
 		</ANIMATION>
 		<ANIMATION id="third" span="2.0" type="linear">
 			<controlpoint x="0.0" y="0.0" z="2.0" />
@@ -50,8 +50,9 @@
 		</ANIMATION>
 	</ANIMATIONS>
 	<LEAVES>
+		<LEAF id="myplane" type="plane" texture="scenes/images/big_terrain.png" heightmap="scenes/images/small_heightmap.png" />
 		<LEAF id="myterrain" type="terrain" texture="scenes/images/big_terrain.png" heightmap="scenes/images/small_heightmap.png" />
-		<LEAF id="mytriangle" type="triangle" args="0.0 12.0 1.0 3.0 12.0 0.0 0.0 12.0 -1.0" />
+		<LEAF id="mytriangle" type="triangle" args="0.0 abc 1.0 3.0 12.0 def 0.0 12.0 -1.0" />
 	</LEAVES>
 	<NODES>
 		<ROOT id="node_scene" />
