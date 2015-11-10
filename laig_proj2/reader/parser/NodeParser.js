@@ -77,16 +77,18 @@ NodeParser.prototype.parse = function(root, id) {
 		printValues('TEXTURE', 'id', nodeTexture);
 	}
 
-	if (root.children[2].nodeName == 'ANIMATIONS') {
-		xmlIndex++;
-	}
-
 	var node = new XMLnode(id, nodeTexture, nodeMaterial);
 	var node_sz = root.children.length;
-	var error = this.parseAnimations(root, node);
 
-	if (error != null) {
-		return error;
+	if (root.children[2].nodeName == 'ANIMATIONREF') {
+		
+		xmlIndex++;
+
+		var error = this.parseAnimations(root, node);
+
+		if (error != null) {
+			return error;
+		}
 	}
 
 	for (; xmlIndex < node_sz; xmlIndex++) {

@@ -74,11 +74,11 @@
 		<NODE id="node_vehicle">
 			<MATERIAL id="material_green" />
 			<TEXTURE id="null" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="first"/>
 				<ANIMATION id="second"/>
 				<ANIMATION id="third"/>
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<DESCENDANTS>
 				<DESCENDANT id="mytriangle" />
 			</DESCENDANTS>

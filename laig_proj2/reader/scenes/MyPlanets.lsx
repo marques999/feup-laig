@@ -201,9 +201,9 @@
 		<NODE id="MERCURIO">
 			<MATERIAL id="null" />
 			<TEXTURE id="mercurio" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="MERCURIO" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="12" y="0" z="0" />
 			<SCALE sx="0.3" sy="0.3" sz="0.3" />
 			<DESCENDANTS>
@@ -215,9 +215,9 @@
 		<NODE id="VENUS">
 			<MATERIAL id="laranja" />
 			<TEXTURE id="venus" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="VENUS" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<!-- geom. transf. are optional and may be repeated, in any order, as necessary -->
 			<TRANSLATION x="16" y="0" z="0" />
 			<SCALE sx="0.8" sy="0.8" sz="0.8" />
@@ -231,9 +231,9 @@
 		<NODE id="TERRA">
 			<MATERIAL id="null" />
 			<TEXTURE id="terra" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="TERRA" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="21" y="0" z="0" />
 			<SCALE sx="0.9" sy="0.9" sz="0.9" />
 			<DESCENDANTS>
@@ -244,9 +244,9 @@
 		<NODE id="MARTE">
 			<MATERIAL id="null" />
 			<TEXTURE id="mars" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="MARTE" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="26" y="0" z="0" />
 			<SCALE sx="0.6" sy="0.6" sz="0.6" />
 			<DESCENDANTS>
@@ -257,9 +257,9 @@
 		<NODE id="JUPITER">
 			<MATERIAL id="null" />
 			<TEXTURE id="jupiter" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="JUPITER" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="36" y="0" z="0" />
 			<SCALE sx="3" sy="3" sz="3" />
 			<DESCENDANTS>
@@ -270,9 +270,9 @@
 		<NODE id="SATURNO">
 			<MATERIAL id="null" />
 			<TEXTURE id="saturno" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="SATURNO" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="46" y="0" z="0" />
 			<SCALE sx="2.5" sy="2.5" sz="2.5" />
 			<DESCENDANTS>
@@ -283,9 +283,9 @@
 		<NODE id="URANO">
 			<MATERIAL id="null" />
 			<TEXTURE id="urano" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="URANO" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="56" y="0" z="0" />
 			<SCALE sx="1.8" sy="1.8" sz="1.8" />
 			<DESCENDANTS>
@@ -296,9 +296,9 @@
 		<NODE id="NEPTUNO">
 			<MATERIAL id="null" />
 			<TEXTURE id="neptune" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="NEPTUNO" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="66" y="0" z="0" />
 			<SCALE sx="2" sy="2" sz="2" />
 			<DESCENDANTS>

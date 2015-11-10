@@ -15,14 +15,12 @@ function MyTerrain(scene, texturePath, heightmapPath) {
 	this.terrainShader = new CGFshader(scene.gl, "shaders/MyTerrain.vert", "shaders/MyTerrain.frag");
 	this.terrainTexture = new CGFtexture(scene, texturePath);
 	this.heightmapTexture = new CGFtexture(scene, heightmapPath);
-
+	this.terrainPlane = new MyPlane(scene, 64);
+	
 	this.terrainShader.setUniformsValues({
 		terrainTexture: 0,
 		heightmapTexture: 1
 	});
-
-	this.terrainPlane = new MyPlane(scene, 64);
-	this.terrainPlane.initBuffers();
 };
 
 MyTerrain.prototype = Object.create(MyPrimitive.prototype);
@@ -38,7 +36,7 @@ MyTerrain.prototype.display = function() {
 	this.terrainTexture.bind(0);
 	this.heightmapTexture.bind(1);
 	this.terrainPlane.display();
-	this.terrainTexture.unbind();
-	this.heightmapTexture.unbind();
+	this.terrainTexture.unbind(0);
+	this.heightmapTexture.unbind(1);
 	this.scene.resetActiveShader();
 };

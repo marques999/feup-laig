@@ -57,11 +57,11 @@
 		<NODE id="scene">
 			<MATERIAL id="green" />
 			<TEXTURE id="null" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="first"/>
 				<ANIMATION id="second"/>
 				<ANIMATION id="third"/>
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<DESCENDANTS>
 				<DESCENDANT id="mytriangle" />
 			</DESCENDANTS>

@@ -247,9 +247,9 @@
 		<NODE id="table">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<ANIMATIONS>
+			<ANIMATIONREF>
 				<ANIMATION id="ss" />
-			</ANIMATIONS>
+			</ANIMATIONREF>
 			<TRANSLATION x="3.5" y="0.0" z="4.5" />
 			<DESCENDANTS>
 				<DESCENDANT id="table_legs" />
