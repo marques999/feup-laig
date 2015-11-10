@@ -23,7 +23,6 @@ function MyPlane(scene, nrDivs) {
 	};
 
 	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, nrDivs, nrDivs);
-	this.nurbsObject.initBuffers();
 };
 
 MyPlane.prototype = Object.create(MyPrimitive.prototype);

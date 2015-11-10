@@ -39,7 +39,7 @@ function onInvalidArguments(id, argsGot, argsExpected) {
 };
 
 function onURLInvalid(node, id, parent) {
-	return parent + " with id=" + id + " has an invalid URL for '" + node + "' attribute!";
+	console.warn("WARNING: " + parent + " with id=" + id + " has an invalid URL for '" + node + "' attribute!");
 };
 
 function onReservedId(id, root) {

@@ -52,15 +52,16 @@ LeafParser.prototype.parse = function(root, id) {
 
 	this.result = null;
 	var leafType = this.reader.getString(root, 'type');
-	var error = this.readType(id, root, leafType);
-
-	if (error != null) {
-		return error;
-	}
 
 	if (this.verbose) {
 		printHeader("LEAF", id);
 		printSingle('type', leafType);
+	}
+
+	var error = this.readType(id, root, leafType);
+
+	if (error != null) {
+		return error;
 	}
 };
 
@@ -117,10 +118,6 @@ LeafParser.prototype.readRectangle = function(id, root) {
 		return onInvalidArguments(id, leafArgs.length, 4);
 	}
 
-	if (this.verbose) {
-		printSingle('args', leafArgs);
-	}
-
 	var parseErrors = 0;
 	var x1 = parseFloat(leafArgs[0]);
 	var y1 = parseFloat(leafArgs[1]);
@@ -143,6 +140,11 @@ LeafParser.prototype.readRectangle = function(id, root) {
 	}
 
 	this.result = new MyRectangle(this.scene, x1, y1, x2, y2);
+
+	if (this.verbose) {
+		printValues('vertex 1', 'x', x1, 'y', y1);
+		printValues('vertex 2', 'x', x2, 'y', y2);
+	}
 };
 
 /**
@@ -162,10 +164,6 @@ LeafParser.prototype.readTriangle = function(id, root) {
 
 	if (leafArgs.length != 9) {
 		return onInvalidArguments(id, leafArgs.length, 9);
-	}
-
-	if (this.verbose) {
-		printSingle('args', leafArgs);
 	}
 
 	var parseErrors = 0;
@@ -195,6 +193,12 @@ LeafParser.prototype.readTriangle = function(id, root) {
 	}
 
 	this.result = new MyTriangle(this.scene, vec1, vec2, vec3);
+
+	if (this.verbose) {
+		printXYZ('vertex 1', vec1);
+		printXYZ('vertex 2', vec2);
+		printXYZ('vertex 2', vec3);
+	}
 };
 
 /**
@@ -219,6 +223,10 @@ LeafParser.prototype.readPlane = function(id, root) {
 	}
 
 	this.result = new MyPlane(this.scene, myDivisions);
+
+	if (this.verbose) {
+		printSingle('divisions', myDivisions);
+	}
 };
 
 /**
@@ -239,7 +247,8 @@ LeafParser.prototype.readTerrain = function(id, root) {
 	}
 
 	if (!checkUrl(myTexture)) {
-		return onURLInvalid('texture path', id, root.nodeName);
+		onURLInvalid('texture', id, 'TERRAIN');
+		parseErrors++;
 	}
 
 	var myHeightmap = this.parseString(root, null, 'heightmap');
@@ -251,7 +260,8 @@ LeafParser.prototype.readTerrain = function(id, root) {
 	}
 
 	if (!checkUrl(myHeightmap)) {
-		return onURLInvalid('texture heightmap path', id, 'TERRAIN');
+		onURLInvalid('heightmap', id, 'TERRAIN');
+		parseErrors++;
 	}
 
 	if (parseErrors != 0) {
@@ -259,6 +269,11 @@ LeafParser.prototype.readTerrain = function(id, root) {
 	}
 
 	this.result = new MyTerrain(this.scene, myTexture, myHeightmap);
+
+	if (this.verbose) {
+		printSingle('texture', myTexture);
+		printSingle('heightmap', myHeightmap);
+	}
 };
 
 /**
@@ -301,7 +316,7 @@ LeafParser.prototype.readPatch = function(id, root) {
 		onXMLWarning(error);
 		parseErrors++;
 	}
-	
+
 	if (myDegreeU > 3 || myDegreeV > 3) {
 		onDegreeOutOfRange(id);
 		parseErrors++;
@@ -357,8 +372,8 @@ LeafParser.prototype.readPatch = function(id, root) {
 	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, myPoints);
 
 	if (this.verbose) {
-		printValues('upatch', 'degree', myDegreeU);
-		printValues('vpatch', 'degree', myDegreeV);
+		printValues('u', 'divisions', myDivsU, 'degree', myDegreeU);
+		printValues('v', 'divisions', myDivsV, 'degree', myDegreeV);
 	}
 };
 
@@ -424,7 +439,11 @@ LeafParser.prototype.readCylinder = function(id, root) {
 	this.result = new MyCylinder(this.scene, myHeight, myRadiusBottom, myRadiusTop, myStacks, mySlices);
 
 	if (this.verbose) {
-		printSingle('args', leafArgs);
+		printSingle('height', myHeight);
+		printSingle('bottom radius', myRadiusBottom);
+		printSingle('top radius', myRadiusTop);
+		printSingle('stacks', myStacks);
+		printSingle('slices', mySlices);
 	}
 };
 
@@ -476,6 +495,8 @@ LeafParser.prototype.readSphere = function(id, root) {
 	this.result = new MySphere(this.scene, myRadius, myStacks, mySlices);
 
 	if (this.verbose) {
-		printSingle('args', leafArgs);
+		printSingle('radius', myRadiuss);
+		printSingle('stacks', myStacks);
+		printSingle('slices', mySlices);
 	}
 };

@@ -98,3 +98,13 @@ MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {
 
 	this.updateTexCoordsGLBuffers();
 };
+
+MyTriangle.prototype.setWireframe = function(we) {
+	
+	if (we) {
+		this.primitiveType = this.scene.gl.LINES;  
+	}
+	else {
+		this.primitiveType = this.scene.gl.TRIANGLES 
+	}
+};

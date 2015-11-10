@@ -20,3 +20,5 @@ MyPrimitive.prototype.constructor = MyPrimitive;
  * @return {null}
  */
 MyPrimitive.prototype.updateTexCoords = function(ampS, ampT) {};
+
+MyPrimitive.prototype.setWireframe = function(we) {};

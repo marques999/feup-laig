@@ -134,14 +134,14 @@ NodeParser.prototype.parse = function(root, id) {
  */
 NodeParser.prototype.parseAnimations = function(root, node) {
 
-	var nodeAnimation = root.getElementsByTagName('ANIMATIONS');
+	var nodeAnimation = root.getElementsByTagName('ANIMATIONREF');
 
 	if (nodeAnimation == null || nodeAnimation.length == 0) {
 		return null;
 	}
 
 	if (nodeAnimation.length != 1) {
-		onMultipleElements('ANIMATIONS', parent);
+		onMultipleElements('ANIMATIONREF', parent);
 	}
 
 	nodeAnimation = nodeAnimation[0].children;
@@ -151,7 +151,7 @@ NodeParser.prototype.parseAnimations = function(root, node) {
 	}
 
 	if (this.verbose) {
-		console.log("\t\tANIMATIONS:");
+		console.log("\t\ANIMATIONREF:");
 	}
 
 	for (var i = 0; i < nodeAnimation.length; i++) {

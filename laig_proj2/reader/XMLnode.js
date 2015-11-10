@@ -88,7 +88,7 @@ XMLnode.prototype.translate = function(coords) {
 XMLnode.prototype.updateAnimation = function(deltaTime) {
 
 	var currentAnimation = this.animations[this.animationNumber];
-	
+
 	if (currentAnimation == null || currentAnimation == undefined) {
 		return null;
 	}
@@ -109,7 +109,7 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 XMLnode.prototype.applyAnimation = function() {
 
 	var currentAnimation = this.animations[this.animationNumber];
-	
+
 	if (currentAnimation == null || currentAnimation == undefined) {
 		return null;
 	}

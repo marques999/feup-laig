@@ -21,9 +21,8 @@
  * @param {String} path
  * @return {null}
  */
-function TextureParser(reader, scene, path) {
+function TextureParser(reader, scene) {
 	BaseParser.call(this, reader, scene);
-	this.path = path;
 };
 
 TextureParser.prototype = Object.create(BaseParser.prototype);
@@ -35,7 +34,7 @@ TextureParser.prototype.constructor = TextureParser;
  * @param {Number} id - identificador do elemento a ser processado
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-TextureParser.prototype.parse = function(root, id) {
+TextureParser.prototype.parse = function(root, id, basePath) {
 
 	this.result = null;
 	var parseErrors = 0;
@@ -50,8 +49,9 @@ TextureParser.prototype.parse = function(root, id) {
 		return onAttributeMissing('file', id, root.nodeName);
 	}
 
-	if (!checkUrl(this.path + texturePath)) {
-		return onURLInvalid('file', id, root.nodeName);
+	if (!checkUrl(basePath + texturePath)) {
+		onURLInvalid('file', id, root.nodeName);
+		parseErrors++;
 	}
 
 	var textureS = this.parseFloat(root, 'amplif_factor', 's');
@@ -74,7 +74,7 @@ TextureParser.prototype.parse = function(root, id) {
 		return onParseError(root.nodeName, parseErrors, id);
 	}
 
-	var textureObject = new CGFtexture(this.scene, this.path + texturePath);
+	var textureObject = new CGFtexture(this.scene, basePath + texturePath);
 	this.result = new XMLtexture(textureObject, textureS, textureT);
 
 	if (this.verbose) {

@@ -89,3 +89,13 @@ MyRectangle.prototype.updateTexCoords = function(ampS, ampT) {
 
 	this.updateTexCoordsGLBuffers();
 };
+
+MyRectangle.prototype.setWireframe = function(we) {
+
+	if (we) {
+		this.primitiveType = this.scene.gl.LINE_STRIP;
+	}
+	else {
+		this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
+	}
+};

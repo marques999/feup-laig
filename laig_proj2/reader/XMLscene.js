@@ -31,7 +31,7 @@ XMLscene.prototype.init = function(application) {
 	this.gl.depthFunc(this.gl.LEQUAL);
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
-	this.wireframe = false;
+	this.wireframeEnabled = false;
 	this.setUpdatePeriod(1000/60);
 
 	mat4.identity(this.defaultMatrix);
@@ -133,6 +133,14 @@ XMLscene.prototype.setDefaultAppearance = function() {
 	this.setSpecular(0.5, 0.5, 0.5, 1.0);
 	this.setShininess(10.0);
 };
+
+/**
+ * coloca o shader da cena no seu estado inicial
+ * @return {null}
+ */
+XMLscene.prototype.resetActiveShader = function() {
+	this.setActiveShader(this.defaultShader);
+}
 
 /**
  * desenha uma primitiva na cena
@@ -262,12 +270,21 @@ XMLscene.prototype.onGraphLoaded = function() {
 	}
 };
 
+/**
+ * callback executado periodicamente para atualizar estado das animações
+ * @param {Number} currTime - epoch time actual (em milisegundos)
+ * @return {null}
+ */
 XMLscene.prototype.update = function(currTime) {
-
-	if (this.graph.loadedOk) {
-		this.graph.processAnimations((currTime - this.lastUpdate) * 0.001);
-	}
+	this.graph.loadedOk && this.graph.processAnimations((currTime - this.lastUpdate) * 0.001);
 };
+
+/**
+ *
+ */
+XMLscene.prototype.setWireframe = function(we) {
+	this.graph.loadedOk && this.graph.setWireframe(we);
+}
 
 /**
  * callback executado periodicamente para atualizar a visualização da cena
@@ -293,7 +310,3 @@ XMLscene.prototype.display = function () {
 		this.graph.display();
 	}
 };
-
-XMLscene.prototype.resetActiveShader = function() {
-	this.setActiveShader(this.defaultShader);
-}

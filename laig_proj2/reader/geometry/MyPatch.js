@@ -21,7 +21,7 @@ function MyPatch(scene, uDivs, vDivs, uDegree, vDegree, controlPoints) {
 		[0, 0, 0, 0, 1, 1, 1, 1]
 	];
 
-	var nurbsSurface = new CGFnurbsSurface(uDegree, vDegree, 
+	var nurbsSurface = new CGFnurbsSurface(uDegree, vDegree,
 		knotsArray[uDegree - 1], knotsArray[vDegree - 1], controlPoints);
 
 	function getSurfacePoint(u, v) {
@@ -29,7 +29,6 @@ function MyPatch(scene, uDivs, vDivs, uDegree, vDegree, controlPoints) {
 	};
 
 	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, uDivs, vDivs);
-	this.nurbsObject.initBuffers();
 };
 
 MyPatch.prototype = Object.create(MyPrimitive.prototype);

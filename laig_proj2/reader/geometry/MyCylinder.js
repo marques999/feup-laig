@@ -83,3 +83,13 @@ MyCylinder.prototype.initBuffers = function() {
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };
+
+MyCylinder.prototype.setWireframe = function(we) {
+	
+	if (we) {
+		this.primitiveType = this.scene.gl.LINES;  
+	}
+	else {
+		this.primitiveType = this.scene.gl.TRIANGLES;
+	}
+};

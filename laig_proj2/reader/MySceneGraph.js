@@ -60,7 +60,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 	this.lightParser = new LightParser(this.reader, this.scene);
 	this.materialParser = new MaterialParser(this.reader, this.scene);
 	this.nodeParser = new NodeParser(this.reader, this);
-	this.textureParser = new TextureParser(this.reader, this.scene, this.scenePath);
+	this.textureParser = new TextureParser(this.reader, this.scene);
 
 	var rootParsers = {
 		'INITIALS': this.parseGlobals,
@@ -212,6 +212,12 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 			this.processNodes(nextElement, this.getNodeMaterial(mId, nextElement), this.getNodeTexture(tId, nextElement));
 			this.scene.popMatrix();
 		}
+	}
+};
+
+MySceneGraph.prototype.setWireframe = function(we) {
+	for (var leaf in this.leaves) {
+		this.leaves[leaf].setWireframe(we);
 	}
 };
 
@@ -557,7 +563,7 @@ MySceneGraph.prototype.parseTexture = function(id, root) {
 		return onElementDuplicate(root.nodeName, id);
 	}
 
-	var error = this.textureParser.parse(root, id);
+	var error = this.textureParser.parse(root, id, this.scenePath);
 	if (error != null) {
 		return error;
 	}

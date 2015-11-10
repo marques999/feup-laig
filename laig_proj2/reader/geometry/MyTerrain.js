@@ -40,3 +40,13 @@ MyTerrain.prototype.display = function() {
 	this.heightmapTexture.unbind(1);
 	this.scene.resetActiveShader();
 };
+
+MyTerrain.prototype.setWireframe = function(we) {
+	
+	if (we) {
+		this.primitiveType = this.scene.gl.LINES;
+	}
+	else {
+		this.primitiveType = this.scene.gl.TRIANGLES;
+	}
+};
