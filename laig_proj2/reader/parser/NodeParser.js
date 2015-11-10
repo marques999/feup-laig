@@ -81,7 +81,7 @@ NodeParser.prototype.parse = function(root, id) {
 	var node_sz = root.children.length;
 
 	if (root.children[2].nodeName == 'ANIMATIONREF') {
-		
+
 		xmlIndex++;
 
 		var error = this.parseAnimations(root, node);
@@ -159,7 +159,7 @@ NodeParser.prototype.parseAnimations = function(root, node) {
 		var thisAnimation = nodeAnimation[i];
 
 		if (!thisAnimation.hasAttribute('id')) {
-			onXMLWarning(onAttributeMissing('animation id', node.id, root.nodeName));
+			onAttributeMissingWarn('animation id', node.id, root.nodeName);
 			continue;
 		}
 
@@ -263,7 +263,7 @@ NodeParser.prototype.parseDescendants = function(root, node) {
 		var childId = this.reader.getString(nodeDescendants[i], 'id', true);
 
 		if (childId == null) {
-			onXMLWarning(onAttributeMissing('id', id, parent));
+			onAttributeMissingWarn('id', id, parent);
 			continue;
 		}
 

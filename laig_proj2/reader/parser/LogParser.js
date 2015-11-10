@@ -1,5 +1,9 @@
 function onAttributeMissing(node, id, parent) {
-	return "<" + parent + "> with id=" + id + " is missing attribute '" + node + "'!";
+	return "<" + parent + "> with id=" + id + " is missing attribute " + node;
+};
+
+function onAttributeMissingWarn(node, id, parent) {
+	console.warn("WARNING: <" + parent + "> with id=" + id + " is missing attribute " + node);
 };
 
 function onAttributeInvalid(node, id, parent) {
@@ -15,7 +19,7 @@ function onCoordinateInvalid(coord, parent) {
 };
 
 function onCoordinateMissing(coord, parent) {
-	console.warn("WARNING: coordinate '" + coord + "' is missing from <" + parent + ">!");
+	console.warn("WARNING: coordinate '" + coord + "' is missing from <" + parent + ">");
 };
 
 function onElementDuplicate(parent, id) {

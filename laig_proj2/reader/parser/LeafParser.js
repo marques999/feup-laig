@@ -222,7 +222,7 @@ LeafParser.prototype.readPlane = function(id, root) {
 
 	this.result = new MyPlane(this.scene, myDivisions);
 
-	if (this.verbose) {	
+	if (this.verbose) {
 		printHeader("LEAF", id);
 		printSingle('type', 'plane');
 		printSingle('parts', myDivisions);
