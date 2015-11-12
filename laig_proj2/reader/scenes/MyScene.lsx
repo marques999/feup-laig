@@ -27,9 +27,16 @@
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
 		</LIGHT>
-		<LIGHT id="l2">
+		<LIGHT id="l3">
 			<enable value="1" />
-			<position x="4.5" y="4.0" z="3.5" w="1.0" />
+			<position x="4.5" y="-4.0" z="3.5" w="1.0" />
+			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
+			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
+		</LIGHT>
+		<LIGHT id="l4">
+			<enable value="1" />
+			<position x="4.5" y="-4.0" z="-3.5" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
@@ -44,16 +51,56 @@
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 	</MATERIALS>
+	<ANIMATIONS>
+		<ANIMATION id="first" span="2.0" type="linear">
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="-1.0" y="0.0" z="0.0" />			
+		</ANIMATION>
+		<ANIMATION id="second" span="1.0" type="linear">
+			<controlpoint x="-1.0" y="0.0" z="0.0" />
+			<controlpoint x="-5.0" y="0.0" z="0.0" />			
+		</ANIMATION>
+		<ANIMATION id="third" span="1.0" type="linear">
+			<controlpoint x="-5.0" y="0.0" z="0.0" />
+			<controlpoint x="-15.0" y="0.0" z="0.0" />			
+		</ANIMATION>
+						
+	</ANIMATIONS>
 	<LEAVES>
 		<LEAF id="myV" type="vehicle"/>
 	</LEAVES>
 	<NODES>
 		<ROOT id="scene" />
+
 		<NODE id="scene">
 			<MATERIAL id="default" />
-			<TEXTURE id="null" />
+			<TEXTURE id="null" />			
+			<DESCENDANTS>
+					<DESCENDANT id="vehicle_mov" />
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="vehicle_mov">
+			<MATERIAL id="default" />
+			<TEXTURE id="null" />			
+			<ROTATION axis="z" angle="-90" />
+			<DESCENDANTS>
+					<DESCENDANT id="vehicle"/>
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="vehicle">
+			<MATERIAL id="default" />
+			<TEXTURE id="null" />			
+			<ANIMATIONREF>
+				<ANIMATION id="first" />
+				<ANIMATION id="second" />
+				<ANIMATION id="third" />				
+			</ANIMATIONREF>			
 			<DESCENDANTS>
 					<DESCENDANT id="myV" />
 			</DESCENDANTS>
 		</NODE>
+
+		
 </SCENE>

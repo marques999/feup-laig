@@ -310,3 +310,4 @@ XMLscene.prototype.display = function () {
 		this.graph.display();
 	}
 };
+

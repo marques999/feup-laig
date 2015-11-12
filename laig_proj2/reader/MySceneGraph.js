@@ -170,7 +170,7 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 	var animationMatrix = node.applyAnimation();
 
 	if (animationMatrix != null) {
-		mat4.multiply(animationMatrix, animationMatrix, node.matrix);
+		mat4.multiply(animationMatrix,animationMatrix, node.matrix);
 	}
 	else {
 		animationMatrix = node.matrix
