@@ -1,9 +1,9 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="0.0" y="0.0" z="-7.0" />
-		<rotation axis="y" angle="0.0" />
-		<rotation axis="x" angle="0.0" />
+		<translation x="0.0" y="0.0" z="0.0" />
+		<rotation axis="y" angle="10.0" />
+		<rotation axis="x" angle="-25.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
 		<reference length="4.0" />
@@ -13,27 +13,35 @@
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
 	<LIGHTS>
-		<LIGHT id="luz1">
+		<LIGHT id="l1">
 			<enable value="1" />
-			<position x="12.5" y="8.0" z="7.5" w="1.0" />
+			<position x="4.5" y="4.0" z="-3.5" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
+			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
 		</LIGHT>
-		<LIGHT id="luz2">
+		<LIGHT id="l2">
 			<enable value="1" />
-			<position x="4.5" y="8.0" z="7.5" w="1.0" />
+			<position x="4.5" y="4.0" z="3.5" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
+			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
+		</LIGHT>
+		<LIGHT id="l3">
+			<enable value="1" />
+			<position x="4.5" y="-4.0" z="3.5" w="1.0" />
+			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
+			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
+		</LIGHT>
+		<LIGHT id="l4">
+			<enable value="1" />
+			<position x="4.5" y="-4.0" z="-3.5" w="1.0" />
+			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
+			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
 		</LIGHT>
 	</LIGHTS>
-	<TEXTURES>
-		<TEXTURE id="colors">
-			<file path="images/colors.jpg" />
-			<amplif_factor s="1.0" t="1.0" />
-		</TEXTURE>
-	</TEXTURES>
 	<MATERIALS>
 		<MATERIAL id="default">
 			<shininess value="5" />
@@ -43,92 +51,50 @@
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 	</MATERIALS>
+	<ANIMATIONS>
+		<ANIMATION id="first" span="2.0" type="linear">
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="-1.0" y="0.0" z="0.0" />
+		</ANIMATION>
+		<ANIMATION id="second" span="1.0" type="linear">
+			<controlpoint x="-1.0" y="0.0" z="0.0" />
+			<controlpoint x="-5.0" y="0.0" z="0.0" />
+		</ANIMATION>
+		<ANIMATION id="third" span="1.0" type="linear">
+			<controlpoint x="-5.0" y="0.0" z="0.0" />
+			<controlpoint x="-15.0" y="0.0" z="0.0" />
+		</ANIMATION>
+	</ANIMATIONS>
 	<LEAVES>
-		<LEAF id="curve1" type="patch" partsU="20" partsV="20" orderU="1" orderV="1">
-			<controlpoint coords="-2.0 -2.0 0.0 1.0"/>
-			<controlpoint coords="-2.0 2.0 0.0 1.0"/>
-			<controlpoint coords="2.0 -2.0 0.0 1.0"/>
-			<controlpoint coords="2.0 2.0 0.0 1.0"/>
-		</LEAF>
-		<LEAF id="curve2" type="patch" partsU="20" partsV="20" orderU="2" orderV="1">
-			<controlpoint coords="-1.5 -1.5 0.0 1.0"/>
-			<controlpoint coords="-1.5 1.5 0.0 1.0"/>
-			<controlpoint coords="0.0 -1.5 3.0 1.0"/>
-			<controlpoint coords="1.0 1.5 3.0 1.0"/>
-			<controlpoint coords="1.5 -1.5 0.0 1.0"/>
-			<controlpoint coords="1.5 1.5 0.0 1.0"/>
-		</LEAF>
-		<LEAF id="curve3" type="patch" partsU="20" partsV="20" orderU="2" orderV="3">
-			<controlpoint coords="-1.5 -1.5 0.0 1.0"/>
-			<controlpoint coords="-2.0 -2.0 2.0 1.0"/>
-			<controlpoint coords="-2.0 2.0 2.0 1.0"/>
-			<controlpoint coords="-1.5 1.5 0.0 1.0"/>
-			<controlpoint coords="0.0 0.0 3.0 1.0"/>
-			<controlpoint coords="0.0 -2.0 3.0 5.0"/>
-			<controlpoint coords="0.0 2.0 3.0 5.0"/>
-			<controlpoint coords="0.0 0.0 3.0 1.0"/>
-			<controlpoint coords="1.5 -1.5 0.0 1.0"/>
-			<controlpoint coords="2.0 -2.0 2.0 1.0"/>
-			<controlpoint coords="2.0 2.0 2.0 1.0"/>
-			<controlpoint coords="1.5 1.5 0.0 1.0"/>
-		</LEAF>
-		<LEAF id="curve4" type="patch" partsU="20" partsV="20" orderU="2" orderV="3">
-			<controlpoint coords="-2.0 -2.0 1.0 1.0"/>
-			<controlpoint coords="-2.0 -1.0 -2.0 1.0"/>
-			<controlpoint coords="-2.0 1.0 5.0 1.0"/>
-			<controlpoint coords="-2.0 2.0 -1.0 1.0"/>
-			<controlpoint coords="0.0 -2.0 0.0 1.0"/>
-			<controlpoint coords="0.0 -1.0 -1.0 5.0"/>
-			<controlpoint coords="0.0 1.0 1.5 5.0"/>
-			<controlpoint coords="0.0 2.0 0.0 1.0"/>
-			<controlpoint coords="2.0 -2.0 -1.0 1.0"/>
-			<controlpoint coords="2.0 -1.0 2.0 1.0"/>
-			<controlpoint coords="2.0 1.0 -5.0 1.0"/>
-			<controlpoint coords="2.0 2.0 1.0 1.0"/>
-		</LEAF>
+		<LEAF id="myV" type="vehicle"/>
 	</LEAVES>
 	<NODES>
 		<ROOT id="scene" />
 		<NODE id="scene">
 			<MATERIAL id="default" />
-			<TEXTURE id="colors" />
+			<TEXTURE id="null" />
 			<DESCENDANTS>
-				<DESCENDANT id="nurbs1" />
-				<DESCENDANT id="nurbs2" />
-				<DESCENDANT id="nurbs3" />
-				<DESCENDANT id="nurbs4" />
+					<DESCENDANT id="vehicle_mov" />
 			</DESCENDANTS>
 		</NODE>
-		<NODE id="nurbs1">
+		<NODE id="vehicle_mov">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="-7.5" y="0.0" z="0.0"/>
+			<ROTATION axis="z" angle="-90" />
 			<DESCENDANTS>
-				<DESCENDANT id="curve1" />
+					<DESCENDANT id="vehicle"/>
 			</DESCENDANTS>
 		</NODE>
-		<NODE id="nurbs2">
+		<NODE id="vehicle">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="-2.5" y="0.0" z="0.0"/>
+			<ANIMATIONREF>
+				<ANIMATION id="first" />
+				<ANIMATION id="second" />
+				<ANIMATION id="third" />
+			</ANIMATIONREF>
 			<DESCENDANTS>
-				<DESCENDANT id="curve2" />
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="nurbs3">
-			<MATERIAL id="default" />
-			<TEXTURE id="null" />
-			<TRANSLATION x="2.5" y="0.0" z="0.0"/>
-			<DESCENDANTS>
-				<DESCENDANT id="curve3" />
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="nurbs4">
-			<MATERIAL id="default" />
-			<TEXTURE id="null" />
-			<TRANSLATION x="7.5" y="0.0" z="0.0"/>
-			<DESCENDANTS>
-				<DESCENDANT id="curve4" />
+					<DESCENDANT id="myV" />
 			</DESCENDANTS>
 		</NODE>
 	</NODES>
