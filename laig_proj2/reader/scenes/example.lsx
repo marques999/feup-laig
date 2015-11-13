@@ -74,7 +74,7 @@
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
 			<DESCENDANTS>
-					<DESCENDANT id="vehicle_mov" />
+				<DESCENDANT id="vehicle_mov" />
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="vehicle_mov">
@@ -82,7 +82,7 @@
 			<TEXTURE id="null" />
 			<ROTATION axis="z" angle="-90" />
 			<DESCENDANTS>
-					<DESCENDANT id="vehicle"/>
+				<DESCENDANT id="vehicle"/>
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="vehicle">
@@ -94,7 +94,7 @@
 				<ANIMATION id="third" />
 			</ANIMATIONREF>
 			<DESCENDANTS>
-					<DESCENDANT id="myV" />
+				<DESCENDANT id="myV" />
 			</DESCENDANTS>
 		</NODE>
 	</NODES>

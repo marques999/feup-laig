@@ -50,7 +50,7 @@
 		</ANIMATION>
 	</ANIMATIONS>
 	<LEAVES>
-		<LEAF id="myterrain" type="terrain" texture="scenes/images/new_terrain.png" heightmap="scenes/images/test_heightmap.png" />
+		<LEAF id="myterrain" type="terrain" texture="scenes/images/new_terrain.jpg" heightmap="scenes/images/test_heightmap.png" />
 		<LEAF id="myplanet" type="sphere" args="1.0 32 32"/>
 		<LEAF id="mytriangle" type="triangle" args="0.0 12.0 1.0 3.0 12.0 0.0 0.0 12.0 -1.0" />
 	</LEAVES>

@@ -58,43 +58,43 @@
 	</LIGHTS>
 	<TEXTURES>
 		<TEXTURE id="sun">
-			<file path="sun.jpg" />
+			<file path="images/sun.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="mercurio">
-			<file path="mercury.jpg" />
+			<file path="images/mercury.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="venus">
-			<file path="venus.jpg" />
+			<file path="images/venus.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="terra">
-			<file path="earth.png" />
+			<file path="images/earth.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="mars">
-			<file path="mars.jpg" />
+			<file path="images/mars.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="jupiter">
-			<file path="jupiter.jpg" />
+			<file path="images/jupiter.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="saturno">
-			<file path="saturno.jpg" />
+			<file path="images/saturn.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="urano">
-			<file path="urano.jpg" />
+			<file path="images/uranus.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="neptune">
-			<file path="neptune.jpg" />
+			<file path="images/neptune.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 		<TEXTURE id="outerspace">
-			<file path="outerspace.jpg" />
+			<file path="images/outerspace.jpg" />
 			<amplif_factor s="1" t="1" />
 		</TEXTURE>
 	</TEXTURES>

@@ -44,8 +44,6 @@ varying float vAmount;
 varying vec4 vFinalColor;
 varying vec2 vTextureCoord;
 
-const float vScale = 0.3;
-
 vec4 doLighting(vec4 vertex, vec3 E, vec3 N) {
 
 	vec4 result = vec4(0.0, 0.0, 0.0, 0.0);
@@ -110,6 +108,7 @@ void main() {
 	vTextureCoord = aTextureCoord;
 	vAmount = texture2D(heightmapTexture, vTextureCoord).r;
 
+	float vScale = 0.25;
 	vec4 vertex = uMVMatrix * vec4(aVertexPosition + aVertexNormal * vAmount * vScale, 1.0);
 	vec3 N = normalize(vec3(uNMatrix * vec4(aVertexNormal, 1.0)));
 	vec3 E = normalize(-vec3(vertex.xyz));
