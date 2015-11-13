@@ -333,45 +333,12 @@ LeafParser.prototype.readPatch = function(id, root) {
 	var uLength = myDegreeU + 1;
 	var vLength = myDegreeV + 1;
 	var totalLength = uLength * vLength;
-	var currentPoint = 0;
-	var myPoints = [];
+	var controlPoints = [];
+	var myArray = [];
 
 	if (root.length != totalLength) {
 		return onInvalidPoints(id, totalLength);
 	}
-
-	for (var currentU = 0; currentU < uLength; currentU++) {
-
-		myPoints[currentU] = [];
-
-		for (var currentV = 0; currentV < vLength; currentV++) {
-
-			var nodePoint = root[currentPoint++];
-
-			if (nodePoint.nodeName != 'controlpoint') {
-				onXMLWarning(onUnexpectedTag(nodePoint.nodeName, 'controlpoint', 'PATCH', id));
-				parseErrors++;
-				continue;
-			}
-
-			var myVertex = this.parseVector4(nodePoint);
-			var error = checkValue(myVertex, 'control vertex', 'PATCH', id);
-
-			if (error == null) {
-				myPoints[currentU][currentV] = myVertex;
-			}
-			else {
-				onXMLWarning(warning);
-				parseErrors++;
-			}
-		}
-	}
-
-	if (parseErrors != 0) {
-		return onParseError('PATCH', parseErrors, id);
-	}
-
-	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, myPoints);
 
 	if (this.verbose) {
 		printHeader("LEAF", id);
@@ -379,6 +346,43 @@ LeafParser.prototype.readPatch = function(id, root) {
 		printValues('u', 'divisions', myDivsU, 'degree', myDegreeU);
 		printValues('v', 'divisions', myDivsV, 'degree', myDegreeV);
 	}
+
+	for (var currentPoint = 0; currentPoint < totalLength; currentPoint+=1) {
+
+		var nodePoint = root[currentPoint];
+
+		if (nodePoint.nodeName != 'controlpoint') {
+			onXMLWarning(onUnexpectedTag(nodePoint.nodeName, 'controlpoint', 'PATCH', id));
+			parseErrors++;
+			continue;
+		}
+
+		var myVertex = this.parseVector4(nodePoint);
+		var error = checkValue(myVertex, 'control vertex', 'PATCH', id);
+
+		if (error != null) {
+			onXMLWarning(warning);
+			parseErrors++;
+		}
+		else {
+			myArray.push(myVertex);
+		}
+
+		if (this.verbose) {
+			printXYZW('controlpoint', myVertex);
+		}
+
+		if (currentPoint % vLength == myDegreeV) {
+			controlPoints.push(myArray);
+			myArray = [];
+		}
+	}
+
+	if (parseErrors != 0) {
+		return onParseError('PATCH', parseErrors, id);
+	}
+
+	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, controlPoints);
 };
 
 /**
