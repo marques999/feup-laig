@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {Number} uDivs - número de divisões da superfície NURBS na coordenada U
  * @param {Number} vDivs - número de divisões da superfície NURBS na coordenada V
  * @param {Number} uDegree - grau da superfície NURBS na coordenada U
@@ -35,7 +35,7 @@ MyPatch.prototype = Object.create(MyPrimitive.prototype);
 MyPatch.prototype.constructor = MyPatch;
 
 /**
- * desenha a primitva 'MyPatch' na CGFscene correspondente
+ * desenha a primitva 'MyPatch' na XMLScene correspondente
  * @return {null}
  */
 MyPatch.prototype.display = function() {

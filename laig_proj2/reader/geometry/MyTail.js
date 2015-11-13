@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
 function MyTail(scene) {
@@ -92,6 +92,10 @@ function MyTail(scene) {
 MyTail.prototype = Object.create(MyPrimitive.prototype);
 MyTail.prototype.constructor = MyTail;
 
+/**
+ * desenha a primitva 'MyTail' na XMLScene correspondente
+ * @return {null}
+ */
 MyTail.prototype.display = function() {
 
 	this.scene.pushMatrix();

@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {Number} height - altura do cilindro
  * @param {Number} radiusBottom - raio da base inferior do cilindro
  * @param {Number} radiusTop - radio da base superior do cilindro
@@ -82,14 +82,4 @@ MyCylinder.prototype.initBuffers = function() {
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
-};
-
-MyCylinder.prototype.setWireframe = function(we) {
-	
-	if (we) {
-		this.primitiveType = this.scene.gl.LINES;  
-	}
-	else {
-		this.primitiveType = this.scene.gl.TRIANGLES;
-	}
 };

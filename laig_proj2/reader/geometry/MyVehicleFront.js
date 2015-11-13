@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
 function MyVehicleFront(scene) {
@@ -27,7 +27,7 @@ function MyVehicleFront(scene) {
 	var P4_3 = [0.0, 0.0, 1.0, 1.0];
 	var P4_4 = [-0.5, 0.5, 0.0, 1.0];
 
-	this.MyVehicleFront = new MyPatch(this.scene, 20, 20, 3, 3,
+	this.FRONT = new MyPatch(this.scene, 20, 20, 3, 3,
 	[
 		[P1_1, P1_2, P1_3, P1_4],
 		[P2_1, P2_2, P2_3, P2_4],
@@ -52,7 +52,7 @@ function MyVehicleFront(scene) {
 	P4_3 = [2.0, 0.0, 3.0, 1.0];
 	P4_4 = [2.5, -0.5, 3.0, 1.0];
 
-	this.MyVehicleFront_TOP = new MyPatch(this.scene, 20, 20, 3, 3,
+	this.FRONT_TOP = new MyPatch(this.scene, 20, 20, 3, 3,
 	[
 		[P1_1, P1_2, P1_3, P1_4],
 		[P2_1, P2_2, P2_3, P2_4],
@@ -77,7 +77,7 @@ function MyVehicleFront(scene) {
 	P4_3 = [1.0, 0.0, 3.0, 1.0];
 	P4_4 = [0.0, 0.0, 3.0, 1.0];
 
-	this.MyVehicleFront_DOWN = new MyPatch(this.scene, 20, 20, 3, 3,
+	this.FRONT_DOWN = new MyPatch(this.scene, 20, 20, 3, 3,
 	[
 		[P1_1, P1_2, P1_3, P1_4],
 		[P2_1, P2_2, P2_3, P2_4],
@@ -102,7 +102,7 @@ function MyVehicleFront(scene) {
 	P4_3 = [1.0, 0.0, 0.0, 1.0];
 	P4_4 = [0.0, 0.0, 0.0, 1.0];
 
-	this.MyVehicleFront_LEFT = new MyPatch(this.scene, 20, 20, 3, 3,
+	this.FRONT_LEFT = new MyPatch(this.scene, 20, 20, 3, 3,
 	[
 		[P1_1, P1_2, P1_3, P1_4],
 		[P2_1, P2_2, P2_3, P2_4],
@@ -127,7 +127,7 @@ function MyVehicleFront(scene) {
 	P4_3 = [2.0, 0.0, 0.0, 1.0];
 	P4_4 = [2.5, 0.5, 0.0, 1.0];
 
-	this.MyVehicleFront_RIGHT = new MyPatch(this.scene, 20, 20, 3, 3,
+	this.FRONT_RIGHT = new MyPatch(this.scene, 20, 20, 3, 3,
 	[
 		[P1_1, P1_2, P1_3, P1_4],
 		[P2_1, P2_2, P2_3, P2_4],
@@ -139,15 +139,19 @@ function MyVehicleFront(scene) {
 MyVehicleFront.prototype = Object.create(MyPrimitive.prototype);
 MyVehicleFront.prototype.constructor = MyVehicleFront;
 
+/**
+ * desenha a primitva 'MyVehicleFront' na XMLScene correspondente
+ * @return {null}
+ */
 MyVehicleFront.prototype.display = function() {
 
-	this.MyVehicleFront.display();
+	this.FRONT.display();
 	this.scene.translate(-3.0, 3.0, 0.0);
-	this.MyVehicleFront_TOP.display();
+	this.FRONT_TOP.display();
 	this.scene.translate(0.0, -3.0, 0.0);
-	this.MyVehicleFront_DOWN.display();
+	this.FRONT_DOWN.display();
 	this.scene.translate(0.0, 0.0, 0.0);
-	this.MyVehicleFront_LEFT.display();
+	this.FRONT_LEFT.display();
 	this.scene.translate(0.0, 0.0, 3.0);
-	this.MyVehicleFront_RIGHT.display();
+	this.FRONT_RIGHT.display();
  };

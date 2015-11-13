@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
 function MyVehicle(scene) {
@@ -21,6 +21,10 @@ function MyVehicle(scene) {
 MyVehicle.prototype = Object.create(MyPrimitive.prototype);
 MyVehicle.prototype.constructor = MyVehicle;
 
+/**
+ * desenha a primitva 'MyVehicle' na XMLScene correspondente
+ * @return {null}
+ */
 MyVehicle.prototype.display = function() {
 
 	this.scene.pushMatrix();

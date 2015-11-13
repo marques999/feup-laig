@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {Number} minX - coordenada X do vértice superior esquerdo do retângulo
  * @param {Number} maxY - coordenada Y do vértice superior esquerdo do retângulo
  * @param {Number} maxX - coordenada X do vértice inferior direito do retângulo
@@ -88,14 +88,4 @@ MyRectangle.prototype.updateTexCoords = function(ampS, ampT) {
 	];
 
 	this.updateTexCoordsGLBuffers();
-};
-
-MyRectangle.prototype.setWireframe = function(we) {
-
-	if (we) {
-		this.primitiveType = this.scene.gl.LINE_STRIP;
-	}
-	else {
-		this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
-	}
 };

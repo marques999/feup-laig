@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
 function MyTailEnd(scene) {
@@ -77,6 +77,10 @@ function MyTailEnd(scene) {
 MyTailEnd.prototype = Object.create(MyPrimitive.prototype);
 MyTailEnd.prototype.constructor = MyTailEnd;
 
+/**
+ * desenha a primitva 'MyTailEnd' na XMLScene correspondente
+ * @return {null}
+ */
 MyTailEnd.prototype.display = function() {
 
 	this.TAIL_END_DOWN.display();

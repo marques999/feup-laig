@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {String} texturePath - caminho para o ficheiro de textura do terreno
  * @param {String} heightmapPath - caminho para o ficheiro de relevo do terreno
  * @return {null}
@@ -27,7 +27,7 @@ MyTerrain.prototype = Object.create(MyPrimitive.prototype);
 MyTerrain.prototype.constructor = MyTerrain;
 
 /**
- * desenha a primitva 'MyTerrain' na CGFscene correspondente
+ * desenha a primitva 'MyTerrain' na XMLScene correspondente
  * @return {null}
  */
 MyTerrain.prototype.display = function() {
@@ -39,14 +39,4 @@ MyTerrain.prototype.display = function() {
 	this.heightmapTexture.unbind(1);
 	this.terrainTexture.unbind(0);
 	this.scene.resetActiveShader();
-};
-
-MyTerrain.prototype.setWireframe = function(we) {
-
-	if (we) {
-		this.primitiveType = this.scene.gl.LINES;
-	}
-	else {
-		this.primitiveType = this.scene.gl.TRIANGLES;
-	}
 };

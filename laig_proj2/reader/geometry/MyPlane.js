@@ -3,11 +3,11 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {Number} nrDivs - número de divisões do plano em partes por eixo
  * @return {null}
  */
-function MyPlane(scene, nrDivs) {
+function MyPlane(scene, divs) {
 
 	CGFobject.call(this, scene);
 
@@ -22,14 +22,14 @@ function MyPlane(scene, nrDivs) {
 		return nurbsSurface.getPoint(u, v);
 	};
 
-	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, nrDivs, nrDivs);
+	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, divs, divs);
 };
 
 MyPlane.prototype = Object.create(MyPrimitive.prototype);
 MyPlane.prototype.constructor = MyPlane;
 
 /**
- * desenha a primitva 'MyPlane' na CGFscene correspondente
+ * desenha a primitva 'MyPlane' na XMLScene correspondente
  * @return {null}
  */
 MyPlane.prototype.display = function() {

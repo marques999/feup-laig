@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {Number[]} v1 - vetor de coordenadas (x, y, z) do vértice esquerdo da base do triângulo
  * @param {Number[]} v2 - vetor de coordenadas (x, y, z) do vértice direito da base do triângulo
  * @param {Number[]} v3 - vetor de coordenadas (x, y, z) do vértice de topo do triângulo
@@ -97,14 +97,4 @@ MyTriangle.prototype.updateTexCoords = function(ampS, ampT) {
 	];
 
 	this.updateTexCoordsGLBuffers();
-};
-
-MyTriangle.prototype.setWireframe = function(we) {
-	
-	if (we) {
-		this.primitiveType = this.scene.gl.LINES;  
-	}
-	else {
-		this.primitiveType = this.scene.gl.TRIANGLES 
-	}
 };

@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
 function MyTailBooster(scene) {
@@ -14,6 +14,10 @@ function MyTailBooster(scene) {
 MyTailBooster.prototype = Object.create(MyPrimitive.prototype);
 MyTailBooster.prototype.constructor = MyTailBooster;
 
+/**
+ * desenha a primitva 'MyTailBooster' na XMLScene correspondente
+ * @return {null}
+ */
 MyTailBooster.prototype.display = function() {
 	this.BOOSTER1.display();
 	this.scene.scale(1.0, -1.0, 1.0);

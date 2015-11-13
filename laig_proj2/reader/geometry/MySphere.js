@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {Number} radius - raio da esfera
  * @param {Number} stacks - número de secções da esfera em altura
  * @param {Number} slices - número de secçoes da esfera em torno do raio
@@ -79,14 +79,4 @@ MySphere.prototype.initBuffers = function() {
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
-};
-
-MySphere.prototype.setWireframe = function(we) {
-	
-	if (we) {
-		this.primitiveType = this.scene.gl.LINES;  
-	}
-	else {
-		this.primitiveType = this.scene.gl.TRIANGLES;
-	}
 };
