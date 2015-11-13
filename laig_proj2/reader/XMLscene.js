@@ -31,7 +31,6 @@ XMLscene.prototype.init = function(application) {
 	this.gl.depthFunc(this.gl.LEQUAL);
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
-	this.wireframeEnabled = false;
 	this.setUpdatePeriod(1000/60);
 
 	mat4.identity(this.defaultMatrix);
@@ -280,13 +279,6 @@ XMLscene.prototype.update = function(currTime) {
 };
 
 /**
- *
- */
-XMLscene.prototype.setWireframe = function(we) {
-	this.graph.loadedOk && this.graph.setWireframe(we);
-}
-
-/**
  * callback executado periodicamente para atualizar a visualização da cena
  * @return {null}
  */
@@ -310,4 +302,3 @@ XMLscene.prototype.display = function () {
 		this.graph.display();
 	}
 };
-

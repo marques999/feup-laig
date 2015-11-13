@@ -215,12 +215,6 @@ MySceneGraph.prototype.processNodes = function(node, materialId, textureId) {
 	}
 };
 
-MySceneGraph.prototype.setWireframe = function(we) {
-	for (var leaf in this.leaves) {
-		this.leaves[leaf].setWireframe(we);
-	}
-};
-
 /**
  * determina por herança qual a textura a aplicar sobre o nó atual
  * @param {String} currTextureId - identificador da textura do pai do nó atual

@@ -20,13 +20,7 @@ MyInterface.prototype.init = function(application) {
 
 	CGFinterface.prototype.init.call(this, application);
 
-	var self = this;
-
 	this.gui = new dat.GUI();
-	this.gui.add(this.scene, 'wireframeEnabled').onChange(function(we) {
-		self.scene.setWireframe(we);
-	});
-
 	this.group = this.gui.addFolder("Lights");
 	this.group.open();
 	this.lights = {};
