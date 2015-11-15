@@ -33,16 +33,6 @@ function MySceneGraph(filename, scene) {
 	this.reader.open(this.sceneFile, this);
 };
 
-/*
-  _____ _   _ _____ _______
- |_   _| \ | |_   _|__   __|
-   | | |  \| | | |    | |
-   | | | . ` | | |    | |
-  _| |_| |\  |_| |_   | |
- |_____|_| \_|_____|  |_|
-
-*/
-
 /**
  * chama as funções de parsing uma a uma para processar os diferentes blocos do ficheiro LSX,
  * apresentando uma mensagem de erro na ausência de um bloco ou na existência de blocos repetidos
@@ -122,14 +112,6 @@ MySceneGraph.prototype.onXMLReady = function() {
 		this.onInvalidRoot(this.graphRoot);
 	}
 };
-
-/*
-  _____ _____  _____ _____  _           __     __
- |  __ \_   _|/ ____|  __ \| |        /\\ \   / /
- | |  | || | | (___ | |__) | |       /  \\ \_/ /
- | |  | || |  \___ \|  ___/| |      / /\ \\   /
- | |__| || |_ ____) | |    | |____ / ____ \| |
- |_____/_____|_____/|_|    |______/_/    \_\_|
 
 /**
  * aplica os materiais e texturas associados ao root node na XMLscene
@@ -291,16 +273,12 @@ MySceneGraph.prototype.parseString = function(root, name, attribute) {
 	}
 };
 
-/*
-		   _____  _____        __     _______
-	 /\   |  __ \|  __ \     /\\ \   / / ____|
-	/  \  | |__) | |__) |   /  \\ \_/ / (___
-   / /\ \ |  _  /|  _  /   / /\ \\   / \___ \
-  / ____ \| | \ \| | \ \  / ____ \| |  ____) |
- /_/    \_\_|  \_\_|  \_\/_/    \_\_| |_____/
-
-*/
-
+/**
+ * processa vários elementos contidos num bloco XML
+ * @param {XMLElement} rootElement - estrutura de dados que contém o documento XML
+ * @param {String} nodeName - identificador do bloco escolhido para ser processado
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 
 	var childrenSize = rootElement.children.length;

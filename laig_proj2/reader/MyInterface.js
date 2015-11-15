@@ -21,7 +21,6 @@ MyInterface.prototype.init = function(application) {
 	CGFinterface.prototype.init.call(this, application);
 
 	var self = this;
-
 	this.loopAnimations = true;
 	this.updatePeriod = 60;
 	this.gui = new dat.GUI();
