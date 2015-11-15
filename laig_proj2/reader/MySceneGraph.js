@@ -651,7 +651,7 @@ MySceneGraph.prototype.onVisitNode = function(node, indegree) {
 };
 
 MySceneGraph.prototype.onInvalidRoot = function(root) {
-	this.onXMLError("invalid graph root '" + root + "'' not found in <NODES>!");
+	this.onXMLError("graph root reference '" + root + "' not found in <NODES>!");
 };
 
 MySceneGraph.prototype.onXMLError = function(message) {

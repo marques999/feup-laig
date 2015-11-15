@@ -48,7 +48,7 @@ NodeParser.prototype.parse = function(root, id) {
 	var nodeTexture = null;
 
 	if (id == 'null' || id == 'clear') {
-		return onReservedId(parent, id);
+		return onReservedId(id, parent);
 	}
 
 	if (root.children[0].nodeName != 'MATERIAL') {
@@ -151,7 +151,7 @@ NodeParser.prototype.parseAnimations = function(root, node) {
 	}
 
 	if (this.verbose) {
-		console.log("\t\ANIMATIONREF:");
+		console.log("\t\tANIMATIONREF:");
 	}
 
 	for (var i = 0; i < nodeAnimation.length; i++) {

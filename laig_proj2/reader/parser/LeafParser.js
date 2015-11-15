@@ -50,6 +50,10 @@ LeafParser.prototype.parse = function(root, id) {
 		return onAttributeMissing('type', id, root.nodeName);
 	}
 
+	if (id == 'null' || id == 'clear') {
+		return onReservedId(id, root.nodeName);
+	}
+
 	this.result = null;
 	var leafType = this.reader.getString(root, 'type');
 	var error = this.readType(id, root, leafType);
@@ -95,7 +99,7 @@ LeafParser.prototype.readType = function(id, root, leafType) {
 		error = this.readPlane(id, root);
 	}
 	else {
-		return onAttributeInvalid('type', id, parent);
+		error = onAttributeInvalid('type', id, root.nodeName);
 	}
 
 	return error;

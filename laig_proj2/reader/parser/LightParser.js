@@ -42,7 +42,7 @@ LightParser.prototype.parse = function(root, id) {
 	var parseErrors = 0;
 
 	if (id == 'null' || id == 'clear') {
-		return onReservedId(root.nodeName, id);
+		return onReservedId(id, root.nodeName);
 	}
 
 	var lightEnabled = this.parseBoolean(root, 'enable');

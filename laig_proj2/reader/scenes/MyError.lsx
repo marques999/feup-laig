@@ -13,19 +13,19 @@
 		<background r="0.53" g="0.45" b="0.8" a="1.0" />
 	</ILLUMINATION>
 	<LIGHTS>
-		<LIGHT id="luz1">
+		<LIGHT id="vais_falhar">
 			<enable value="1" />
 			<position x="8" y="8" z="5" w="0.0" />
 			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
 			<diffuse r="0.7" g="0.7" b="0.7" a="1.0" />
 			<specular r="0.5" g="0.5" b="0.5" a="1.0" />
 		</LIGHT>
-		<LIGHT id="luz2">
-			<enable value="1" />
+		<LIGHT id="vais_falhar">
+			<enable value="vais_falhar" />
 			<position x="-4" y="4" z="2" w="0.0" />
 			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
-			<diffuse r="0.7" g="0.7" b="0.7" a="1.0" />
-			<specular r="0.5" g="0.5" b="0.5" a="1.0" />
+			<diffuse r="0.7" vais_falhar="0.7" b="0.7" a="1.0" />
+			<specular r="0.5" g="0.5" b="vais_falhar" a="1.0" />
 		</LIGHT>
 	</LIGHTS>
 	<MATERIALS>
@@ -40,28 +40,29 @@
 	<ANIMATIONS>
 		<ANIMATION id="first" span="2.0" type="linear">
 			<controlpoint y="0.0" z="0.0" />
-			<controlpoint x="-2.0" y="merda" z="0.0" />
+			<controlpoint x="-2.0" y="vais_falhar" z="0.0" />
 		</ANIMATION>
-		<ANIMATION id="second" span="caralhopa" asd="circular" center="0.0 0.0 0.0" radius="2.0" startang="-180" rotang="90">
+		<ANIMATION id="second" span="vais_falhar" asd="circular" center="0.0 0.0 0.0" radius="2.0" startang="-180" rotang="90">
 		</ANIMATION>
-		<ANIMATION id="third" span="2.0" type="linear">
+		<ANIMATION id="third" span="2.0" type="vais_falhar">
 			<controlpoint x="0.0" y="0.0" z="2.0" />
 			<controlpoint x="0.0" y="0.0" z="8.0" />
 		</ANIMATION>
 	</ANIMATIONS>
 	<LEAVES>
 		<LEAF id="myplane" type="plane" texture="scenes/images/big_terrain.png" heightmap="scenes/images/small_heightmap.png" />
-		<LEAF id="myterrain" type="terrain" texture="scenes/images/big_terrain.png" heightmap="scenes/images/small_heightmap.png" />
+		<LEAF id="myterrain" type="terrain" texture="scenes/images/big_terrain.png" heightmap="vais_falhar" />
 		<LEAF id="mytriangle" type="triangle" args="0.0 abc 1.0 3.0 12.0 def 0.0 12.0 -1.0" />
+		<LEAF id="null" type="vais_falhar" args="0.0 abc 1.0 3.0 12.0 def 0.0 12.0 -1.0" />
 	</LEAVES>
 	<NODES>
-		<ROOT id="node_scene" />
-		<NODE id="node_scene">
+		<ROOT id="null" />
+		<NODE id="null">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
 			<DESCENDANTS>
 				<DESCENDANT id="node_terrain" />
-				<DESCENDANT id="node_vehicle" />
+				<DESCENDANT id="vais_falhar" />
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="node_terrain">
@@ -81,7 +82,7 @@
 				<ANIMATION id="third"/>
 			</ANIMATIONREF>
 			<DESCENDANTS>
-				<DESCENDANT id="mytriangle" />
+				<DESCENDANT id="vais_falhar" />
 			</DESCENDANTS>
 		</NODE>
 	</NODES>

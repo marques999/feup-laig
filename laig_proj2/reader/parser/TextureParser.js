@@ -40,7 +40,7 @@ TextureParser.prototype.parse = function(root, id, basePath) {
 	var parseErrors = 0;
 
 	if (id == 'null' || id == 'clear') {
-		return onReservedId(root.nodeName, id);
+		return onReservedId(id, root.nodeName);
 	}
 
 	var texturePath = this.parseString(root, 'file', 'path');

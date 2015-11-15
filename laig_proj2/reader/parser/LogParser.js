@@ -9,19 +9,19 @@
 */
 
 function onAttributeMissing(node, id, parent) {
-	return "<" + parent + "> with id=" + id + " is missing attribute " + node;
+	return "<" + parent + "> with id=" + id + " is missing attribute '" + node + "'";
 };
 
 function onAttributeMissingWarn(node, id, parent) {
-	console.warn("WARNING: <" + parent + "> with id=" + id + " is missing attribute " + node);
+	console.warn("WARNING: <" + parent + "> with id=" + id + " is missing attribute '" + node + "'");
 };
 
 function onAttributeInvalid(node, id, parent) {
-	return parent + " with id=" + id + " has an invalid value for '" + node + "' attribute!";
+	return "<" + parent + "> with id=" + id + " has an invalid value for '" + node + "' attribute!";
 };
 
 function onAttributeInvalidWarn(node, id, parent) {
-	console.warn("WARNING:" + parent + " with id=" + id + " has an invalid value for '" + node + "' attribute!");
+	console.warn("WARNING: <" + parent + "> with id=" + id + " has an invalid value for '" + node + "' attribute!");
 };
 
 function onCoordinateInvalid(coord, parent) {
@@ -53,11 +53,11 @@ function onInvalidArguments(id, argsGot, argsExpected) {
 };
 
 function onURLInvalid(node, id, parent) {
-	console.warn("WARNING: " + parent + " with id=" + id + " has an invalid URL for '" + node + "' attribute!");
+	console.warn("WARNING: <" + parent + "> with id=" + id + " has an invalid URL for '" + node + "' attribute!");
 };
 
 function onReservedId(id, root) {
-	return parent + " with id=" + id + " has a reserved ID ['null', 'clear'], skipping...";
+	return "<" + root + "> with id=" + id + " has a reserved ID ['null', 'clear'], skipping...";
 };
 
 function onDegreeOutOfRange(id, attribute) {
