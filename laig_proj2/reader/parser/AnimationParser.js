@@ -85,7 +85,7 @@ AnimationParser.prototype.parse = function(root, id) {
 /**
  * processa uma animação do tipo "linear" e acrescenta ao array de animações do grafo
  * @param {XMLElement} root - estrutura de dados XML que contém os atributos desta animação
- * @param {Number} id - identificador da animação atual
+ * @param {Number} id - identificador da animação
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 AnimationParser.prototype.readLinear = function(root, id) {
@@ -132,7 +132,7 @@ AnimationParser.prototype.readLinear = function(root, id) {
 /**
  * processa uma animação do tipo "circular" e acrescenta ao array de animações do grafo
  * @param {XMLElement} root - estrutura de dados XML que contém os atributos desta animação
- * @param {Number} id - identificador da animação atual
+ * @param {Number} id - identificador da animação
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 AnimationParser.prototype.readCircular = function(root, id) {

@@ -1,3 +1,13 @@
+/*
+  _____  ______ ____  _    _  _____
+ |  __ \|  ____|  _ \| |  | |/ ____|
+ | |  | | |__  | |_) | |  | | |  __
+ | |  | |  __| |  _ <| |  | | | |_ |
+ | |__| | |____| |_) | |__| | |__| |
+ |_____/|______|____/ \____/ \_____|
+
+*/
+
 function onAttributeMissing(node, id, parent) {
 	return "<" + parent + "> with id=" + id + " is missing attribute " + node;
 };
@@ -38,10 +48,6 @@ function onInvalidPoints(id, lenghtExpected) {
 	return "invalid number of control points for surface with id=" + id + ", expected " + lenghtExpected;
 }
 
-function onInvalidKnots(id, attribute, lenghtExpected) {
-	return "invalid number of " + attribute + " for surface with id=" + id + ", expected " + lenghtExpected;
-}
-
 function onInvalidArguments(id, argsGot, argsExpected) {
 	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + "...";
 };
@@ -54,8 +60,8 @@ function onReservedId(id, root) {
 	return parent + " with id=" + id + " has a reserved ID ['null', 'clear'], skipping...";
 };
 
-function onDegreeOutOfRange(id) {
-	console.warn("WARNING: <PATCH> with id=" + id + " has invalid value for 'degree', must be between 1 and 3");
+function onDegreeOutOfRange(id, attribute) {
+	console.warn("WARNING: <PATCH> with id=" + id + " has invalid value for '"+ attribute + "', must be between 1 and 3");
 }
 
 function onMaximumLights(number) {

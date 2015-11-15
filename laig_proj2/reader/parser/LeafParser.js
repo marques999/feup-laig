@@ -7,18 +7,18 @@
  |______|______/_/    \_\/   |______|_____/
 
 	<LEAVES>
-		<LEAF id="ss" type="rectangle" args="ff ff ff ff" />
-		<LEAF id="ss" type="cylinder" args="ff ff ff ii ii" />
-		<LEAF id="ss" type="sphere" args="ff ii ii" />
-		<LEAF id="ss" type="triangle" args="ff ff ff ff ff ff ff ff ff" />
-		<LEAF id="ss" type="plane" parts="ii" />
-		<LEAF id="ss" type=”terrain” texture=”ss” heightmap=”ss”/>
+		<LEAF id="ss" type="rectangle" args="ff ff ff ff"/>
+		<LEAF id="ss" type="cylinder" args="ff ff ff ii ii"/>
+		<LEAF id="ss" type="sphere" args="ff ii ii"/>
+		<LEAF id="ss" type="triangle" args="ff ff ff ff ff ff ff ff ff"/>
+		<LEAF id="ss" type="plane" parts="ii"/>
+		<LEAF id="ss" type="terrain" texture="ss" heightmap="ss"/>
 		<LEAF id="ss" type="vehicle"/>
-		<LEAF id="ss" type="patch" orderU=”ii” orderV=”ii” partsU=”ii” partsV=”ii”>
-			<controlpoint coords=”ff ff ff ff” />
-			<controlpoint coords=”ff ff ff ff” />
-			<controlpoint coords=”ff ff ff ff” />
-			<controlpoint coords=”ff ff ff ff” />
+		<LEAF id="ss" type="patch" orderU="ii" orderV="ii" partsU="ii" partsV="ii">
+			<controlpoint coords="ff ff ff ff" />
+			<controlpoint coords="ff ff ff ff" />
+			<controlpoint coords="ff ff ff ff" />
+			<controlpoint coords="ff ff ff ff" />
 		</LEAF>
 	</LEAVES>
 */
@@ -59,6 +59,13 @@ LeafParser.prototype.parse = function(root, id) {
 	}
 };
 
+/**
+ * process uma primitiva e acrescenta ao array de leaves do grafo
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
+ * @param {String} leafType - tipo da primitiva atual
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
 LeafParser.prototype.readType = function(id, root, leafType) {
 
 	var error = null;
@@ -96,7 +103,7 @@ LeafParser.prototype.readType = function(id, root, leafType) {
 /**
  * processa uma primitiva do tipo "rectangle" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readRectangle = function(id, root) {
@@ -146,7 +153,7 @@ LeafParser.prototype.readRectangle = function(id, root) {
 /**
  * processa uma primitiva do tipo "triangle" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readTriangle = function(id, root) {
@@ -202,7 +209,7 @@ LeafParser.prototype.readTriangle = function(id, root) {
 /**
  * processa uma primitiva do tipo "plane" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readPlane = function(id, root) {
@@ -232,7 +239,7 @@ LeafParser.prototype.readPlane = function(id, root) {
 /**
  * processa uma primitiva do tipo "terrain" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readTerrain = function(id, root) {
@@ -281,7 +288,7 @@ LeafParser.prototype.readTerrain = function(id, root) {
 /**
  * processa uma primitiva do tipo "patch" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readPatch = function(id, root) {
@@ -319,8 +326,13 @@ LeafParser.prototype.readPatch = function(id, root) {
 		parseErrors++;
 	}
 
-	if (myDegreeU > 3 || myDegreeV > 3) {
-		onDegreeOutOfRange(id);
+	if (myDegreeU < 0 || myDegreeU > 3) {
+		onDegreeOutOfRange(id, 'degreeU');
+		parseErrors++;
+	}
+
+	if (myDegreeV < 0 || myDegreeV > 3) {
+		onDegreeOutOfRange(id, 'degreeV');
 		parseErrors++;
 	}
 
@@ -388,7 +400,7 @@ LeafParser.prototype.readPatch = function(id, root) {
 /**
  * processa uma primitiva do tipo "cylinder" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readCylinder = function(id, root) {
@@ -460,7 +472,7 @@ LeafParser.prototype.readCylinder = function(id, root) {
 /**
  * processa uma primitiva do tipo "sphere" e acrescenta ao array de leaves do grafo
  * @param {Number} id - identificador da leaf/primitiva atual
- * @param {String[]} leafArgs - array contendo os argumentos não processados desta primitiva
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 LeafParser.prototype.readSphere = function(id, root) {

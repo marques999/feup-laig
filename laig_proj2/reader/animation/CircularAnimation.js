@@ -6,7 +6,7 @@
  * @param {Number[]} center - centro de rotação
  * @param {Number} radius - raio da rotação em relação ao seu centro
  * @param {Number} start - ângulo inicial da rotação
- * @param {Number} angle - ângulo final da rotação
+ * @param {Number} angle - ângulo de rotação
  * @return {null}
  */
 function CircularAnimation(span, center, radius, startang, rotang) {

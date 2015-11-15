@@ -18,7 +18,6 @@
  * @author Diogo Marques
  * @param {CGFxmlReader} reader
  * @param {CGFscene} scene
- * @param {String} path
  * @return {null}
  */
 function TextureParser(reader, scene) {
@@ -32,6 +31,7 @@ TextureParser.prototype.constructor = TextureParser;
  * processa uma determinada entidade presente no bloco <TEXTURES>
  * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <TEXTURES>
  * @param {Number} id - identificador do elemento a ser processado
+ * @param {String} basePath - caminha relativo para a pasta que contém os ficheiros LSX
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
 TextureParser.prototype.parse = function(root, id, basePath) {
