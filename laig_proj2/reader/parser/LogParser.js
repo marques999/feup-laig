@@ -33,23 +33,23 @@ function onCoordinateMissing(coord, parent) {
 };
 
 function onElementDuplicate(parent, id) {
-	return parent + " with id=" + id + " already exists, skipping...";
+	return "<" + parent + "> with id=" + id + " already exists, skipping...";
 };
 
 function onElementInvalid(node, parent) {
-	return node + " attribute from <" + parent + "> has an invalid value!";
+	return "<" + node + "> attribute from <" + parent + "> has an invalid value!";
 };
 
 function onElementMissing(node, parent) {
-	return node + " attribute is missing from <" + parent + ">";
+	return "<" + node + "> attribute is missing from <" + parent + ">";
 };
 
 function onInvalidPoints(id, lenghtExpected) {
-	return "invalid number of control points for surface with id=" + id + ", expected " + lenghtExpected;
+	return "<PATCH> with id=" + id + " has invalid number of control points, expected " + lenghtExpected;
 }
 
 function onInvalidArguments(id, argsGot, argsExpected) {
-	return "LEAF with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + "...";
+	return "<LEAF> with id=" + id + " has " + argsGot + " arguments, expected " + argsExpected + "...";
 };
 
 function onURLInvalid(node, id, parent) {
@@ -81,7 +81,7 @@ function onMultipleAxis(axis) {
 };
 
 function onUnexpectedTag(tag, expected, parent, id) {
-	return "invalid tag <" + tag + "> found in " + parent + " with id=" + id + ", expected <" + expected + ">!";
+	return "invalid tag <" + tag + "> found in <" + parent + "> with id=" + id + ", expected <" + expected + ">!";
 };
 
 function onUnknownAxis(axis, node, parent) {

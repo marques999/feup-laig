@@ -39,15 +39,15 @@
 	</MATERIALS>
 	<ANIMATIONS>
 		<ANIMATION id="first" span="2.0" type="linear">
-			<controlpoint y="0.0" z="0.0" />
+			<vais_falhar y="0.0" z="0.0" />
 			<controlpoint x="-2.0" y="vais_falhar" z="0.0" />
 		</ANIMATION>
 		<ANIMATION id="second" span="vais_falhar" asd="circular" center="0.0 0.0 0.0" radius="2.0" startang="-180" rotang="90">
 		</ANIMATION>
-		<ANIMATION id="third" span="2.0" type="vais_falhar">
+		<vais_falhar id="third" span="2.0" type="vais_falhar">
 			<controlpoint x="0.0" y="0.0" z="2.0" />
 			<controlpoint x="0.0" y="0.0" z="8.0" />
-		</ANIMATION>
+		</vais_falhar>
 	</ANIMATIONS>
 	<LEAVES>
 		<LEAF id="myplane" type="plane" texture="scenes/images/big_terrain.png" heightmap="scenes/images/small_heightmap.png" />
@@ -75,7 +75,7 @@
 		</NODE>
 		<NODE id="node_vehicle">
 			<MATERIAL id="material_green" />
-			<TEXTURE id="null" />
+			<vais_falhar id="null" />
 			<ANIMATIONREF>
 				<ANIMATION id="first"/>
 				<ANIMATION id="second"/>
