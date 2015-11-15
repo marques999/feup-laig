@@ -20,7 +20,23 @@ MyInterface.prototype.init = function(application) {
 
 	CGFinterface.prototype.init.call(this, application);
 
+	var self = this;
+
+	this.loopAnimations = true;
+	this.updatePeriod = 60;
 	this.gui = new dat.GUI();
+	this.group = this.gui.addFolder("Animations");
+	this.group.open();
+
+	this.group.add(this, "updatePeriod", 1, 60).onChange(function(updatePeriod) {
+		self.scene.setUpdatePeriod(1000 / updatePeriod);
+	});
+
+	this.group.add(this.scene, "pauseAnimations");
+	this.group.add(this, "loopAnimations").onChange(function(loopValue) {
+		self.scene.setAnimationLoop(loopValue);
+	});
+
 	this.group = this.gui.addFolder("Lights");
 	this.group.open();
 	this.lights = {};

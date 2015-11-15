@@ -16,6 +16,8 @@ function XMLnode(id, textureId, materialId) {
 	this.matrix = mat4.create();
 	this.animations = [];
 	this.animationNumber = 0;
+	this.animationFinished = false;
+	this.animationLoop = true;
 	this.children = [];
 
 	mat4.identity(this.matrix);
@@ -80,6 +82,23 @@ XMLnode.prototype.translate = function(coords) {
 	mat4.translate(this.matrix, this.matrix, coords);
 };
 
+XMLnode.prototype.setLoop = function(loopValue) {
+
+	var currentAnimation = this.animations[this.animationNumber];
+
+	if (currentAnimation != null && currentAnimation != undefined) {
+		currentAnimation.stop();
+	}
+	
+	this.animationLoop = loopValue;
+	this.animationFinished = false;
+	this.animationNumber = 0;
+	
+	if (this.animations[0] != undefined) {
+		this.animations[0].start();
+	}
+}
+
 /**
  * multiplica a matriz de transformação deste node por uma matriz de translação
  * @param {Number} deltaTime - intervalo de tempo decorrido desde o último update
@@ -89,7 +108,7 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 
 	var currentAnimation = this.animations[this.animationNumber];
 
-	if (currentAnimation == null || currentAnimation == undefined) {
+	if (this.animationFinished || currentAnimation == undefined) {
 		return null;
 	}
 
@@ -97,8 +116,15 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 		currentAnimation.step(deltaTime);
 	}
 	else {
+
 		this.animationNumber = (this.animationNumber + 1) % this.animations.length;
-		this.animations[this.animationNumber].start();
+
+		if (!this.animationLoop && this.animationNumber == 0) {
+			this.animationFinished = true;
+		}
+		else {
+			this.animations[this.animationNumber].start();
+		}
 	}
 };
 
@@ -110,13 +136,20 @@ XMLnode.prototype.applyAnimation = function() {
 
 	var currentAnimation = this.animations[this.animationNumber];
 
-	if (currentAnimation == null || currentAnimation == undefined) {
+	if (this.animationFinished || currentAnimation == undefined) {
 		return null;
 	}
 
 	if (!currentAnimation.active) {
+
 		this.animationNumber = (this.animationNumber + 1) % this.animations.length;
-		this.animations[this.animationNumber].start();
+
+		if (!this.animationLoop && this.animationNumber == 0) {
+			this.animationFinished = true;
+		}
+		else {
+			this.animations[this.animationNumber].start();
+		}
 	}
 
 	return currentAnimation.update();

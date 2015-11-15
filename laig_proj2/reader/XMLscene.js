@@ -31,6 +31,7 @@ XMLscene.prototype.init = function(application) {
 	this.gl.depthFunc(this.gl.LEQUAL);
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
+	this.pauseAnimations = false;
 	this.setUpdatePeriod(1000/60);
 
 	mat4.identity(this.defaultMatrix);
@@ -134,12 +135,12 @@ XMLscene.prototype.setDefaultAppearance = function() {
 };
 
 /**
- * coloca o shader da cena no seu estado inicial
+ * regressa ao shader default definido pela cena
  * @return {null}
  */
 XMLscene.prototype.resetActiveShader = function() {
 	this.setActiveShader(this.defaultShader);
-}
+};
 
 /**
  * desenha uma primitiva na cena
@@ -151,16 +152,16 @@ XMLscene.prototype.drawPrimitive = function(primitive) {
 };
 
 /**
- * associa uma CGFappearance a esta cena
+ * associa uma CGFappearance aos objetos da cena atual
  * @param {CGFappearance} appearance
  * @return {null}
  */
 XMLscene.prototype.applyMaterial = function(appearance) {
 	appearance.apply();
-}
+};
 
 /**
- * altera a componente de iluminação global ambiente da cena
+ * altera a componente de iluminação global ambiente da cena atual
  * @param {Number[]} rgba - vetor com as componentes (r, g, b, a) da iluminação ambiente
  * @return {null}
  */
@@ -169,8 +170,8 @@ XMLscene.prototype.setAmbient = function(rgba) {
 };
 
 /**
- * altera a cor de fundo da cena
- * @param {Number[]} rgba - vetor com as componentes (r, g, b, a) da cor de fundo
+ * altera a cor de background da cena atual
+ * @param {Number[]} rgba - vetor com as componentes (r, g, b, a) da cor de background
  * @return {null}
  */
 XMLscene.prototype.setBackground = function(rgba) {
@@ -178,7 +179,7 @@ XMLscene.prototype.setBackground = function(rgba) {
 };
 
 /**
- * altera as coordenadas de rotação inicial da cena
+ * altera as coordenadas de rotação inicial da cena atual
  * @param {Number} id - ordem da rotação
  * @param {Character} axis - eixo da rotação (x, y, z)
  * @param {Number} angle - ângulo da rotação (em graus)
@@ -200,7 +201,7 @@ XMLscene.prototype.setRotation = function(id, axis, angle) {
 };
 
 /**
- * adiciona uma nova CGFlight ao array de luzes da cena
+ * adiciona uma nova CGFlight ao array de luzes da cena atual
  * @param {String} id - identificador da luz
  * @param {Boolean} enabled - estado ON/OFF inicial da luz
  * @param {Number[]} position - vetor de coordenadas (x, y, z, w) da posição
@@ -226,9 +227,9 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 };
 
 /**
- * altera o estado ON/OFF de uma CGFlight existente na cena
+ * altera o estado ON/OFF de uma CGFlight existente na cena atual
  * @param {Number} id - índice da CGFlight no array de luzes da cena
- * @param {Boolean} enabled - novo estado ON/OFF da CGFlight
+ * @param {Boolean} enabled - novo estado desta CGFlight
  * @return {null}
  */
 XMLscene.prototype.toggleLight = function(id, enabled) {
@@ -269,13 +270,17 @@ XMLscene.prototype.onGraphLoaded = function() {
 	}
 };
 
+XMLscene.prototype.setAnimationLoop = function(loopValue) {
+	this.graph.loadedOk && this.graph.setAnimationLoop(loopValue);
+};
+
 /**
  * callback executado periodicamente para atualizar estado das animações
  * @param {Number} currTime - epoch time actual (em milisegundos)
  * @return {null}
  */
 XMLscene.prototype.update = function(currTime) {
-	this.graph.loadedOk && this.graph.processAnimations((currTime - this.lastUpdate) * 0.001);
+	this.graph.loadedOk && !this.pauseAnimations && this.graph.processAnimations((currTime - this.lastUpdate) * 0.001);
 };
 
 /**

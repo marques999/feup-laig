@@ -255,6 +255,12 @@ MySceneGraph.prototype.processAnimations = function(deltaTime) {
 	}
 };
 
+MySceneGraph.prototype.setAnimationLoop = function(loopValue) {
+	for (var node in this.nodes) {
+		this.nodes[node].setLoop(loopValue);
+	}
+};
+
 /**
  * processa uma string contida num atributo de um elemento XML
  * @param {XMLElement} root - estrutura de dados XML que contém o elemento
