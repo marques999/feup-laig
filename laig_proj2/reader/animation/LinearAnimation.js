@@ -2,7 +2,6 @@
  * construtor default da classe 'LinearAnimation'
  * @constructor
  * @author Diogo Marques
- * @param {String} id - identificador da animação
  * @param {Number} span - duração da animação (em segundos)
  * @param {Number[]} points - pontos de controlo da trajetória
  * @return {null}
@@ -52,7 +51,7 @@ LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
 
 /**
- * calcula a orientação do objecto com base no seu deslocamento
+ * calcula a orientação do objecto com base no seu vetor deslocamento
  * @param {Number[]} vector - vector deslocamento do objeto, não-normalizado
  * @return {Number} - ângulo de rotação do objecto em torno do eixo Y
  */
@@ -92,7 +91,7 @@ LinearAnimation.prototype.start = function() {
 };
 
 /**
- * calcula a matriz da animação para os novos valores
+ * calcula uma nova matriz de animação para os parâmetros atuais
  * @return {null}
  */
 LinearAnimation.prototype.update = function() {
@@ -105,7 +104,7 @@ LinearAnimation.prototype.update = function() {
 };
 
 /**
- * avança a animação em deltaTime unidades de tempo, caso esta se encontre ativa
+ * avança a animação em deltaTime unidades de tempo
  * @param {Number} deltaTime - tempo decorrido desde a última verificação
  * @return {null}
  */

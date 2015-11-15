@@ -2,7 +2,6 @@
  * construtor default da classe 'CircularAnimation'
  * @constructor
  * @author Diogo Marques
- * @param {String} id - identificador da animação
  * @param {Number} span - duração da animação (em segundos)
  * @param {Number[]} center - centro de rotação
  * @param {Number} radius - raio da rotação em relação ao seu centro
@@ -36,7 +35,7 @@ CircularAnimation.prototype.start = function() {
 };
 
 /**
- * calcula a matriz da animação com os novos valores
+ * calcula uma nova matriz de animação para os parâmetros atuais
  * @return {null}
  */
 CircularAnimation.prototype.update = function() {
@@ -50,7 +49,7 @@ CircularAnimation.prototype.update = function() {
 };
 
 /**
- * avança a animação em deltaTime unidades de tempo, caso esta se encontre ativa
+ * avança a animação em deltaTime unidades de tempo
  * @param {Number} deltaTime - tempo decorrido desde a última verificação
  * @return {null}
  */
