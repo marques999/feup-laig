@@ -57,7 +57,7 @@
 		</ANIMATION>
 	</ANIMATIONS>
 	<LEAVES>
-		<LEAF id="mytriangle" type="triangle" args="0.0 0.0 -1.0 0.0 0.0 1.0 3.0 0.0 0.0" />
+		<LEAF id="l1" type="triangle" args="0 0 -1 0 0 1 3 0 0" />
 	</LEAVES>
 	<NODES>
 		<ROOT id="scene" />
@@ -68,7 +68,7 @@
 				<ANIMATION id="first"/>
 			</ANIMATIONREF>
 			<DESCENDANTS>
-				<DESCENDANT id="mytriangle" />
+				<DESCENDANT id="l1" />
 			</DESCENDANTS>
 		</NODE>
 	</NODES>

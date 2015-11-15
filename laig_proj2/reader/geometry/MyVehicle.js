@@ -47,7 +47,6 @@ MyVehicle.prototype.display = function() {
 			this.scene.popMatrix();
 
 		this.scene.popMatrix();
-
 		this.scene.pushMatrix();
 		this.scene.scale(0.5, 0.5, 0.5);
 
@@ -59,7 +58,6 @@ MyVehicle.prototype.display = function() {
 			this.scene.pushMatrix();
 			this.scene.translate(2.0, -0.3, -1.5);
 			this.scene.scale(3.0, 1.0, 1.0);
-
 			this.body.display();
 			this.scene.popMatrix();
 

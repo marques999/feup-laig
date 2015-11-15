@@ -1,19 +1,17 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="-15.0" y="-9.0" z="-7.0" />
+		<translation x="-6.0" y="-1.0" z="5.0" />
 		<rotation axis="y" angle="45.0" />
 		<rotation axis="x" angle="-25.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
 		<reference length="4.0" />
 	</INITIALS>
-
 	<ILLUMINATION>
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
-
 	<LIGHTS>
 		<LIGHT id="l1">
 			<enable value="1" />
@@ -22,7 +20,6 @@
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
 		</LIGHT>
-
 		<LIGHT id="l2">
 			<enable value="1" />
 			<position x="4.5" y="8.0" z="7.5" w="1.0" />
@@ -31,34 +28,28 @@
 			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
 		</LIGHT>
 	</LIGHTS>
-
 	<TEXTURES>
 		<TEXTURE id="room_floor">
 			<file path="images/floor.png" />
 			<amplif_factor s="0.25" t="0.5" />
 		</TEXTURE>
-
 		<TEXTURE id="room_wall">
 			<file path="images/wall.png" />
 			<amplif_factor s="0.5" t="1.0" />
 		</TEXTURE>
-
 		<TEXTURE id="table_felt">
 			<file path="images/felt.png" />
 			<amplif_factor s="0.25" t="0.5" />
 		</TEXTURE>
-
 		<TEXTURE id="table_wood">
 			<file path="images/wood.jpg" />
 			<amplif_factor s="0.25" t="1.5" />
 		</TEXTURE>
-
 		<TEXTURE id="marble">
 			<file path="images/marble.png" />
 			<amplif_factor s="1.0" t="2.0" />
 		</TEXTURE>
 	</TEXTURES>
-
 	<MATERIALS>
 		<MATERIAL id="default">
 			<shininess value="5" />
@@ -67,7 +58,6 @@
 			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="ball_red">
 			<shininess value="30" />
 			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -75,7 +65,6 @@
 			<ambient r="0.66" g="0.0" b="0.02" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="ball_black">
 			<shininess value="30" />
 			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -83,7 +72,6 @@
 			<ambient r="0.05" g="0.05" b="0.05" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="ball_white">
 			<shininess value="30" />
 			<specular r="1.0" g="1.0" b="1.0" a="1.0" />
@@ -91,7 +79,6 @@
 			<ambient r="0.95" g="0.95" b="0.95" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="rubber_red">
 			<shininess value="1" />
 			<specular r="0.7" g="0.04" b="0.04" a="1.0" />
@@ -99,7 +86,6 @@
 			<ambient r="0.05" g="0.0" b="0.00" a="0.8" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="bulb_white">
 			<shininess value="1" />
 			<specular r="0.0" g="0.0" b="0.0" a="0.0" />
@@ -107,7 +93,6 @@
 			<ambient r="1.0" g="1.0" b="1.0" a="0.1" />
 			<emission r="1.0" g="0.95" b="0.95" a="0.8" />
 		</MATERIAL>
-
 		<MATERIAL id="lamp_white">
 		  <shininess value="1" />
 		  <specular r="0.0" g="0.0" b="0.0" a="0.0" />
@@ -115,7 +100,6 @@
 		  <ambient r="0.5" g="0.5" b="0.5" a="0.2" />
 		  <emission r="0.5" g="0.5" b="0.5" a="0.5" />
 		</MATERIAL>
-
 		<MATERIAL id="scene_white">
 		  <shininess value="1" />
 		  <specular r="0.0" g="0.0" b="0.0" a="0.0" />
@@ -123,7 +107,6 @@
 		  <ambient r="0.8" g="0.8" b="0.8" a="0.2" />
 		  <emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="table_green">
 		  <shininess value="5" />
 		  <specular r="0.1" g="0.1" b="0.1" a="0.5" />
@@ -131,7 +114,6 @@
 		  <ambient r="0.06" g="0.44" b="0.3" a="0.8" />
 		  <emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="wood_cherry">
 			<shininess value="2" />
 			<specular r="0.1" g="0.1" b="0.1" a="0.8" />
@@ -139,7 +121,6 @@
 			<ambient r="0.08" g="0.02" b="0.01" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="scene_yellow">
 			<shininess value="1" />
 			<specular r="0.2" g="0.2" b="0.2" a="0.6" />
@@ -147,7 +128,6 @@
 			<ambient r="0.07" g="0.04" b="0.02" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="plastic_dark">
 			<shininess value="1" />
 			<specular r="0.2" g="0.2" b="0.2" a="0.6" />
@@ -155,7 +135,6 @@
 			<ambient r="0.1" g="0.1" b="0.1" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
-
 		<MATERIAL id="wood_oak">
 			<shininess value="2" />
 			<specular r="0.1" g="0.1" b="0.1" a="0.8" />
@@ -164,19 +143,6 @@
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 	</MATERIALS>
-
-	<ANIMATIONS>
-		<ANIMATION id="tt" span="0.7" type="linear">
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="0.0" y="5.0" z="0.0" />
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-		</ANIMATION>
-			<ANIMATION id="ss" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="0" rotang="180">
-		</ANIMATION>
-			<ANIMATION id="uu" span="5" type="circular" center="0.0 0.0 0.0" radius="0.0" startang="160" rotang="20">
-		</ANIMATION>
-	</ANIMATIONS>
-
 	<LEAVES>
 		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />
 		<LEAF id="leg_base1" type="cylinder" args="0.5 0.2 0.4 16.0 16.0" />
@@ -189,10 +155,8 @@
 		<LEAF id="mycueMid" type="cylinder" args="2.0 0.02 0.05 16 16" />
 		<LEAF id="mycueDown" type="cylinder" args="1.0 0.05 0.05 16 16" />
 	</LEAVES>
-
 	<NODES>
 		<ROOT id="scene" />
-
 		<NODE id="scene">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
@@ -202,7 +166,6 @@
 				<DESCENDANT id="walls" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="walls">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -212,7 +175,6 @@
 				<DESCENDANT id="x_wall" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="floor">
 			<MATERIAL id="null" />
 			<TEXTURE id="room_floor" />
@@ -223,7 +185,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="z_wall">
 			<MATERIAL id="null" />
 			<TEXTURE id="room_wall" />
@@ -234,7 +195,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="x_wall">
 			<MATERIAL id="null" />
 			<TEXTURE id="room_wall" />
@@ -243,13 +203,9 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<ANIMATIONREF>
-				<ANIMATION id="ss" />
-			</ANIMATIONREF>
 			<TRANSLATION x="3.5" y="0.0" z="4.5" />
 			<DESCENDANTS>
 				<DESCENDANT id="table_legs" />
@@ -258,7 +214,6 @@
 				<DESCENDANT id="ashtray" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ashtray">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -270,7 +225,6 @@
 				<DESCENDANT	id="cigarette" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cigarette">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -282,7 +236,6 @@
 				<DESCENDANT id="cigarette_top" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cigarette_base">
 			<MATERIAL id="scene_yellow" />
 			<TEXTURE id="null" />
@@ -292,7 +245,6 @@
 				<DESCENDANT id="cigarette_baseP2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cigarette_baseP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -301,7 +253,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cigarette_baseP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -309,7 +260,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cigarette_top">
 			<MATERIAL id="scene_white" />
 			<TEXTURE id="null" />
@@ -320,7 +270,6 @@
 				<DESCENDANT id="cigarette_topP2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cigarette_topP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -329,7 +278,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cigarette_topP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -337,7 +285,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ashtray_base">
 			<MATERIAL id="null" />
 			<TEXTURE id="marble" />
@@ -349,7 +296,6 @@
 				<DESCENDANT id="ashtray_baseP5" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ashtray_baseP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -359,7 +305,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ashtray_baseP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -368,7 +313,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ashtray_baseP3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -378,7 +322,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ashtray_baseP4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -388,7 +331,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ashtray_baseP5">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -398,7 +340,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cues">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -407,7 +348,6 @@
 				<DESCENDANT id="cue2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cue1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -418,7 +358,6 @@
 				<DESCENDANT id="cue" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cue2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -429,7 +368,6 @@
 				<DESCENDANT id="cue" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cue">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -441,7 +379,6 @@
 				<DESCENDANT id="cueDown" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueTop">
 			<MATERIAL id="rubber_red" />
 			<TEXTURE id="null" />
@@ -450,7 +387,6 @@
 				<DESCENDANT id="cueTopP2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueTopP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -459,7 +395,6 @@
 				<DESCENDANT id="mycueTop" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueTopP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -467,7 +402,6 @@
 				<DESCENDANT id="mycueTop" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueMid">
 			<MATERIAL id="wood_oak" />
 			<TEXTURE id="null" />
@@ -477,7 +411,6 @@
 				<DESCENDANT id="cueMidP2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueMidP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -486,7 +419,6 @@
 				<DESCENDANT id="mycueMid" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueMidP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -494,7 +426,6 @@
 				<DESCENDANT id="mycueMid" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueDown">
 			<MATERIAL id="plastic_dark" />
 			<TEXTURE id="null" />
@@ -504,7 +435,6 @@
 				<DESCENDANT id="cueDownP2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueDownP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -513,7 +443,6 @@
 				<DESCENDANT id="mycueDown" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="cueDownP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -521,7 +450,6 @@
 				<DESCENDANT id="mycueDown" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconces">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -530,7 +458,6 @@
 				<DESCENDANT id="sconce2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -539,7 +466,6 @@
 				<DESCENDANT id="sconce" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -548,7 +474,6 @@
 				<DESCENDANT id="sconce" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -560,7 +485,6 @@
 				<DESCENDANT id="sconce_border" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce_chain">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -571,8 +495,6 @@
 				<DESCENDANT id="sconce_chainP2" />
 			</DESCENDANTS>
 		</NODE>
-
-
 		<NODE id="sconce_chainP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -580,8 +502,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
-
 		<NODE id="sconce_chainP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -590,7 +510,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce_lamp">
 			<MATERIAL id="bulb_white" />
 			<TEXTURE id="null" />
@@ -600,8 +519,6 @@
 				<DESCENDANT id="mylamp" />
 			</DESCENDANTS>
 		</NODE>
-
-
 		<NODE id="sconce_border">
 			<MATERIAL id="lamp_white" />
 			<TEXTURE id="null" />
@@ -612,7 +529,6 @@
 				<DESCENDANT id="sconce_borderP2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce_borderP1">
 			<MATERIAL id="lamp_white" />
 			<TEXTURE id="null" />
@@ -620,8 +536,6 @@
 				<DESCENDANT id="mysconce_chain" />
 			</DESCENDANTS>
 		</NODE>
-
-
 		<NODE id="sconce_borderP2">
 			<MATERIAL id="lamp_white" />
 			<TEXTURE id="null" />
@@ -630,7 +544,6 @@
 				<DESCENDANT id="mysconce_chain" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce_rods">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -640,7 +553,6 @@
 				<DESCENDANT id="sconce_rodP3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce_rodP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -649,7 +561,6 @@
 				<DESCENDANT id="rod" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce_rodP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -658,7 +569,6 @@
 				<DESCENDANT id="rod" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="sconce_rodP3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -666,7 +576,6 @@
 				<DESCENDANT id="rod" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="rod">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -676,7 +585,6 @@
 				<DESCENDANT id="rodP2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="rodP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -685,8 +593,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
-
 		<NODE id="rodP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -694,7 +600,6 @@
 				<DESCENDANT id="mycylinder" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_legs">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -707,7 +612,6 @@
 				<DESCENDANT id="table_leg_fr" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_top">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -718,7 +622,6 @@
 				<DESCENDANT id="table_balls" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_balls">
 			<MATERIAL id="ball_red" />
 			<TEXTURE id="null" />
@@ -732,7 +635,6 @@
 				<DESCENDANT id="ball7" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ball1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -741,7 +643,6 @@
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ball2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -750,7 +651,6 @@
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ball3">
 			<MATERIAL id="ball_white" />
 			<TEXTURE id="null" />
@@ -759,7 +659,6 @@
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ball4">
 			<MATERIAL id="ball_black" />
 			<TEXTURE id="null" />
@@ -768,7 +667,6 @@
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ball5">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -777,7 +675,6 @@
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ball6">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -786,29 +683,26 @@
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="ball7">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="2.9" y="2.75" z="1.8" />
-		  <DESCENDANTS>
-			<DESCENDANT id="myball" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="2.9" y="2.75" z="1.8" />
+			<DESCENDANTS>
+				<DESCENDANT id="myball" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_holes">
-		  <MATERIAL id="plastic_dark" />
-		  <TEXTURE id="null" />
-		  <DESCENDANTS>
-			<DESCENDANT id="hole1" />
-			<DESCENDANT id="hole2" />
-			<DESCENDANT id="hole3" />
-			<DESCENDANT id="hole4" />
-			<DESCENDANT id="hole5" />
-			<DESCENDANT id="hole6" />
-		  </DESCENDANTS>
+			<MATERIAL id="plastic_dark" />
+			<TEXTURE id="null" />
+			<DESCENDANTS>
+				<DESCENDANT id="hole1" />
+				<DESCENDANT id="hole2" />
+				<DESCENDANT id="hole3" />
+				<DESCENDANT id="hole4" />
+				<DESCENDANT id="hole5" />
+				<DESCENDANT id="hole6" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="hole1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -817,7 +711,6 @@
 				<DESCENDANT id="corner_hole" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="hole2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -826,7 +719,6 @@
 				<DESCENDANT id="side_hole" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="hole3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -835,7 +727,6 @@
 				<DESCENDANT id="side_hole" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="hole4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -845,7 +736,6 @@
 				<DESCENDANT id="corner_hole" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="hole5">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -855,7 +745,6 @@
 				<DESCENDANT id="corner_hole" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="hole6">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -865,7 +754,6 @@
 				<DESCENDANT id="corner_hole" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="side_hole">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -874,18 +762,15 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="corner_hole">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-
 			<DESCENDANTS>
 				<DESCENDANT id="corner_holeP1" />
 				<DESCENDANT id="corner_holeP2" />
 			</DESCENDANTS>
 		</NODE>
-
-			<NODE id="corner_holeP1">
+		<NODE id="corner_holeP1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
 			<TRANSLATION x="0.45" y="0.0" z="0.0" />
@@ -894,7 +779,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="corner_holeP2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -903,7 +787,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_topBase">
 			<MATERIAL id="table_green" />
 			<TEXTURE id="table_felt" />
@@ -913,46 +796,38 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side">
-		  <MATERIAL id="wood_cherry" />
-		  <TEXTURE id="table_wood" />
-			<ANIMATIONREF>
-				<ANIMATION id="tt"/>
-				<ANIMATION id="uu"/>
-			</ANIMATIONREF>
-		  <DESCENDANTS>
-			<DESCENDANT id="table_side_cl" />
-			<DESCENDANT id="table_side_rl" />
-			<DESCENDANT id="table_side_rr" />
-			<DESCENDANT id="table_side_cr" />
-			<DESCENDANT id="table_side_fr" />
-			<DESCENDANT id="table_side_fl" />
-		  </DESCENDANTS>
+			<MATERIAL id="wood_cherry" />
+			<TEXTURE id="table_wood" />
+			<DESCENDANTS>
+				<DESCENDANT id="table_side_cl" />
+				<DESCENDANT id="table_side_rl" />
+				<DESCENDANT id="table_side_rr" />
+				<DESCENDANT id="table_side_cr" />
+				<DESCENDANT id="table_side_fr" />
+				<DESCENDANT id="table_side_fl" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side_cl">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="0.45" y="2.4" z="0.75" />
-		  <ROTATION axis="y" angle="-90" />
-		  <SCALE sx="4.5" sy="0.5" sz="0.45" />
-		  <DESCENDANTS>
-			<DESCENDANT id="primitive_cube" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.45" y="2.4" z="0.75" />
+			<ROTATION axis="y" angle="-90" />
+			<SCALE sx="4.5" sy="0.5" sz="0.45" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side_cr">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="10.0" y="2.4" z="0.75" />
-		  <ROTATION axis="y" angle="-90" />
-		  <SCALE sx="4.5" sy="0.5" sz="0.45" />
-		  <DESCENDANTS>
-			<DESCENDANT id="primitive_cube" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="10.0" y="2.4" z="0.75" />
+			<ROTATION axis="y" angle="-90" />
+			<SCALE sx="4.5" sy="0.5" sz="0.45" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side_rl">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -962,27 +837,24 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side_rr">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="5.225" y="2.4" z="0.0" />
-		  <SCALE sx="4.025" sy="0.5" sz="0.45" />
-		  <DESCENDANTS>
-			<DESCENDANT id="primitive_cube" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="5.225" y="2.4" z="0.0" />
+			<SCALE sx="4.025" sy="0.5" sz="0.45" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side_fl">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="0.75" y="2.4" z="5.55" />
-		  <SCALE sx="4.025" sy="0.5" sz="0.45" />
-		  <DESCENDANTS>
-			<DESCENDANT id="primitive_cube" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.75" y="2.4" z="5.55" />
+			<SCALE sx="4.025" sy="0.5" sz="0.45" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side_fr">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -992,16 +864,14 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_leg_rl">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="0.6" y="0.0" z="0.6" />
-		  <DESCENDANTS>
-			<DESCENDANT id="table_leg" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.6" y="0.0" z="0.6" />
+			<DESCENDANTS>
+				<DESCENDANT id="table_leg" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_leg_rm">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1010,7 +880,6 @@
 				<DESCENDANT id="table_leg" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_leg_rr">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1019,7 +888,6 @@
 				<DESCENDANT id="table_leg" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_leg_fl">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1028,109 +896,97 @@
 				<DESCENDANT id="table_leg" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_leg_fm">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="5.0" y="0.0" z="5.4" />
-		  <DESCENDANTS>
-			<DESCENDANT id="table_leg" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="5.0" y="0.0" z="5.4" />
+			<DESCENDANTS>
+				<DESCENDANT id="table_leg" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_leg_fr">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="9.4" y="0.0" z="5.4" />
-		  <DESCENDANTS>
-			<DESCENDANT id="table_leg" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="9.4" y="0.0" z="5.4" />
+			<DESCENDANTS>
+				<DESCENDANT id="table_leg" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_leg">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="table_wood" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_base" />
-			<DESCENDANT id="primitive_leg_top" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="table_wood" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_base" />
+				<DESCENDANT id="primitive_leg_top" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg_base">
-		  <MATERIAL id="wood_cherry" />
-		  <TEXTURE id="null" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_baseP1" />
-			<DESCENDANT id="leg_baseP2" />
-		  </DESCENDANTS>
+			<MATERIAL id="wood_cherry" />
+			<TEXTURE id="null" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_baseP1" />
+				<DESCENDANT id="leg_baseP2" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg_baseP1">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="0.0" y="0.5" z="0.0" />
-		  <ROTATION axis="x" angle="90" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_baseP1.1" />
-			<DESCENDANT id="leg_baseP1.2" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="0.5" z="0.0" />
+			<ROTATION axis="x" angle="90" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_baseP1.1" />
+				<DESCENDANT id="leg_baseP1.2" />
+			</DESCENDANTS>
 		</NODE>
-
-		 <NODE id="leg_baseP1.1">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <SCALE sx="-1.0" sy="1.0" sz="1.0" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_base1" />
-		  </DESCENDANTS>
+		<NODE id="leg_baseP1.1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<SCALE sx="-1.0" sy="1.0" sz="1.0" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_base1" />
+			</DESCENDANTS>
 		</NODE>
-
-		 <NODE id="leg_baseP1.2">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_base1" />
-		  </DESCENDANTS>
+		<NODE id="leg_baseP1.2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_base1" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg_baseP2">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <TRANSLATION x="0.0" y="2.0" z="0.0" />
-		  <ROTATION axis="x" angle="90" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_baseP2.1" />
-			<DESCENDANT id="leg_baseP2.2" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="2.0" z="0.0" />
+			<ROTATION axis="x" angle="90" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_baseP2.1" />
+				<DESCENDANT id="leg_baseP2.2" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg_baseP2.1">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <SCALE sx="-1.0" sy="1.0" sz="1.0" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_base2" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<SCALE sx="-1.0" sy="1.0" sz="1.0" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_base2" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg_baseP2.2">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="null" />
-		  <DESCENDANTS>
-			<DESCENDANT id="leg_base2" />
-		  </DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<DESCENDANTS>
+				<DESCENDANT id="leg_base2" />
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_leg_top">
-		  <MATERIAL id="null" />
-		  <TEXTURE id="clear" />
-		  <TRANSLATION x="0.0" y="2.0" z="0.0" />
-		  <SCALE sx="0.9" sy="0.4" sz="0.9" />
-		  <DESCENDANTS>
+			<MATERIAL id="null" />
+			<TEXTURE id="clear" />
+			<TRANSLATION x="0.0" y="2.0" z="0.0" />
+			<SCALE sx="0.9" sy="0.4" sz="0.9" />
+			<DESCENDANTS>
 			<DESCENDANT id="primitive_leg" />
-		  </DESCENDANTS>
+			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_leg">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1139,7 +995,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1152,7 +1007,6 @@
 				<DESCENDANT id="primitive_cube_right" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube_back">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1162,7 +1016,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube_front">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1171,7 +1024,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube_down">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1180,7 +1032,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube_top">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1190,7 +1041,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube_left">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1199,7 +1049,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube_right">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />

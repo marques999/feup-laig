@@ -1,7 +1,7 @@
 <SCENE>
 	<INITIALS>
-		<frustum near="10" far="1200" />
-		<translation x="0.0" y="0.0" z="0.0" />
+		<frustum near="10" far="1500" />
+		<translation x="-400.0" y="-400.0" z="-400.0" />
 		<rotation axis="x" angle="0.0" />
 		<rotation axis="y" angle="0.0" />
 		<rotation axis="z" angle="0.0" />
@@ -16,13 +16,6 @@
 		<LIGHT id="SOL1">
 			<enable value="1" />
 			<position x="0" y="0" z="50" w="1" />
-			<ambient r="0" g="0" b="0" a="1" />
-			<diffuse r="1" g="1" b="1" a="0.2" />
-			<specular r="1" g="1" b="1" a="0.2" />
-		</LIGHT>
-		<LIGHT id="SOL6">
-			<enable value="1" />
-			<position x="0" y="0" z="-50" w="1" />
 			<ambient r="0" g="0" b="0" a="1" />
 			<diffuse r="1" g="1" b="1" a="0.2" />
 			<specular r="1" g="1" b="1" a="0.2" />
@@ -51,6 +44,13 @@
 		<LIGHT id="SOL5">
 			<enable value ="1" />
 			<position x="0" y="50" z="0" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r="1" g="1" b="1" a="0.2" />
+			<specular r="1" g="1" b="1" a="0.2" />
+		</LIGHT>
+		<LIGHT id="SOL6">
+			<enable value="1" />
+			<position x="0" y="0" z="-50" w="1" />
 			<ambient r="0" g="0" b="0" a="1" />
 			<diffuse r="1" g="1" b="1" a="0.2" />
 			<specular r="1" g="1" b="1" a="0.2" />
@@ -113,47 +113,19 @@
 			<ambient r="1" g="1" b="1" a="0.5" />
 			<emission r="1" g="1" b="1" a="1" />
 		</MATERIAL>
-		<MATERIAL id="preto">
-			<shininess value="60" />
-			<specular r="0" g="0" b="0" a="0.5" />
-			<diffuse r="0" g="0" b="0" a="0.5" />
-			<ambient r="0" g="0" b="0" a="0.5" />
-			<emission r="0" g="0" b="0" a="0.5" />
-		</MATERIAL>
-		<MATERIAL id="green">
-			<shininess value="60" />
-			<specular r="0.4" g="0.8" b="0.4" a="0.5" />
-			<diffuse r="0.4" g="0.8" b="0.4" a="0.5" />
-			<ambient r="0" g="0" b="0" a="0.5" />
-			<emission r="0" g="0" b="0" a="0.5" />
-		</MATERIAL>
-		<MATERIAL id="brown">
-			<shininess value="60" />
-			<specular r="0.65" g="0.49" b="0.18" a="0.5" />
-			<diffuse r="0.65" g="0.49" b="0.18" a="0.5" />
-			<ambient r="0" g="0" b="0" a="0.5" />
-			<emission r="0" g="0" b="0" a="0.5" />
-		</MATERIAL>
-		<MATERIAL id="branco">
-			<shininess value="120" />
-			<specular r="1" g="1" b="1" a="0.5" />
-			<diffuse r="1" g="1" b="1" a="0.5" />
-			<ambient r="0" g="0" b="0" a="0.5" />
-			<emission r="0" g="0" b="0" a="0.5" />
-		</MATERIAL>
 	</MATERIALS>
 	<LEAVES>
 		<LEAF id="l1s" type="sphere" args="1.0 40 40" />
 	</LEAVES>
 	<ANIMATIONS>
-		<ANIMATION id="MERCURIO" span="3" type="circular" center="0 0 0" radius="12" startang="0" rotang="360" />
-		<ANIMATION id="VENUS" span="6.5" type="circular" center="0 0 0" radius="16" startang="0" rotang="360" />
-		<ANIMATION id="TERRA" span="12.5" type="circular" center="0 0 0" radius="21" startang="0" rotang="360" />
-		<ANIMATION id="MARTE" span="25" type="circular" center="0 0 0" radius="26" startang="0" rotang="360" />
-		<ANIMATION id="JUPITER" span="50" type="circular" center="0 0 0" radius="36" startang="0" rotang="360" />
-		<ANIMATION id="SATURNO" span="120" type="circular" center="0 0 0" radius="46" startang="0" rotang="360" />
-		<ANIMATION id="URANO" span="200" type="circular" center="0 0 0" radius="56" startang="0" rotang="360" />
-		<ANIMATION id="NEPTUNO" span="240" type="circular" center="0 0 0" radius="66" startang="0" rotang="360" />
+		<ANIMATION id="MERCURIO" span="3" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="VENUS" span="6.5" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="TERRA" span="12.5" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="MARTE" span="25" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="JUPITER" span="50" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="SATURNO" span="120" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="URANO" span="200" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="NEPTUNO" span="240" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
 	</ANIMATIONS>
 	<NODES>
 		<ROOT id="ROOT" />
@@ -196,7 +168,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="MERCURIO" />
 			</ANIMATIONREF>
-			<TRANSLATION x="12" y="0" z="0" />
+			<TRANSLATION x="16" y="0" z="0" />
 			<SCALE sx="0.3" sy="0.3" sz="0.3" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
@@ -208,7 +180,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="VENUS" />
 			</ANIMATIONREF>
-			<TRANSLATION x="16" y="0" z="0" />
+			<TRANSLATION x="21" y="0" z="0" />
 			<SCALE sx="0.8" sy="0.8" sz="0.8" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
@@ -220,7 +192,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="TERRA" />
 			</ANIMATIONREF>
-			<TRANSLATION x="21" y="0" z="0" />
+			<TRANSLATION x="28" y="0" z="0" />
 			<SCALE sx="0.9" sy="0.9" sz="0.9" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
@@ -232,7 +204,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="MARTE" />
 			</ANIMATIONREF>
-			<TRANSLATION x="26" y="0" z="0" />
+			<TRANSLATION x="35" y="0" z="0" />
 			<SCALE sx="0.6" sy="0.6" sz="0.6" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
@@ -244,7 +216,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="JUPITER" />
 			</ANIMATIONREF>
-			<TRANSLATION x="36" y="0" z="0" />
+			<TRANSLATION x="48" y="0" z="0" />
 			<SCALE sx="3" sy="3" sz="3" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
@@ -256,7 +228,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="SATURNO" />
 			</ANIMATIONREF>
-			<TRANSLATION x="46" y="0" z="0" />
+			<TRANSLATION x="61" y="0" z="0" />
 			<SCALE sx="2.5" sy="2.5" sz="2.5" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
@@ -268,7 +240,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="URANO" />
 			</ANIMATIONREF>
-			<TRANSLATION x="56" y="0" z="0" />
+			<TRANSLATION x="75" y="0" z="0" />
 			<SCALE sx="1.8" sy="1.8" sz="1.8" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
@@ -280,7 +252,7 @@
 			<ANIMATIONREF>
 				<ANIMATION id="NEPTUNO" />
 			</ANIMATIONREF>
-			<TRANSLATION x="66" y="0" z="0" />
+			<TRANSLATION x="88" y="0" z="0" />
 			<SCALE sx="2" sy="2" sz="2" />
 			<DESCENDANTS>
 				<DESCENDANT id="l1s" />
