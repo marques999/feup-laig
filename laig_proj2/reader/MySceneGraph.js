@@ -250,12 +250,19 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
  * @return {null}
  */
 MySceneGraph.prototype.processAnimations = function(deltaTime) {
+
 	for (var node in this.nodes) {
 		this.nodes[node].updateAnimation(deltaTime);
 	}
 };
 
+/**
+ * altera o modo de reprodução em todas as animações dos nodes do grafo
+ * @param {Boolean} loopValue - "true" repete as animações, "false" para não repetir
+ * @return {null}
+ */
 MySceneGraph.prototype.setAnimationLoop = function(loopValue) {
+
 	for (var node in this.nodes) {
 		this.nodes[node].setLoop(loopValue);
 	}
@@ -597,6 +604,7 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
  * @return {null}
  */
 MySceneGraph.prototype.resetIndegree = function() {
+
 	for (var node in this.nodes) {
 		var children = this.nodes[node].children;
 		for (var i = 0; i < children.length; i++) {

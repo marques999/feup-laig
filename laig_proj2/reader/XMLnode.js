@@ -36,7 +36,7 @@ XMLnode.prototype.addChild = function(child) {
 };
 
 /**
- * acrescenta uma animação no final da lista de animações deste node
+ * acrescenta uma animação ao final da lista de animações deste node
  * @param {Animation} animation - estrutura de dados contendo uma animação
  * @return {null}
  */
@@ -46,7 +46,7 @@ XMLnode.prototype.addAnimation = function(animation) {
 };
 
 /**
- * multiplica a matriz de transformação deste node por uma matriz de rotação
+ * multiplica a matriz das transformações deste node por uma matriz de rotação
  * @param {String} axis - vetor de coordenadas do eixo de rotação (x, y, z)
  * @param {Number} angle - ângulo da rotação (em graus)
  * @return {null}
@@ -65,7 +65,7 @@ XMLnode.prototype.rotate = function(axis, angle) {
 };
 
 /**
- * multiplica a matriz de transformação deste node por uma matriz de escalamento
+ * multiplica a matriz das transformações deste node por uma matriz de escalamento
  * @param {Number[]} coords - vetor de coordenadas (x, y, z) do escalamento
  * @return {null}
  */
@@ -74,7 +74,7 @@ XMLnode.prototype.scale = function(coords) {
 };
 
 /**
- * multiplica a matriz de transformação deste node por uma matriz de translação
+ * multiplica a matriz das transformações deste node por uma matriz de translação
  * @param {Number[]} coords - vetor de coordenadas (x, y, z) da translação
  * @return {null}
  */
@@ -82,6 +82,11 @@ XMLnode.prototype.translate = function(coords) {
 	mat4.translate(this.matrix, this.matrix, coords);
 };
 
+/**
+ * altera o modo de reprodução das animações deste node
+ * @param {Boolean} loopValue - "true" repete a animação, "false" para não repetir
+ * @return {null}
+ */
 XMLnode.prototype.setLoop = function(loopValue) {
 
 	var currentAnimation = this.animations[this.animationNumber];
@@ -89,18 +94,18 @@ XMLnode.prototype.setLoop = function(loopValue) {
 	if (currentAnimation != null && currentAnimation != undefined) {
 		currentAnimation.stop();
 	}
-	
+
 	this.animationLoop = loopValue;
 	this.animationFinished = false;
 	this.animationNumber = 0;
-	
+
 	if (this.animations[0] != undefined) {
 		this.animations[0].start();
 	}
-}
+};
 
 /**
- * multiplica a matriz de transformação deste node por uma matriz de translação
+ * atualiza a animação atual e avança para a seguinte se esta tiver terminado
  * @param {Number} deltaTime - intervalo de tempo decorrido desde o último update
  * @return {null}
  */
@@ -129,8 +134,8 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 };
 
 /**
- * aplica a matriz de transformação da animação corrente
- * @return {Mat4|null} - null se o node não tiver animações ou estas tiverem já terminado
+ * aplica a matriz de transformação da animação atual neste node
+ * @return {mat4|null} - "null" se não existirem animações ou estas tiverem terminado
  */
 XMLnode.prototype.applyAnimation = function() {
 

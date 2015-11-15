@@ -270,13 +270,18 @@ XMLscene.prototype.onGraphLoaded = function() {
 	}
 };
 
+/**
+ * altera o modo de reprodução de todas as animações presentes na cena
+ * @param {Boolean} loopValue - "true" repete as animações, "false" para não repetir
+ * @return {null}
+ */
 XMLscene.prototype.setAnimationLoop = function(loopValue) {
 	this.graph.loadedOk && this.graph.setAnimationLoop(loopValue);
 };
 
 /**
- * callback executado periodicamente para atualizar estado das animações
- * @param {Number} currTime - epoch time actual (em milisegundos)
+ * callback executado periodicamente para atualizar as animações presentes na cena
+ * @param {Number} currTime - tempo atual (em milisegundos)
  * @return {null}
  */
 XMLscene.prototype.update = function(currTime) {
