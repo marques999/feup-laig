@@ -99,6 +99,9 @@ function MyVehicleWing(scene) {
 		[P2_1, P2_2, P2_3, P2_4],
 		[P3_1, P3_2, P3_3, P3_4]
 	]);
+
+	this.RED = new CGFappearance(scene);
+	this.RED.loadTexture("scenes/images/vehicle_wing.png");
 };
 
 MyVehicleWing.prototype = Object.create(MyPrimitive.prototype);
@@ -109,8 +112,8 @@ MyVehicleWing.prototype.constructor = MyVehicleWing;
  * @return {null}
  */
 MyVehicleWing.prototype.display = function() {
-
-	this.scene.scale(0.6,1.0,1.5);
+	this.RED.apply();
+	this.scene.scale(0.6, 1.0, 1.5);
 	this.ASA_UP.display();
 	this.ASA_DOWN.display();
 	this.ASA_SIDE1.display();

@@ -42,6 +42,12 @@
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
 		</LIGHT>
 	</LIGHTS>
+	<TEXTURES>
+		<TEXTURE id="colors">
+			<file path="images/colors.jpg" />
+			<amplif_factor s="1.0" t="1.0" />
+		</TEXTURE>
+	</TEXTURES>
 	<MATERIALS>
 		<MATERIAL id="default">
 			<shininess value="5" />
@@ -72,7 +78,7 @@
 		<ROOT id="scene" />
 		<NODE id="scene">
 			<MATERIAL id="default" />
-			<TEXTURE id="null" />
+			<TEXTURE id="colors" />
 			<DESCENDANTS>
 				<DESCENDANT id="vehicle_mov" />
 			</DESCENDANTS>
@@ -80,7 +86,7 @@
 		<NODE id="vehicle_mov">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
-			<ROTATION axis="z" angle="-90" />
+			<ROTATION axis="y" angle="90" />
 			<DESCENDANTS>
 				<DESCENDANT id="vehicle"/>
 			</DESCENDANTS>

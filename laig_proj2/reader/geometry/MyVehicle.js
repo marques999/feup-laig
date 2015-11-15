@@ -28,7 +28,6 @@ MyVehicle.prototype.constructor = MyVehicle;
 MyVehicle.prototype.display = function() {
 
 	this.scene.pushMatrix();
-	this.scene.rotate(Math.PI/2, 1, 0, 0);
 	this.scene.translate(3.6, -0.65, 0.0);
 
 		this.scene.pushMatrix();
@@ -58,18 +57,19 @@ MyVehicle.prototype.display = function() {
 			this.scene.popMatrix();
 
 			this.scene.pushMatrix();
+			this.scene.translate(2.0, -0.3, -1.5);
 			this.scene.scale(3.0, 1.0, 1.0);
-			this.scene.translate(1.0, -0.3, -1.5);
+
 			this.body.display();
 			this.scene.popMatrix();
 
 			this.scene.pushMatrix();
-			this.scene.translate(-6.0, -0.3, -1.5);
+			this.scene.translate(-7.0, -0.3, -1.5);
 			this.tailEnd.display();
 			this.scene.popMatrix();
 
 			this.scene.pushMatrix();
-			this.scene.translate(-6.0, 0.0, 0.0);
+			this.scene.translate(-7.0, 0.0, 0.0);
 			this.scene.scale(1.2, 1.2, 1.2);
 
 				this.scene.pushMatrix();

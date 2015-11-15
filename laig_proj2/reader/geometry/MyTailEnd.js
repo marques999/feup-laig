@@ -72,6 +72,9 @@ function MyTailEnd(scene) {
 		[P3_1, P3_2, P3_3, P3_4],
 		[P4_1, P4_1, P4_1, P4_1]
 	]);
+
+	this.METAL = new CGFappearance(scene);
+	this.METAL.loadTexture("scenes/images/vehicle_metal.png");
 };
 
 MyTailEnd.prototype = Object.create(MyPrimitive.prototype);
@@ -83,6 +86,7 @@ MyTailEnd.prototype.constructor = MyTailEnd;
  */
 MyTailEnd.prototype.display = function() {
 
+	this.METAL.apply();
 	this.TAIL_END_DOWN.display();
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 3.0, 3.0);

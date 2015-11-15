@@ -7,9 +7,9 @@
  * @param {Number[]} points - pontos de controlo da trajetória
  * @return {null}
  */
-function LinearAnimation(id, span, points) {
+function LinearAnimation(span, points) {
 
-	Animation.call(this, id, span);
+	Animation.call(this, span);
 
 	this.points = points;
 	this.sections = points.length;
@@ -19,12 +19,12 @@ function LinearAnimation(id, span, points) {
 	this.orientation = [];
 	this.duration[0] = 0.0;
 
-	// CALCULA DISTÂNCIAS PARCIAIS ENTRE PONTOS DE CONTROLO
+	// CALCULA DISTÂNCIAS PARCIAIS E TOTAL ENTRE PONTOS DE CONTROLO
 	for (var i = 1; i < this.sections; i++) {
 		this.totalDistance += vec3.dist(this.points[i - 1], this.points[i]);
 	}
 
-	// CALCULA VELOCIDADE, DURAÇÃO E ORIENTAÇÃO PARA RESTANTES PONTOS
+	// CALCULA VELOCIDADE, DURAÇÃO E ORIENTAÇÃO PARA TODOS OS PONTOS DE CONTROLO
 	for (var i = 1; i < this.sections; i++) {
 
 		var sectionOrientation = 0.0;
@@ -64,28 +64,18 @@ LinearAnimation.prototype.orientate = function(vector) {
 
 	var N = Math.sqrt(vector[0] * vector[0] + vector[2] * vector[2]);
 
-	if (N > 0.0) {
-		vector[0] /= N;
-		vector[2] /= N;
-	}
+	vector[0] /= N;
+	vector[2] /= N;
 
-	if (vector[0] == 0) {
-		return 3 * Math.PI / 2 + Math.acos(vector[2]);
-	}
-
-	if (vector[0] < 0) {
-		return 3 * Math.PI / 2 - Math.acos(vector[2]);
+	if (vector[0] <= 0) {
+		return 3*Math.PI/2 - Math.acos(vector[2]);
 	}
 
 	if (vector[2] <= 0) {
 		return Math.acos(vector[0]);
 	}
 
-	if (vector[2] > 0 && vector[0] > 0) {
-		return 3 * Math.PI / 2 + Math.acos(vector[2]);
-	}
-
-	return 3 * Math.PI / 2 + Math.acos(vector[0]);
+	return 3*Math.PI/2 + Math.acos(vector[0] > vector[2] ? vector[0] : vector[2]);
 }
 
 /**
@@ -93,6 +83,7 @@ LinearAnimation.prototype.orientate = function(vector) {
  * @return {null}
  */
 LinearAnimation.prototype.start = function() {
+
 	this.active = true;
 	this.currentTime = 0.0;
 	this.currentDelta = vec3.create();

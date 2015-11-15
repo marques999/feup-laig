@@ -38,15 +38,22 @@
 		</MATERIAL>
 	</MATERIALS>
 	<ANIMATIONS>
-		<ANIMATION id="first" span="2.0" type="linear">
+		<ANIMATION id="first" span="3.0" type="linear">
+			<controlpoint x="0.0" y="0.0" z="0.0" />
 			<controlpoint x="8.0" y="0.0" z="0.0" />
-			<controlpoint x="-2.0" y="0.0" z="0.0" />
-		</ANIMATION>
-		<ANIMATION id="second" span="1.0" type="circular" center="0.0 0.0 0.0" radius="2.0" startang="-180" rotang="90">
-		</ANIMATION>
-		<ANIMATION id="third" span="2.0" type="linear">
-			<controlpoint x="0.0" y="0.0" z="2.0" />
+			<controlpoint x="10.0" y="0.0" z="9.0" />
+			<controlpoint x="8.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
 			<controlpoint x="0.0" y="0.0" z="8.0" />
+			<controlpoint x="8.0" y="0.0" z="8.0" />
+			<controlpoint x="0.0" y="0.0" z="8.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="8.0" y="0.0" z="8.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="8.0" y="0.0" z="0.0" />
+			<controlpoint x="8.0" y="0.0" z="8.0" />
+			<controlpoint x="8.0" y="0.0" z="0.0" />
+			<controlpoint x="0.0" y="0.0" z="0.0" />
 		</ANIMATION>
 	</ANIMATIONS>
 	<LEAVES>
@@ -59,13 +66,10 @@
 			<TEXTURE id="null" />
 			<ANIMATIONREF>
 				<ANIMATION id="first"/>
-				<ANIMATION id="second"/>
-				<ANIMATION id="third"/>
 			</ANIMATIONREF>
 			<DESCENDANTS>
 				<DESCENDANT id="mytriangle" />
 			</DESCENDANTS>
-		</NODE>
 		</NODE>
 	</NODES>
  </SCENE>

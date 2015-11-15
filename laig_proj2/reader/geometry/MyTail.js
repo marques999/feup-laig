@@ -87,6 +87,10 @@ function MyTail(scene) {
 
 	this.TOP_WING_SIDE2 = new MyRectangle(scene, 0, 3, 0.2, 0);
 	this.TOP_WING_SIDE3 = new MyRectangle(scene, 0, 0.5, 0.2, 0);
+	this.RED = new CGFappearance(scene);
+	this.METAL = new CGFappearance(scene);
+	this.RED.loadTexture("scenes/images/vehicle_red.png");
+	this.METAL.loadTexture("scenes/images/vehicle_metal.png");
 };
 
 MyTail.prototype = Object.create(MyPrimitive.prototype);
@@ -98,6 +102,7 @@ MyTail.prototype.constructor = MyTail;
  */
 MyTail.prototype.display = function() {
 
+	this.RED.apply();
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, -0.1);
 	this.TOP_WING1.display();
@@ -108,6 +113,7 @@ MyTail.prototype.display = function() {
 	this.TOP_WING2.display();
 	this.scene.popMatrix();
 
+	this.METAL.apply();
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, -0.1);
 	this.TOP_WING_SIDE1.display();

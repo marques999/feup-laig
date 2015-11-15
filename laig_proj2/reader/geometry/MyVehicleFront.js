@@ -134,6 +134,11 @@ function MyVehicleFront(scene) {
 		[P3_1, P3_2, P3_3, P3_4],
 		[P4_1, P4_2, P4_3, P4_4]
 	]);
+
+	this.CHOMP = new CGFappearance(scene);
+	this.METAL = new CGFappearance(scene);
+	this.CHOMP.loadTexture("scenes/images/vehicle_chomp.png");
+	this.METAL.loadTexture("scenes/images/vehicle_metal.png");
 };
 
 MyVehicleFront.prototype = Object.create(MyPrimitive.prototype);
@@ -144,9 +149,10 @@ MyVehicleFront.prototype.constructor = MyVehicleFront;
  * @return {null}
  */
 MyVehicleFront.prototype.display = function() {
-
+	this.CHOMP.apply();
 	this.FRONT.display();
 	this.scene.translate(-3.0, 3.0, 0.0);
+	this.METAL.apply();
 	this.FRONT_TOP.display();
 	this.scene.translate(0.0, -3.0, 0.0);
 	this.FRONT_DOWN.display();

@@ -126,7 +126,7 @@ AnimationParser.prototype.readLinear = function(root, id) {
 		printXYZ('control point ' + i, animationPoints[i]);
 	}
 
-	this.result = new LinearAnimation(id, this.span, animationPoints);
+	this.result = new LinearAnimation(this.span, animationPoints);
 };
 
 /**
@@ -170,5 +170,5 @@ AnimationParser.prototype.readCircular = function(root, id) {
 		printSingle('rotang', this.rotang);
 	}
 
-	this.result = new CircularAnimation(id, this.span, this.center, this.radius, this.startang, this.rotang);
+	this.result = new CircularAnimation(this.span, this.center, this.radius, this.startang, this.rotang);
 };

@@ -10,9 +10,9 @@
  * @param {Number} angle - ângulo final da rotação
  * @return {null}
  */
-function CircularAnimation(id, span, center, radius, startang, rotang) {
+function CircularAnimation(span, center, radius, startang, rotang) {
 
-	Animation.call(this, id, span);
+	Animation.call(this, span);
 
 	this.center = center;
 	this.radius = radius;
@@ -29,6 +29,7 @@ CircularAnimation.prototype.constructor = CircularAnimation;
  * @return {null}
  */
 CircularAnimation.prototype.start = function() {
+
 	this.active = true;
 	this.currentAngle = this.angleStart;
 	this.currentTime = 0.0;

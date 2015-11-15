@@ -6,8 +6,7 @@
  * @param {Number} span - duração da animação (em segundos)
  * @return {null}
  */
-function Animation(id, span) {
-	this.id = id;
+function Animation(span) {
 	this.span = span;
 	this.active = false;
 	this.matrix = mat4.create();
