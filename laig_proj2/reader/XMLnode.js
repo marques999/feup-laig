@@ -106,7 +106,7 @@ XMLnode.prototype.setLoop = function(loopValue) {
 
 /**
  * atualiza a animação atual e avança para a seguinte se esta tiver terminado
- * @param {Number} deltaTime - intervalo de tempo decorrido desde o último update
+ * @param {Number} deltaTime - tempo decorrido desde a última verificação
  * @return {null}
  */
 XMLnode.prototype.updateAnimation = function(deltaTime) {
@@ -134,7 +134,7 @@ XMLnode.prototype.updateAnimation = function(deltaTime) {
 };
 
 /**
- * aplica a matriz de transformação da animação atual neste node
+ * aplica neste node a matriz de transformação da animação atual
  * @return {mat4|null} - "null" se não existirem animações ou estas tiverem terminado
  */
 XMLnode.prototype.applyAnimation = function() {

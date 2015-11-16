@@ -9,11 +9,11 @@
 */
 
 function onAttributeMissing(node, id, parent) {
-	return "<" + parent + "> with id=" + id + " is missing attribute '" + node + "'";
+	return "<" + parent + "> with id=" + id + " is missing attribute '" + node + "'!";
 };
 
 function onAttributeMissingWarn(node, id, parent) {
-	console.warn("WARNING: <" + parent + "> with id=" + id + " is missing attribute '" + node + "'");
+	console.warn("WARNING: <" + parent + "> with id=" + id + " is missing attribute '" + node + "'!");
 };
 
 function onAttributeInvalid(node, id, parent) {
@@ -45,7 +45,7 @@ function onElementMissing(node, parent) {
 };
 
 function onInvalidPoints(id, lenghtExpected) {
-	return "<PATCH> with id=" + id + " has invalid number of control points, expected " + lenghtExpected;
+	return "<PATCH> with id=" + id + " has invalid number of control points, expected " + lenghtExpected + "...";
 }
 
 function onInvalidArguments(id, argsGot, argsExpected) {
@@ -61,7 +61,7 @@ function onReservedId(id, root) {
 };
 
 function onDegreeOutOfRange(id, attribute) {
-	console.warn("WARNING: <PATCH> with id=" + id + " has invalid value for '"+ attribute + "', must be between 1 and 3");
+	console.warn("WARNING: <PATCH> with id=" + id + " has invalid value for '"+ attribute + "', must be between 1 and 3!");
 }
 
 function onMaximumLights(number) {
@@ -81,7 +81,7 @@ function onMultipleAxis(axis) {
 };
 
 function onUnexpectedTag(tag, expected, parent, id) {
-	return "invalid tag <" + tag + "> found in <" + parent + "> with id=" + id + ", expected <" + expected + ">!";
+	return "invalid tag <" + tag + "> found in <" + parent + "> with id=" + id + ", expected <" + expected + ">...";
 };
 
 function onUnknownAxis(axis, node, parent) {

@@ -293,7 +293,7 @@ MySceneGraph.prototype.parseArray = function(rootElement, nodeName, parseFunc) {
 		}
 
 		if (currentElementName != nodeName) {
-			console.warn("WARNING: invalid tag found <" + currentElementName + "> found in <" + rootElement.nodeName + ">, expected <" + nodeName + ">!");
+			console.warn("WARNING: invalid tag found <" + currentElementName + "> found in <" + rootElement.nodeName + ">, expected <" + nodeName + ">...");
 			continue;
 		}
 

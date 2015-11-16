@@ -10,7 +10,7 @@
 	</INITIALS>
 	<ILLUMINATION>
 		<ambient r="0.5" g="1.0" b="0.5" a="1.0" />
-		<background r="0.53" g="0.45" b="0.8" a="1.0" />
+		<background r="0.1" g="0.1" b="0.1" a="1.0" />
 	</ILLUMINATION>
 	<LIGHTS>
 		<LIGHT id="luz1">

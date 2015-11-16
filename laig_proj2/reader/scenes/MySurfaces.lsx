@@ -1,9 +1,9 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="0.0" y="0.0" z="-7.0" />
-		<rotation axis="y" angle="0.0" />
-		<rotation axis="x" angle="0.0" />
+		<translation x="-3.0" y="-3.0" z="-3.0" />
+		<rotation axis="y" angle="45.0" />
+		<rotation axis="x" angle="-30.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
 		<reference length="4.0" />

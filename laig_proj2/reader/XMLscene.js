@@ -135,7 +135,7 @@ XMLscene.prototype.setDefaultAppearance = function() {
 };
 
 /**
- * regressa ao shader default definido pela cena
+ * regressa ao shader default definido pela cena atual
  * @return {null}
  */
 XMLscene.prototype.resetActiveShader = function() {
@@ -143,7 +143,7 @@ XMLscene.prototype.resetActiveShader = function() {
 };
 
 /**
- * desenha uma primitiva na cena
+ * desenha uma primitiva na cena atual
  * @param {CGFobject} primitive
  * @return {null}
  */

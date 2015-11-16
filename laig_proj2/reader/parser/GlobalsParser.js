@@ -84,7 +84,7 @@ GlobalsParser.prototype.parse = function(root, id) {
 	}
 
 	if (node_sz > 3) {
-		console.warn("WARNING: more than three rotations found in <INITIALS>.");
+		console.warn("WARNING: more than three rotations found in <INITIALS>!");
 	}
 
 	var axisFound = {
@@ -126,15 +126,15 @@ GlobalsParser.prototype.parse = function(root, id) {
 	}
 
 	if (!axisFound['x']) {
-		return "X axis rotation is missing from <INITIALS>";
+		return "X axis rotation is missing from <INITIALS>!";
 	}
 
 	if (!axisFound['y']) {
-		return "Y axis rotation is missing from <INITIALS>";
+		return "Y axis rotation is missing from <INITIALS>!";
 	}
 
 	if (!axisFound['z']) {
-		return "Z axis rotation is missing from <INITIALS>";
+		return "Z axis rotation is missing from <INITIALS>!";
 	}
 
 	this.scene.initAxis(globalReference);
