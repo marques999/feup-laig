@@ -102,6 +102,28 @@
 		<LEAF id="myV" type="vehicle"/>
 		<LEAF id="myterrain" type="terrain" texture="scenes/images/moon.jpg" heightmap="scenes/images/moon.jpg" />
 		<LEAF id="earth" type="sphere" args="1.0 20 20" />
+		<LEAF id="bandeira" type="patch" partsU="20" partsV="20" orderU="3" orderV="3">
+			<controlpoint coords="0.0 0.0 0.0 1.0"/>
+			<controlpoint coords="2.0 0.0 1.0 1.0"/>
+			<controlpoint coords="0.0 0.0 2.0 1.0"/>
+			<controlpoint coords="2.0 0.0 3.0 1.0"/>
+
+			<controlpoint coords="0.0 1.0 0.0 1.0"/>
+			<controlpoint coords="2.0 1.0 1.0 1.0"/>
+			<controlpoint coords="0.0 1.0 2.0 1.0"/>
+			<controlpoint coords="2.0 1.0 3.0 1.0"/>
+
+			<controlpoint coords="0.0 2.0 0.0 1.0"/>
+			<controlpoint coords="2.0 2.0 1.0 1.0"/>
+			<controlpoint coords="0.0 2.0 2.0 1.0"/>
+			<controlpoint coords="2.0 2.0 3.0 1.0"/>
+
+			<controlpoint coords="0.0 3.0 0.0 1.0"/>
+			<controlpoint coords="2.0 3.0 1.0 1.0"/>
+			<controlpoint coords="0.0 3.0 2.0 1.0"/>
+			<controlpoint coords="2.0 3.0 3.0 1.0"/>
+		</LEAF>
+		<LEAF id="pau" type="cylinder" args="1.0 1.0 1.0 20 20" />
 	</LEAVES>
 	<NODES>
 		<ROOT id="scene" />
@@ -114,6 +136,7 @@
 				<DESCENDANT id="earth_main" />
 				<DESCENDANT id="sun_main" />				
 				<DESCENDANT id="space" />
+				<DESCENDANT id="flag" />
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="vehicle_mov">
@@ -194,6 +217,36 @@
 				<DESCENDANT id="earth" />
 			</DESCENDANTS>
 		</NODE>
-
+		<NODE id="flag">
+			<MATERIAL id="null" />	
+			<TEXTURE id="null" />	
+			<TRANSLATION x="-35.0" y="3.0" z="54.0" />				
+			<SCALE sx="0.7" sy="0.7" sz="0.7"/>	
+			<ROTATION axis="z" angle="-180" />	
+			<ROTATION axis="y" angle="-40" />										
+			<DESCENDANTS>
+				<DESCENDANT id="stick" />
+				<DESCENDANT id="pano" />				
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="pano">
+			<MATERIAL id="null" />	
+			<TEXTURE id="null" />	
+			<SCALE sx="0.5" sy="0.4" sz="0.5"/>
+			<ROTATION axis="y" angle="-90" />										
+			<DESCENDANTS>
+				<DESCENDANT id="bandeira" />				
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="stick">
+			<MATERIAL id="null" />	
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="-0.1" z="-0.1" />	
+			<SCALE sx="0.08" sy="3.0" sz="0.08"/>		
+			<ROTATION axis="x" angle="-90" />								
+			<DESCENDANTS>
+				<DESCENDANT id="pau" />				
+			</DESCENDANTS>
+		</NODE>
 	</NODES>
 </SCENE>
