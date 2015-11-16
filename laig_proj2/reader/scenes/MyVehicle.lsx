@@ -51,20 +51,6 @@
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 	</MATERIALS>
-	<ANIMATIONS>
-		<ANIMATION id="first" span="2.0" type="linear">
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="-1.0" y="0.0" z="0.0" />
-		</ANIMATION>
-		<ANIMATION id="second" span="1.0" type="linear">
-			<controlpoint x="-1.0" y="0.0" z="0.0" />
-			<controlpoint x="-5.0" y="0.0" z="0.0" />
-		</ANIMATION>
-		<ANIMATION id="third" span="1.0" type="linear">
-			<controlpoint x="-5.0" y="0.0" z="0.0" />
-			<controlpoint x="-15.0" y="0.0" z="0.0" />
-		</ANIMATION>
-	</ANIMATIONS>
 	<LEAVES>
 		<LEAF id="myV" type="vehicle"/>
 	</LEAVES>
@@ -73,26 +59,6 @@
 		<NODE id="scene">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
-			<DESCENDANTS>
-				<DESCENDANT id="vehicle_mov" />
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="vehicle_mov">
-			<MATERIAL id="default" />
-			<TEXTURE id="null" />
-			<ROTATION axis="z" angle="-90" />
-			<DESCENDANTS>
-				<DESCENDANT id="vehicle"/>
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="vehicle">
-			<MATERIAL id="default" />
-			<TEXTURE id="null" />
-			<ANIMATIONREF>
-				<ANIMATION id="first" />
-				<ANIMATION id="second" />
-				<ANIMATION id="third" />
-			</ANIMATIONREF>
 			<DESCENDANTS>
 				<DESCENDANT id="myV" />
 			</DESCENDANTS>

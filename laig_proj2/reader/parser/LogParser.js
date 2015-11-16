@@ -25,11 +25,11 @@ function onAttributeInvalidWarn(node, id, parent) {
 };
 
 function onCoordinateInvalid(coord, parent) {
-	console.warn("WARNING: coordinate '" + coord + "' from <" + parent + "> has an invalid value!");
+	console.warn("WARNING: coordinate " + coord + " from <" + parent + "> has an invalid value!");
 };
 
 function onCoordinateMissing(coord, parent) {
-	console.warn("WARNING: coordinate '" + coord + "' is missing from <" + parent + ">");
+	console.warn("WARNING: coordinate " + coord + " is missing from <" + parent + ">");
 };
 
 function onElementDuplicate(parent, id) {
@@ -69,7 +69,7 @@ function onMaximumLights(number) {
 };
 
 function onMultipleElements(node, parent) {
-	console.warn("WARNING: either zero or more than one '" + node + "' elements found in <" + parent + ">!");
+	console.warn("WARNING: either zero or more than one <" + node + "> elements found in <" + parent + ">!");
 };
 
 function onMultipleDefinitions(name, parent) {
@@ -85,7 +85,7 @@ function onUnexpectedTag(tag, expected, parent, id) {
 };
 
 function onUnknownAxis(axis, node, parent) {
-	return "unknown axis '" + axis + "' for <" + node + "> found in <" + parent + ">!";
+	return "unknown axis " + axis + " for <" + node + "> found in <" + parent + ">!";
 };
 
 function onXMLWarning(message) {
