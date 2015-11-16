@@ -109,7 +109,7 @@
 		<LEAF id="myV" type="vehicle"/>
 		<LEAF id="myterrain" type="terrain" texture="scenes/images/moon.jpg" heightmap="scenes/images/moon.jpg" />
 		<LEAF id="earth" type="sphere" args="1.0 20 20" />
-		<LEAF id="bandeira" type="patch" partsU="20" partsV="20" orderU="3" orderV="3">
+		<LEAF id="bandeira_front" type="patch" partsU="20" partsV="20" orderU="3" orderV="3">
 			<controlpoint coords="0.0 0.0 0.0 1.0"/>
 			<controlpoint coords="2.0 0.0 1.0 1.0"/>
 			<controlpoint coords="0.0 0.0 2.0 1.0"/>
@@ -129,6 +129,27 @@
 			<controlpoint coords="2.0 3.0 1.0 1.0"/>
 			<controlpoint coords="0.0 3.0 2.0 1.0"/>
 			<controlpoint coords="2.0 3.0 3.0 1.0"/>
+		</LEAF>
+		<LEAF id="bandeira_back" type="patch" partsU="20" partsV="20" orderU="3" orderV="3">
+			<controlpoint coords="0.0 3.0 0.0 1.0"/>
+			<controlpoint coords="2.0 3.0 1.0 1.0"/>
+			<controlpoint coords="0.0 3.0 2.0 1.0"/>
+			<controlpoint coords="2.0 3.0 3.0 1.0"/>
+
+			<controlpoint coords="0.0 2.0 0.0 1.0"/>
+			<controlpoint coords="2.0 2.0 1.0 1.0"/>
+			<controlpoint coords="0.0 2.0 2.0 1.0"/>
+			<controlpoint coords="2.0 2.0 3.0 1.0"/>
+
+			<controlpoint coords="0.0 1.0 0.0 1.0"/>
+			<controlpoint coords="2.0 1.0 1.0 1.0"/>
+			<controlpoint coords="0.0 1.0 2.0 1.0"/>
+			<controlpoint coords="2.0 1.0 3.0 1.0"/>
+
+			<controlpoint coords="0.0 0.0 0.0 1.0"/>
+			<controlpoint coords="2.0 0.0 1.0 1.0"/>
+			<controlpoint coords="0.0 0.0 2.0 1.0"/>
+			<controlpoint coords="2.0 0.0 3.0 1.0"/>
 		</LEAF>
 		<LEAF id="pau" type="cylinder" args="1.0 1.0 1.0 20 20" />
 	</LEAVES>
@@ -242,7 +263,8 @@
 			<SCALE sx="0.5" sy="0.4" sz="0.5"/>
 			<ROTATION axis="y" angle="-90" />										
 			<DESCENDANTS>
-				<DESCENDANT id="bandeira" />				
+				<DESCENDANT id="bandeira_front" />	
+				<DESCENDANT id="bandeira_back" />			
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="stick">
