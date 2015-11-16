@@ -67,6 +67,13 @@
 			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
 			<emission r="0.7" g="0.7" b="0.7" a="0.7" />
 		</MATERIAL>
+		<MATERIAL id="stick_I">
+			<shininess value="20" />
+			<specular r="0.1" g="0.1" b="0.1" a="1.0" />
+			<diffuse r="0.1" g="0.1" b="0.1" a="1.0" />
+			<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
 	</MATERIALS>
 	<ANIMATIONS>
 		<ANIMATION id="earth_anim" span="60.0" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" >		
@@ -239,8 +246,8 @@
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="stick">
-			<MATERIAL id="null" />	
-			<TEXTURE id="null" />	
+			<MATERIAL id="stick_I" />	
+			<TEXTURE id="clear" />	
 			<TRANSLATION x="0.0" y="-0.1" z="-0.1" />	
 			<SCALE sx="0.08" sy="3.0" sz="0.08"/>		
 			<ROTATION axis="x" angle="-90" />								
