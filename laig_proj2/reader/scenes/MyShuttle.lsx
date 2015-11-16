@@ -1,10 +1,10 @@
 <SCENE>
 	<INITIALS>
-		<frustum near="0.1" far="200" />
-		<translation x="0.0" y="0.0" z="0.0" />
-		<rotation axis="y" angle="10.0" />
-		<rotation axis="x" angle="-25.0" />
-		<rotation axis="z" angle="0.0" />
+		<frustum near="0.1" far="500" />	
+		<translation x="-25.0" y="-40.0" z="-45.0" />		
+		<rotation axis="y" angle="60.0" />	
+		<rotation axis="x" angle="-35.0" />
+		<rotation axis="z" angle="-10.0" />						
 		<scale sx="1.0" sy="1.0" sz="1.0" />
 		<reference length="4.0" />
 	</INITIALS>
@@ -12,39 +12,36 @@
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
-	<LIGHTS>
+	<LIGHTS>	
 		<LIGHT id="luz1">
 			<enable value="1" />
-			<position x="4.5" y="4.0" z="-3.5" w="1.0" />
+			<position x="260.0" y="0.0" z="260.0" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
-		</LIGHT>
+		</LIGHT>	
 		<LIGHT id="luz2">
 			<enable value="1" />
-			<position x="4.5" y="4.0" z="3.5" w="1.0" />
+			<position x="260.0" y="0.0" z="-260.0" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
-		</LIGHT>
-		<LIGHT id="luz3">
-			<enable value="1" />
-			<position x="4.5" y="-4.0" z="3.5" w="1.0" />
-			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
-		</LIGHT>
-		<LIGHT id="luz4">
-			<enable value="1" />
-			<position x="4.5" y="-4.0" z="-3.5" w="1.0" />
-			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
-			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
-		</LIGHT>
-	</LIGHTS>
+		</LIGHT>		
 	<TEXTURES>
 		<TEXTURE id="colors">
 			<file path="images/colors.jpg" />
+			<amplif_factor s="1.0" t="1.0" />
+		</TEXTURE>
+		<TEXTURE id="earth_Text">
+			<file path="images/earth.jpg" />
+			<amplif_factor s="1.0" t="1.0" />
+		</TEXTURE>
+		<TEXTURE id="sun_Text">
+			<file path="images/sun.jpg" />
+			<amplif_factor s="1.0" t="1.0" />
+		</TEXTURE>
+		<TEXTURE id="space_Text">
+			<file path="images/scape.jpg" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 	</TEXTURES>
@@ -56,23 +53,55 @@
 			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
+		<MATERIAL id="space_I">
+			<shininess value="5" />
+			<specular r="0.5" g="0.5" b="0.5" a="1.0" />
+			<diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+			<emission r="0.7" g="0.7" b="0.7" a="0.7" />
+		</MATERIAL>
+		<MATERIAL id="sun_I">
+			<shininess value="5" />
+			<specular r="0.5" g="0.5" b="0.5" a="1.0" />
+			<diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
+			<ambient r="0.5" g="0.5" b="0.5" a="1.0" />
+			<emission r="0.7" g="0.7" b="0.7" a="0.7" />
+		</MATERIAL>
 	</MATERIALS>
 	<ANIMATIONS>
-		<ANIMATION id="first" span="2.0" type="linear">
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="-1.0" y="0.0" z="0.0" />
+		<ANIMATION id="earth_anim" span="60.0" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" >		
 		</ANIMATION>
-		<ANIMATION id="second" span="1.0" type="linear">
-			<controlpoint x="-1.0" y="0.0" z="0.0" />
-			<controlpoint x="-5.0" y="0.0" z="0.0" />
+		<ANIMATION id="first" span="0.5" type="linear">
+			<controlpoint x="0.0" y="0.0" z="0.0" />
+			<controlpoint x="-0.5" y="0.0" z="0.0" />
+		</ANIMATION>
+		<ANIMATION id="second" span="0.7" type="linear">
+			<controlpoint x="-0.5" y="0.0" z="0.0" />
+			<controlpoint x="-1.55" y="0.0" z="0.0" />
 		</ANIMATION>
 		<ANIMATION id="third" span="1.0" type="linear">
-			<controlpoint x="-5.0" y="0.0" z="0.0" />
-			<controlpoint x="-15.0" y="0.0" z="0.0" />
+			<controlpoint x="-1.55" y="0.0" z="0.0" />
+			<controlpoint x="-4.05" y="0.0" z="0.0" />
 		</ANIMATION>
+		<ANIMATION id="fourth" span="1.5" type="linear">
+			<controlpoint x="-4.05" y="0.0" z="0.0" />
+			<controlpoint x="-10.05" y="0.0" z="0.0" />
+		</ANIMATION>
+		<ANIMATION id="fifth" span="3.5" type="linear">
+			<controlpoint x="-10.05" y="0.0" z="0.0" />
+			<controlpoint x="-35.00" y="0.0" z="0.0" />
+		</ANIMATION>		
+		<ANIMATION id="sixth" span="2.00" type="circular" center="-25 0 0" radius="10" startang="180" rotang="-90" >		
+		</ANIMATION>
+		<ANIMATION id="seventh" span="12.5" type="linear">
+			<controlpoint x="-25.00" y="0.0" z="-10.0" />
+			<controlpoint x="-25.00" y="0.0" z="-150.0" />
+		</ANIMATION>	
 	</ANIMATIONS>
 	<LEAVES>
 		<LEAF id="myV" type="vehicle"/>
+		<LEAF id="myterrain" type="terrain" texture="scenes/images/moon.jpg" heightmap="scenes/images/moon.jpg" />
+		<LEAF id="earth" type="sphere" args="1.0 20 20" />
 	</LEAVES>
 	<NODES>
 		<ROOT id="scene" />
@@ -81,27 +110,90 @@
 			<TEXTURE id="colors" />
 			<DESCENDANTS>
 				<DESCENDANT id="vehicle_mov" />
+				<DESCENDANT id="moonSurface" />
+				<DESCENDANT id="earth_main" />
+				<DESCENDANT id="sun_main" />				
+				<DESCENDANT id="space" />
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="vehicle_mov">
 			<MATERIAL id="default" />
 			<TEXTURE id="null" />
-			<ROTATION axis="y" angle="90" />
+			<ROTATION axis="z" angle="-90" />
 			<DESCENDANTS>
 				<DESCENDANT id="vehicle"/>
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="vehicle">
 			<MATERIAL id="default" />
-			<TEXTURE id="null" />
+			<TEXTURE id="null" />			
 			<ANIMATIONREF>
 				<ANIMATION id="first" />
 				<ANIMATION id="second" />
 				<ANIMATION id="third" />
+				<ANIMATION id="fourth" />
+				<ANIMATION id="fifth" />
+				<ANIMATION id="sixth" />
+				<ANIMATION id="seventh" />
 			</ANIMATIONREF>
+			<ROTATION axis="x" angle="-90" />
 			<DESCENDANTS>
 				<DESCENDANT id="myV" />
 			</DESCENDANTS>
 		</NODE>
+		<NODE id="moonSurface">
+			<MATERIAL id="default" />	
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="-1.2" z="0.0" />			
+			<SCALE sx="150.0" sy="20.0" sz="150.0"/>		
+			<DESCENDANTS>
+				<DESCENDANT id="myterrain" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="earth_main">
+			<MATERIAL id="default" />	
+			<TEXTURE id="earth_Text" />			
+			<TRANSLATION x="5.0" y="25.0" z="-200.0" />	
+			<SCALE sx="15.0" sy="15.0" sz="15.0"/>									
+			<DESCENDANTS>
+				<DESCENDANT id="earth_T" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="earth_T">
+			<MATERIAL id="default" />	
+			<TEXTURE id="earth_Text" />
+			<ANIMATIONREF>
+				<ANIMATION id="earth_anim" />				
+			</ANIMATIONREF>									
+			<DESCENDANTS>
+				<DESCENDANT id="earth" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="sun_main">
+			<MATERIAL id="sun_I" />	
+			<TEXTURE id="earth_Text" />			
+			<TRANSLATION x="150.0" y="30.0" z="-80.0" />	
+			<SCALE sx="1.5" sy="1.5" sz="1.5"/>									
+			<DESCENDANTS>
+				<DESCENDANT id="sun_T" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="sun_T">
+			<MATERIAL id="sun_I" />	
+			<TEXTURE id="sun_Text" />											
+			<DESCENDANTS>
+				<DESCENDANT id="earth" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="space">
+			<MATERIAL id="space_I" />	
+			<TEXTURE id="space_Text" />	
+			<TRANSLATION x="0.0" y="50.0" z="-70.0" />	
+			<SCALE sx="-160.0" sy="160.0" sz="160.0"/>										
+			<DESCENDANTS>
+				<DESCENDANT id="earth" />
+			</DESCENDANTS>
+		</NODE>
+
 	</NODES>
 </SCENE>
