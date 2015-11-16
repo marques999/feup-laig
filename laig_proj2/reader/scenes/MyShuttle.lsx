@@ -103,15 +103,15 @@
 			<controlpoint x="-8.15" y="0.0" z="0.0" />
 			<controlpoint x="-14.15" y="0.0" z="0.0" />
 		</ANIMATION>
-		<ANIMATION id="fifth" span="3.5" type="linear">
+		<ANIMATION id="fifth" span="3.0" type="linear">
 			<controlpoint x="-14.15" y="0.0" z="0.0" />
-			<controlpoint x="-39.10" y="0.0" z="0.0" />
+			<controlpoint x="-34.10" y="0.0" z="0.0" />
 		</ANIMATION>
-		<ANIMATION id="sixth" span="2.00" type="circular" center="-29.1 0 0" radius="10" startang="180" rotang="-90" >
+		<ANIMATION id="sixth" span="2.00" type="circular" center="-24.1 0 0" radius="10" startang="180" rotang="-90" >
 		</ANIMATION>
 		<ANIMATION id="seventh" span="12.5" type="linear">
-			<controlpoint x="-29.10" y="0.0" z="-10.0" />
-			<controlpoint x="-29.10" y="0.0" z="-150.0" />
+			<controlpoint x="-24.10" y="0.0" z="-10.0" />
+			<controlpoint x="-24.10" y="0.0" z="-150.0" />
 		</ANIMATION>
 	</ANIMATIONS>
 	<LEAVES>
