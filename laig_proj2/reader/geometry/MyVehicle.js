@@ -28,7 +28,7 @@ MyVehicle.prototype.constructor = MyVehicle;
 MyVehicle.prototype.display = function() {
 
 	this.scene.pushMatrix();
-	this.scene.translate(4.1, -0.65, 0.0);
+	this.scene.translate(0, -0.65, 0.0);
 
 		this.scene.pushMatrix();
 		this.scene.scale(1.4, 0.8, 0.5);

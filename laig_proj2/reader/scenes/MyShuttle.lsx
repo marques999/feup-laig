@@ -27,6 +27,7 @@
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
 		</LIGHT>
+	</LIGHTS>
 	<TEXTURES>
 		<TEXTURE id="texture_colors">
 			<file path="images/colors.jpg" />
@@ -46,6 +47,10 @@
 		</TEXTURE>
 		<TEXTURE id="texture_flag">
 			<file path="images/moon_flag.png" />
+			<amplif_factor s="1.0" t="1.0" />
+		</TEXTURE>
+		<TEXTURE id="texture_flagB">
+			<file path="images/moon_flagB.png" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 	</TEXTURES>
@@ -83,30 +88,30 @@
 		<ANIMATION id="animation_earth" span="60.0" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" >
 		</ANIMATION>
 		<ANIMATION id="animation_first" span="0.5" type="linear">
-			<controlpoint x="0.0" y="0.0" z="0.0" />
-			<controlpoint x="-0.5" y="0.0" z="0.0" />
+			<controlpoint x="-4.1" y="0.0" z="0.0" />
+			<controlpoint x="-4.6" y="0.0" z="0.0" />
 		</ANIMATION>
 		<ANIMATION id="animation_second" span="0.7" type="linear">
-			<controlpoint x="-0.5" y="0.0" z="0.0" />
-			<controlpoint x="-1.55" y="0.0" z="0.0" />
+			<controlpoint x="-4.6" y="0.0" z="0.0" />
+			<controlpoint x="-5.65" y="0.0" z="0.0" />
 		</ANIMATION>
 		<ANIMATION id="animation_third" span="1.0" type="linear">
-			<controlpoint x="-1.55" y="0.0" z="0.0" />
-			<controlpoint x="-4.05" y="0.0" z="0.0" />
+			<controlpoint x="-5.65" y="0.0" z="0.0" />
+			<controlpoint x="-8.15" y="0.0" z="0.0" />
 		</ANIMATION>
 		<ANIMATION id="fourth" span="1.5" type="linear">
-			<controlpoint x="-4.05" y="0.0" z="0.0" />
-			<controlpoint x="-10.05" y="0.0" z="0.0" />
+			<controlpoint x="-8.15" y="0.0" z="0.0" />
+			<controlpoint x="-14.15" y="0.0" z="0.0" />
 		</ANIMATION>
 		<ANIMATION id="fifth" span="3.5" type="linear">
-			<controlpoint x="-10.05" y="0.0" z="0.0" />
-			<controlpoint x="-35.00" y="0.0" z="0.0" />
+			<controlpoint x="-14.15" y="0.0" z="0.0" />
+			<controlpoint x="-39.10" y="0.0" z="0.0" />
 		</ANIMATION>
-		<ANIMATION id="sixth" span="2.00" type="circular" center="-25 0 0" radius="10" startang="180" rotang="-90" >
+		<ANIMATION id="sixth" span="2.00" type="circular" center="-29.1 0 0" radius="10" startang="180" rotang="-90" >
 		</ANIMATION>
 		<ANIMATION id="seventh" span="12.5" type="linear">
-			<controlpoint x="-25.00" y="0.0" z="-10.0" />
-			<controlpoint x="-25.00" y="0.0" z="-150.0" />
+			<controlpoint x="-29.10" y="0.0" z="-10.0" />
+			<controlpoint x="-29.10" y="0.0" z="-150.0" />
 		</ANIMATION>
 	</ANIMATIONS>
 	<LEAVES>
@@ -259,6 +264,7 @@
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_flag" />
 			<SCALE sx="0.5" sy="0.4" sz="0.5"/>
+			<ROTATION axis="y" angle="-90" />
 			<DESCENDANTS>
 				<DESCENDANT id="panoA" />
 				<DESCENDANT id="panoB" />
@@ -266,19 +272,16 @@
 		</NODE>
 			<NODE id="panoA">
 			<MATERIAL id="null" />
-			<TEXTURE id="texture_flag" />
-			<ROTATION axis="y" angle="-90" />
+			<TEXTURE id="texture_flag" />			
 			<DESCENDANTS>
 				<DESCENDANT id="leaf_flagA" />
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="panoB">
 			<MATERIAL id="null" />
-			<TEXTURE id="texture_flag" />
-			<SCALE sx="-1.0" sy="1.0" sz="-1.0" />
-			<ROTATION axis="y" angle="-90" />
+			<TEXTURE id="texture_flagB" />
 			<DESCENDANTS>
-				<DESCENDANT id="leaf_flagA" />
+				<DESCENDANT id="leaf_flagB" />
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="pole">
