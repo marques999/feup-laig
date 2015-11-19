@@ -1,0 +1,262 @@
+<SCENE>
+	<INITIALS>
+		<frustum near="10" far="1500" />
+		<translation x="-400.0" y="-400.0" z="-400.0" />
+		<rotation axis="x" angle="0.0" />
+		<rotation axis="y" angle="0.0" />
+		<rotation axis="z" angle="0.0" />
+		<scale sx="1.0" sy="1.0" sz="1.0" />
+		<reference length="500" />
+	</INITIALS>
+	<ILLUMINATION>
+		<ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+		<background r="0.5" g="0.5" b="0.8" a="1.0" />
+	</ILLUMINATION>
+	<LIGHTS>
+		<LIGHT id="SOL1">
+			<enable value="1" />
+			<position x="0" y="0" z="50" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r="1" g="1" b="1" a="0.2" />
+			<specular r="1" g="1" b="1" a="0.2" />
+		</LIGHT>
+		<LIGHT id="SOL2">
+			<enable value="1" />
+			<position x="-50" y="0" z="0" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r="1" g="1" b="1" a="0.2" />
+			<specular r="1" g="1" b="1" a="0.2" />
+		</LIGHT>
+		<LIGHT id="SOL3">
+			<enable value="1" />
+			<position x="50" y="0" z="0" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r="1" g="1" b="1" a="0.2" />
+			<specular r="1" g="1" b="1" a="0.2" />
+		</LIGHT>
+		<LIGHT id="SOL4">
+			<enable value="1" />
+			<position x="0" y="-50" z="0" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r="1" g="1" b="1" a="0.2" />
+			<specular r="1" g="1" b="1" a="0.2" />
+		</LIGHT>
+		<LIGHT id="SOL5">
+			<enable value ="1" />
+			<position x="0" y="50" z="0" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r="1" g="1" b="1" a="0.2" />
+			<specular r="1" g="1" b="1" a="0.2" />
+		</LIGHT>
+		<LIGHT id="SOL6">
+			<enable value="1" />
+			<position x="0" y="0" z="-50" w="1" />
+			<ambient r="0" g="0" b="0" a="1" />
+			<diffuse r="1" g="1" b="1" a="0.2" />
+			<specular r="1" g="1" b="1" a="0.2" />
+		</LIGHT>
+	</LIGHTS>
+	<TEXTURES>
+		<TEXTURE id="sun">
+			<file path="images/sun.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="mercurio">
+			<file path="images/mercury.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="venus">
+			<file path="images/venus.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="terra">
+			<file path="images/earth.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="mars">
+			<file path="images/mars.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="jupiter">
+			<file path="images/jupiter.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="saturno">
+			<file path="images/saturn.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="urano">
+			<file path="images/uranus.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="neptune">
+			<file path="images/neptune.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+		<TEXTURE id="outerspace">
+			<file path="images/outerspace.jpg" />
+			<amplif_factor s="1" t="1" />
+		</TEXTURE>
+	</TEXTURES>
+	<MATERIALS>
+		<MATERIAL id="laranja">
+			<shininess value="1" />
+			<specular r="1" g="0.5" b="0" a="0.5" />
+			<diffuse r="1" g="0.5" b="0" a="0.5" />
+			<ambient r="0" g="0" b="0" a="0.5" />
+			<emission r="0" g="0" b="0" a="0.5" />
+		</MATERIAL>
+		<MATERIAL id="outerspace">
+			<shininess value="1" />
+			<specular r="1" g="0.5" b="0" a="0.5" />
+			<diffuse r="1" g="0.5" b="0" a="0.5" />
+			<ambient r="1" g="1" b="1" a="0.5" />
+			<emission r="1" g="1" b="1" a="1" />
+		</MATERIAL>
+	</MATERIALS>
+	<LEAVES>
+		<LEAF id="l1s" type="sphere" args="1.0 40 40" />
+	</LEAVES>
+	<ANIMATIONS>
+		<ANIMATION id="MERCURIO" span="3" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="VENUS" span="6.5" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="TERRA" span="12.5" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="MARTE" span="25" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="JUPITER" span="50" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="SATURNO" span="120" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="URANO" span="200" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+		<ANIMATION id="NEPTUNO" span="240" type="circular" center="0 0 0" radius="0" startang="0" rotang="360" />
+	</ANIMATIONS>
+	<NODES>
+		<ROOT id="ROOT" />
+		<NODE id="ROOT">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<SCALE sx="5" sy="5" sz ="5" />
+			<DESCENDANTS>
+				<DESCENDANT id="SOL" />
+				<DESCENDANT id="MERCURIO" />
+				<DESCENDANT id="VENUS" />
+				<DESCENDANT id="TERRA" />
+				<DESCENDANT id="MARTE" />
+				<DESCENDANT id="JUPITER" />
+				<DESCENDANT id="SATURNO" />
+				<DESCENDANT id="URANO" />
+				<DESCENDANT id="NEPTUNO" />
+				<DESCENDANT id="OUTERSPACE" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="OUTERSPACE">
+			<MATERIAL id="outerspace" />
+			<TEXTURE id="outerspace" />
+			<SCALE sx="100" sy="-100" sz="100" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="SOL">
+			<MATERIAL id="null" />
+			<TEXTURE id="sun" />
+			<SCALE sx="5" sy="5" sz="5" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="MERCURIO">
+			<MATERIAL id="null" />
+			<TEXTURE id="mercurio" />
+			<ANIMATIONREF>
+				<ANIMATION id="MERCURIO" />
+			</ANIMATIONREF>
+			<TRANSLATION x="16" y="0" z="0" />
+			<SCALE sx="0.3" sy="0.3" sz="0.3" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="VENUS">
+			<MATERIAL id="laranja" />
+			<TEXTURE id="venus" />
+			<ANIMATIONREF>
+				<ANIMATION id="VENUS" />
+			</ANIMATIONREF>
+			<TRANSLATION x="21" y="0" z="0" />
+			<SCALE sx="0.8" sy="0.8" sz="0.8" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="TERRA">
+			<MATERIAL id="null" />
+			<TEXTURE id="terra" />
+			<ANIMATIONREF>
+				<ANIMATION id="TERRA" />
+			</ANIMATIONREF>
+			<TRANSLATION x="28" y="0" z="0" />
+			<SCALE sx="0.9" sy="0.9" sz="0.9" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="MARTE">
+			<MATERIAL id="null" />
+			<TEXTURE id="mars" />
+			<ANIMATIONREF>
+				<ANIMATION id="MARTE" />
+			</ANIMATIONREF>
+			<TRANSLATION x="35" y="0" z="0" />
+			<SCALE sx="0.6" sy="0.6" sz="0.6" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="JUPITER">
+			<MATERIAL id="null" />
+			<TEXTURE id="jupiter" />
+			<ANIMATIONREF>
+				<ANIMATION id="JUPITER" />
+			</ANIMATIONREF>
+			<TRANSLATION x="48" y="0" z="0" />
+			<SCALE sx="3" sy="3" sz="3" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="SATURNO">
+			<MATERIAL id="null" />
+			<TEXTURE id="saturno" />
+			<ANIMATIONREF>
+				<ANIMATION id="SATURNO" />
+			</ANIMATIONREF>
+			<TRANSLATION x="61" y="0" z="0" />
+			<SCALE sx="2.5" sy="2.5" sz="2.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="URANO">
+			<MATERIAL id="null" />
+			<TEXTURE id="urano" />
+			<ANIMATIONREF>
+				<ANIMATION id="URANO" />
+			</ANIMATIONREF>
+			<TRANSLATION x="75" y="0" z="0" />
+			<SCALE sx="1.8" sy="1.8" sz="1.8" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="NEPTUNO">
+			<MATERIAL id="null" />
+			<TEXTURE id="neptune" />
+			<ANIMATIONREF>
+				<ANIMATION id="NEPTUNO" />
+			</ANIMATIONREF>
+			<TRANSLATION x="88" y="0" z="0" />
+			<SCALE sx="2" sy="2" sz="2" />
+			<DESCENDANTS>
+				<DESCENDANT id="l1s" />
+			</DESCENDANTS>
+		</NODE>
+	</NODES>
+</SCENE>
