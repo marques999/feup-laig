@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'MyCylinder'
+ * construtor default da classe 'MyInvertedCylinder'
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
@@ -11,7 +11,7 @@
  * @param {Number} slices - número de secçoes do cilindro em torno dos raios
  * @return {null}
  */
-function MyInvCylinder(scene, height, radiusBottom, radiusTop, stacks, slices) {
+function MyInvertedCylinder(scene, height, radiusBottom, radiusTop, stacks, slices) {
 
 	MyPrimitive.call(this, scene);
 
@@ -27,14 +27,14 @@ function MyInvCylinder(scene, height, radiusBottom, radiusTop, stacks, slices) {
 	this.initBuffers();
 };
 
-MyInvCylinder.prototype = Object.create(MyPrimitive.prototype);
-MyInvCylinder.prototype.constructor = MyInvCylinder;
+MyInvertedCylinder.prototype = Object.create(MyPrimitive.prototype);
+MyInvertedCylinder.prototype.constructor = MyInvertedCylinder;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyCylinder'
+ * inicializa os buffers WebGL da primitiva 'MyInvertedCylinder'
  * @return {null}
  */
-MyInvCylinder.prototype.initBuffers = function() {
+MyInvertedCylinder.prototype.initBuffers = function() {
 
 	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;
 	var stackIncrement = this.height / this.stacks;

@@ -20,6 +20,7 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function(application) {
 	CGFscene.prototype.init.call(this, application);
 	
+	this.circleee = new MyRing(this, 'white', 0.25, 1.0);
 	this.httpServer = new GameServer(null, 'localhost', 8081);
 	this.httpServer.requestPlace('disc', 5, 5);
 	this.httpServer.requestQuit();
@@ -327,6 +328,10 @@ XMLscene.prototype.display = function () {
 			this.lights[i].update();
 		}
 
+		this.pushMatrix();
+		this.scale(5.0, 5.0, 5.0);
+		this.circleee.display();
+		this.popMatrix();
 		this.graph.display();
 	}
 };
