@@ -49,6 +49,7 @@ serialInclude([
 	'parser/MaterialParser.js',
 	'parser/NodeParser.js',
 	'parser/TextureParser.js',
+	'GameServer.js',
 	'XMLscene.js',
 	'MySceneGraph.js',
 

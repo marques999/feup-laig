@@ -19,6 +19,10 @@ XMLscene.prototype.constructor = XMLscene;
  */
 XMLscene.prototype.init = function(application) {
 	CGFscene.prototype.init.call(this, application);
+	
+	this.httpServer = new GameServer(null, 'localhost', 8081);
+	this.httpServer.requestPlace('disc', 5, 5);
+	this.httpServer.requestQuit();
 	this.initCameras();
 	this.initDefaults();
 	this.enableTextures(true);
