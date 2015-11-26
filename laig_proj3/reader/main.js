@@ -39,6 +39,7 @@ serialInclude([
 	'geometry/MyHoleCircle.js',
 	'geometry/MyDisc.js',
 	'geometry/MyRing.js',
+	'geometry/MyBoard.js',
 	'parser/BaseParser.js',
 	'parser/AnimationParser.js',
 	'parser/GlobalsParser.js',
