@@ -1,15 +1,6 @@
-/**
- * construtor default da classe 'MyCircle'
- * @constructor
- * @augments MyPrimitive
- * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
- * @param {Number} slices - número de divisões do círculo em torno do raio
- * @return {null}
- */
 function MyCircle(scene, slices) {
 
-	MyPrimitive.call(this, scene);
+	CGFobject.call(this, scene);
 
 	this.indices = [];
 	this.normals = [];
@@ -19,13 +10,9 @@ function MyCircle(scene, slices) {
 	this.initBuffers();
 };
 
-MyCircle.prototype = Object.create(MyPrimitive.prototype);
+MyCircle.prototype = Object.create(CGFobject.prototype);
 MyCircle.prototype.constructor = MyCircle;
 
-/**
- * inicializa os buffers WebGL da primitiva 'MyCircle'
- * @return {null}
- */
 MyCircle.prototype.initBuffers = function() {
 
 	var theta = 0;
