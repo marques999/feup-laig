@@ -13,21 +13,21 @@
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
 	<LIGHTS>
-		<LIGHT id="luz1">
+		<LIGHT id="l1">
 			<enable value="1" />
-			<position x="260.0" y="0.0" z="260.0" w="1.0" />
+			<position x="12.5" y="8.0" z="-5.5" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
+			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
 		</LIGHT>
-		<LIGHT id="luz2">
+		<LIGHT id="l2">
 			<enable value="1" />
-			<position x="260.0" y="0.0" z="-260.0" w="1.0" />
+			<position x="4.5" y="8.0" z="5.5" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
-			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
-		</LIGHT>	
-	</LIGHTS>		
+			<specular r="0.6" g="0.6" b="0.6" a="1.0" />
+		</LIGHT>
+	</LIGHTS>	
 	<LEAVES>		
 		<LEAF id="test" type="test"/>
 	</LEAVES>

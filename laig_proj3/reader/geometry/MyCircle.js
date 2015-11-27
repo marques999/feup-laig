@@ -7,7 +7,7 @@
  * @param {Number} slices - número de divisões do círculo em torno do raio
  * @return {null}
  */
-function MyCircle(scene, slices) {
+function MyCircle(scene, slices, radius) {
 
 	CGFobject.call(this, scene);
 
@@ -15,6 +15,7 @@ function MyCircle(scene, slices) {
 	this.normals = [];
 	this.texCoords = [];
 	this.vertices = [];
+	this.radius = radius || 1.0;
 	this.slices = slices;
 	this.initBuffers();
 };
@@ -27,17 +28,20 @@ MyCircle.prototype.constructor = MyCircle;
  * @return {null}
  */
 MyCircle.prototype.initBuffers = function() {
+
+	var halfRadius = this.radius / 2;
 	var thetaIncrement = (2 * Math.PI) / this.slices;
 	var vertexNumber = 1;
 	this.vertices.push(0, 0, 0);
-	this.texCoords.push(0.5, 0.5);
+	this.texCoords.push(halfRadius, halfRadius);
 	this.normals.push(0, 0, 1);
 
 	for (var i = 0; i <= this.slices; i++) {
-		var x = Math.cos(thetaIncrement * i);
-		var y = Math.sin(thetaIncrement * i);
+
+		var x = this.radius * Math.cos(thetaIncrement * i);
+		var y = this.radius * Math.sin(thetaIncrement * i);
 		this.vertices.push(x, y, 0);
-		this.texCoords.push(x * 0.5 + 0.5, 0.5 - y * 0.5);
+		this.texCoords.push(x * halfRadius + halfRadius, halfRadius - y * halfRadius);
 		this.normals.push(0, 0, 1);
 
 		if (i > 0) {

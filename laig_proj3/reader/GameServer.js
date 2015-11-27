@@ -11,69 +11,75 @@ GameServer.prototype.constructor = GameServer;
 GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onError) {
 
 	var request = new XMLHttpRequest();
-	
+
 	request.open('GET', this.serverAddress + requestString, true);
 	request.onload = onSuccess || function(data) {
 		console.log("Request successful. Reply: " + data.target.response);
 	};
-	
+
 	request.onerror = onError || function() {
 		console.log("Error waiting for response");
 	};
-	
+
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	request.send();
 };
 
 GameServer.prototype.requestReset = function() {
 	this.getPrologRequest('reset', this.handleGenericCommand);
-}
+};
 
 GameServer.prototype.requestQuit = function() {
 	this.getPrologRequest('quit', this.handleQuitCommand);
-}
+};
 
 GameServer.prototype.requestStatus = function() {
 	this.getPrologRequest('status', handleStatus);
-}
+};
 
 GameServer.prototype.requestMove = function(Piece, FromX, FromY, ToX, ToY) {
+	
 	var src = this.formatCoords(srcX, srcY);
+	if (src == null) {
+		onXMLWarning("source cell coordinats invalid");
+	}
+	
 	var dst = this.formatCoords(dstX, dstY);
-	var method = 'none';
-
+	if (dst == null) {
+		onXMLWarning("destination cell coordinats invalid");
+	}
+	
 	if (piece == 'disc') {
-		method = 'moveDisc';
+		this.getPrologRequest("moveDisc(" + src + "," + dst + ")", this.handleMove);
 	}
 	else if (piece == 'ring') {
-		method = 'moveRing';
+		this.getPrologRequest("moveRing(" + src + "," + dst + ")", this.handleMove);
 	}
-
-	var requestString = method + "(" + src + "," + dst + ")";
-	this.getPrologRequest(requestString, this.handleMove);
 };
 
 GameServer.prototype.requestPlace = function(piece, dstX, dstY) {
+	
 	var src = this.formatCoords(dstX, dstY);
-	var method = 'none';
+	if (src == null) {
+		onXMLWarning("source cell coordinats invalid");
+	}
 
 	if (piece == 'disc') {
-		method = 'placeDisc';
+		this.getPrologRequest("placeDisc(" + src + ")", this.handlePlace);
 	}
 	else if (piece == 'ring') {
-		method = 'placeRing';
+		this.getPrologRequest("placeRing(" + src + ")", this.handlePlace);
 	}
-
-	var requestString = method + "(" + src + ")";
-	this.getPrologRequest(requestString, this.handlePlace);
 };
 
 GameServer.prototype.handleQuitCommand = function(httpResponse) {
+	
 	var serverResponse = httpResponse.currentTarget;
+	
 	if (serverResponse.status == 200 && serverResponse.responseText == 'goodbye') {
 		console.log("SERVER CONNECTION TERMINATED");
 	}
-}
+};
 
 GameServer.prototype.handleGenericCommand = function(httpResponse) {
 	var response = httpResponse.currentTarget;
@@ -84,12 +90,14 @@ GameServer.prototype.handleGenericCommand = function(httpResponse) {
 	else if (responseValidm && response.responseText == 'rej') {
 		console.log("MESsAGE REJECTED!");
 	}
-}
+};
 
 GameServer.prototype.handleMove = function(httpResponse) {
+	
 	var serverResponse = httpResponse.currentTarget;
 
 	if (serverResponse.status == 200) {
+		
 		if (serverResponse.responseText == 'ack') {
 			console.log("MOVE COMPLETE");
 		}
@@ -103,10 +111,11 @@ GameServer.prototype.handleMove = function(httpResponse) {
 };
 
 GameServer.prototype.handlePlace = function(httpResponse) {
-	
+
 	var serverResponse = httpResponse.currentTarget;
 
 	if (serverResponse.status == 200) {
+		
 		if (serverResponse.responseText == 'ack') {
 			console.log("MOVE COMPLETE");
 		}
@@ -119,13 +128,12 @@ GameServer.prototype.handlePlace = function(httpResponse) {
 	}
 };
 
-
-
 GameServer.prototype.handleStatus = function(httpResponse) {
 
 	var serverResponse = httpResponse.currentTarget;
 
 	if (serverResponse.status == 200) { // HTTP OK
+		
 		if (serverResponse.responseText = 'NOP') {
 			console.log("GAME IS STILL RUNNING");
 		}

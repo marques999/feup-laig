@@ -43,6 +43,7 @@ MyRing.prototype.constructor = MyRing;
  */
 MyRing.prototype.display = function() {
 	this.material.apply();
+	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, this.height);
 	this.hole.display();
 	this.scene.translate(0.0, 0.0, -this.height);
@@ -51,4 +52,5 @@ MyRing.prototype.display = function() {
 	this.hole.display();
 	this.scene.scale(this.inner, -this.inner, -1.0);
 	this.invertedCylinder.display();
+	this.scene.popMatrix();
  };

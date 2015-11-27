@@ -15,7 +15,7 @@ function MyDisc(scene, color, height, radius) {
 
 	this.material = new CGFappearance(scene);
 	this.cylinder = new MyCylinder(scene, height, radius, radius, 16, 32);
-	this.circle = new MyCircle(scene, 32);
+	this.circle = new MyCircle(scene, 32, radius);
 	this.height = height;
 
 	if (color == 'black') {
@@ -41,10 +41,12 @@ MyDisc.prototype.constructor = MyDisc;
  */
 MyDisc.prototype.display = function() {
 	this.material.apply();
+	this.scene.pushMatrix();
 	this.cylinder.display();
 	this.scene.translate(0.0, 0.0, this.height);
 	this.circle.display();
 	this.scene.translate(0.0, 0.0, -this.height);
 	this.scene.scale(1.0, -1.0, -1.0);
 	this.circle.display();
+	this.scene.popMatrix();
  };

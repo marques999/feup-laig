@@ -21,7 +21,6 @@ XMLscene.prototype.init = function(application) {
 
 	CGFscene.prototype.init.call(this, application);
 
-	this.circleee = new MyRing(this, 'white', 0.25, 1.0);
 	this.httpServer = new GameServer(null, 'localhost', 8081);
 	this.httpServer.requestPlace('disc', 5, 5);
 	this.httpServer.requestQuit();
@@ -379,8 +378,9 @@ XMLscene.prototype.display = function () {
 			this.lights[i].update();
 		}
 
+		this.translate(-8.0, 0.0, 0.0);
 		this.clock.display();
-		this.circleee.display();
+				this.translate(8.0, 0.0, 0.0);
 		this.graph.display();
 	}
 };
