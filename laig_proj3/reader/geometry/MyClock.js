@@ -31,6 +31,7 @@ MyClock.prototype.constructor = MyClock;
  * @return {null}
  */
 MyClock.prototype.display = function() {
+	this.scene.pushMatrix();
 	this.CLOCK_material.apply();
 	this.DIGITS[this.CLOCK[0]].display();
 	this.scene.translate(1.0, 0.0, 0.0);
@@ -42,6 +43,7 @@ MyClock.prototype.display = function() {
 	this.scene.translate(-1.75, 0.0, 0.0);
 	this.scene.scale(0.5, 1.0, 1.0);
 	this.DIGITS[this.CLOCK[2]].display();
+	this.scene.popMatrix();
 };
 
 MyClock.prototype.update = function(currTime) {

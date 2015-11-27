@@ -20,15 +20,11 @@ XMLscene.prototype.constructor = XMLscene;
 XMLscene.prototype.init = function(application) {
 
 	CGFscene.prototype.init.call(this, application);
-<<<<<<< HEAD
 
-=======
-	
 	this.circleee = new MyRing(this, 'white', 0.25, 1.0);
 	this.httpServer = new GameServer(null, 'localhost', 8081);
 	this.httpServer.requestPlace('disc', 5, 5);
 	this.httpServer.requestQuit();
->>>>>>> origin/master
 	this.initCameras();
 	this.initDefaults();
 	this.enableTextures(true);
@@ -382,16 +378,9 @@ XMLscene.prototype.display = function () {
 		for (var i = 0; i < this.activeLights; i++) {
 			this.lights[i].update();
 		}
-<<<<<<< HEAD
-		this.clock.display();
-		//this.graph.display();
-=======
 
-		this.pushMatrix();
-		this.scale(5.0, 5.0, 5.0);
+		this.clock.display();
 		this.circleee.display();
-		this.popMatrix();
 		this.graph.display();
->>>>>>> origin/master
 	}
 };

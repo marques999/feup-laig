@@ -19,6 +19,8 @@ serialInclude([
 	'animation/CircularAnimation.js',
 	'animation/LinearAnimation.js',
 	'geometry/MyPrimitive.js',
+	'geometry/MyClock.js',
+	'geometry/MyClockDigit.js',
 	'geometry/MyCylinder.js',
 	'geometry/MyPatch.js',
 	'geometry/MyPlane.js',
