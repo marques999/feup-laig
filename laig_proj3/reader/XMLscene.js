@@ -18,28 +18,39 @@ XMLscene.prototype.constructor = XMLscene;
  * @return {null}
  */
 XMLscene.prototype.init = function(application) {
+
 	CGFscene.prototype.init.call(this, application);
+
 	this.initCameras();
 	this.initDefaults();
 	this.enableTextures(true);
-	this.initDisplay();
-};
-
-XMLscene.prototype.initDisplay = function() {
-
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(100.0);
 	this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
+	this.resetDisplay();
+};
+
+XMLscene.prototype.resetDisplay = function() {
+
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
+	this.cameraActive = false;
 	this.cameraAngle = 0.0;
+	this.cameraZoom = 0.0;
 	this.animationSpeed = 1.0;
 	this.pauseAnimations = false;
-	this.setUpdatePeriod(1000/60);
+	this.setUpdatePeriod(1000 / 60);
 
 	mat4.identity(this.defaultMatrix);
+}
+
+XMLscene.prototype.loadGraph = function(lsxPath) {
+	this.resetDisplay();
+	this.guiInterface.reset();
+	var myGraph = new MySceneGraph(lsxPath, this);
+	this.guiInterface.setActiveCamera(this.camera);
 }
 
 /**
@@ -50,13 +61,6 @@ XMLscene.prototype.initDisplay = function() {
 XMLscene.prototype.initAxis = function(length) {
 	this.defaultReference = length;
 };
-
-XMLscene.prototype.loadGraph = function(lsxPath) {
-	this.initDisplay();
-	this.guiInterface.reset();
-	var myGraph = new MySceneGraph(lsxPath, this);
-	this.guiInterface.setActiveCamera(this.camera);
-}
 
 /**
  * cria um observador na cena com os valores por omissão
@@ -79,6 +83,7 @@ XMLscene.prototype.initDefaults = function() {
 	this.defaultRotationAxis = [];
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
+	this.clock = new MyClock(this);
 };
 
 /**
@@ -277,11 +282,20 @@ XMLscene.prototype.onGraphLoaded = function() {
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[2], this.defaultRotationAxis[2]);
 	mat4.scale(this.defaultMatrix, this.defaultMatrix, this.defaultScale);
 
-	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
-		this.pushLight('default', true, [2, 3, 3, 1], [0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0], [0.1, 0.1, 0.1, 1.0]);
+		this.initLights();
 	}
 };
+
+XMLscene.prototype.initLights = function() {
+	this.lights[0].setPosition(2.0, 3.0, 3.0, 1.0);
+	this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
+	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[0].setSpecular(0.1, 0.1, 0.1, 1.0);
+	this.lights[0].setVisible(true);
+	this.lights[0].enable();
+	this.guiInterface.pushLight('default', this.activeLights++, true);
+}
 
 /**
  * altera o modo de reprodução de todas as animações presentes na cena
@@ -292,13 +306,50 @@ XMLscene.prototype.setAnimationLoop = function(loopValue) {
 	this.graph.loadedOk && this.graph.setAnimationLoop(loopValue);
 };
 
+XMLscene.prototype.processCamera = function(deltaTime) {
+
+	if (this.cameraZoomAmount > 0 && this.cameraZoom < this.cameraTargetZoom) {
+		this.cameraZoom += this.cameraZoomAmount * deltaTime;
+		this.camera.zoom(this.cameraZoomAmount * deltaTime);
+	}
+	else if (this.cameraZoomAmount < 0 && this.cameraZoom > this.cameraTargetZoom ) {
+		this.cameraZoom += this.cameraZoomAmount * deltaTime;
+		this.camera.zoom(this.cameraZoomAmount * deltaTime);
+	}
+	else {
+		this.cameraActive = false;
+	}
+}
+
+XMLscene.prototype.zoomOut = function() {
+	this.cameraActive = true;
+	this.cameraZoomAmount = -4.0;
+	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
+}
+
+XMLscene.prototype.zoomIn = function() {
+	this.cameraActive = true;
+	this.cameraZoomAmount = 4.0;
+	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
+}
+
 /**
  * callback executado periodicamente para atualizar as animações presentes na cena
  * @param {Number} currTime - tempo atual (em milisegundos)
  * @return {null}
  */
 XMLscene.prototype.update = function(currTime) {
-	this.graph.loadedOk && !this.pauseAnimations && this.graph.processAnimations(this.animationSpeed * (currTime - this.lastUpdate) * 0.001);
+	
+	if (!this.graph.loadedOk || this.pauseAnimations) {
+		return;
+	} 
+
+	this.clock.update(currTime);
+	if (this.cameraActive) {
+		this.processCamera(3.0 * (currTime - this.lastUpdate) * 0.001);
+	}
+
+	this.graph.processAnimations(this.animationSpeed * (currTime - this.lastUpdate) * 0.001);
 };
 
 /**
@@ -311,8 +362,9 @@ XMLscene.prototype.display = function () {
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 	this.updateProjectionMatrix();
 	this.loadIdentity();
-	this.rotate(this.cameraAngle, 0, 1, 0);
+	
 	this.applyViewMatrix();
+	
 	this.multMatrix(this.defaultMatrix);
 	this.axis.display();
 	this.setDefaultAppearance();
@@ -322,7 +374,7 @@ XMLscene.prototype.display = function () {
 		for (var i = 0; i < this.activeLights; i++) {
 			this.lights[i].update();
 		}
-
-		this.graph.display();
+		this.clock.display();
+		//this.graph.display();
 	}
 };

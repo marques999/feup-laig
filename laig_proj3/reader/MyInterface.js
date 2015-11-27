@@ -25,9 +25,9 @@ MyInterface.prototype.init = function(application) {
 	this.updatePeriod = 60;
 
 	this.gameScenes = {
-		'Moon': 'example.lsx',
-		'Rocket': 'MyVehicle.lsx',
-		'Terrain': 'MyLandscape.lsx'
+		'Apollo PT': 'MyShuttle.lsx',
+		'Billiards': 'MyBilliards.lsx',
+		'Solar System': 'MyPlanets.lsx'
 	};
 
 	this.gui = new dat.GUI();
@@ -45,6 +45,7 @@ MyInterface.prototype.reset = function() {
 
 	var self = this;
 
+	/*****************/
 	if (this.sceneGroup != undefined && this.sceneGroup != null) {
 		this.deleteFolder("Scene");
 	}
@@ -56,8 +57,17 @@ MyInterface.prototype.reset = function() {
 		self.scene.loadGraph(currentScene);
 	});
 
-	this.sceneGroup.add(this.scene, "cameraAngle", -Math.PI, Math.PI);
+	this.sceneGroup.add(this.scene, "cameraAngle", -0.1, 0.1);
+	/*****************/
+	if (this.camerasGroup != undefined && this.camerasGroup != null) {
+		this.deleteFolder("Cameras");
+	}
 
+	this.camerasGroup = this.gui.addFolder("Cameras");
+	this.camerasGroup.open();
+	this.camerasGroup.add(this.scene, "zoomIn");
+	this.camerasGroup.add(this.scene, "zoomOut");
+	/*****************/
 	if (this.animationsGroup != undefined && this.animationsGroup != null) {
 		this.deleteFolder("Animations");
 	}
@@ -75,7 +85,7 @@ MyInterface.prototype.reset = function() {
 	this.animationsGroup.add(this, "loopAnimations").onChange(function(loopValue) {
 		self.scene.setAnimationLoop(loopValue);
 	});
-
+	/*****************/
 	if (this.lightsGroup != undefined && this.lightsGroup != null) {
 		this.deleteFolder("Lights");
 	}

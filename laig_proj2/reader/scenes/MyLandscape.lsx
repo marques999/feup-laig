@@ -10,7 +10,7 @@
 	</INITIALS>
 	<ILLUMINATION>
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
-		<background r="0.53" g="0.45" b="0.8" a="1.0" />
+		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
 	<LIGHTS>
 		<LIGHT id="luz1">
@@ -37,22 +37,8 @@
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 	</MATERIALS>
-	<ANIMATIONS>
-		<ANIMATION id="first" span="2.0" type="linear">
-			<controlpoint x="8.0" y="0.0" z="0.0" />
-			<controlpoint x="-2.0" y="0.0" z="0.0" />
-		</ANIMATION>
-		<ANIMATION id="second" span="1.0" type="circular" center="0.0 0.0 0.0" radius="2.0" startang="-180" rotang="90">
-		</ANIMATION>
-		<ANIMATION id="third" span="2.0" type="linear">
-			<controlpoint x="0.0" y="0.0" z="2.0" />
-			<controlpoint x="0.0" y="0.0" z="8.0" />
-		</ANIMATION>
-	</ANIMATIONS>
 	<LEAVES>
 		<LEAF id="myterrain" type="terrain" texture="scenes/images/new_terrain.jpg" heightmap="scenes/images/test_heightmap.png" />
-		<LEAF id="myplanet" type="sphere" args="1.0 32 32"/>
-		<LEAF id="mytriangle" type="triangle" args="0.0 12.0 1.0 3.0 12.0 0.0 0.0 12.0 -1.0" />
 	</LEAVES>
 	<NODES>
 		<ROOT id="node_scene" />
@@ -60,36 +46,7 @@
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
 			<DESCENDANTS>
-				<DESCENDANT id="node_terra" />
-				<DESCENDANT id="node_mars" />
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="node_mars">
-			<MATERIAL id="null" />
-			<TEXTURE id="null" />
-			<SCALE sx="40.0" sy="25.0" sz="40.0"/>
-			<DESCENDANTS>
 				<DESCENDANT id="myterrain" />
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="node_terra">
-			<MATERIAL id="null" />
-			<TEXTURE id="null" />
-			<SCALE sx="10.0" sy="10.0" sz="10.0"/>
-			<DESCENDANTS>
-				<DESCENDANT id="myplanet" />
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="node_vehicle">
-			<MATERIAL id="material_green" />
-			<TEXTURE id="null" />
-			<ANIMATIONREF>
-				<ANIMATION id="first"/>
-				<ANIMATION id="second"/>
-				<ANIMATION id="third"/>
-			</ANIMATIONREF>
-			<DESCENDANTS>
-				<DESCENDANT id="mytriangle" />
 			</DESCENDANTS>
 		</NODE>
 	</NODES>
