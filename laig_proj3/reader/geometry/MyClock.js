@@ -11,6 +11,7 @@ function MyClock(scene) {
 	MyPrimitive.call(this, scene);
 
 	this.DIGITS = [];
+	this.currentSeconds = 0.0;
 	this.CLOCK = [10, 10, 11, 10, 10];
 	this.texelLength = 1/16;
 
@@ -19,6 +20,7 @@ function MyClock(scene) {
 	}
 
 	this.DIGITS[11] = new MyClockDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
+	this.DIGITS[12] = new MyClockDigit(scene, (12/16), (13/16));
 	this.CLOCK_material = new CGFappearance(scene);
 	this.CLOCK_material.loadTexture("scenes/images/clock.png");
 };
@@ -46,10 +48,17 @@ MyClock.prototype.display = function() {
 	this.scene.popMatrix();
 };
 
-MyClock.prototype.update = function(currTime) {
+MyClock.prototype.update = function(currTime, lastUpdate) {
 
-	var elapsedMinutes = Math.trunc((currTime / 1000 / 60) % 60);
-	var elapsedHours = Math.trunc((currTime / 1000 / 60 / 60) % 12);
+	var currentSeconds = currTime / 1000;
+	var elapsedMinutes = Math.trunc((currentSeconds / 60) % 60);
+	var elapsedHours = Math.trunc((currentSeconds / 60 / 60) % 24);
+	this.currentSeconds += currTime - lastUpdate;
+
+	if (this.currentSeconds > 500) {
+		this.currentSeconds = 0;
+		this.CLOCK[2] ^= 7;
+	}
 
 	this.CLOCK[0] = Math.trunc(elapsedHours / 10) - 1;
 	if (this.CLOCK[0] < 0) {

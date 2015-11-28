@@ -1,7 +1,7 @@
 <SCENE>
 	<INITIALS>
-		<frustum near="0.1" far="500" />
-		<translation x="-25.0" y="-40.0" z="-45.0" />
+		<frustum near="0.1" far="200" />
+		<translation x="-15.0" y="-20.0" z="-20.0" />
 		<rotation axis="y" angle="60.0" />
 		<rotation axis="x" angle="-35.0" />
 		<rotation axis="z" angle="-10.0" />

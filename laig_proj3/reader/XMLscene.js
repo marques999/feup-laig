@@ -347,7 +347,7 @@ XMLscene.prototype.update = function(currTime) {
 		return;
 	} 
 
-	this.clock.update(currTime);
+	this.clock.update(currTime, this.lastUpdate);
 	if (this.cameraActive) {
 		this.processCamera(3.0 * (currTime - this.lastUpdate) * 0.001);
 	}
