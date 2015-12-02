@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'MyDisc'
+ * construtor default da classe 'ObjectRing'
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
@@ -9,44 +9,48 @@
  * @param {Number} slices - número de secçoes da esfera em torno do raio
  * @return {null}
  */
-function MyDisc(scene, color, height, radius) {
+function ObjectRing(scene, color, inner, height)  {
 
-	MyPrimitive.call(this, scene);
+	GamePiece.call(this, scene);
 
 	this.material = new CGFappearance(scene);
-	this.cylinder = new MyCylinder(scene, height, radius, radius, 16, 32);
-	this.circle = new MyCircle(scene, 32, radius);
+	this.invertedCylinder = new MyCylinderInverted(scene, height, 1.0, 1.0, 16, 32);
+	this.cylinder = new MyCylinder(scene, height, 1.0, 1.0, 16, 32);
+	this.hole = new MyCircleHole(scene, 32, inner);
+	this.inner = 1.0 - inner;
 	this.height = height;
 
 	if (color == 'black') {
 		this.material.setDiffuse(0.05, 0.05, 0.05, 0.6);
 		this.material.setAmbient(0.05, 0.05, 0.05, 0.2);
-		this.material.setSpecular(1.0, 1.0, 1.0, 0.5);
+		this.material.setSpecular(1.0, 1.0, 1.0, 0.1);
 		this.material.setShininess(30);
 	}
 	else if (color == 'white') {
 		this.material.setDiffuse(0.95, 0.95, 0.95, 0.6);
 		this.material.setAmbient(0.95, 0.95, 0.95, 0.2);
-		this.material.setSpecular(1.0, 1.0, 1.0, 0.5);
+		this.material.setSpecular(1.0, 1.0, 1.0, 0.1);
 		this.material.setShininess(30);
 	}
 };
 
-MyDisc.prototype = Object.create(MyPrimitive.prototype);
-MyDisc.prototype.constructor = MyDisc;
+ObjectRing.prototype = Object.create(GamePiece.prototype);
+ObjectRing.prototype.constructor = ObjectRing;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyDisc'
+ * inicializa os buffers WebGL da primitiva 'ObjectRing'
  * @return {null}
  */
-MyDisc.prototype.display = function() {
+ObjectRing.prototype.display = function() {
 	this.material.apply();
 	this.scene.pushMatrix();
-	this.cylinder.display();
 	this.scene.translate(0.0, 0.0, this.height);
-	this.circle.display();
+	this.hole.display();
 	this.scene.translate(0.0, 0.0, -this.height);
+	this.cylinder.display();
 	this.scene.scale(1.0, -1.0, -1.0);
-	this.circle.display();
+	this.hole.display();
+	this.scene.scale(this.inner, -this.inner, -1.0);
+	this.invertedCylinder.display();
 	this.scene.popMatrix();
  };

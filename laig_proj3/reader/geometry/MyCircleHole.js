@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'MyHoleCircle'
+ * construtor default da classe 'MyCircleHole'
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
@@ -9,9 +9,9 @@
  * @param {Number} slices - número de secçoes da esfera em torno do raio
  * @return {null}
  */
-function MyHoleCircle(scene, slices, width) {
+function MyCircleHole(scene, slices, width) {
 
-	CGFobject.call(this, scene);
+	MyPrimitive.call(this, scene);
 
 	this.indices = [];
 	this.normals = [];
@@ -22,14 +22,14 @@ function MyHoleCircle(scene, slices, width) {
 	this.initBuffers();
 };
 
-MyHoleCircle.prototype = Object.create(CGFobject.prototype);
-MyHoleCircle.prototype.constructor = MyHoleCircle;
+MyCircleHole.prototype = Object.create(MyPrimitive.prototype);
+MyCircleHole.prototype.constructor = MyCircleHole;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyHoleCircle'
+ * inicializa os buffers WebGL da primitiva 'MyCircleHole'
  * @return {null}
  */
-MyHoleCircle.prototype.initBuffers = function() {
+MyCircleHole.prototype.initBuffers = function() {
 
 	var theta = 0;
 	var thetaIncrement = (2 * Math.PI) / this.slices;

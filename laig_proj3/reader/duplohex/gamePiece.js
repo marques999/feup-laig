@@ -1,5 +1,9 @@
-function GamePiece(scene) {
+function GamePiece(scene, xCoord, yCoord) {
+
 	MyPrimitive.call(this, scene);
+
+	this.X = xCoord || 0.0;
+	this.Y = yCoord || 0.0;
 };
 
 GamePiece.prototype = Object.create(MyPrimitive.prototype);

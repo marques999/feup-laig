@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'MyCircle'
+ * construtor default da classe 'ObjectHexagon'
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
@@ -7,7 +7,7 @@
  * @param {Number} slices - número de divisões do círculo em torno do raio
  * @return {null}
  */
-function MyHexagon(scene, slices, radius) {
+function ObjectHexagon(scene, slices, radius) {
 
 	GamePiece.call(this, scene);
 
@@ -20,14 +20,14 @@ function MyHexagon(scene, slices, radius) {
 	this.initBuffers();
 };
 
-MyHexagon.prototype = Object.create(GamePiece.prototype);
-MyHexagon.prototype.constructor = MyHexagon;
+ObjectHexagon.prototype = Object.create(GamePiece.prototype);
+ObjectHexagon.prototype.constructor = ObjectHexagon;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyCircle'
+ * inicializa os buffers WebGL da primitiva 'ObjectHexagon'
  * @return {null}
  */
-MyHexagon.prototype.initBuffers = function() {
+ObjectHexagon.prototype.initBuffers = function() {
 
 	var halfRadius = this.radius / 2;
 	var thetaIncrement = (2 * Math.PI) / this.slices;

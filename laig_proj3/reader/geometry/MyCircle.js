@@ -9,7 +9,7 @@
  */
 function MyCircle(scene, slices, radius) {
 
-	CGFobject.call(this, scene);
+	MyPrimitive.call(this, scene);
 
 	this.indices = [];
 	this.normals = [];
@@ -20,7 +20,7 @@ function MyCircle(scene, slices, radius) {
 	this.initBuffers();
 };
 
-MyCircle.prototype = Object.create(CGFobject.prototype);
+MyCircle.prototype = Object.create(MyPrimitive.prototype);
 MyCircle.prototype.constructor = MyCircle;
 
 /**

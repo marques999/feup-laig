@@ -38,17 +38,17 @@ GameServer.prototype.requestStatus = function() {
 };
 
 GameServer.prototype.requestMove = function(Piece, FromX, FromY, ToX, ToY) {
-	
+
 	var src = this.formatCoords(srcX, srcY);
 	if (src == null) {
 		onXMLWarning("source cell coordinats invalid");
 	}
-	
+
 	var dst = this.formatCoords(dstX, dstY);
 	if (dst == null) {
 		onXMLWarning("destination cell coordinats invalid");
 	}
-	
+
 	if (piece == 'disc') {
 		this.getPrologRequest("moveDisc(" + src + "," + dst + ")", this.handleMove);
 	}
@@ -58,7 +58,7 @@ GameServer.prototype.requestMove = function(Piece, FromX, FromY, ToX, ToY) {
 };
 
 GameServer.prototype.requestPlace = function(piece, dstX, dstY) {
-	
+
 	var src = this.formatCoords(dstX, dstY);
 	if (src == null) {
 		onXMLWarning("source cell coordinats invalid");
@@ -73,9 +73,9 @@ GameServer.prototype.requestPlace = function(piece, dstX, dstY) {
 };
 
 GameServer.prototype.handleQuitCommand = function(httpResponse) {
-	
+
 	var serverResponse = httpResponse.currentTarget;
-	
+
 	if (serverResponse.status == 200 && serverResponse.responseText == 'goodbye') {
 		console.log("SERVER CONNECTION TERMINATED");
 	}
@@ -93,11 +93,11 @@ GameServer.prototype.handleGenericCommand = function(httpResponse) {
 };
 
 GameServer.prototype.handleMove = function(httpResponse) {
-	
+
 	var serverResponse = httpResponse.currentTarget;
 
 	if (serverResponse.status == 200) {
-		
+
 		if (serverResponse.responseText == 'ack') {
 			console.log("MOVE COMPLETE");
 		}
@@ -115,7 +115,7 @@ GameServer.prototype.handlePlace = function(httpResponse) {
 	var serverResponse = httpResponse.currentTarget;
 
 	if (serverResponse.status == 200) {
-		
+
 		if (serverResponse.responseText == 'ack') {
 			console.log("MOVE COMPLETE");
 		}
@@ -133,7 +133,7 @@ GameServer.prototype.handleStatus = function(httpResponse) {
 	var serverResponse = httpResponse.currentTarget;
 
 	if (serverResponse.status == 200) { // HTTP OK
-		
+
 		if (serverResponse.responseText = 'NOP') {
 			console.log("GAME IS STILL RUNNING");
 		}

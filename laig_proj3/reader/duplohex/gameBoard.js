@@ -1,12 +1,12 @@
 /**
- * construtor default da classe 'MyBoard'
+ * construtor default da classe 'GameBoard'
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
  * @return {null}
  */
-function MyBoard(scene) {
+function GameBoard(scene) {
 
 	MyPrimitive.call(this, scene);
 
@@ -37,23 +37,23 @@ function MyBoard(scene) {
 	}
 };
 
-MyBoard.prototype = Object.create(MyPrimitive.prototype);
-MyBoard.prototype.constructor = MyBoard;
+GameBoard.prototype = Object.create(MyPrimitive.prototype);
+GameBoard.prototype.constructor = GameBoard;
 
 /**
  * desenha a primitva 'MyBoard' na XMLScene correspondente
  * @return {null}
  */
-MyBoard.prototype.display = function() {
+GameBoard.prototype.display = function() {
 
 	this.scene.pushMatrix();
-	
+
 	this.scene.translate(0.0, 0.0,20.0);
 	this.scene.rotate(3 * Math.PI/2, 1, 0, 0);
 	this.scene.scale(5.0, 5.0, 1.0);
 
 	for(var i= 0; i < this.numberCells; i++) {
-		
+
 		var x = i % this.numberColumns;
 		var y = i / this.numberRows;
 		var currentCell = this.cells[i];
@@ -63,23 +63,23 @@ MyBoard.prototype.display = function() {
 		this.scene.translate(currentCell.X, currentCell.Y, 0.0);
 		this.scene.scale(0.5, 0.5, 0.5);
 		this.HEX_MATERIAL.apply();
-		
+
 		currentCell.display();
-		
+
 		if (currentPieces != null && currentPieces != undefined) {
 			this.scene.scale(0.7, 0.7, 0.7);
 
 			if (currentPieces[0] != undefined) {
 					currentPieces[0].display();
 			}
-			
+
 			if (currentPieces[1] != undefined) {
 				currentPieces[1].display();
-			}		
+			}
 		}
-	
+
 		this.scene.popMatrix();
 	}
-	
+
 	this.scene.popMatrix();
  };

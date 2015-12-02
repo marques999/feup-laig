@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'MyClockDigit'
+ * construtor default da classe 'ObjectClockDigit'
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
@@ -10,7 +10,7 @@
  * @param {Number} minY - coordenada Y do vértice inferior direito do retângulo
  * @return {null}
  */
-function MyClockDigit(scene, minS, maxS) {
+function ObjectClockDigit(scene, minS, maxS) {
 
 	MyPrimitive.call(this, scene);
 
@@ -43,5 +43,5 @@ function MyClockDigit(scene, minS, maxS) {
 	this.initGLBuffers();
 };
 
-MyClockDigit.prototype = Object.create(MyPrimitive.prototype);
-MyClockDigit.prototype.constructor = MyClockDigit;
+ObjectClockDigit.prototype = Object.create(MyPrimitive.prototype);
+ObjectClockDigit.prototype.constructor = ObjectClockDigit;

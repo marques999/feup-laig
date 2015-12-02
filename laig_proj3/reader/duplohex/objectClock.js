@@ -1,12 +1,12 @@
 /**
- * construtor default da classe 'MyTailBooster'
+ * construtor default da classe 'ObjectClock'
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
  * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
-function MyClock(scene) {
+function ObjectClock(scene) {
 
 	MyPrimitive.call(this, scene);
 
@@ -16,23 +16,23 @@ function MyClock(scene) {
 	this.texelLength = 1/16;
 
 	for (var i = 0; i <= 10; i++) {
-		this.DIGITS[i] = new MyClockDigit(scene, this.texelLength * i, this.texelLength * (i + 1));
+		this.DIGITS[i] = new ObjectClockDigit(scene, this.texelLength * i, this.texelLength * (i + 1));
 	}
 
-	this.DIGITS[11] = new MyClockDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
-	this.DIGITS[12] = new MyClockDigit(scene, (12/16), (13/16));
+	this.DIGITS[11] = new ObjectClockDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
+	this.DIGITS[12] = new ObjectClockDigit(scene, (12/16), (13/16));
 	this.CLOCK_material = new CGFappearance(scene);
 	this.CLOCK_material.loadTexture("scenes/images/clock.png");
 };
 
-MyClock.prototype = Object.create(MyPrimitive.prototype);
-MyClock.prototype.constructor = MyClock;
+ObjectClock.prototype = Object.create(MyPrimitive.prototype);
+ObjectClock.prototype.constructor = ObjectClock;
 
 /**
- * desenha a primitv5 'MyTailBooster' na XMLScene correspondente
+ * desenha a primitv5 'ObjectClock' na XMLScene correspondente
  * @return {null}
  */
-MyClock.prototype.display = function() {
+ObjectClock.prototype.display = function() {
 	this.scene.pushMatrix();
 	this.CLOCK_material.apply();
 	this.DIGITS[this.CLOCK[0]].display();
@@ -48,7 +48,7 @@ MyClock.prototype.display = function() {
 	this.scene.popMatrix();
 };
 
-MyClock.prototype.update = function(currTime, lastUpdate) {
+ObjectClock.prototype.update = function(currTime, lastUpdate) {
 
 	var currentSeconds = currTime / 1000;
 	var elapsedMinutes = Math.trunc((currentSeconds / 60) % 60);
