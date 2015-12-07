@@ -1,4 +1,4 @@
-/**
+﻿/**
  * construtor default da classe 'LinearAnimation'
  * @constructor
  * @author Diogo Marques
@@ -110,18 +110,29 @@ LinearAnimation.prototype.update = function() {
  */
 LinearAnimation.prototype.step = function(deltaTime) {
 
+	
 	if (this.active) {
 
 		this.currentTime += deltaTime;
 
-		if (this.currentTime >= this.duration[this.currentSection]) {
+		while (this.currentTime >= this.duration[this.currentSection]) {
+
+			var difDelta = this.duration[this.currentSection] - (this.currentTime - deltaTime);
+
+			vec3.scale(this.currentDelta, this.velocity[this.currentSection], difDelta);
+			vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
+			
+			deltaTime -= difDelta;
+						
 			if (++this.currentSection == this.sections) {
-				this.currentSection--;
+				this.currentSection--;				
 				this.stop();
-			}
+				deltaTime = 0;
+				break;
+			}				
 		}
 
 		vec3.scale(this.currentDelta, this.velocity[this.currentSection], deltaTime);
 		vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
 	}
-};
+}; 
