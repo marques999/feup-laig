@@ -4,20 +4,10 @@
  * @augments MyPrimitive
  * @author Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Number} slices - número de divisões do círculo em torno do raio
  * @return {null}
  */
-function ObjectHexagon(scene, slices, radius) {
-
-	GamePiece.call(this, scene);
-
-	this.indices = [];
-	this.normals = [];
-	this.texCoords = [];
-	this.vertices = [];
-	this.radius = radius || 1.0;
-	this.slices = slices;
-	this.initBuffers();
+function ObjectHexagon(scene) {
+	GamePiece.call(this, scene, new MyCircle(scene, 6, 1.0));
 };
 
 ObjectHexagon.prototype = Object.create(GamePiece.prototype);
@@ -29,19 +19,18 @@ ObjectHexagon.prototype.constructor = ObjectHexagon;
  */
 ObjectHexagon.prototype.initBuffers = function() {
 
-	var halfRadius = this.radius / 2;
-	var thetaIncrement = (2 * Math.PI) / this.slices;
+	var thetaIncrement = Math.PI / 3;
 	var vertexNumber = 1;
 	this.vertices.push(0, 0, 0);
-	this.texCoords.push(halfRadius, halfRadius);
+	this.texCoords.push(0.5, 0.5);
 	this.normals.push(0, 0, 1);
 
-	for (var i = 0; i <= this.slices; i++) {
+	for (var i = 0; i <= 6; i++) {
 
-		var x = this.radius * Math.cos(thetaIncrement * i);
-		var y = this.radius * Math.sin(thetaIncrement * i);
+		var x = Math.cos(thetaIncrement * i);
+		var y = Math.sin(thetaIncrement * i);
 		this.vertices.push(x, y, 0);
-		this.texCoords.push(x * halfRadius + halfRadius, halfRadius - y * halfRadius);
+		this.texCoords.push(x * 0.5 + 0.5, 0.5 - y * 0.5);
 		this.normals.push(0, 0, 1);
 
 		if (i > 0) {
@@ -51,4 +40,8 @@ ObjectHexagon.prototype.initBuffers = function() {
 
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
+};
+
+ObjectHexagon.prototype.display = function() {
+	this.object.display();
 };

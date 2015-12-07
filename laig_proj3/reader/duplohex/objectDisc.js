@@ -9,14 +9,13 @@
  * @param {Number} slices - número de secçoes da esfera em torno do raio
  * @return {null}
  */
-function ObjectDisc(scene, color, height, radius) {
+function ObjectDisc(scene, color) {
 
-	GamePiece.call(this, scene);
+	GamePiece.call(this, scene, null);
 
 	this.material = new CGFappearance(scene);
-	this.cylinder = new MyCylinder(scene, height, radius, radius, 16, 32);
-	this.circle = new MyCircle(scene, 32, radius);
-	this.height = height;
+	this.cylinder = new MyCylinder(scene, 1.0, 0.65, 0.65, 16, 32);
+	this.circle = new MyCircle(scene, 32, 0.65);
 
 	if (color == 'black') {
 		this.material.setDiffuse(0.05, 0.05, 0.05, 0.6);
@@ -43,9 +42,9 @@ ObjectDisc.prototype.display = function() {
 	this.material.apply();
 	this.scene.pushMatrix();
 	this.cylinder.display();
-	this.scene.translate(0.0, 0.0, this.height);
+	this.scene.translate(0.0, 0.0, 1.0);
 	this.circle.display();
-	this.scene.translate(0.0, 0.0, -this.height);
+	this.scene.translate(0.0, 0.0, -1.0);
 	this.scene.scale(1.0, -1.0, -1.0);
 	this.circle.display();
 	this.scene.popMatrix();

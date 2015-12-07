@@ -245,7 +245,7 @@ LeafParser.prototype.readPlane = function(id, root) {
 
 LeafParser.prototype.readTest = function(id, root) {
 	
-	this.result = new MyBoard(this.scene);	
+	this.result = new GameBoard(this.scene);	
 };
 
 /**

@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'ObjectClock'
+ * construtor default da classe 'objectClock'
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
@@ -29,7 +29,7 @@ ObjectClock.prototype = Object.create(MyPrimitive.prototype);
 ObjectClock.prototype.constructor = ObjectClock;
 
 /**
- * desenha a primitv5 'ObjectClock' na XMLScene correspondente
+ * desenha a primitva 'objectClock' na XMLScene correspondente
  * @return {null}
  */
 ObjectClock.prototype.display = function() {

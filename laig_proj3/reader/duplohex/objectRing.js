@@ -11,14 +11,12 @@
  */
 function ObjectRing(scene, color, inner, height)  {
 
-	GamePiece.call(this, scene);
+	GamePiece.call(this, scene, null);
 
 	this.material = new CGFappearance(scene);
-	this.invertedCylinder = new MyCylinderInverted(scene, height, 1.0, 1.0, 16, 32);
-	this.cylinder = new MyCylinder(scene, height, 1.0, 1.0, 16, 32);
-	this.hole = new MyCircleHole(scene, 32, inner);
-	this.inner = 1.0 - inner;
-	this.height = height;
+	this.invertedCylinder = new MyCylinderInverted(scene, 0.85, 1.0, 1.0, 16, 32);
+	this.cylinder = new MyCylinder(scene, 0.85, 1.0, 1.0, 16, 32);
+	this.hole = new MyCircleHole(scene, 32, 0.35);
 
 	if (color == 'black') {
 		this.material.setDiffuse(0.05, 0.05, 0.05, 0.6);
@@ -44,13 +42,13 @@ ObjectRing.prototype.constructor = ObjectRing;
 ObjectRing.prototype.display = function() {
 	this.material.apply();
 	this.scene.pushMatrix();
-	this.scene.translate(0.0, 0.0, this.height);
+	this.scene.translate(0.0, 0.0, 0.85);
 	this.hole.display();
-	this.scene.translate(0.0, 0.0, -this.height);
+	this.scene.translate(0.0, 0.0, -0.85);
 	this.cylinder.display();
 	this.scene.scale(1.0, -1.0, -1.0);
 	this.hole.display();
-	this.scene.scale(this.inner, -this.inner, -1.0);
+	this.scene.scale(0.65, -0.65, -1.0);
 	this.invertedCylinder.display();
 	this.scene.popMatrix();
  };

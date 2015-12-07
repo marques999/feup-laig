@@ -18,21 +18,70 @@ XMLscene.prototype.constructor = XMLscene;
  * @return {null}
  */
 XMLscene.prototype.init = function(application) {
-
+	//---------------------------------------------------------
 	CGFscene.prototype.init.call(this, application);
-
-	this.httpServer = new GameServer(null, 'localhost', 8081);
-	this.httpServer.requestPlace('disc', 5, 5);
-	this.httpServer.requestQuit();
+	//---------------------------------------------------------
 	this.initCameras();
 	this.initDefaults();
+	this.initGL();
+	this.initServer();
+	this.initGame();
+	//---------------------------------------------------------
 	this.enableTextures(true);
+	this.setPickEnabled(true);
+	this.resetDisplay();
+	//---------------------------------------------------------
+};
+
+XMLscene.prototype.initGL = function() {
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-	this.gl.clearDepth(100.0);
+	this.gl.clearDepth(1000.0);
 	this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
-	this.resetDisplay();
+};
+
+XMLscene.prototype.initServer = function() {
+	this.httpServer = new GameServer(null, 'localhost', 8081);
+	this.httpServer.requestPlace('disc', 5, 5);
+	this.httpServer.requestQuit();
+}
+
+XMLscene.prototype.initGame = function() {
+	
+	this.elapsedMillis = 0.0;
+	this.board = new GameBoard(this);
+	this.player = [];
+
+	this.player[0] = {
+		color: 'white',
+		discs: 24,
+		rings: 24,
+		next: true
+	}
+
+	this.player[1] = {
+		color: 'black',
+		discs: 24,
+		rings: 24,
+		next: false
+	}
+}
+
+XMLscene.prototype.updatePicking = function() {
+
+	if (this.pickMode || this.pickResults == null || this.pickResults.length <= 0) {
+		return;
+	}
+
+	for (var i = 0; i <this.pickResults.length; i++) {
+		
+		if (this.pickResults[i][0]) {
+			this.board.updatePicking(this.pickResults[i][1]);
+		}
+	}
+		
+	this.pickResults.splice(0,this.pickResults.length);	
 };
 
 XMLscene.prototype.resetDisplay = function() {
@@ -86,7 +135,8 @@ XMLscene.prototype.initDefaults = function() {
 	this.defaultRotationAxis = [];
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
-	this.clock = new MyClock(this);
+	this.clock = new ObjectClock(this);
+	this.score = new ObjectScore(this);
 };
 
 /**
@@ -343,15 +393,27 @@ XMLscene.prototype.zoomIn = function() {
  */
 XMLscene.prototype.update = function(currTime) {
 	
-	if (!this.graph.loadedOk || this.pauseAnimations) {
+	this.updatePicking();
+	this.clearPickRegistration();
+
+	if (this.pauseAnimations) {
 		return;
 	} 
 
+	this.elapsedMillis += (currTime - this.lastUpdate);
 	this.clock.update(currTime, this.lastUpdate);
+
+	if (this.elapsedMillis > 200) {
+		this.elapsedMillis = 0;
+		this.score.update(this.player[0].discs++, this.player[0].rings++);
+	}
+
 	if (this.cameraActive) {
 		this.processCamera(3.0 * (currTime - this.lastUpdate) * 0.001);
 	}
 
+	this.updatePicking();
+	this.clearPickRegistration();
 	this.graph.processAnimations(this.animationSpeed * (currTime - this.lastUpdate) * 0.001);
 };
 
@@ -380,7 +442,8 @@ XMLscene.prototype.display = function () {
 
 		this.translate(-8.0, 0.0, 0.0);
 		this.clock.display();
-				this.translate(8.0, 0.0, 0.0);
-		this.graph.display();
+		this.translate(8.0, 0.0, 0.0);
+		this.score.display();
+		this.board.display();
 	}
 };

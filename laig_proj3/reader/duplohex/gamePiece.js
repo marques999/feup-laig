@@ -1,18 +1,49 @@
-function GamePiece(scene, xCoord, yCoord) {
+function GamePiece(scene, object) {
 
 	MyPrimitive.call(this, scene);
 
-	this.X = xCoord || 0.0;
-	this.Y = yCoord || 0.0;
+	this.coords = {
+		x: 0.0,
+		y: 0.0,
+		z: 0.0
+	};
+
+	this.position = {
+		x: 0.0,
+		y: 0.0,
+		z: 0.0
+	};
+
+	this.object = object;
 };
 
 GamePiece.prototype = Object.create(MyPrimitive.prototype);
 GamePiece.prototype.constructor = GamePiece;
 
-GamePiece.prototype.setX = function(xCoord) {
-	this.X = xCoord;
+GamePiece.prototype.setCoords = function(coordX, coordY, coordZ) {
+    
+    this.coords = {
+    	x: coordX,
+    	y: coordY,
+    	z: coordZ 
+	};
+
+	this.position = {
+		x: coordX * 0.75,
+		y: coordY * Math.cos(30*Math.PI/180) + 0.5*coordX*Math.cos(30*Math.PI/180),
+		z: 0.0
+	};
 };
 
-GamePiece.prototype.setY = function(yCoord) {
-	this.Y = yCoord;
+GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
+	
+	this.position = {
+		x: coordX,
+		y: coordY,
+		z: coordZ 
+	};
+};
+
+GamePiece.prototype.display = function() {
+	this.object.display();
 };
