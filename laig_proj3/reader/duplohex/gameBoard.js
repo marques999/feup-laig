@@ -13,23 +13,40 @@ function GameBoard(scene) {
 	//--------------------------------------------------------	
 	this.baseXsize = 5.0;
 	this.baseYsize = 5.0;
-
+	this.elapsedMillis = 0.0;
 	this.baseXpos = -2.25;
 	this.baseYpos = 0.0;
 	this.baseZpos = -4.5*Math.cos(30*Math.PI/180);
-
+	this.currentId = 0;
 	this.numberRows = 7;
 	this.numberColumns = 7;
 	this.numberCells = this.numberRows * this.numberColumns;
 	//--------------------------------------------------------
 
+	this.player1 = {
+		color: 'white',
+		discs: 24,
+		rings: 24,
+		next: true
+	}
+
+	this.player2 = {
+		color: 'black',
+		discs: 24,
+		rings: 24,
+		next: false
+	}
 	//--------------------------------------------------------
 
 	this.hexagon = new MyCircle(scene, 6);
 	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
 	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);		
-	this.pieceHolder = new ObjectBox(scene, this.baseXsize, this.baseYsize);
+	this.p1Holder = new ObjectBox(scene, [0.0, 0.0, 0.0], 'black', 12, 6);
+	this.p2Holder = new ObjectBox(scene, [-17.5, -0.25, -29.0], 'white', 1, 1);
 	this.cells = [];
+	this.clock = new ObjectClock(scene);
+	this.score1 = new ObjectScore(scene);
+	this.score2 = new ObjectScore(scene);
 	this.pieces = [];
 	this.piecesId = [];
 	//--------------------------------------------------------
@@ -39,16 +56,11 @@ function GameBoard(scene) {
 	this.baseTexture = new CGFtexture(this.scene, "scenes/images/hex_board.png");
 	//--------------------------------------------------------
 
-	this.pieces[0] = new ObjectDisc(scene, 'black');
-	this.pieces[1] = new ObjectDisc(scene, 'white');
-	this.pieces[2] = new ObjectRing(scene, 'white');
-	this.pieces[3] = new ObjectRing(scene, 'black');
-	this.pieces[4] = new ObjectRing(scene, 'white');
-	this.pieces[0].setPosition(3, 0, 15);
-	this.pieces[1].setPosition(4, 0, 17);	
-	this.pieces[2].setPosition(8, 0, 15);	
-	this.pieces[3].setPosition(8.5, 1.0, 15);	
-	this.pieces[4].setPosition(10.0, 0.0, 17);
+
+
+
+
+
 	//---------------------------------------------------------
 
 	this.seq = [];
@@ -74,7 +86,6 @@ function GameBoard(scene) {
 
 	for (var i = 0; i < this.numberCells; i++) {
 		this.cells[i] = new ObjectHexagon(scene);
-		this.registerPicking(i);
 		this.cells[i].setCoords(~~(i / this.numberColumns), i % this.numberRows, 0.0);
 	}
 };
@@ -88,18 +99,18 @@ GameBoard.prototype.constructor = GameBoard;
  */
 GameBoard.prototype.display = function() {
 
+	this.scene.resetPicking();
 	this.scene.pushMatrix();
-	this.scene.scale(1.0, 1.0, 1.0);
-		this.scene.rotate(-Math.PI/2, 0.0, 1.0, 0.0);
+	this.scene.rotate(-Math.PI/2, 0.0, 1.0, 0.0);
 	this.scene.translate(0.0, 0.0, 0.0);
+	this.currentId = 0;
 	this.scene.pushMatrix();
 	this.scene.scale(this.baseXsize, 1.0, this.baseYsize); 
 	this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
 	this.scene.translate(this.baseXpos, this.baseZpos, this.baseYpos);
 	this.HEX_MATERIAL.apply();
 
-	for(var i= 0; i < this.numberCells; i++) {
-
+	for(var i = 0; i < this.numberCells; i++) {
 
 		var x = ~~(i / this.numberColumns);
 		var y = i % this.numberRows;
@@ -108,7 +119,7 @@ GameBoard.prototype.display = function() {
 		this.scene.pushMatrix();
 		this.scene.translate(currentPosition.x, currentPosition.y, currentPosition.z);
 		this.scene.scale(0.5, 0.5, 0.5);
-		this.scene.registerForPick(i+1, this.cells[i]);
+		this.scene.registerPicking(this.cells[i]);
 		
 		if (this.selectedId == i + 1) {
 			this.hoverTexture.bind();
@@ -132,31 +143,34 @@ GameBoard.prototype.display = function() {
 	}
 	
 	this.defaultMaterial.apply();
-	this.scene.registerForPick(this.numberCells+1, this.base);
 	this.scene.popMatrix();
 	this.scene.pushMatrix();						
 	this.scene.scale(this.baseXsize*7.0, 1.0, this.baseYsize*12.0);	
 	this.scene.translate(-0.5, -0.5, 0.5);					
-	this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);					
+	this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);		
+	this.scene.registerPicking(this.base);			
 	this.base.display();
 	this.scene.popMatrix();
-
+	this.scene.popMatrix();
+	
+	this.scene.translate(-12.0, 4.0, 0.0);
+	this.clock.display();
+	this.scene.translate(6.0, 0.0, 0.0);
+	this.score1.display();
+	this.scene.translate(0.0, 4.0, 0.0);
+	this.score2.display();
+	this.scene.translate(6.0, -8.0, 0.0);
 	this.scene.pushMatrix();
-	this.scene.translate(-0.5, -0.25, 17.0);
-	this.pieceHolder.display();
-	this.scene.popMatrix();	
 
-	this.scene.pushMatrix();
-	this.scene.translate(-17.5, -0.25, -29.0);		
-	this.pieceHolder.display();
-	this.scene.popMatrix();	
+	this.scene.scale(this.baseXsize*1.5/5.0, this.baseYsize*1.5/5.0, this.baseXsize*1.5/5.0);	
+	this.p1Holder.display();
+	//this.p2Holder.updatePicking();
+	this.p2Holder.display();		
+	this.scene.popMatrix();
 
-	this.scene.pushMatrix();
-	this.scene.scale(this.baseXsize*1.5/5.0, this.baseYsize*1.3/5.0, this.baseXsize*1.5/5.0);			
- 
 	/*for(var i = 0; i < this.pieces.length; i++) {
 		
-		var currentPosition = this.pieces[i].coords;
+		var currentPosition = this.pieces[i].position;
 		this.scene.pushMatrix();
 			
 		if(this.animation != null && this.animationId == i) {
@@ -171,13 +185,10 @@ GameBoard.prototype.display = function() {
 		this.scene.popMatrix();
 	}
 */
-	this.scene.popMatrix();
-	this.scene.popMatrix();
  };
 
-GameBoard.prototype.registerPicking = function(cellId) {
-	this.piecesId[cellId+1] = this.cells[cellId];
-	
+GameBoard.prototype.registerCellPicking = function(cellId) {
+	this.scene.registerForPick(++this.currentId, this.cells[cellId]);
 }
 
  GameBoard.prototype.placePiece = function(pieceId, dstX, dstY)  {
@@ -194,8 +205,8 @@ GameBoard.prototype.registerPicking = function(cellId) {
 	this.pieces[pieceId].setCoords(x2, y2, z2);
 };
 
-GameBoard.prototype.update = function(delta) {
-	if(this.animationId != null) {		
+GameBoard.prototype.update = function(currTime, lastUpdate) {
+/*	if(this.animationId != null) {		
 		this.animation.step(delta);
 		if (!this.animation.active) {			
 			this.animationId = null;			
@@ -205,9 +216,20 @@ GameBoard.prototype.update = function(delta) {
 		this.seqR++;
 		if(this.seqR < this.seq.length)
 			this.placePiece(this.seq[this.seqR][0], this.seq[this.seqR][1], this.seq[this.seqR][2]);
-	}
+	}*/
+
+	this.clock.update(currTime, lastUpdate);
+	this.elapsedMillis += currTime - lastUpdate;
+
+	this.player1.discs = this.p1Holder.getDiscs();
+	this.player1.rings = this.p1Holder.getRings();
+	this.player2.discs = this.p2Holder.getDiscs();
+	this.player2.rings = this.p2Holder.getRings();
+	this.score1.update(this.player1.discs, this.player1.rings);
+	this.score2.update(this.player2.discs, this.player2.rings);
 }
 
 GameBoard.prototype.updatePicking = function(selectedId) {
 	this.selectedId = selectedId;
+	this.p1Holder.removePiece(selectedId);
 }

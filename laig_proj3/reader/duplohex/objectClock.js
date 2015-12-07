@@ -6,12 +6,14 @@
  * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
-function ObjectClock(scene) {
+function ObjectClock(scene, mode) {
 
 	MyPrimitive.call(this, scene);
 
 	this.DIGITS = [];
-	this.currentSeconds = 0.0;
+	this.currentMillis = 0.0;
+	this.elapsedSeconds = 0.0;
+	this.clockMode = mode;
 	this.CLOCK = [10, 10, 11, 10, 10];
 	this.texelLength = 1/16;
 
@@ -21,6 +23,7 @@ function ObjectClock(scene) {
 
 	this.DIGITS[11] = new ObjectClockDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
 	this.DIGITS[12] = new ObjectClockDigit(scene, (12/16), (13/16));
+	this.defaultMaterial = new CGFappearance(scene);
 	this.CLOCK_material = new CGFappearance(scene);
 	this.CLOCK_material.loadTexture("scenes/images/clock.png");
 };
@@ -45,18 +48,31 @@ ObjectClock.prototype.display = function() {
 	this.scene.translate(-1.75, 0.0, 0.0);
 	this.scene.scale(0.5, 1.0, 1.0);
 	this.DIGITS[this.CLOCK[2]].display();
+	this.defaultMaterial.apply();
 	this.scene.popMatrix();
 };
 
 ObjectClock.prototype.update = function(currTime, lastUpdate) {
 
-	var currentSeconds = currTime / 1000;
-	var elapsedMinutes = Math.trunc((currentSeconds / 60) % 60);
-	var elapsedHours = Math.trunc((currentSeconds / 60 / 60) % 24);
-	this.currentSeconds += currTime - lastUpdate;
+	this.currentMillis += currTime - lastUpdate;
 
-	if (this.currentSeconds > 500) {
-		this.currentSeconds = 0;
+	if (lastUpdate <= 0) {
+		lastUpdate = currTime;
+	}
+
+	if (this.clockMode == 'time') {
+		var currentSeconds = currTime / 1000;
+		var elapsedMinutes = ~~((currentSeconds / 60) % 60);
+		var elapsedHours = ~~((currentSeconds / 60 / 60) % 24);
+	}
+	else {
+		this.elapsedSeconds += ((currTime - lastUpdate) / 1000);
+		var elapsedMinutes = ~~(this.elapsedSeconds % 60);
+		var elapsedHours = ~~((this.elapsedSeconds / 60) % 60);
+	}
+
+	if (this.currentMillis > 500) {
+		this.currentMillis = 0;
 		this.CLOCK[2] ^= 7;
 	}
 

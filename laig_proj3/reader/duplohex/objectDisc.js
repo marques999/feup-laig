@@ -9,9 +9,9 @@
  * @param {Number} slices - número de secçoes da esfera em torno do raio
  * @return {null}
  */
-function ObjectDisc(scene, color) {
+function ObjectDisc(scene, color, position) {
 
-	GamePiece.call(this, scene, null);
+	GamePiece.call(this, scene, position);
 
 	this.material = new CGFappearance(scene);
 	this.cylinder = new MyCylinder(scene, 1.0, 0.65, 0.65, 16, 32);

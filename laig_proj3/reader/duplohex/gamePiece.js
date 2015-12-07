@@ -1,4 +1,4 @@
-function GamePiece(scene, object) {
+function GamePiece(scene, position) {
 
 	MyPrimitive.call(this, scene);
 
@@ -8,13 +8,7 @@ function GamePiece(scene, object) {
 		z: 0.0
 	};
 
-	this.position = {
-		x: 0.0,
-		y: 0.0,
-		z: 0.0
-	};
-
-	this.object = object;
+	this.position = position;
 };
 
 GamePiece.prototype = Object.create(MyPrimitive.prototype);
@@ -42,8 +36,4 @@ GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
 		y: coordY,
 		z: coordZ 
 	};
-};
-
-GamePiece.prototype.display = function() {
-	this.object.display();
 };

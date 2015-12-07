@@ -49,7 +49,9 @@ XMLscene.prototype.initServer = function() {
 
 XMLscene.prototype.initGame = function() {
 	
-	this.elapsedMillis = 0.0;
+	this.currentId = 0.0;
+	
+	
 	this.board = new GameBoard(this);
 	this.player = [];
 
@@ -74,10 +76,11 @@ XMLscene.prototype.updatePicking = function() {
 		return;
 	}
 
-	for (var i = 0; i <this.pickResults.length; i++) {
+	for (var i = 0; i < this.pickResults.length; i++) {
 		
 		if (this.pickResults[i][0]) {
 			this.board.updatePicking(this.pickResults[i][1]);
+			console.log("id picked: " + this.pickResults[i][1]);
 		}
 	}
 		
@@ -135,8 +138,7 @@ XMLscene.prototype.initDefaults = function() {
 	this.defaultRotationAxis = [];
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
-	this.clock = new ObjectClock(this);
-	this.score = new ObjectScore(this);
+
 };
 
 /**
@@ -386,6 +388,19 @@ XMLscene.prototype.zoomIn = function() {
 	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
 }
 
+XMLscene.prototype.resetPicking = function() {
+	this.currentId = 0;
+}
+
+XMLscene.prototype.registerPicking = function(object) {
+	this.registerForPick(++this.currentId, object);
+	return this.currentId;
+}
+
+XMLscene.prototype.defaultPicking = function(object) {
+	this.registerForPick(50, object);
+}
+
 /**
  * callback executado periodicamente para atualizar as animações presentes na cena
  * @param {Number} currTime - tempo atual (em milisegundos)
@@ -396,25 +411,18 @@ XMLscene.prototype.update = function(currTime) {
 	this.updatePicking();
 	this.clearPickRegistration();
 
+	var delta = currTime - this.lastUpdate;
+	this.board.update(currTime, this.lastUpdate);
+
 	if (this.pauseAnimations) {
 		return;
 	} 
 
-	this.elapsedMillis += (currTime - this.lastUpdate);
-	this.clock.update(currTime, this.lastUpdate);
-
-	if (this.elapsedMillis > 200) {
-		this.elapsedMillis = 0;
-		this.score.update(this.player[0].discs++, this.player[0].rings++);
-	}
-
 	if (this.cameraActive) {
-		this.processCamera(3.0 * (currTime - this.lastUpdate) * 0.001);
+		this.processCamera(3.0 * delta * 0.001);
 	}
 
-	this.updatePicking();
-	this.clearPickRegistration();
-	this.graph.processAnimations(this.animationSpeed * (currTime - this.lastUpdate) * 0.001);
+	this.graph.processAnimations(this.animationSpeed * delta * 0.001);
 };
 
 /**
@@ -440,10 +448,6 @@ XMLscene.prototype.display = function () {
 			this.lights[i].update();
 		}
 
-		this.translate(-8.0, 0.0, 0.0);
-		this.clock.display();
-		this.translate(8.0, 0.0, 0.0);
-		this.score.display();
 		this.board.display();
 	}
 };

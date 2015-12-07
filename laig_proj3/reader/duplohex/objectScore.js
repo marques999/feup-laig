@@ -22,6 +22,7 @@ function ObjectScore(scene) {
 
 	this.DIGITS[11] = new ObjectClockDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
 	this.DIGITS[12] = new ObjectClockDigit(scene, (12/16), (13/16));
+	this.defaultMaterial = new CGFappearance(scene);
 	this.CLOCK_material = new CGFappearance(scene);
 	this.CLOCK_material.loadTexture("scenes/images/clock.png");
 };
@@ -43,6 +44,7 @@ ObjectScore.prototype.display = function() {
 	this.DIGITS[this.RIGHT_DIGITS[0]].display();
 	this.scene.translate(1.0, 0.0, 0.0);
 	this.DIGITS[this.RIGHT_DIGITS[1]].display();
+	this.defaultMaterial.apply();
 	this.scene.popMatrix();
 };
 

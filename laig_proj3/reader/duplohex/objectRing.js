@@ -9,9 +9,9 @@
  * @param {Number} slices - número de secçoes da esfera em torno do raio
  * @return {null}
  */
-function ObjectRing(scene, color, inner, height)  {
+function ObjectRing(scene, color, position)  {
 
-	GamePiece.call(this, scene, null);
+	GamePiece.call(this, scene, position);
 
 	this.material = new CGFappearance(scene);
 	this.invertedCylinder = new MyCylinderInverted(scene, 0.85, 1.0, 1.0, 16, 32);
