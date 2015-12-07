@@ -98,9 +98,6 @@ LeafParser.prototype.readType = function(id, root, leafType) {
 	else if (leafType == 'plane') {
 		error = this.readPlane(id, root);
 	}
-	else if (leafType == 'test') {
-		error = this.readTest();
-	}
 	else {
 		error = onAttributeInvalid('type', id, root.nodeName);
 	}
@@ -241,11 +238,6 @@ LeafParser.prototype.readPlane = function(id, root) {
 		printSingle('type', 'plane');
 		printSingle('parts', myDivisions);
 	}
-};
-
-LeafParser.prototype.readTest = function(id, root) {
-	
-	this.result = new GameBoard(this.scene);	
 };
 
 /**
