@@ -56,9 +56,14 @@ function GameBoard(scene) {
 	this.baseTexture = new CGFtexture(this.scene, "scenes/images/hex_board.png");
 	//--------------------------------------------------------
 
+	this.gameModes = ['pvp', 'pvb', 'bvb'];
+	this.gameBoard = ['default', 'small', 'diagonal'];
 
-
-
+	this.gameSettings = {
+		mode: 'pvp',
+		board: 'default',
+		difficulty: 0,
+	};
 
 
 	//---------------------------------------------------------
@@ -186,6 +191,15 @@ GameBoard.prototype.display = function() {
 	}
 */
  };
+
+
+GameBoard.prototype.setPlayer1 = function(playerState) {
+	this.player1.discs = playerState.discs;
+	this.player1.rings = playerState.rings;
+	console.log(this.player1.discs);
+	console.log(this.player1.rings);
+};
+
 
 GameBoard.prototype.registerCellPicking = function(cellId) {
 	this.scene.registerForPick(++this.currentId, this.cells[cellId]);

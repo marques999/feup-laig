@@ -18,76 +18,32 @@ XMLscene.prototype.constructor = XMLscene;
  * @return {null}
  */
 XMLscene.prototype.init = function(application) {
-	//---------------------------------------------------------
 	CGFscene.prototype.init.call(this, application);
-	//---------------------------------------------------------
+	
+	this.httpServer = new GameServer(null, 'localhost', 8081);
+	this.httpServer.requestPlace('disc', 5, 5);
+	this.httpServer.requestQuit();
 	this.initCameras();
 	this.initDefaults();
-	this.initGL();
-	this.initGame();
-	this.initServer();
-	//---------------------------------------------------------
 	this.enableTextures(true);
-	this.setPickEnabled(true);
-	this.resetDisplay();
-	//---------------------------------------------------------
+	this.initDisplay();
 };
 
-XMLscene.prototype.initGL = function() {
+XMLscene.prototype.initDisplay = function() {
+
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-	this.gl.clearDepth(1000.0);
+	this.gl.clearDepth(100.0);
 	this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
-};
-
-XMLscene.prototype.initServer = function() {
-	this.httpServer = new GameServer(this.board, 'localhost', 8081);
-	this.httpServer.requestPlaceDisc(5, 5);
-	this.httpServer.requestQuit();
-}
-
-XMLscene.prototype.initGame = function() {
-	this.currentId = 0.0;
-	this.board = new GameBoard(this);
-}
-
-XMLscene.prototype.updatePicking = function() {
-
-	if (this.pickMode || this.pickResults == null || this.pickResults.length <= 0) {
-		return;
-	}
-
-	for (var i = 0; i < this.pickResults.length; i++) {
-		
-		if (this.pickResults[i][0]) {
-			this.board.updatePicking(this.pickResults[i][1]);
-			console.log("id picked: " + this.pickResults[i][1]);
-		}
-	}
-		
-	this.pickResults.splice(0,this.pickResults.length);	
-};
-
-XMLscene.prototype.resetDisplay = function() {
-
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
-	this.cameraActive = false;
 	this.cameraAngle = 0.0;
-	this.cameraZoom = 0.0;
 	this.animationSpeed = 1.0;
 	this.pauseAnimations = false;
-	this.setUpdatePeriod(1000 / 60);
+	this.setUpdatePeriod(1000/60);
 
 	mat4.identity(this.defaultMatrix);
-}
-
-XMLscene.prototype.loadGraph = function(lsxPath) {
-	this.resetDisplay();
-	this.guiInterface.reset();
-	var myGraph = new MySceneGraph(lsxPath, this);
-	this.guiInterface.setActiveCamera(this.camera);
 }
 
 /**
@@ -98,6 +54,13 @@ XMLscene.prototype.loadGraph = function(lsxPath) {
 XMLscene.prototype.initAxis = function(length) {
 	this.defaultReference = length;
 };
+
+XMLscene.prototype.loadGraph = function(lsxPath) {
+	this.initDisplay();
+	this.guiInterface.reset();
+	var myGraph = new MySceneGraph(lsxPath, this);
+	this.guiInterface.setActiveCamera(this.camera);
+}
 
 /**
  * cria um observador na cena com os valores por omissão
@@ -120,7 +83,7 @@ XMLscene.prototype.initDefaults = function() {
 	this.defaultRotationAxis = [];
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
-
+	this.board = new MyBoard(this);
 };
 
 /**
@@ -319,20 +282,11 @@ XMLscene.prototype.onGraphLoaded = function() {
 	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[2], this.defaultRotationAxis[2]);
 	mat4.scale(this.defaultMatrix, this.defaultMatrix, this.defaultScale);
 
+	// INITIALIZE LIGHTS
 	if (this.activeLights == 0) {
-		this.initLights();
+		this.pushLight('default', true, [2, 3, 3, 1], [0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0], [0.1, 0.1, 0.1, 1.0]);
 	}
 };
-
-XMLscene.prototype.initLights = function() {
-	this.lights[0].setPosition(2.0, 3.0, 3.0, 1.0);
-	this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
-	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
-	this.lights[0].setSpecular(0.1, 0.1, 0.1, 1.0);
-	this.lights[0].setVisible(true);
-	this.lights[0].enable();
-	this.guiInterface.pushLight('default', this.activeLights++, true);
-}
 
 /**
  * altera o modo de reprodução de todas as animações presentes na cena
@@ -343,68 +297,23 @@ XMLscene.prototype.setAnimationLoop = function(loopValue) {
 	this.graph.loadedOk && this.graph.setAnimationLoop(loopValue);
 };
 
-XMLscene.prototype.processCamera = function(deltaTime) {
-
-	if (this.cameraZoomAmount > 0 && this.cameraZoom < this.cameraTargetZoom) {
-		this.cameraZoom += this.cameraZoomAmount * deltaTime;
-		this.camera.zoom(this.cameraZoomAmount * deltaTime);
-	}
-	else if (this.cameraZoomAmount < 0 && this.cameraZoom > this.cameraTargetZoom ) {
-		this.cameraZoom += this.cameraZoomAmount * deltaTime;
-		this.camera.zoom(this.cameraZoomAmount * deltaTime);
-	}
-	else {
-		this.cameraActive = false;
-	}
-}
-
-XMLscene.prototype.zoomOut = function() {
-	this.cameraActive = true;
-	this.cameraZoomAmount = -4.0;
-	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
-}
-
-XMLscene.prototype.zoomIn = function() {
-	this.cameraActive = true;
-	this.cameraZoomAmount = 4.0;
-	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
-}
-
-XMLscene.prototype.resetPicking = function() {
-	this.currentId = 0;
-}
-
-XMLscene.prototype.registerPicking = function(object) {
-	this.registerForPick(++this.currentId, object);
-	return this.currentId;
-}
-
-XMLscene.prototype.defaultPicking = function(object) {
-	this.registerForPick(50, object);
-}
-
 /**
  * callback executado periodicamente para atualizar as animações presentes na cena
  * @param {Number} currTime - tempo atual (em milisegundos)
  * @return {null}
  */
 XMLscene.prototype.update = function(currTime) {
-	
-	this.updatePicking();
-	this.clearPickRegistration();
-
-	var delta = currTime - this.lastUpdate;
-	this.board.update(currTime, this.lastUpdate);
-
-	if (this.pauseAnimations) {
+	if (!this.graph.loadedOk || this.pauseAnimations) {
 		return;
 	} 
 
+	this.board.update((currTime - this.lastUpdate) * 0.001);
+	
 	if (this.cameraActive) {
-		this.processCamera(3.0 * delta * 0.001);
+		this.processCamera(3.0 * (currTime - this.lastUpdate) * 0.001);
 	}
 
-	this.graph.processAnimations(this.animationSpeed * delta * 0.001);
+	this.graph.processAnimations(this.animationSpeed * (currTime - this.lastUpdate) * 0.001);
 };
 
 /**
@@ -417,9 +326,8 @@ XMLscene.prototype.display = function () {
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 	this.updateProjectionMatrix();
 	this.loadIdentity();
-	
+	this.rotate(this.cameraAngle, 0, 1, 0);
 	this.applyViewMatrix();
-	
 	this.multMatrix(this.defaultMatrix);
 	this.axis.display();
 	this.setDefaultAppearance();
@@ -429,7 +337,7 @@ XMLscene.prototype.display = function () {
 		for (var i = 0; i < this.activeLights; i++) {
 			this.lights[i].update();
 		}
-
 		this.board.display();
+		this.graph.display();
 	}
 };

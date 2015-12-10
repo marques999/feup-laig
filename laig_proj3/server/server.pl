@@ -114,6 +114,16 @@ parse_input(moveRing(FromX-FromY, ToX-ToY), ack).
 parse_input(init(Gamemode, BotMode), GameMode).
 parse_input(quit, goodbye).
 
+parse_input(playerPieces(black, default), '{"color":"black",discs":24,"rings":24}').
+parse_input(playerPieces(white, default), '{"color":"white",discs":24,"rings":24}').
+parse_input(playerPieces(black, small), '{"color":"black",discs":17,"rings":19}').
+parse_input(playerPieces(white, small), '{"color":"white",discs":18,"rings":18}').
+parse_input(playerPieces(black, diagonal), '{"color":"black",discs":20,"rings":20}').
+parse_input(playerPieces(white, diagonal), '{"color":"white",discs":21,"rings":21}').
+
+
 test(_,[],N) :- N =< 0.
 test(A,[A|Bs],N) :- N1 is N-1, test(A,Bs,N1).
 	
+
+formatJSON(Keys, Values):-
