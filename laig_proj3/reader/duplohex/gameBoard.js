@@ -65,6 +65,35 @@ function GameBoard(scene) {
 	this.baseTexture = new CGFtexture(this.scene, "scenes/images/hex_board.png");
 	//--------------------------------------------------------
 
+<<<<<<< HEAD
+=======
+	this.gameModes = ['pvp', 'pvb', 'bvb'];
+	this.gameBoard = ['default', 'small', 'diagonal'];
+
+	this.gameSettings = {
+		mode: 'pvp',
+		board: 'default',
+		difficulty: 0,
+	};
+
+
+	//---------------------------------------------------------
+
+	this.seq = [];
+	this.seqR = -1;
+	this.selectedId=0;
+	this.seq[0] = [0,1,2];
+	this.seq[1] = [3,3,4];
+	this.seq[2] = [0,2,2];
+	this.seq[3] = [2,5,4];
+	this.seq[4] = [1,4,0];
+	this.seq[5] = [3,3,3];
+	this.seq[6] = [0,3,2];
+	this.seq[7] = [3,3,2];
+	this.seq[8] = [4,1,2];
+	//---------------------------------------------------------
+
+>>>>>>> origin/master
 	this.defaultMaterial = new CGFappearance(scene);
 	/*this.HEX_MATERIAL = new CGFappearance(scene);
 	this.HEX_MATERIAL.setSpecular(0.2, 0.2, 0.2, 0.6);
@@ -151,6 +180,21 @@ GameBoard.prototype.display = function() {
 		//this.box.display();		
 	this.scene.popMatrix();
 
+<<<<<<< HEAD
+=======
+
+GameBoard.prototype.setPlayer1 = function(playerState) {
+	this.player1.discs = playerState.discs;
+	this.player1.rings = playerState.rings;
+	console.log(this.player1.discs);
+	console.log(this.player1.rings);
+};
+
+
+GameBoard.prototype.registerCellPicking = function(cellId) {
+	this.scene.registerForPick(++this.currentId, this.cells[cellId]);
+}
+>>>>>>> origin/master
 
 };
 

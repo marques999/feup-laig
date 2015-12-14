@@ -24,8 +24,8 @@ XMLscene.prototype.init = function(application) {
 	this.initCameras();
 	this.initDefaults();
 	this.initGL();
-	this.initServer();
 	this.initGame();
+	this.initServer();
 	//---------------------------------------------------------
 	this.enableTextures(true);
 	this.setPickEnabled(true);
@@ -42,32 +42,14 @@ XMLscene.prototype.initGL = function() {
 };
 
 XMLscene.prototype.initServer = function() {
-	this.httpServer = new GameServer(null, 'localhost', 8081);
-	this.httpServer.requestPlace('disc', 5, 5);
+	this.httpServer = new GameServer(this.board, 'localhost', 8081);
+	this.httpServer.requestPlaceDisc(5, 5);
 	this.httpServer.requestQuit();
 }
 
 XMLscene.prototype.initGame = function() {
-	
 	this.currentId = 0.0;
-	
-	
 	this.board = new GameBoard(this);
-	this.player = [];
-
-	this.player[0] = {
-		color: 'white',
-		discs: 24,
-		rings: 24,
-		next: true
-	}
-
-	this.player[1] = {
-		color: 'black',
-		discs: 24,
-		rings: 24,
-		next: false
-	}
 }
 
 XMLscene.prototype.updatePicking = function() {

@@ -25,71 +25,216 @@ GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onErr
 	request.send();
 };
 
-GameServer.prototype.requestReset = function() {
-	this.getPrologRequest('reset', this.handleGenericCommand);
+GameServer.prototype.requestReset = function() 
+{
+	this.getPrologRequest('reset', function()
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
+			console.log("SEND COMMAND COMPLETE");
+		}
+		else if (serverResponse.status && serverResponse.responseText == 'rej') {
+			console.log("MESsAGE REJECTED!");
+		}
+	});
 };
 
-GameServer.prototype.requestQuit = function() {
-	this.getPrologRequest('quit', this.handleQuitCommand);
+GameServer.prototype.requestQuit = function() 
+{
+	this.getPrologRequest('quit', function(httpResponse) 
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200 && serverResponse.responseText == 'goodbye') {
+			return true;
+		}
+	});
+
+	return false;
 };
 
-GameServer.prototype.requestStatus = function() {
-	this.getPrologRequest('status', handleStatus);
+GameServer.prototype.setDifficulty = function(difficulty)
+{
+	if (difficulty != 'smart' && difficulty != 'random') {
+		return false;
+	}
+
+	var requestString = 'setDifficulty(' + difficulty + ')';
+
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
+			return true;
+		}
+	});
+
+	return false;
 };
 
-GameServer.prototype.requestMove = function(Piece, FromX, FromY, ToX, ToY) {
-
-	var src = this.formatCoords(srcX, srcY);
-	if (src == null) {
-		onXMLWarning("source cell coordinats invalid");
+GameServer.prototype.setBoard = function(boardType)
+{
+	if (boardType != 'default' && boardType != 'small' && boardType != 'diagonal') {
+		return false;
 	}
 
-	var dst = this.formatCoords(dstX, dstY);
-	if (dst == null) {
-		onXMLWarning("destination cell coordinats invalid");
+	var requestString = 'setBoard(' + boardType + ')';
+
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
+			return true;
+		}
+	});
+
+	return false;
+}
+
+GameServer.prototype.setMode = function(gameMode) {
+	
+	if (gameMode != 'pvp' && gameMode != 'pvb' && gameMode != 'bvb') {
+		return false;
 	}
 
-	if (piece == 'disc') {
-		this.getPrologRequest("moveDisc(" + src + "," + dst + ")", this.handleMove);
+	var requestString = 'setMode(' + gameMode + ')';
+
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
+			return true;
+		}
+	});
+
+	return false;
+}
+
+GameServer.prototype.setColor = function(playerColor)
+{
+	if (playerColor != 'black' && playerColor != 'white')  {
+		return false;
 	}
-	else if (piece == 'ring') {
-		this.getPrologRequest("moveRing(" + src + "," + dst + ")", this.handleMove);
-	}
+
+	var requestString = 'setColor(' + playerColor + ')';
+
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
+			return true;
+		}
+		else {
+			alert("RECEIVED MESSAGE NOT VALID...");
+		}
+	});
+
+	return false;	
+}
+
+GameServer.prototype.requestPlayerInfo = function(playerColor, boardType) 
+{
+	var self = this;
+	var requestString = 'playerPieces(' + playerColor + ',' + boardType + ')';
+
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{	
+		var playerStruct = null;
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200) 
+		{
+			try
+			{
+				playerStruct = JSON.parse(serverResponse.responseText);
+				self.gameBoard.setPlayer1(playerStruct);
+			}
+			catch (e)
+			{
+			    alert(e);
+			}
+		}
+	});
+}
+
+GameServer.prototype.requestBot = function() 
+{
+	var self = this;
+	var requestString = 'botMove';
+
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{	
+		var serverResponse = httpResponse.currentTarget;
+		var botStruct = null;
+
+		if (serverResponse.status == 200) 
+		{
+			try
+			{
+				botStruct = JSON.parse(serverResponse.responseText);
+				self.gameMode.processMove(botStruct);
+			}
+			catch (e)
+			{
+			    alert(e);
+			}
+		}
+	});
+}
+
+GameServer.prototype.requestStatus = function() 
+{
+	this.getPrologRequest('status', function() 
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200) { // HTTP OK
+
+			if (serverResponse.responseText = 'NOP') {
+				console.log("GAME IS STILL RUNNING");
+			}
+			else if (serverResponse.responseText == 'P1W') {
+				console.log("PLAYER 1 WON!");
+			}
+			else if(serverResponse.responseText == 'P1D') {
+				console.log("PLAYER 1 HAS NO PIECES LEFT AND WAS DEFEATED");
+			}
+			else if (serverResponse.responseText == 'P2W') {
+				console.log("PLAYER 2 WON!");
+			}
+			else if (serverResponse.responseText == 'P2D') {
+				console.log("PLAYER 2 HAS NO PIECES LEFT AND WAS DEFEATED");
+			}
+			else {
+				console.log("RECEIVED INVALID MESSAGE");
+			}
+		}
+	});
 };
 
-GameServer.prototype.requestPlace = function(piece, dstX, dstY) {
-
-	var src = this.formatCoords(dstX, dstY);
-	if (src == null) {
-		onXMLWarning("source cell coordinats invalid");
-	}
-
-	if (piece == 'disc') {
-		this.getPrologRequest("placeDisc(" + src + ")", this.handlePlace);
-	}
-	else if (piece == 'ring') {
-		this.getPrologRequest("placeRing(" + src + ")", this.handlePlace);
-	}
+GameServer.prototype.requestMoveDisc = function(Source, Destination) {
+	var sourceString = this.formatMoveCoords('moveDisc', Source, Destination);
+	return this.getPrologRequest(requestString, this.handleMove);
 };
 
-GameServer.prototype.handleQuitCommand = function(httpResponse) {
-
-	var serverResponse = httpResponse.currentTarget;
-
-	if (serverResponse.status == 200 && serverResponse.responseText == 'goodbye') {
-		console.log("SERVER CONNECTION TERMINATED");
-	}
+GameServer.prototype.requestMoveRing = function(Source, Destination) {
+	var sourceString = this.formatMoveCoords('moveRing', Source, Destination);
+	return this.getPrologRequest(requestString, this.handleMove);
 };
 
-GameServer.prototype.handleGenericCommand = function(httpResponse) {
-	var response = httpResponse.currentTarget;
-	var responseValid = response.status == 200;
-	if (responseValid && response.responseText == 'ack') {
-		console.log("SEND COMMAND COMPLETE");
-	}
-	else if (responseValidm && response.responseText == 'rej') {
-		console.log("MESsAGE REJECTED!");
-	}
+GameServer.prototype.requestPlaceDisc = function(Destination) {
+	var requestString = this.formatPlaceCoords('placeDisc', Destination);
+	return this.getPrologRequest(requestString, this.handlePlace);
+};
+
+GameServer.prototype.requestPlaceRing = function(Destination) {
+	var requestString = this.formatPlaceCoords('placeRing', Destination);
+	return this.getPrologRequest(requestString, this.handlePlace);
 };
 
 GameServer.prototype.handleMove = function(httpResponse) {
@@ -99,62 +244,48 @@ GameServer.prototype.handleMove = function(httpResponse) {
 	if (serverResponse.status == 200) {
 
 		if (serverResponse.responseText == 'ack') {
-			console.log("MOVE COMPLETE");
+			return true;
 		}
-		else if (serverResponse.responseText == 'rej') {
-			console.log("INVALID MOVE!");
+
+		if (serverResponse.responseText == 'dst') {
+			alert("INVALID MOVE! Destination cell invalid");
+		}
+		else if (serverResponse.responseText == 'src') {
+			alert("INVALID MOVE! Source cell invalid.");
 		}
 		else {
-			console.log("RECEIVED MESSAGE NOT VALID...");
+			alert("RECEIVED MESSAGE NOT VALID...");
 		}
 	}
+
+	return false;
 };
 
 GameServer.prototype.handlePlace = function(httpResponse) {
 
 	var serverResponse = httpResponse.currentTarget;
 
-	if (serverResponse.status == 200) {
-
-		if (serverResponse.responseText == 'ack') {
-			console.log("MOVE COMPLETE");
-		}
-		else if (serverResponse.responseText == 'rej') {
-			console.log("INVALID MOVE!");
-		}
-		else {
-			console.log("RECEIVED MESSAGE NOT VALID...");
-		}
-	}
-};
-
-GameServer.prototype.handleStatus = function(httpResponse) {
-
-	var serverResponse = httpResponse.currentTarget;
-
 	if (serverResponse.status == 200) { // HTTP OK
 
-		if (serverResponse.responseText = 'NOP') {
-			console.log("GAME IS STILL RUNNING");
+		if (serverResponse.responseText == 'ack') {
+			return true;
 		}
-		else if (serverResponse.responseText == 'P1W') {
-			console.log("PLAYER 1 WON!");
-		}
-		else if(serverResponse.responseText == 'P1D') {
-			console.log("PLAYER 1 HAS NO PIECES LEFT AND WAS DEFEATED");
-		}
-		else if (serverResponse.responseText == 'P2W') {
-			console.log("PLAYER 2 WON!");
-		}
-		else if (serverResponse.responseText == 'P2D') {
-			console.log("PLAYER 2 HAS NO PIECES LEFT AND WAS DEFEATED");
+		
+		if (serverResponse.responseText == 'err') {
+			alert("INVALID MOVE!");
 		}
 		else {
-			console.log("RECEIVED INVALID MESSAGE");
+			alert("RECEIVED MESSAGE NOT VALID...");
 		}
 	}
+
+	return false;
 };
 
-GameServer.prototype.formatCoords = function(x, y) {
-	return x + "-" + y;
+GameServer.prototype.formatPlaceCoords = function(Command, Source) {
+	return Command + '(' + (Source % 7) + '-' + (~~(Source / 7)) + ')';
+};
+
+GameServer.prototype.formatMoveCoords = function(Command, Source, Destination) {
+	return Command + '(' + (Source % 7) + '-' + (~~(Source / 7)) + "," + (Destination % 7) + '-' + (~~(Destination / 7)) + ')';
 };
