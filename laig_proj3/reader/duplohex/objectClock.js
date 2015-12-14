@@ -14,7 +14,7 @@ function ObjectClock(scene, mode) {
 	this.currentMillis = 0.0;
 	this.elapsedSeconds = 0.0;
 	this.clockMode = mode;
-	this.CLOCK = [10, 10, 11, 10, 10];
+	this.CLOCK = [10, 10, 12, 10, 10];
 	this.texelLength = 1/16;
 
 	for (var i = 0; i <= 10; i++) {

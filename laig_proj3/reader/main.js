@@ -59,6 +59,7 @@ serialInclude([
 	'duplohex/objectHexagon.js',
 	'duplohex/objectRing.js',
 	'duplohex/objectScore.js',
+	'duplohex/pieceControler.js',
 	'XMLscene.js',
 	'MySceneGraph.js',
 

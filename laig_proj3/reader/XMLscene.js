@@ -398,7 +398,7 @@ XMLscene.prototype.registerPicking = function(object) {
 }
 
 XMLscene.prototype.defaultPicking = function(object) {
-	this.registerForPick(50, object);
+	this.registerForPick(0, object);
 }
 
 /**
