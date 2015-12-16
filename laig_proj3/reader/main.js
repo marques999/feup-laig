@@ -41,6 +41,7 @@ serialInclude([
 	'geometry/MyVehicle.js',
 	'parser/BaseParser.js',
 	'parser/AnimationParser.js',
+	'parser/BoardParser.js',
 	'parser/GlobalsParser.js',
 	'parser/IlluminationParser.js',
 	'parser/LeafParser.js',
@@ -59,7 +60,7 @@ serialInclude([
 	'duplohex/objectHexagon.js',
 	'duplohex/objectRing.js',
 	'duplohex/objectScore.js',
-	'duplohex/pieceControler.js',
+	'duplohex/pieceController.js',
 	'XMLscene.js',
 	'MySceneGraph.js',
 

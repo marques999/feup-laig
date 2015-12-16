@@ -356,32 +356,40 @@ XMLscene.prototype.processCamera = function(deltaTime) {
 	else {
 		this.cameraActive = false;
 	}
-}
+};
 
 XMLscene.prototype.zoomOut = function() {
 	this.cameraActive = true;
 	this.cameraZoomAmount = -4.0;
 	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
-}
+};
 
 XMLscene.prototype.zoomIn = function() {
 	this.cameraActive = true;
 	this.cameraZoomAmount = 4.0;
 	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
-}
+};
 
 XMLscene.prototype.resetPicking = function() {
 	this.currentId = 0;
-}
+};
 
 XMLscene.prototype.registerPicking = function(object) {
 	this.registerForPick(++this.currentId, object);
 	return this.currentId;
-}
+};
 
 XMLscene.prototype.defaultPicking = function(object) {
 	this.registerForPick(0, object);
-}
+};
+
+XMLscene.prototype.setBoardPosition = function(position) {
+	this.board != null && this.board.setPosition(position);
+};
+
+XMLscene.prototype.setBoardDimensions = function(width, height) {
+	this.board != null && this.board.setDimensions(width, height);
+};
 
 /**
  * callback executado periodicamente para atualizar as animações presentes na cena

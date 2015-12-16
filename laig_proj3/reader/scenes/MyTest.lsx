@@ -12,6 +12,10 @@
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
+	<BOARD>
+		<position x="-2.25" y="0.0" z="-3.9" />
+		<dimensions width="5.0" height="5.0" />
+	</BOARD>
 	<LIGHTS>
 		<LIGHT id="luz1">
 			<enable value="1" />

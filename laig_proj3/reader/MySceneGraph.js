@@ -44,6 +44,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 
 	var rootElement = this.reader.xmlDoc.documentElement;
 	this.animationParser = new AnimationParser(this.reader, this.scene);
+	this.boardParser = new BoardParser(this.reader, this.scene);
 	this.globalsParser = new GlobalsParser(this.reader, this.scene);
 	this.illuminationParser = new IlluminationParser(this.reader, this.scene);
 	this.leafParser = new LeafParser(this.reader, this.scene);
@@ -55,6 +56,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 	var rootParsers = {
 		'INITIALS': this.parseGlobals,
 		'ILLUMINATION': this.parseIllumination,
+		'BOARD': this.parseBoard,
 		'LIGHTS': this.parseLights,
 		'MATERIALS': this.parseMaterials,
 		'TEXTURES': this.parseTextures,
@@ -66,6 +68,7 @@ MySceneGraph.prototype.onXMLReady = function() {
 	var requiredElements = {
 		'INITIALS': true,
 		'ILLUMINATION': true,
+		'BOARD': false,
 		'LIGHTS': true,
 		'MATERIALS': false,
 		'TEXUTRES': false,
@@ -398,6 +401,15 @@ MySceneGraph.prototype.parseGlobals = function(root) {
  */
 MySceneGraph.prototype.parseIllumination = function(root) {
 	return this.illuminationParser.parse(root, 0);
+};
+
+/**
+ * processa todas as entidades presentes no bloco <BOARD> do ficheiro LSX
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <BOARD>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+MySceneGraph.prototype.parseBoard = function(root) {
+	return this.boardParser.parse(root, 0);
 };
 
 /**

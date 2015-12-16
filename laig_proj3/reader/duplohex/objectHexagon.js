@@ -20,32 +20,32 @@ ObjectHexagon.prototype.display = function() {
 
 ObjectHexagon.prototype.getDisc = function() {
 	return this.disc;
-}
+};
 
 ObjectHexagon.prototype.getRing = function() {
 	return this.ring;
-}
+};
 
 ObjectHexagon.prototype.removeDisc = function() {
 	this.disc = null;
-}
+};
 
 ObjectHexagon.prototype.removeRing = function() {
 	this.ring = null;
-}
+};
 
-ObjectHexagon.prototype.insertDisc = function(disc) {
+ObjectHexagon.prototype.setDisc = function(disc) {
 	this.disc = disc;
-}
+};
 
-ObjectHexagon.prototype.insertRing = function(ring) {
+ObjectHexagon.prototype.setRing = function(ring) {
 	this.ring = ring;
-}
+};
 
 ObjectHexagon.prototype.hasDisc = function() {
 	return this.disc != null;
-}
+};
 
 ObjectHexagon.prototype.hasRing = function() {
 	return this.ring != null;
-}
+};

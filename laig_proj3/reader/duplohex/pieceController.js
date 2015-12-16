@@ -185,11 +185,13 @@ PieceController.prototype.display = function() {
 	}
 
 	var piece = this.pieces[pieceId].setColor('default');
-	var piecePosition = this.pieces[pieceId].position;
 
 	var x2 = (this.baseSize[0]/2 + this.baseSize[0]/4)*2/3*x +  this.baseSize[0]*(this.basePos[0]/1.5);
 	var y2 = this.basePos[1];
 	var z2 = -(this.baseSize[1]/2)*2/3*x*Math.cos(30*Math.PI/180) - this.baseSize[1]*y*2/3*Math.cos(30*Math.PI/180) - this.baseSize[1]*(this.basePos[2]/1.5);
+
+
+	var piecePosition = this.pieces[pieceId].position;
 	var dist = vec3.dist([x2, y2 + 6, z2], piecePosition);
 
 	this.animation = new LinearAnimation(dist*0.20, [piecePosition, [piecePosition[0], 3.0, piecePosition[2]], [x2, y2 + 3, z2], [x2, y2, z2]]);
