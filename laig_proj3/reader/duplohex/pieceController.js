@@ -71,7 +71,7 @@ PieceController.prototype.initialize = function() {
 	//--------------------------------------------------------	
 	for (var i = this.p1Rings_start; i < this.p1Rings_end; i++) {
 
-		var nStack = (i - this.player1.discs) % 8;
+		var nStack = (i - this.p1Rings_start) % 8;
 
 		if (this.p1RingStacks[nStack] == undefined) {
 			this.p1RingStacks[nStack] = [];
@@ -89,7 +89,7 @@ PieceController.prototype.initialize = function() {
 	//--------------------------------------------------------	
 	for (var i = this.p2Discs_start; i < this.p2Discs_end; i++) {
 
-		var nStack = i % 8;
+		var nStack = (i - this.p2Discs_start) % 8;
 
 		if (this.p2DiscStacks[nStack] == undefined) {
 			this.p2DiscStacks[nStack] = [];
@@ -107,7 +107,7 @@ PieceController.prototype.initialize = function() {
 	//--------------------------------------------------------	
 	for (var i = this.p2Rings_start; i < this.p2Rings_end; i++) {
 
-		var nStack = (i - this.player2.discs) % 8;
+		var nStack = (i - this.p2Rings_start) % 8;
 
 		if (this.p2RingStacks[nStack] == undefined) {
 			this.p2RingStacks[nStack] = [];
