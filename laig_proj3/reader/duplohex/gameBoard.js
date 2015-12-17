@@ -23,15 +23,15 @@ function GameBoard(scene) {
 	//--------------------------------------------------------
 	this.player1 = {
 		color: 'white',
-		discs: 24,
-		rings: 24,
+		discs: 21,
+		rings: 18,
 		next: true
 	}
 	//--------------------------------------------------------	
 	this.player2 = {
 		color: 'black',
-		discs: 24,
-		rings: 24,
+		discs: 19,
+		rings: 19,
 		next: false
 	}
 	//--------------------------------------------------------
@@ -39,7 +39,9 @@ function GameBoard(scene) {
 	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
 	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);		
 	this.box = new ObjectBox(scene);
-	this.pieces = new PieceController(scene, 19, 19, this.baseSize, this.basePos, this.boxPos);	
+	this.numberDiscs = 19;
+	this.numberRings = 19;
+	this.pieces = new PieceController(scene, this, this.player1, this.player2);	
 	this.cells = [];
 	this.clock = new ObjectClock(scene);
 	this.score1 = new ObjectScore(scene);
@@ -100,7 +102,7 @@ GameBoard.prototype.display = function() {
 		this.scene.scale(0.5, 0.5, 0.5);
 		this.scene.registerPicking(this.cells[i]);
 
-		if (this.selectedCellId == i + 1) {
+		if (this.cells[i].selected) {
 			this.hexTexture.unbind();
 			this.hoverTexture.bind();
 			this.cells[i].display();
@@ -171,8 +173,8 @@ GameBoard.prototype.setPlayer2 = function(playerState) {
 GameBoard.prototype.update = function(currTime, lastUpdate) {
 		
 	this.clock.update(currTime, lastUpdate);
-	this.score1.update(this.player1.discs, this.player1.rings);
-	this.score2.update(this.player2.discs, this.player2.rings);
+	this.score1.update(this.pieces.p1Discs, this.pieces.p1Rings);
+	this.score2.update(this.pieces.p2Discs, this.pieces.p2Rings);
 	
 	var delta = currTime -lastUpdate;
 	var animationPlaying = this.pieces.update(delta * 0.001); 
@@ -181,6 +183,7 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 
 	if (this.animationActive == 1 && !animationPlaying) {
 		this.animationActive = 0;
+		this.unselectActiveCell();
 		this.selectedCellId = null;
 		this.selectedPieceId = null;		
 	}
@@ -188,6 +191,99 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 		this.animationActive = 1;
 	}
 };
+
+GameBoard.prototype.isDisc = function(selectedId) {
+
+	return selectedId < this.numberDiscs || (selectedId >= this.numberDiscs + this.numberRings && selectedId < this.numberDiscs*2 + this.numberRings);
+}
+
+GameBoard.prototype.updatePlaceHints = function(selectedId) {
+	
+	for (var i = 0; i < this.numberCells; i++) {
+		var currentCell = this.cells[i];
+		if (currentCell.isEmpty()) {
+			currentCell.select();
+		}
+	}
+
+}
+
+GameBoard.prototype.updateMoveHints = function(playerState) {
+	if (this.selectedCellId == null) {
+		return;
+	}
+
+	var selectedCell = this.cells[this.selectedCellId];
+	var playerColor = playerState.color;
+console.log(selectedCell.getDisc());
+console.log(selectedCell.getRing());
+	if (selectedCell.getDisc() == playerColor) {
+		
+		console.log("current playeer owns disc");
+	}
+	else if (selectedCell.getRing() == playerColor) {
+
+		console.log("!current player owns ring")
+	}
+	else {
+		console.log("no moves found!");;
+	}
+}
+
+GameBoard.prototype.unselectHints = function() {
+
+	for (var i = 0; i < this.numberCells; i++) {
+		if (this.cells[i].selected && i != this.selectedCellId) {
+			this.cells[i].unselect();
+		}
+	}
+}
+
+GameBoard.prototype.unselectActiveCell = function() {
+
+	if (this.selectedCellId != null && this.selectedCellId != undefined) {
+		this.cells[this.selectedCellId].unselect();
+		this.selectedPieceId = null;
+	}
+}
+
+GameBoard.prototype.insertDisc = function(x, y, player) {
+
+	var index = x * this.numberColumns + y;
+	if (index > 0 && index < this.numberCells) {
+		this.cells[index].setDisc(player.color);
+	}
+};
+
+GameBoard.prototype.insertRing = function(x, y, player) {
+
+	var index = x * this.numberColumns + y;
+	if (index > 0 && index < this.numberCells) {
+		this.cells[index].setRing(player.color);
+	}
+};
+
+GameBoard.prototype.toggleCell = function(selectedId) {
+
+	if (selectedId > this.numberCells) {
+		return;
+	}
+
+	if (this.selectedCellId == selectedId) {
+		this.cells[this.selectedCellId].unselect();
+		this.selectedCellId = null;
+	}
+	else {
+
+		if (this.selectedCellId != undefined && this.selectedCellId != null) {
+			this.cells[this.selectedCellId].unselect();
+		}
+	
+		this.selectedCellId = selectedId;
+		this.cells[this.selectedCellId].select();	
+		this.updateMoveHints(this.player1);
+	}
+}
 
 GameBoard.prototype.updatePicking = function(selectedId) {
 	
@@ -198,22 +294,21 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 	var id = this.pieces.selectPiece(selectedId);
 		
 	if (id == null) {
-		
-		if (selectedId < 50) {
-			this.selectedCellId = selectedId;	
-		}		
+		this.toggleCell(selectedId - 1);
 	}
 	else {
 		this.selectedPieceId = id;
 	} 
 
+	// utilizador seleccionou uma célula primeiro
 	if (this.selectedPieceId == -1 && this.selectedCellId != null) {
-		this.selectedCellId = null;
 		this.selectedPieceId = null;
 		this.pieces.unselectActivePiece();
 	}
 
+	// utilizador seleccionou a célula de destino
 	if (this.selectedPieceId != null && this.selectedCellId != null) {
-		this.pieces.placePiece(this.selectedPieceId, Math.floor((this.selectedCellId - 1)/7), (this.selectedCellId - 1) % 7);			
+		this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId/7), this.selectedCellId % 7);
+		this.unselectHints();
 	}
 };

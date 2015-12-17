@@ -25,7 +25,7 @@ GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onErr
 	request.send();
 };
 
-GameServer.prototype.requestReset = function() 
+GameServer.prototype.requestReset = function()
 {
 	this.getPrologRequest('reset', function()
 	{
@@ -40,9 +40,9 @@ GameServer.prototype.requestReset = function()
 	});
 };
 
-GameServer.prototype.requestQuit = function() 
+GameServer.prototype.requestQuit = function()
 {
-	this.getPrologRequest('quit', function(httpResponse) 
+	this.getPrologRequest('quit', function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
 
@@ -62,7 +62,7 @@ GameServer.prototype.setDifficulty = function(difficulty)
 
 	var requestString = 'setDifficulty(' + difficulty + ')';
 
-	this.getPrologRequest(requestString, function(httpResponse) 
+	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
 
@@ -82,7 +82,7 @@ GameServer.prototype.setBoard = function(boardType)
 
 	var requestString = 'setBoard(' + boardType + ')';
 
-	this.getPrologRequest(requestString, function(httpResponse) 
+	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
 
@@ -95,14 +95,14 @@ GameServer.prototype.setBoard = function(boardType)
 }
 
 GameServer.prototype.setMode = function(gameMode) {
-	
+
 	if (gameMode != 'pvp' && gameMode != 'pvb' && gameMode != 'bvb') {
 		return false;
 	}
 
 	var requestString = 'setMode(' + gameMode + ')';
 
-	this.getPrologRequest(requestString, function(httpResponse) 
+	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
 
@@ -122,7 +122,7 @@ GameServer.prototype.setColor = function(playerColor)
 
 	var requestString = 'setColor(' + playerColor + ')';
 
-	this.getPrologRequest(requestString, function(httpResponse) 
+	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
 
@@ -134,20 +134,20 @@ GameServer.prototype.setColor = function(playerColor)
 		}
 	});
 
-	return false;	
+	return false;
 }
 
-GameServer.prototype.requestPlayerInfo = function(playerColor, boardType) 
+GameServer.prototype.requestPlayerInfo = function(playerColor, boardType)
 {
 	var self = this;
 	var requestString = 'playerPieces(' + playerColor + ',' + boardType + ')';
 
-	this.getPrologRequest(requestString, function(httpResponse) 
-	{	
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
 		var playerStruct = null;
 		var serverResponse = httpResponse.currentTarget;
 
-		if (serverResponse.status == 200) 
+		if (serverResponse.status == 200)
 		{
 			try
 			{
@@ -162,17 +162,17 @@ GameServer.prototype.requestPlayerInfo = function(playerColor, boardType)
 	});
 }
 
-GameServer.prototype.requestBot = function() 
+GameServer.prototype.requestBot = function()
 {
 	var self = this;
 	var requestString = 'botMove';
 
-	this.getPrologRequest(requestString, function(httpResponse) 
-	{	
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
 		var serverResponse = httpResponse.currentTarget;
 		var botStruct = null;
 
-		if (serverResponse.status == 200) 
+		if (serverResponse.status == 200)
 		{
 			try
 			{
@@ -187,9 +187,9 @@ GameServer.prototype.requestBot = function()
 	});
 }
 
-GameServer.prototype.requestStatus = function() 
+GameServer.prototype.requestStatus = function()
 {
-	this.getPrologRequest('status', function() 
+	this.getPrologRequest('status', function()
 	{
 		var serverResponse = httpResponse.currentTarget;
 
@@ -270,7 +270,7 @@ GameServer.prototype.handlePlace = function(httpResponse) {
 		if (serverResponse.responseText == 'ack') {
 			return true;
 		}
-		
+
 		if (serverResponse.responseText == 'err') {
 			alert("INVALID MOVE!");
 		}

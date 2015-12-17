@@ -2,28 +2,29 @@
  * construtor default da classe 'objectClock'
  * @constructor
  * @augments MyPrimitive
- * @author Carlos Samouco
+ * @author Diogo Marques
  * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @return {null}
  */
 function ObjectClock(scene, mode) {
 
 	MyPrimitive.call(this, scene);
-
+	//--------------------------------------------------------	
 	this.DIGITS = [];
+	this.CLOCK = [10, 10, 11, 10, 10];
+	//--------------------------------------------------------	
 	this.currentMillis = 0.0;
 	this.elapsedSeconds = 0.0;
 	this.clockMode = mode;
-	this.CLOCK = [10, 10, 12, 10, 10];
 	this.texelLength = 1/16;
-
+	this.defaultMaterial = new CGFappearance(scene);
+	//--------------------------------------------------------	
 	for (var i = 0; i <= 10; i++) {
 		this.DIGITS[i] = new ObjectClockDigit(scene, this.texelLength * i, this.texelLength * (i + 1));
 	}
-
+	//--------------------------------------------------------	
 	this.DIGITS[11] = new ObjectClockDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
 	this.DIGITS[12] = new ObjectClockDigit(scene, (12/16), (13/16));
-	this.defaultMaterial = new CGFappearance(scene);
 	this.CLOCK_material = new CGFappearance(scene);
 	this.CLOCK_material.loadTexture("scenes/images/clock.png");
 };
@@ -76,22 +77,22 @@ ObjectClock.prototype.update = function(currTime, lastUpdate) {
 		this.CLOCK[2] ^= 7;
 	}
 
-	this.CLOCK[0] = Math.trunc(elapsedHours / 10) - 1;
+	this.CLOCK[0] = ~~(elapsedHours / 10) - 1;
 	if (this.CLOCK[0] < 0) {
 		this.CLOCK[0] = 10;
 	}
 
-	this.CLOCK[1] = Math.trunc(elapsedHours % 10) - 1;
+	this.CLOCK[1] = ~~(elapsedHours % 10) - 1;
 	if (this.CLOCK[1] < 0) {
 		this.CLOCK[1] = 9;
 	}
 
-	this.CLOCK[3] = Math.trunc(elapsedMinutes / 10) - 1;
+	this.CLOCK[3] = ~~(elapsedMinutes / 10) - 1;
 	if (this.CLOCK[3] < 0) {
 		this.CLOCK[3] = 9;
 	}
 
-	this.CLOCK[4] = Math.trunc(elapsedMinutes % 10) - 1;
+	this.CLOCK[4] = ~~(elapsedMinutes % 10) - 1;
 	if (this.CLOCK[4] < 0) {
 		this.CLOCK[4] = 9;
 	}

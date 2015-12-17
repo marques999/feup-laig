@@ -2,13 +2,18 @@
  * construtor default da classe 'ObjectHexagon'
  * @constructor
  * @augments MyPrimitive
- * @author Diogo Marques
+ * @author Carlos Samouco, Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
  * @return {null}
  */
 function ObjectHexagon(scene) {
-	this.circle = new MyCircle(scene, 6, 1.0);
+	
 	GamePiece.call(this, scene, null);
+	//--------------------------------------------------------	
+	this.circle = new MyCircle(scene, 6, 1.0);
+	this.selected = false;
+	this.disc = null;
+	this.ring = null;
 };
 
 ObjectHexagon.prototype = Object.create(GamePiece.prototype);
@@ -49,3 +54,23 @@ ObjectHexagon.prototype.hasDisc = function() {
 ObjectHexagon.prototype.hasRing = function() {
 	return this.ring != null;
 };
+
+ObjectHexagon.prototype.isEmpty = function() {
+	return this.disc == null && this.ring == null;
+};
+
+ObjectHexagon.prototype.isTwopiece = function() {
+	return this.disc != null && this.ring != null;
+}
+
+ObjectHexagon.prototype.isSingle = function() {
+	return !this.isEmpty && !this.isTwopiece;
+}
+
+ObjectHexagon.prototype.select = function() {
+	this.selected = true;
+}
+
+ObjectHexagon.prototype.unselect = function() {
+	this.selected = false;
+}

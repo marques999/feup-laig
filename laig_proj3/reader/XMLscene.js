@@ -431,9 +431,10 @@ XMLscene.prototype.display = function () {
 	this.multMatrix(this.defaultMatrix);
 	this.axis.display();
 	this.setDefaultAppearance();
-
+	
 	if (this.graph.loadedOk) {
-
+		this.graph.display();
+	
 		for (var i = 0; i < this.activeLights; i++) {
 			this.lights[i].update();
 		}

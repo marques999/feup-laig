@@ -1,3 +1,11 @@
+/**
+ * construtor default da classe 'objectBox'
+ * @constructor
+ * @augments MyPrimitive
+ * @author Carlos Samouco
+ * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @return {null}
+ */
 function ObjectBox(scene) {
 	
 	MyPrimitive.call(this, scene);

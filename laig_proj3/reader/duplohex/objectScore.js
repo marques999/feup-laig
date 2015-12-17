@@ -50,22 +50,22 @@ ObjectScore.prototype.display = function() {
 
 ObjectScore.prototype.update = function(player1Score, player2Score) {
 
-	this.LEFT_DIGITS[0] = Math.trunc(player1Score / 10) % 10 - 1;
+	this.LEFT_DIGITS[0] = ~~(player1Score / 10) % 10 - 1;
 	if (this.LEFT_DIGITS[0] < 0) {
 		this.LEFT_DIGITS[0] = 10;
 	}
 
-	this.LEFT_DIGITS[1] = Math.trunc(player1Score % 10) - 1;
+	this.LEFT_DIGITS[1] = ~~(player1Score % 10) - 1;
 	if (this.LEFT_DIGITS[1] < 0) {
 		this.LEFT_DIGITS[1] = 9;
 	}
 
-	this.RIGHT_DIGITS[0] = Math.trunc(player2Score / 10) % 10 - 1;
+	this.RIGHT_DIGITS[0] = ~~(player2Score / 10) % 10 - 1;
 	if (this.RIGHT_DIGITS[0] < 0) {
 		this.RIGHT_DIGITS[0] = 10;
 	}
 
-	this.RIGHT_DIGITS[1] = Math.trunc(player2Score % 10) - 1;
+	this.RIGHT_DIGITS[1] = ~~(player2Score % 10) - 1;
 	if (this.RIGHT_DIGITS[1] < 0) {
 		this.RIGHT_DIGITS[1] = 9;
 	}
