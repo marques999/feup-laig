@@ -12,6 +12,7 @@ function getUrlVars() {
 
 serialInclude([
 	'../lib/CGF.js',
+	'../lib/jquery-2.1.4.min.js',
 	'MyInterface.js',
 	'XMLtexture.js',
 	'XMLnode.js',
@@ -51,6 +52,7 @@ serialInclude([
 	'parser/NodeParser.js',
 	'parser/TextureParser.js',
 	'duplohex/gameBoard.js',
+	'duplohex/gameMenu.js',
 	'duplohex/gamePiece.js',
 	'duplohex/gameServer.js',
 	'duplohex/objectBox.js',

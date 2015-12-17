@@ -31,8 +31,17 @@ XMLscene.prototype.init = function(application) {
 	this.setPickEnabled(true);
 	this.resetDisplay();
 	//---------------------------------------------------------
+	this.cameraPosition = 0.0;
+	this.cameraTarget = 2.0;
 };
 
+XMLscene.prototype.setCameraPosition = function(x) {
+	this.camera.setPosition([0.0, 15.0, 0.0]);
+	this.camera.setTarget([15.0 * Math.sin(x * Math.PI / 180), 5.0, 15.0 * Math.sin(x * Math.PI / 180)]);
+}
+XMLscene.prototype.setCameraTarget = function(x) {
+	
+}
 XMLscene.prototype.initGL = function() {
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(1000.0);
@@ -50,6 +59,8 @@ XMLscene.prototype.initServer = function() {
 XMLscene.prototype.initGame = function() {
 	this.currentId = 0.0;
 	this.board = new GameBoard(this);
+	this.menu = new GameMenu(this);
+	this.menu.loadJSON('menu_difficulty.json');
 }
 
 XMLscene.prototype.updatePicking = function() {
@@ -62,7 +73,6 @@ XMLscene.prototype.updatePicking = function() {
 		
 		if (this.pickResults[i][0]) {
 			this.board.updatePicking(this.pickResults[i][1]);
-			console.log("id picked: " + this.pickResults[i][1]);
 		}
 	}
 		
@@ -105,6 +115,8 @@ XMLscene.prototype.initAxis = function(length) {
  */
 XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
+	this.cameraPosition = this.camera.position[1];
+	this.cameraTarget = this.camera.target[1];
 };
 
 /**
@@ -120,7 +132,6 @@ XMLscene.prototype.initDefaults = function() {
 	this.defaultRotationAxis = [];
 	this.defaultScale = [1.0, 1.0, 1.0];
 	this.defaultTranslate = [0.0, 0.0, 0.0];
-
 };
 
 /**
@@ -403,7 +414,8 @@ XMLscene.prototype.update = function(currTime) {
 
 	var delta = currTime - this.lastUpdate;
 	this.board.update(currTime, this.lastUpdate);
-
+	//this.menu.update(delta);
+	
 	if (this.pauseAnimations) {
 		return;
 	} 

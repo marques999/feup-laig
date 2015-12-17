@@ -57,7 +57,13 @@ MyInterface.prototype.reset = function() {
 		self.scene.loadGraph(currentScene);
 	});
 
-	this.sceneGroup.add(this.scene, "cameraAngle", -0.1, 0.1);
+	this.sceneGroup.add(this.scene, "cameraPosition", 0, 60.0).onChange(function(value) {
+		self.scene.setCameraPosition(value);
+	});
+
+	this.sceneGroup.add(this.scene, "cameraTarget", 0, 360.0).onChange(function(value) {
+		self.scene.setCameraTarget(value);
+	});
 	/*****************/
 	if (this.camerasGroup != undefined && this.camerasGroup != null) {
 		this.deleteFolder("Cameras");
