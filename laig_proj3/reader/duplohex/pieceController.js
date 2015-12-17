@@ -150,17 +150,17 @@ PieceController.prototype.display = function() {
 	this.scene.popMatrix();
  };
 
-PieceController.prototype.placePiece = function(pieceId, x, y)  {
-	//--------------------------------------------------------	
+
+ PieceController.prototype.removeFromStack = function(pieceId, x, y) {
+ 	//--------------------------------------------------------	
 	if (pieceId < this.p1Discs_end) {
 
 		var nStack = pieceId % 8;
 		var top = this.p1DiscStacks[nStack].length - 1;
 
 		if (this.p1DiscStacks[nStack][top] == pieceId) {
-			this.p1DiscStacks[nStack].pop();
-			this.gameBoard.insertDisc(x, y, this.player1);
-			this.player1.discs--;
+			this.p1DiscStacks[nStack].pop();			
+			this.player1.discs--;			
 		}
 
 		if (this.selectedPiece == pieceId){
@@ -174,8 +174,7 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 		var top = this.p1RingStacks[nStack].length - 1;
 
 		if (this.p1RingStacks[nStack][top] == pieceId) {
-			this.p1RingStacks[nStack].pop();
-			this.gameBoard.insertRing(x, y, this.player1);
+			this.p1RingStacks[nStack].pop();			
 			this.player1.rings--;
 		}
 
@@ -190,8 +189,7 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 		var top = this.p2DiscStacks[nStack].length - 1;
 
 		if (this.p2DiscStacks[nStack][top] == pieceId) {
-			this.p2DiscStacks[nStack].pop();
-			this.gameBoard.insertDisc(x, y, this.player2);
+			this.p2DiscStacks[nStack].pop();			
 			this.player2.discs--;
 		}
 
@@ -206,8 +204,7 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 		var top = this.p2RingStacks[nStack].length - 1;
 
 		if (this.p2RingStacks[nStack][top] == pieceId) {
-			this.p2RingStacks[nStack].pop();
-			this.gameBoard.insertRing(x, y, this.player2);
+			this.p2RingStacks[nStack].pop();			
 			this.player2.rings--;
 		}
 
@@ -215,8 +212,16 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 			this.selectedPiece = null;
 		}
 	}
+ }
+
+PieceController.prototype.placePiece = function(pieceId, x, y)  {
+	
 	//--------------------------------------------------------	
 	var piece = this.pieces[pieceId];
+
+	if(!piece.wasPlaced()) {
+		this.removeFromStack(pieceId, x, y);		
+	}
 
 	piece.setColor('default');
 
@@ -233,8 +238,22 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 
 	piece.setPosition(x2, y2, z2);
 	piece.setColor('default');
-	piece.place();
+	piece.place(x, y);
 }
+
+PieceController.prototype.pieceAt = function(pieceId) {
+	return this.pieces[pieceId];
+}
+
+
+PieceController.prototype.isDisc = function(pieceId) {
+	return (pieceId >= this.p1Discs_start && pieceId < this.p1Discs_end) || (pieceId >= this.p2Discs_start && pieceId < this.p2Discs_end);
+}
+
+PieceController.prototype.isRing = function(pieceId) {
+	return (pieceId >= this.p1Rings_start && pieceId < this.p1Rings_end) || (pieceId >= this.p2Rings_start && pieceId < this.p2Rings_end);
+}
+
 
 PieceController.prototype.update = function(delta) {
 
@@ -267,10 +286,11 @@ PieceController.prototype.selectPiece = function(pickingId) {
 		return null;
 	}*/
 
-	if (pickingId >= 50 && pickingId <= 49 + this.pieces.length) {
+	var boarSize = this.gameBoard.numberRows*this.gameBoard.numberColumns;
 
-		this.gameBoard.unselectHints();
-		var id = pickingId - 50;
+	if (pickingId >= boarSize + 1 && pickingId <= boarSize + this.pieces.length) {
+		
+		var id = pickingId - boarSize - 1;
 
 		if (this.selectedPiece == id) {
 			this.unselectActivePiece();
@@ -291,8 +311,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 
 			if (this.p1DiscStacks[nStack][top] == id || this.p1DiscStacks[nStack].indexOf(id) == -1) {
 				this.selectedPiece = id;
-				this.pieces[id].setColor('yellow');		
-				this.gameBoard.updatePlaceHints(id);
+				this.pieces[id].setColor('yellow');					
 				return id;
 			}
 		}
@@ -304,7 +323,6 @@ PieceController.prototype.selectPiece = function(pickingId) {
 			if (this.p1RingStacks[nStack][top] == id || this.p1RingStacks[nStack].indexOf(id) == -1) {
 				this.selectedPiece = id;
 				this.pieces[id].setColor('yellow');
-				this.gameBoard.updatePlaceHints(id);
 				return id;
 			}
 		}
@@ -315,8 +333,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 
 			if (this.p2DiscStacks[nStack][top] == id || this.p2DiscStacks[nStack].indexOf(id) == -1) {
 				this.selectedPiece = id;
-				this.pieces[id].setColor('yellow');
-				this.gameBoard.updatePlaceHints(id);
+				this.pieces[id].setColor('yellow');				
 				return id;
 			}
 		}
@@ -327,8 +344,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 
 			if(this.p2RingStacks[nStack][top] == id || this.p2RingStacks[nStack].indexOf(id) == -1) {
 				this.selectedPiece = id;
-				this.pieces[id].setColor('yellow');
-				this.gameBoard.updatePlaceHints(id);
+				this.pieces[id].setColor('yellow');			
 				return id;
 			}
 		}

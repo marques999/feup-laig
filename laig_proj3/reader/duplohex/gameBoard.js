@@ -46,7 +46,7 @@ function GameBoard(scene) {
 	this.clock = new ObjectClock(scene);
 	this.score1 = new ObjectScore(scene);
 	this.score2 = new ObjectScore(scene);
-	this.animationActive = 0;
+	this.animationActive = 0;	
 	//--------------------------------------------------------
 	this.hexTexture = new CGFtexture(this.scene, "scenes/images/hexagon.png");
 	this.hoverTexture = new CGFtexture(this.scene, "scenes/images/hexagon_hover.png");
@@ -197,37 +197,76 @@ GameBoard.prototype.isDisc = function(selectedId) {
 	return selectedId < this.numberDiscs || (selectedId >= this.numberDiscs + this.numberRings && selectedId < this.numberDiscs*2 + this.numberRings);
 }
 
-GameBoard.prototype.updatePlaceHints = function(selectedId) {
-	
-	for (var i = 0; i < this.numberCells; i++) {
-		var currentCell = this.cells[i];
-		if (currentCell.isEmpty()) {
-			currentCell.select();
+GameBoard.prototype.updatePlaceHints = function() {
+
+	if(!this.pieces.pieceAt(this.selectedPieceId).wasPlaced()) {
+		for (var i = 0; i < this.numberCells; i++) {
+			var currentCell = this.cells[i];
+			if (currentCell.isEmpty()) {
+				currentCell.select();
+			}
 		}
 	}
+	else {
+		if(this.updateMoveHints() == 0) {
+			this.pieces.pieceAt(this.selectedPieceId).setColor("red");
+		}
+	}	
 
 }
 
-GameBoard.prototype.updateMoveHints = function(playerState) {
-	if (this.selectedCellId == null) {
-		return;
+GameBoard.prototype.validateMove = function(cellX, cellY) {
+
+	var cellIndex = cellX * this.numberRows + cellY;			
+	var selectedCell = this.cells[cellIndex];
+
+	if(selectedCell.disc != null && selectedCell.ring == null && this.pieces.isRing(this.selectedPieceId)) {		
+		return true;
+	}
+	else if(selectedCell.ring != null && selectedCell.disc == null && this.pieces.isDisc(this.selectedPieceId)) {		
+		return true;
 	}
 
-	var selectedCell = this.cells[this.selectedCellId];
-	var playerColor = playerState.color;
-console.log(selectedCell.getDisc());
-console.log(selectedCell.getRing());
-	if (selectedCell.getDisc() == playerColor) {
-		
-		console.log("current playeer owns disc");
-	}
-	else if (selectedCell.getRing() == playerColor) {
+	return false;
+}
 
-		console.log("!current player owns ring")
+GameBoard.prototype.updateMoveHints = function() {
+
+	
+	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
+	var cellX = selectedPiece.cellX;
+	var cellY = selectedPiece.cellY;
+	var i = 0;
+
+	if(this.cells[cellX*7 + cellY].isTwopiece()) {
+		return 0;
 	}
-	else {
-		console.log("no moves found!");;
+
+	if(cellX - 1 >= 0 && cellY + 1 < 7 && this.validateMove(cellX - 1,cellY + 1)) {
+		this.cells[(cellX - 1)*7 + (cellY + 1)].select();	
+		i++;		
 	}
+	if(cellX + 1 < 7 && cellY - 1 >= 0 && this.validateMove(cellX + 1,cellY - 1)) {
+		this.cells[(cellX + 1)*7 + (cellY - 1)].select();
+		i++;
+	}
+	if(cellX - 1 >= 0 && this.validateMove(cellX - 1,cellY)) {
+		this.cells[(cellX - 1)*7 + cellY].select();
+		i++;
+	}
+	if(cellX + 1 < 7 && this.validateMove(cellX + 1,cellY)) {
+		this.cells[(cellX + 1)*7 + cellY].select();
+		i++;
+	}
+	if(cellY + 1 < 7 && this.validateMove(cellX,cellY + 1)) {
+		this.cells[cellX*7 + (cellY + 1)].select();
+		i++;
+	}
+	if(cellY - 1 >= 0 && this.validateMove(cellX,cellY - 1)) {
+		this.cells[cellX*7 + (cellY - 1)].select();
+		i++;
+	}
+	return i;
 }
 
 GameBoard.prototype.unselectHints = function() {
@@ -247,22 +286,6 @@ GameBoard.prototype.unselectActiveCell = function() {
 	}
 }
 
-GameBoard.prototype.insertDisc = function(x, y, player) {
-
-	var index = x * this.numberColumns + y;
-	if (index > 0 && index < this.numberCells) {
-		this.cells[index].setDisc(player.color);
-	}
-};
-
-GameBoard.prototype.insertRing = function(x, y, player) {
-
-	var index = x * this.numberColumns + y;
-	if (index > 0 && index < this.numberCells) {
-		this.cells[index].setRing(player.color);
-	}
-};
-
 GameBoard.prototype.toggleCell = function(selectedId) {
 
 	if (selectedId > this.numberCells) {
@@ -281,8 +304,30 @@ GameBoard.prototype.toggleCell = function(selectedId) {
 	
 		this.selectedCellId = selectedId;
 		this.cells[this.selectedCellId].select();	
-		this.updateMoveHints(this.player1);
 	}
+}
+
+
+GameBoard.prototype.placePieceHandler = function() {
+	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
+	var index = selectedPiece.cellX*this.numberColumns + selectedPiece.cellY;
+	if(selectedPiece.wasPlaced()) {
+		if(this.pieces.isDisc(this.selectedPieceId)) {
+			this.cells[index].disc = null;
+
+		}
+		else {
+			this.cells[index].ring = null;
+		}
+	}
+
+	this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId/7), this.selectedCellId % 7);
+	if(this.pieces.isDisc(this.selectedPieceId)) {
+		this.cells[this.selectedCellId].disc = selectedPiece.color;
+	}
+	else {
+		this.cells[this.selectedCellId].ring = selectedPiece.color;
+	}	
 }
 
 GameBoard.prototype.updatePicking = function(selectedId) {
@@ -291,24 +336,37 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 		return;
 	}
 
+	
 	var id = this.pieces.selectPiece(selectedId);
+	console.log(id);
 		
 	if (id == null) {
 		this.toggleCell(selectedId - 1);
 	}
 	else {
-		this.selectedPieceId = id;
+		this.selectedPieceId = id;		
 	} 
+
+	// mostra as hints disponiveis se houver uma peça selecionada
+	if(this.selectedPieceId != null && this.selectedPieceId != -1) {
+		this.unselectHints();
+		this.updatePlaceHints();		
+	}
+	else {
+		this.unselectHints();
+	}
 
 	// utilizador seleccionou uma célula primeiro
 	if (this.selectedPieceId == -1 && this.selectedCellId != null) {
 		this.selectedPieceId = null;
-		this.pieces.unselectActivePiece();
+		this.pieces.unselectActivePiece();		
 	}
 
 	// utilizador seleccionou a célula de destino
 	if (this.selectedPieceId != null && this.selectedCellId != null) {
-		this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId/7), this.selectedCellId % 7);
+		this.placePieceHandler();		
 		this.unselectHints();
 	}
 };
+
+
