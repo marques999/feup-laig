@@ -53,6 +53,7 @@ serialInclude([
 	'parser/TextureParser.js',
 	'duplohex/gameBoard.js',
 	'duplohex/gameMenu.js',
+	'duplohex/gameMove.js',
 	'duplohex/gamePiece.js',
 	'duplohex/gameServer.js',
 	'duplohex/objectBox.js',

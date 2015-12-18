@@ -38,10 +38,12 @@ XMLscene.prototype.init = function(application) {
 XMLscene.prototype.setCameraPosition = function(x) {
 	this.camera.setPosition([0.0, 15.0, 0.0]);
 	this.camera.setTarget([15.0 * Math.sin(x * Math.PI / 180), 5.0, 15.0 * Math.sin(x * Math.PI / 180)]);
-}
+};
+
 XMLscene.prototype.setCameraTarget = function(x) {
 	
-}
+};
+
 XMLscene.prototype.initGL = function() {
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(1000.0);
@@ -54,14 +56,14 @@ XMLscene.prototype.initServer = function() {
 	this.httpServer = new GameServer(this.board, 'localhost', 8081);
 	this.httpServer.requestPlaceDisc(5, 5);
 	this.httpServer.requestQuit();
-}
+};
 
 XMLscene.prototype.initGame = function() {
 	this.currentId = 0.0;
 	this.board = new GameBoard(this);
 	this.menu = new GameMenu(this);
 	this.menu.loadJSON('menu_difficulty.json');
-}
+};
 
 XMLscene.prototype.updatePicking = function() {
 
@@ -171,6 +173,7 @@ XMLscene.prototype.initTranslate = function(matrix) {
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
 	this.guiInterface.setActiveCamera(this.camera);
+	this.board.setInterface(this.guiInterface);
 };
 
 /**
@@ -187,7 +190,7 @@ XMLscene.prototype.setInterface = function(guiInterface) {
  */
 XMLscene.prototype.getNumberLights = function() {
 	return this.lights.length;
-}
+};
 
 /**
  * inicializa a aparência por omissão dos objetos
@@ -414,11 +417,6 @@ XMLscene.prototype.update = function(currTime) {
 
 	var delta = currTime - this.lastUpdate;
 	this.board.update(currTime, this.lastUpdate);
-	//this.menu.update(delta);
-	
-	if (this.pauseAnimations) {
-		return;
-	} 
 
 	if (this.cameraActive) {
 		this.processCamera(3.0 * delta * 0.001);

@@ -41,15 +41,44 @@ MyInterface.prototype.deleteFolder = function(folderName) {
     this.gui.onResize();
 };
 
-MyInterface.prototype.reset = function() {
+MyInterface.prototype.initGame = function(gameBoard) {
+	this.gameBoard = gameBoard;
+	this.gui.add(this, "movieMenu");
+}
 
-	var self = this;
+MyInterface.prototype.movieMenu = function() {
 
-	/*****************/
-	if (this.sceneGroup != undefined && this.sceneGroup != null) {
-		this.deleteFolder("Scene");
+	if (this.movieGroup != undefined && this.movieGroup != null) {
+		this.deleteFolder("Movie");
+		this.movieGroup = undefined;
 	}
 
+	var self = this;
+	this.gameBoard.startMovie();
+	this.movieGroup = this.gui.addFolder("Movie");
+	this.movieGroup.open();
+	this.movieGroup.add(this.gameBoard, "pauseMovie");
+	
+	this.movieGroup.add(this.gameBoard, "stopMovie").onChange(function(value) {
+		self.deleteFolder("Movie");
+		self.movieGroup = undefined;
+	});
+
+	this.movieGroup.add(this.gameBoard, "skipFrame");
+	
+	this.movieGroup.add(this.gameBoard, "movieDelay", 100, 5000);
+	this.movieGroup.add(this.gameBoard, "movieSpeed", 1, 5);
+	this.movieGroup.add(this.gameBoard, "movieFrame", 0, 4).listen();
+};
+
+MyInterface.prototype.sceneMenu = function() {
+	
+	if (this.sceneGroup != undefined && this.sceneGroup != null) {
+		this.deleteFolder("Scene");
+		this.sceneGroup = undefined;
+	}
+
+	var self = this;
 	this.sceneGroup = this.gui.addFolder("Scene");
 	this.sceneGroup.open();
 
@@ -64,41 +93,56 @@ MyInterface.prototype.reset = function() {
 	this.sceneGroup.add(this.scene, "cameraTarget", 0, 360.0).onChange(function(value) {
 		self.scene.setCameraTarget(value);
 	});
-	/*****************/
+};
+
+MyInterface.prototype.cameraMenu = function() {
+
 	if (this.camerasGroup != undefined && this.camerasGroup != null) {
 		this.deleteFolder("Cameras");
+		this.camerasGroup = null;
 	}
 
 	this.camerasGroup = this.gui.addFolder("Cameras");
 	this.camerasGroup.open();
 	this.camerasGroup.add(this.scene, "zoomIn");
 	this.camerasGroup.add(this.scene, "zoomOut");
-	/*****************/
+};
+
+MyInterface.prototype.animationMenu = function() {
+
 	if (this.animationsGroup != undefined && this.animationsGroup != null) {
 		this.deleteFolder("Animations");
+		this.animationsGroup = undefined;
 	}
 
 	this.animationsGroup = this.gui.addFolder("Animations");
 	this.animationsGroup.open();
-
 	this.animationsGroup.add(this, "updatePeriod", 1, 60).onChange(function(updatePeriod) {
 		self.scene.setUpdatePeriod(1000 / updatePeriod);
 	});
+}
 
-	this.animationsGroup.add(this.scene, "animationSpeed", 0.1, 5);
-	this.animationsGroup.add(this.scene, "pauseAnimations");
-
-	this.animationsGroup.add(this, "loopAnimations").onChange(function(loopValue) {
-		self.scene.setAnimationLoop(loopValue);
-	});
-	/*****************/
+MyInterface.prototype.lightsMenu = function() {
+	
 	if (this.lightsGroup != undefined && this.lightsGroup != null) {
 		this.deleteFolder("Lights");
+		this.lightsGroup = undefined;
 	}
 
 	this.lightsGroup = this.gui.addFolder("Lights");
 	this.lightsGroup.open();
 	this.lights = {};
+}
+
+MyInterface.prototype.reset = function() {
+	//--------------------------------------------------------		
+	this.sceneMenu();
+	//--------------------------------------------------------		
+	this.cameraMenu();
+	//--------------------------------------------------------		
+	this.animationMenu();
+	//--------------------------------------------------------		
+	this.lightsMenu();
 };
 
 /**
