@@ -6,7 +6,7 @@ function GamePiece(scene, position, color) {
 	this.position = position;
 	this.cellX = null;
 	this.cellY = null;
-	this.color = color;	
+	this.color = color;
 	this.materials = {};
 	//--------------------------------------------------------
 	if (color == 'black') {
@@ -42,32 +42,20 @@ function GamePiece(scene, position, color) {
 GamePiece.prototype = Object.create(MyPrimitive.prototype);
 GamePiece.prototype.constructor = GamePiece;
 
-GamePiece.prototype.setCoords = function(coordX, coordY, coordZ) {
-
-	this.coords = [
-		coordX, coordY, coordZ
-	];
-
-	this.position = [
-		coordX * 0.75, coordY * Math.cos(30*Math.PI/180) + 0.5*coordX*Math.cos(30*Math.PI/180), 0.0
-	];
-};
-
 GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
-
-	this.position = [
-		coordX, coordY, coordZ
-	];
+	this.position[0] = coordX;
+	this.position[1] = coordY;
+	this.position[2] = coordZ;
 };
 
 GamePiece.prototype.place = function(x, y) {
 	this.cellX = x;
 	this.cellY = y;
-}
+};
 
 GamePiece.prototype.wasPlaced = function() {
 	return this.cellX != null && this.cellY != null;
-}
+};
 
 GamePiece.prototype.setColor = function(color) {
 	this.material = this.materials[color];

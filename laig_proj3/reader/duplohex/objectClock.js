@@ -7,27 +7,31 @@
  * @return {null}
  */
 function ObjectClock(scene, player) {
-
+	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
 	//--------------------------------------------------------
 	this.DIGITS = [];
 	this.CLOCK = [10, 10, 11, 10, 10];
 	this.LEFT = [10, 1];
 	this.RIGHT = [10, 2];
+	this.materials = [];
 	//--------------------------------------------------------
 	this.cube = new ObjectCube(scene);
 	this.ramp = new ObjectRamp(scene);
 	this.player = player;
-	this.redMaterial = new CGFappearance(scene);
-	this.redMaterial.setDiffuse(0.9, 0.05, 0.05, 0.6);
-	this.redMaterial.setAmbient(0.9, 0.05, 0.05, 0.2);
-	this.redMaterial.setSpecular(1.0, 1.0, 1.0, 0.5);
-	this.redMaterial.setShininess(30);
+	//--------------------------------------------------------
+	this.materials["clock"] = new CGFappearance(scene);
+	this.materials["clock"].loadTexture("scenes/images/clock.png");
+	this.materials["default"] = new CGFappearance(scene);
+	this.materials["red"] = new CGFappearance(scene);
+	this.materials["red"].setDiffuse(0.9, 0.05, 0.05, 0.6);
+	this.materials["red"].setAmbient(0.9, 0.05, 0.05, 0.2);
+	this.materials["red"].setSpecular(1.0, 1.0, 1.0, 0.5);
+	this.materials["red"].setShininess(30);
 	//--------------------------------------------------------
 	this.currentMillis = 0.0;
 	this.elapsedSeconds = 0.0;
 	this.texelLength = 1/16;
-	this.defaultMaterial = new CGFappearance(scene);
 	//--------------------------------------------------------
 	for (var i = 0; i <= 10; i++) {
 		this.DIGITS[i] = new ObjectDigit(scene, this.texelLength * i, this.texelLength * (i + 1));
@@ -35,8 +39,6 @@ function ObjectClock(scene, player) {
 	//--------------------------------------------------------
 	this.DIGITS[11] = new ObjectDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
 	this.DIGITS[12] = new ObjectDigit(scene, (12/16), (13/16));
-	this.CLOCK_material = new CGFappearance(scene);
-	this.CLOCK_material.loadTexture("scenes/images/clock.png");
 };
 
 ObjectClock.prototype = Object.create(MyPrimitive.prototype);
@@ -48,7 +50,7 @@ ObjectClock.prototype.constructor = ObjectClock;
  */
 ObjectClock.prototype.display = function() {
 	this.scene.pushMatrix();
-	this.redMaterial.apply();
+	this.materials["red"].apply();
 	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(0.0, 0.5, 3.0);
@@ -94,7 +96,7 @@ ObjectClock.prototype.display = function() {
 		this.cube.display();
 	this.scene.popMatrix();
 	//--------------------------------------------------------
-	this.CLOCK_material.apply();
+	this.materials["clock"].apply();
 	this.scene.translate(0.5, 0.5, 3.5);
 	this.scene.rotate(-Math.PI/4, 1, 0, 0);
 	//--------------------------------------------------------
@@ -121,7 +123,7 @@ ObjectClock.prototype.display = function() {
 	this.DIGITS[this.RIGHT[1]].display();
 	//--------------------------------------------------------
 	this.scene.translate(-0.5, -0.5, -3.5);
-	this.defaultMaterial.apply();
+	this.materials["default"].apply();
 	this.scene.popMatrix();
 };
 

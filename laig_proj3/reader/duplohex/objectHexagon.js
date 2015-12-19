@@ -7,17 +7,26 @@
  * @return {null}
  */
 function ObjectHexagon(scene) {
-	
-	GamePiece.call(this, scene, null);
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
+	MyPrimitive.call(this, scene);
+	//--------------------------------------------------------
 	this.circle = new MyCircle(scene, 6, 1.0);
+	//--------------------------------------------------------
+	this.defaultAngle = Math.cos(Math.PI/6);
+	this.position = [0.0, 0.0, 0.0];
 	this.selected = false;
 	this.disc = null;
 	this.ring = null;
 };
 
-ObjectHexagon.prototype = Object.create(GamePiece.prototype);
+ObjectHexagon.prototype = Object.create(MyPrimitive.prototype);
 ObjectHexagon.prototype.constructor = ObjectHexagon;
+
+ObjectHexagon.prototype.setCoords = function(coordX, coordY, coordZ) {
+	this.position[0] = coordX * 0.75;
+	this.position[1] = coordY * this.defaultAngle + 0.5 * coordX * this.defaultAngle;
+	this.position[2] = coordZ;
+};
 
 ObjectHexagon.prototype.display = function() {
 	this.circle.display();
@@ -61,16 +70,16 @@ ObjectHexagon.prototype.isEmpty = function() {
 
 ObjectHexagon.prototype.isTwopiece = function() {
 	return this.disc != null && this.ring != null;
-}
+};
 
 ObjectHexagon.prototype.isSingle = function() {
 	return !this.isEmpty && !this.isTwopiece;
-}
+};
 
 ObjectHexagon.prototype.select = function() {
 	this.selected = true;
-}
+};
 
 ObjectHexagon.prototype.unselect = function() {
 	this.selected = false;
-}
+};

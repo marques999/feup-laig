@@ -40,7 +40,6 @@ function MyBoardBorder(scene, size, type) {
 		this.material.setSpecular(1.0, 1.0, 1.0, 0.5);
 		this.material.setShininess(30);
 	}
-	//--------------------------------------------------------
 };
 
 MyBoardBorder.prototype = Object.create(MyPrimitive.prototype);
@@ -52,8 +51,8 @@ MyBoardBorder.prototype.constructor = MyBoardBorder;
  */
 MyBoardBorder.prototype.display = function() {
 
-	this.material.apply();
 	this.scene.pushMatrix();
+		this.material.apply();
 		this.scene.rotate(Math.PI/2,1,0,0);
 		this.scene.translate(0.0, -0.5, 0.5);
 		this.rectangle.display();
@@ -64,64 +63,76 @@ MyBoardBorder.prototype.display = function() {
 	this.scene.popMatrix();
 
 	if (this.type == 1) {
-
-		this.scene.pushMatrix();
-			 this.scene.translate(this.defaultScale,0.0,0.0);
-			 this.scene.rotate(-Math.PI/2,0.0,0.0,1.0);
-			 this.moddedCircle.display();
-			 this.scene.translate(0.0,0.0,-0.5);
-			 this.moddedCylinder.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix();
-			this.triangle.display();
-			for(var i = 0; i < this.size; i++) {
-				this.scene.translate(2.0*this.defaultAngle,0.0,0.0);
-				this.triangle.display();
-			}
-			this.scene.translate(2.0*this.defaultAngle,0.0,0.0);
-			this.halftriangle.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix();
-			 this.scene.rotate(-5*Math.PI/6,0.0,0.0,1.0);
-			 this.moddedCircle2.display();
-			 this.scene.translate(0.0,0.0,-0.5);
-			 this.moddedCylinder2.display();
-		this.scene.popMatrix();
+		this.displayBlack();		
 	}
 	else {
-
-		this.scene.pushMatrix();
-			 this.scene.rotate(4*Math.PI/3,0.0,0.0,1.0);
-			 this.moddedCircle.display();
-			 this.scene.translate(0.0,0.0,-0.5);
-			 this.moddedCylinder.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix();
-			this.halftriangle2.display();
-			for(var i = 0; i < this.size; i++) {
-			if(i == 0){
-				this.scene.translate(0.5/this.defaultAngle,0.0,0.0);
-			}
-			else {
-				this.scene.translate(2*this.defaultAngle,0.0,0.0);
-			}
-
-				this.triangle.display();
-			}
-			this.scene.translate(2*this.defaultAngle,0.0,0.0);
-			this.triangle.display();
-
-		this.scene.popMatrix();
-
-		 this.scene.pushMatrix();
-			 this.scene.translate(this.defaultScale,0.0,0.0);
-			 this.scene.rotate(-Math.PI/2,0.0,0.0,1.0);
-			 this.moddedCircle2.display();
-			 this.scene.translate(0.0,0.0,-0.5);
-			 this.moddedCylinder2.display();
-		this.scene.popMatrix();
+		this.displayWhite();
 	}
+};
+
+MyBoardBorder.prototype.displayBlack = function() {
+	
+	this.scene.pushMatrix();
+		this.scene.translate(this.defaultScale,0.0,0.0);
+		this.scene.rotate(-Math.PI/2,0.0,0.0,1.0);
+		this.moddedCircle.display();
+		this.scene.translate(0.0,0.0,-0.5);
+		this.moddedCylinder.display();
+	this.scene.popMatrix();
+
+	this.scene.pushMatrix();	
+	this.triangle.display();
+		
+	for (var i = 0; i < this.size; i++) {
+		this.scene.translate(2.0*this.defaultAngle,0.0,0.0);
+		this.triangle.display();
+	}
+		
+	this.scene.translate(2.0*this.defaultAngle,0.0,0.0);
+	this.halftriangle.display();
+	this.scene.popMatrix();
+
+	this.scene.pushMatrix();
+		this.scene.rotate(-5*Math.PI/6,0.0,0.0,1.0);
+		this.moddedCircle2.display();
+		this.scene.translate(0.0,0.0,-0.5);
+		this.moddedCylinder2.display();
+	this.scene.popMatrix();
+};
+
+MyBoardBorder.prototype.displayWhite = function() {
+
+	this.scene.pushMatrix();
+		this.scene.rotate(4*Math.PI/3,0.0,0.0,1.0);
+		this.moddedCircle.display();
+		this.scene.translate(0.0,0.0,-0.5);
+		this.moddedCylinder.display();
+	this.scene.popMatrix();
+
+	this.scene.pushMatrix();
+	this.halftriangle2.display();
+
+	for (var i = 0; i < this.size; i++) {
+
+		if (i == 0){
+			this.scene.translate(0.5/this.defaultAngle,0.0,0.0);
+		}
+		else {
+			this.scene.translate(2*this.defaultAngle,0.0,0.0);
+		}
+
+		this.triangle.display();
+	}
+
+	this.scene.translate(2*this.defaultAngle,0.0,0.0);
+	this.triangle.display();
+	this.scene.popMatrix();
+
+	this.scene.pushMatrix();
+		this.scene.translate(this.defaultScale,0.0,0.0);
+		this.scene.rotate(-Math.PI/2,0.0,0.0,1.0);
+		this.moddedCircle2.display();
+		this.scene.translate(0.0,0.0,-0.5);
+		this.moddedCylinder2.display();
+	this.scene.popMatrix();
 };

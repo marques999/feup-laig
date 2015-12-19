@@ -32,4 +32,4 @@ ObjectDisc.prototype.display = function() {
 	this.scene.scale(1.0, -1.0, -1.0);
 	this.circle.display();
 	this.scene.scale(1.0, -1.0, -1.0);
- };
+};

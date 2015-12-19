@@ -76,19 +76,19 @@ serialInclude([
 	'MySceneGraph.js',
 
 main=function() {
-
+	//--------------------------------------------------------
 	var app = new CGFapplication(document.body);
 	var myScene = new XMLscene();
 	var myInterface = new MyInterface();
-
+	//--------------------------------------------------------
 	app.init();
 	app.setScene(myScene);
 	app.setInterface(myInterface);
 	myInterface.setActiveCamera(myScene.camera);
 	myScene.setInterface(myInterface);
-
+	//--------------------------------------------------------
 	var filename = getUrlVars()['file'] || "example.lsx";
 	var myGraph = new MySceneGraph(filename, myScene);
-
+	//--------------------------------------------------------
 	app.run();
 }]);
