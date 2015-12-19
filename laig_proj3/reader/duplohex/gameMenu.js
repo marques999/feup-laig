@@ -57,7 +57,7 @@ GameMenu.prototype.parseMenu = function(data) {
 	this.objects = [];
 	
 	for ( var i = 0; i < this.numberItems; i++) {
-		this.objects[i] = new MyCube(this.scene);
+		this.objects[i] = new ObjectCube(this.scene);
 	}
 };
 

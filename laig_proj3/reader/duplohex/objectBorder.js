@@ -15,7 +15,7 @@ function ObjectBorder(scene, size, color) {
 	this.color = color;
 	this.defaultAngle = Math.sin(Math.PI / 3);
 	this.invertedAngle = Math.sin(Math.PI / 6);
-	this.defaultScale = 0.5 / this.defaultAngle + 7 * 2 * this.defaultAngle;
+	this.defaultScale = 0.5 / this.defaultAngle + size * 2 * this.defaultAngle;
 	this.material = new CGFappearance(scene);
 	//--------------------------------------------------------
 	this.plane = new ObjectPlane(scene, 15);
@@ -84,7 +84,7 @@ ObjectBorder.prototype.displayBlack = function() {
 	this.halftriangle2.display();
 
 	for (var i = 0; i < this.size; i++) {
-
+		
 		if (i == 0) {
 			this.scene.translate(0.5/this.defaultAngle,0.0,0.0);
 		}
@@ -95,7 +95,7 @@ ObjectBorder.prototype.displayBlack = function() {
 		this.triangle.display();
 	}
 
-	this.scene.translate(2*this.defaultAngle,0.0,0.0);
+	this.scene.translate(0.5/this.defaultAngle*(this.size == 0) + 2*this.defaultAngle*(this.size > 0),0.0,0.0);
 	this.triangle.display();
 	this.scene.popMatrix();
 

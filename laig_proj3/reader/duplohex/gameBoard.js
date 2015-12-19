@@ -39,7 +39,7 @@ function GameBoard(scene) {
 	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);
 	this.table = new ObjectTable(scene);
 	this.whiteBorder = new ObjectBorder(scene, this.numberRows, 'white');
-	this.blackBorder = new ObjectBorder(scene, this.numberRows, 'black');
+	this.blackBorder = new ObjectBorder(scene, this.numberColumns, 'black');
 	this.box = new ObjectBox(scene);
 	this.numberDiscs = 19;
 	this.numberRings = 19;
@@ -85,7 +85,7 @@ function GameBoard(scene) {
 	for (var i = 0; i < this.numberCells; i++) {
 		this.cells[i] = new ObjectHexagon(scene);
 		this.cells[i].setCoords(~~(i / this.numberColumns), i % this.numberColumns, 0.0);
-	}
+	}	
 };
 //--------------------------------------------------------
 GameBoard.prototype = Object.create(MyPrimitive.prototype);
@@ -172,19 +172,20 @@ GameBoard.prototype.displayBorder = function() {
 		this.whiteBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(7*2*this.borderAngle*this.borderAngle - 0.5, 0.0, -7*2*this.borderAngle*0.5 - 7*2*this.borderAngle + this.borderAngle);
+		this.scene.translate(this.numberRows*2*this.borderAngle*this.borderAngle - 0.5, 0.0, -this.numberRows*2*this.borderAngle*0.5 - this.numberColumns*2*this.borderAngle + this.borderAngle);
 		this.scene.rotate(Math.PI/6 + Math.PI, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.whiteBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows/2) * 2.0,0.0,0.5/this.borderAngle - 3*2*this.borderAngle);
+		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows/2) * 2.0 - !(this.numberRows & 1)*0.5,0.0,0.5/this.borderAngle - (-!(this.numberRows & 1)*0.5 + ~~(this.numberRows/2))*2*this.borderAngle);
+		console.log()
 		this.scene.rotate(Math.PI/2, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.blackBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-1.0, 0.0, -6*2*this.borderAngle -0.5/this.borderAngle);
+		this.scene.translate(-1.0, 0.0, -(this.numberColumns - 1)*2*this.borderAngle -0.5/this.borderAngle);
 		this.scene.rotate(-Math.PI/2, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.blackBorder.display();
