@@ -82,20 +82,11 @@ ObjectBorder.prototype.displayBlack = function() {
 
 	this.scene.pushMatrix();
 	this.halftriangle2.display();
-
-	for (var i = 0; i < this.size; i++) {
-		
-		if (i == 0) {
-			this.scene.translate(0.5/this.defaultAngle,0.0,0.0);
-		}
-		else {
-			this.scene.translate(2*this.defaultAngle,0.0,0.0);
-		}
-
+	this.scene.translate(0.5/this.defaultAngle,0.0,0.0);
+	for (var i = 0; i < this.size; i++) {		
 		this.triangle.display();
-	}
-
-	this.scene.translate(0.5/this.defaultAngle*(this.size == 0) + 2*this.defaultAngle*(this.size > 0),0.0,0.0);
+		this.scene.translate(2*this.defaultAngle,0.0,0.0);
+	}	
 	this.triangle.display();
 	this.scene.popMatrix();
 
