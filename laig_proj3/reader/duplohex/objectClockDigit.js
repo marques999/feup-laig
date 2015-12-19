@@ -15,10 +15,10 @@ function ObjectClockDigit(scene, minS, maxS) {
 	MyPrimitive.call(this, scene);
 
 	this.vertices = [
-		-0.5, -1.0, 0.0,
-		0.5, -1.0, 0.0,
-		-0.5, 1.0, 0.0,
-		0.5, 1.0, 0.0
+		0.0, 0.0, 0.0,
+		1.0, 0.0, 0.0,
+		0.0, 2.0, 0.0,
+		1.0, 2.0, 0.0
 	];
 
 	this.indices = [
