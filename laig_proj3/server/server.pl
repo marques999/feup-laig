@@ -1,10 +1,14 @@
-:-use_module(library(sockets)).
-:-use_module(library(lists)).
-:-use_module(library(codesio)).
+%                 ------------- %
+% #includes                     %
+%                 ------------- %
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%                                        Server                                                   %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- use_module(library(sockets)).
+:- use_module(library(lists)).
+:- use_module(library(codesio)).
+
+%                 ------------- %
+% #server                       %
+%                 ------------- %
 
 % To run, enter 'server.' on sicstus command line after consulting this file.
 % You can test requests to this server by going to http://localhost:8081/<request>.
@@ -128,7 +132,6 @@ read_request(_,syntax_error).
 read_request_aux([32|_],[46]) :- !.
 read_request_aux([C|Cs],[C|RCs]) :- read_request_aux(Cs, RCs).
 
-% Reads and Ignores the rest of the lines of the HTTP Header
 read_header(Stream) :-
 	repeat,
 	read_line(Stream, Line),
@@ -139,23 +142,15 @@ check_end_of_header([]) :- !, fail.
 check_end_of_header(end_of_file) :- !,fail.
 check_end_of_header(_).
 
-% Function to Output Request Lines (uncomment the line bellow to see more information on received HTTP Requests)
-% print_header_line(LineCodes) :- catch((atom_codes(Line,LineCodes),write(Line),nl),_,fail), !.
 print_header_line(_).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%                                       Commands                                                  %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                 ------------- %
+% #commands                     %
+%                 ------------- %
 
 :- include('duplohex.pl').
 
-duplohex:-
-	initializeRandomSeed, !,
-	server.
-
 parse_input(handshake, handshake).
-parse_input(test(C,N), Res) :- test(C,Res,N).
-
 parse_input(reset, ack).
 parse_input(init(Gamemode, BotMode), GameMode).
 parse_input(quit, goodbye).
@@ -172,9 +167,9 @@ parse_handshake(bvb(Player,BotMode,Matrix), ack, Game, bvb):-
 	call(Matrix, Board),
 	initializeBvB(Game,Board,Player,BotMode).
 
-parse_input(playerPieces(black, default), '{"color":"black",discs":24,"rings":24}').
-parse_input(playerPieces(white, default), '{"color":"white",discs":24,"rings":24}').
-parse_input(playerPieces(black, small), '{"color":"black",discs":17,"rings":19}').
-parse_input(playerPieces(white, small), '{"color":"white",discs":18,"rings":18}').
-parse_input(playerPieces(black, diagonal), '{"color":"black",discs":20,"rings":20}').
-parse_input(playerPieces(white, diagonal), '{"color":"white",discs":21,"rings":21}').
+parse_input(playerPieces(blackPlayer, default), '{"color":"black",discs":24,"rings":24}').
+parse_input(playerPieces(whitePlayer, default), '{"color":"white",discs":24,"rings":24}').
+parse_input(playerPieces(blackPlayer, small), '{"color":"black",discs":17,"rings":19}').
+parse_input(playerPieces(whitePlayer, small), '{"color":"white",discs":18,"rings":18}').
+parse_input(playerPieces(blackPlayer, diagonal), '{"color":"black",discs":20,"rings":20}').
+parse_input(playerPieces(whitePlayer, diagonal), '{"color":"white",discs":21,"rings":21}').

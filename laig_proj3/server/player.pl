@@ -15,55 +15,52 @@ playerColor(whitePlayer, white).
 playerColor(blackPlayer, black).
 
 % obtém o nome de determinado jogador
-getPlayerName(playerState(Name, _NumberDiscs, _NumberRings), Name).
+getPlayerName(playerState(Name, _, _), Name).
 
 % obtém o número de discos que determinado jogador possui
-getNumberDiscs(playerState(_Name, NumberDiscs, _NumberRings), NumberDiscs).
+getNumberDiscs(playerState(_, NumberDiscs, _), NumberDiscs).
 
 % obtém o número de anéis que determinado jogador possui
-getNumberRings(playerState(_Name, _NumberDiscs, NumberRings), NumberRings).
+getNumberRings(playerState(_, _, NumberRings), NumberRings).
 
 % obtém a cor associada ao jogador adversário
-getEnemyColor(playerState(whitePlayer, _NumberDiscs, _NumberRings), black).
-getEnemyColor(playerState(blackPlayer, _NumberDiscs, _NumberRings), white).
+getEnemyColor(playerState(whitePlayer, _, _), black).
+getEnemyColor(playerState(blackPlayer, _, _), white).
 
 %                 ------------- %
 % #predicados                   %
 %                 ------------- %
 
 % cria um novo jogador com o número de peças especificado
-initializePlayer(Name, NumberDiscs, NumberRings,
-	playerState(Name, NumberDiscs, NumberRings)):-
+initializePlayer(Name, NumberDiscs, NumberRings, playerState(Name, NumberDiscs, NumberRings)):-
 	player(Name).
 
 % obtém a cor associada a um determinado jogador
-getPlayerColor(playerState(Name, _NumberDiscs, _NumberRings), Color):-
+getPlayerColor(playerState(Name, _, _), Color):-
 	playerColor(Name, Color).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se determinado jogador possui discos
-hasDiscs(playerState(_Name, NumberDiscs, _NumberRings)):-
+hasDiscs(playerState(_, NumberDiscs, _)):-
 	NumberDiscs > 0.
 
 % verifica se determinado jogador possui pelo menos uma das peças
-hasPieces(playerState(_Name, NumberDiscs, _NumberRings)):-
+hasPieces(playerState(_, NumberDiscs, _)):-
 	NumberDiscs > 0.
-hasPieces(playerState(_Name, _NumberDiscs, NumberRings)):-
+hasPieces(playerState(_, _, NumberRings)):-
 	NumberRings > 0.
 
 % verifica se determinado jogador possui anéis
-hasRings(playerState(_Name, _NumberDiscs, NumberRings)):-
+hasRings(playerState(_, _, NumberRings)):-
 	NumberRings > 0.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % decrementa o número de discos que determinado jogador possui
-decrementDiscs(playerState(Name, NumberDiscs, NumberRings),
-	playerState(Name, NewDiscs, NumberRings)):-
+decrementDiscs(playerState(Name, NumberDiscs, NumberRings), playerState(Name, NewDiscs, NumberRings)):-
 	NewDiscs is NumberDiscs - 1.
 
 % decrementa o número de anéis que determinado jogador possui
-decrementRings(playerState(Name, NumberDiscs, NumberRings),
-	playerState(Name, NumberDiscs, NewRings)):-
+decrementRings(playerState(Name, NumberDiscs, NumberRings), playerState(Name, NumberDiscs, NewRings)):-
 	NewRings is NumberRings - 1.

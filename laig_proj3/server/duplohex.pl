@@ -16,7 +16,6 @@
 % #factos                       %
 %                 ------------- %
 
-% matriz vazia 7 x 7
 emptyMatrix([
 	[0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0],
@@ -27,7 +26,6 @@ emptyMatrix([
 	[0, 0, 0, 0, 0, 0, 0]
 ]).
 
-% matriz "vazia" 6x6 (peças distribuídas pelas paredes)
 empty6x6Matrix([
 	[1, 4, 1, 4, 1, 4, 1],
 	[8, 0, 0, 0, 0, 0, 2],
@@ -38,7 +36,6 @@ empty6x6Matrix([
 	[2, 1, 4, 1, 4, 1, 8]
 ]).
 
-% matriz diagonal
 diagonalMatrix([
 	[1, 0, 0, 0, 0, 0, 2],
 	[0, 8, 0, 0, 0, 4, 0],
@@ -61,6 +58,10 @@ gameMode(bvb).
 %                 ------------- %
 % #predicados                   %
 %                 ------------- %
+
+duplohex:-
+	initializeRandomSeed, !,
+	server.
 
 % inicializa uma nova partida no modo Player vs Player (situação 1: jogador 1 escolheu cor preta)
 initializePvP(Game, Board, blackPlayer):-
@@ -195,29 +196,29 @@ setCurrentPlayer(Board-Mode-BotMode-PlayerTurn-Player1-Player2, NewPlayer,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se as coordenadas introduzidas pelo utilizador são válidas (célula de origem)
-validateSource(Symbol, _Piece):-
+validateSource(Symbol, _):-
 	isTwopiece(Symbol), !,
 	messageSourceTwopiece.
 validateSource(Symbol, disc):-
 	isDisc(Symbol, _).
-validateSource(_Symbol, disc):- !,
+validateSource(_, disc):- !,
 	messageSourceNotDisc.
 validateSource(Symbol, ring):-
 	isRing(Symbol, _).
-validateSource(_Symbol, ring):- !,
+validateSource(_, ring):- !,
 	messageSourceNotRing.
 
 % verifica se as coordenadas introduzidas pelo utilizador são válidas (célula de destino)
-validateDestination(Symbol, _Piece):-
+validateDestination(Symbol, _):-
 	isTwopiece(Symbol), !,
 	messageDestinationTwopiece.
 validateDestination(Symbol, disc):-
 	isDisc(Symbol, _).
-validateDestination(_Symbol, disc):- !,
+validateDestination(_, disc):- !,
 	messageDestinationNotDisc.
 validateDestination(Symbol, ring):-
 	isRing(Symbol, _).
-validateDestination(_Symbol, ring):- !,
+validateDestination(_, ring):- !,
 	messageDestinationNotRing.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -226,7 +227,7 @@ validateDestination(_Symbol, ring):- !,
 validateCoordinates(X, Y):-
 	X > 0, Y > 0,
 	X < 8, Y < 8.
-validateCoordinates(_X, _Y):-
+validateCoordinates(_, _):-
 	messageInvalidCoordinates.
 
 % verifica se ambas as coordenadas introduzidas pelo utilizador são diferentes
@@ -235,22 +236,18 @@ validateBothCoordinates(FromX, FromY, FromX, FromY):-
 	messageSameCoordinates.
 validateBothCoordinates(FromX, FromY, ToX, ToY):-
 	isNeighbour(FromX, FromY, ToX, ToY).
-validateBothCoordinates(_FromX, _FromY, _ToX, _ToY):-
+validateBothCoordinates(_, _, _, _):-
 	messageNotNeighbours.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se determinado disco é da mesma cor que o jogador atual
-validateDiscOwnership(Symbol, Player):-
-	playerOwnsDisc(Symbol, Player).
-validateDiscOwnership(_X, _Y):-
-	messageNotOwned.
+validateDiscOwnership(Symbol, Player):- playerOwnsDisc(Symbol, Player).
+validateDiscOwnership(_, _):- messageNotOwned.
 
 % verifica se determinado anel é da mesma cor que o jogador atual
-validateRingOwnership(Symbol, Player):-
-	playerOwnsRing(Symbol, Player).
-validateRingOwnership(_X, _Y):-
-	messageNotOwned.
+validateRingOwnership(Symbol, Player):- playerOwnsRing(Symbol, Player).
+validateRingOwnership(_, _):- messageNotOwned.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -295,42 +292,42 @@ serverMoveRing(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se o jogador pode colocar um disco numa determinada posição do tabuleiro
-validatePlaceDisc(X, Y, Board, _Player):-
+validatePlaceDisc(X, Y, Board, _):-
 	getSymbol(X, Y, Board, Symbol),
 	isTwopiece(Symbol), !,
 	messageDestinationTwopiece.
-validatePlaceDisc(_X, _Y, _Board, Player):-
+validatePlaceDisc(_, _, _, Player):-
 	\+hasDiscs(Player), !,
 	messageNoDiscs.
-validatePlaceDisc(X, Y, Board, _Player):-
+validatePlaceDisc(X, Y, Board, _):-
 	canPlaceDisc(Board, X, Y).
-validatePlaceDisc(_X, _Y, Board, Player):-
+validatePlaceDisc(_, _, Board, Player):-
 	\+isPlayerStuck(Board, Player), !,
 	messagePieceExists.
-validatePlaceDisc(X, Y, Board, _Player):-
+validatePlaceDisc(X, Y, Board, _):-
 	\+canSpecialDisc(Board, X, Y), !,
 	messageDestinationNotRing.
-validatePlaceDisc(_X, _Y, _Board, _Player).
+validatePlaceDisc(_, _, _, _).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se o jogador pode colocar um anel numa determinada posição do tabuleiro
-validatePlaceRing(X, Y, Board, _Player):-
+validatePlaceRing(X, Y, Board, _):-
 	getSymbol(X, Y, Board, Symbol),
 	isTwopiece(Symbol), !,
 	messageDestinationTwopiece.
-validatePlaceRing(_X, _Y, _Board, Player):-
+validatePlaceRing(_, _, _, Player):-
 	\+hasRings(Player), !,
 	messageNoRings.
-validatePlaceRing(X, Y, Board, _Player):-
+validatePlaceRing(X, Y, Board, _):-
 	canPlaceRing(Board, X, Y).
-validatePlaceRing(_X, _Y, Board, Player):-
+validatePlaceRing(_, _, Board, Player):-
 	\+isPlayerStuck(Board, Player), !,
 	messagePieceExists.
-validatePlaceRing(X, Y, Board, _Player):-
+validatePlaceRing(X, Y, Board, _):-
 	\+canSpecialRing(Board, X, Y), !,
 	messageDestinationNotDisc.
-validatePlaceRing(_X, _Y, _Board, _Player).
+validatePlaceRing(_, _, _, _).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -358,7 +355,7 @@ startGame(Socket, Game, bvb):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se ainda restam peças ao jogador atual
-playGame(_, Game, _Mode):-
+playGame(_, Game, _):-
 	getCurrentPlayer(Game, Player),
 	\+hasPieces(Player), !,
 	getGameBoard(Game, Board),
@@ -366,7 +363,7 @@ playGame(_, Game, _Mode):-
 	messagePlayerLost(Player).
 
 % verifica se o jogador 1 venceu a partida atual
-playGame(_, Game, _Mode):-
+playGame(_, Game, _):-
 	getGameBoard(Game, Board),
 	getPlayer1(Game, Player1),
 	hasPlayerWon(Board, Player1), !,
@@ -374,7 +371,7 @@ playGame(_, Game, _Mode):-
 	messagePlayerWins(Player1).
 
 % verifica se o jogador 2 venceu a partida atual
-playGame(_, Game, _Mode):-
+playGame(_, Game, _):-
 	getGameBoard(Game, Board),
 	getPlayer2(Game, Player2),
 	hasPlayerWon(Board, Player2), !,
@@ -411,7 +408,7 @@ move(Game, Board, Player, NewGame):-
 	changePlayerTurn(TempGame2, NewGame), !.
 
 % acção do computador: realizar uma jogada (constitúida por dois movimentos)
-playBot(Socket, Game, NewGame):-
+playBot(_, Game, NewGame):-
 	getBotMode(Game, BotMode),
 	getGameBoard(Game, Board),
 	getCurrentPlayer(Game, Player),
@@ -429,7 +426,7 @@ playHuman(Socket, Game, NewGame):-
 	move(Game, NewBoard, NewPlayer, NewGame).
 
 % acção do computador: realizar a jogada inicial (apenas um movimento "colocar peça")
-startBot(Socket, Game, NewGame):-
+startBot(_, Game, NewGame):-
 	getGameBoard(Game, Board),
 	getCurrentPlayer(Game, Player),
 	printState(Game),

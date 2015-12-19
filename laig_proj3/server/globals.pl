@@ -86,12 +86,3 @@ initializeRandomSeed:-
 pressEnterToContinue:-
 	write('Press <Enter> to continue...'), nl,
 	get_code(_), !.
-
-getInt(Input):-
-	get_code(TempInput),
-	get_code(_),
-	Input is TempInput - 48.
-
-getCoordinates(X, Y):-
-	getInt(X),
-	getInt(Y).
