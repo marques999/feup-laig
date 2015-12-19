@@ -1,15 +1,14 @@
 function GamePiece(scene, position, color) {
-
+	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
-
+	//--------------------------------------------------------
 	this.coords = [0.0, 0.0, 0.0];
 	this.position = position;
 	this.cellX = null;
 	this.cellY = null;
 	this.color = color;	
-
 	this.materials = {};
-
+	//--------------------------------------------------------
 	if (color == 'black') {
 		this.materials["default"] = new CGFappearance(scene);
 		this.materials["default"].setDiffuse(0.05, 0.05, 0.05, 0.6);

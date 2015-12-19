@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} minX - coordenada X do vértice superior esquerdo do retângulo
  * @param {Number} maxY - coordenada Y do vértice superior esquerdo do retângulo
  * @param {Number} maxX - coordenada X do vértice inferior direito do retângulo
@@ -11,9 +11,9 @@
  * @return {null}
  */
 function MyRectangle(scene, minX, maxY, maxX, minY) {
-
+	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
-
+	//--------------------------------------------------------
 	this.minX = minX;
 	this.minY = minY;
 	this.maxX = maxX;
@@ -33,32 +33,32 @@ MyRectangle.prototype.constructor = MyRectangle;
  * @return {null}
  */
 MyRectangle.prototype.initBuffers = function() {
-
+	//--------------------------------------------------------
 	this.vertices = [
 		this.minX, this.minY, 0.0,
 		this.maxX, this.minY, 0.0,
 		this.minX, this.maxY, 0.0,
 		this.maxX, this.maxY, 0.0
 	];
-
+	//--------------------------------------------------------
 	this.indices = [
 		0, 1, 2, 3
 	];
-
+	//--------------------------------------------------------
 	this.normals = [
 		0.0, 0.0, 1.0,
 		0.0, 0.0, 1.0,
 		0.0, 0.0, 1.0,
 		0.0, 0.0, 1.0
 	];
-
+	//--------------------------------------------------------
 	this.texCoords = [
 		0.0, 1.0,
 		1.0, 1.0,
 		0.0, 0.0,
 		1.0, 0.0
 	];
-
+	//--------------------------------------------------------
 	this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
 	this.initGLBuffers();
 };
