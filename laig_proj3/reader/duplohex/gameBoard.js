@@ -35,10 +35,12 @@ function GameBoard(scene) {
 		next: false
 	}
 	//--------------------------------------------------------
-	this.hexagon = new MyCircle(scene, 6);
-	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
-	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);		
+	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);	
+	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);	
 	this.box = new ObjectBox(scene);
+	this.boardBorder = new MyBoardBorder(scene, this.numberRows, 1);
+	this.boardBorder2 = new MyBoardBorder(scene, this.numberRows, 2);
+
 	this.numberDiscs = 19;
 	this.numberRings = 19;
 	this.pieces = new PieceController(scene, this, this.player1, this.player2);	
@@ -112,7 +114,6 @@ GameBoard.prototype.display = function() {
 		else {
 			this.cells[i].display();			
 		}
-
 		if (y == 0 || x == 0 || y == this.numberRows - 1 || x == this.numberColumns - 1) {	
 			this.hexTexture.unbind();
 			this.scene.translate(0.0, 0.0, -1.0);					
@@ -121,6 +122,7 @@ GameBoard.prototype.display = function() {
 			this.hexTexture.bind();
 		}
 
+		
 		this.scene.scale(2.0, 2.0, 2.0);
 		this.scene.translate(-currentPosition[0], -currentPosition[1], -currentPosition[2]);
 	}
@@ -131,7 +133,7 @@ GameBoard.prototype.display = function() {
 
 	this.scene.pushMatrix();						
 		this.scene.scale(this.baseSize[0]*8.0, 1.0, this.baseSize[1]*16.0);	
-		this.scene.translate(-0.5, -0.5, 0.5);					
+		this.scene.translate(-0.5, -1.0, 0.5);					
 		this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);		
 		this.scene.registerPicking(this.base);			
 		this.base.display();	
@@ -147,8 +149,40 @@ GameBoard.prototype.display = function() {
 		this.scene.translate(6.0, -8.0, 0.0);
 	this.scene.popMatrix();
 
+
 	this.scene.pushMatrix();
-		//this.box.display();		
+		this.scene.scale(this.baseSize[0]/2, 1.0, this.baseSize[1]/2); 	
+		this.scene.translate(this.basePos[0]*2, -0.5+this.basePos[1]*2, -this.basePos[2]*2);
+
+		this.scene.pushMatrix();							
+			this.scene.translate(-2*Math.sin(Math.PI/3)*Math.cos(Math.PI/6) + 0.5,0.0,2*Math.sin(Math.PI/3)*0.5 + Math.sin(Math.PI/3));				
+			this.scene.rotate(Math.PI/6, 0,1,0);			
+			this.scene.rotate(-Math.PI/2, 1,0,0);		
+			this.boardBorder.display();			
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();				
+			this.scene.translate(7*2*Math.sin(Math.PI/3)*Math.cos(Math.PI/6) - 0.5,0.0,-7*2*Math.sin(Math.PI/3)*0.5 - 7*2*Math.sin(Math.PI/3) + Math.sin(Math.PI/3));				
+			this.scene.rotate(Math.PI/6 + Math.PI, 0,1,0);			
+			this.scene.rotate(-Math.PI/2, 1,0,0);				
+			this.boardBorder.display();			
+		this.scene.popMatrix();
+
+
+		this.scene.pushMatrix();				
+			this.scene.translate(Math.ceil(this.numberRows/2) + Math.floor(this.numberRows/2)*2,0.0,0.5/Math.cos(Math.PI/6) - 3*2*Math.sin(Math.PI/3));						
+			this.scene.rotate(Math.PI/2, 0,1,0);			
+			this.scene.rotate(-Math.PI/2, 1,0,0);			
+			this.boardBorder2.display();			
+		this.scene.popMatrix();
+
+		this.scene.pushMatrix();			
+			this.scene.translate(-1.0,0.0,-6*2*Math.sin(Math.PI/3) -0.5/Math.cos(Math.PI/6));					
+			this.scene.rotate(-Math.PI/2, 0,1,0);			
+			this.scene.rotate(-Math.PI/2, 1,0,0);				
+			this.boardBorder2.display();			
+		this.scene.popMatrix();
+
 	this.scene.popMatrix();
 };
 
