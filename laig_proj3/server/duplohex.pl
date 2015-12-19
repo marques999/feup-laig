@@ -272,7 +272,7 @@ serverMoveDisc(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
 	getSymbol(FromX, FromY, Board, Source),
 	validateSource(Source, disc), !,
 	validateDiscOwnership(Source, Player), !,
-	validateCoordinates(ToX, ToY),
+	validateCoordinates(ToX, ToY), !,
 	validateBothCoordinates(FromX, FromY, ToX, ToY),
 	getSymbol(ToX, ToY, Board, Destination),
 	validateDestination(Destination, ring), !,
@@ -283,7 +283,7 @@ serverMoveRing(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
 	getSymbol(FromX, FromY, Board, Source),
 	validateSource(Source, ring), !,
 	validateRingOwnership(Source, Player), !,
-	validateCoordinates(ToX, ToY),
+	validateCoordinates(ToX, ToY), !,
 	validateBothCoordinates(FromX, FromY, ToX, ToY),
 	getSymbol(ToX, ToY, Board, Destination),
 	validateDestination(Destination, disc), !,
@@ -540,9 +540,9 @@ secondDiscRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer
 secondDiscRequest(_, 'rej', '400 Bad Request', _, _, _, _).
 
 secondDiscAction(placeDisc(Position), ack, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer).
-secondDiscAction(moveDisc(From,To), ack, Board, Player, NewBoard, _):-
-	serverMoveDisc(Board, Player, From, To, NewBoard).
+	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer), !.
+secondDiscAction(moveDisc(From,To), ack, Board, Player, NewBoard, Player):-
+	serverMoveDisc(Board, Player, From, To, NewBoard), !.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -551,8 +551,8 @@ secondRingRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer
 secondRingRequest(_, 'rej', '400 Bad Request', _, _, _, _).
 
 secondRingAction(placeRing(Position), ack, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer).
-secondRingAction(moveRing(From,To), ack, Board, Player, NewBoard, _):-
-	serverMoveRing(Board, Player, From, To, NewBoard).
+	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer), !.
+secondRingAction(moveRing(From,To), ack, Board, Player, NewBoard, Player):-
+	serverMoveRing(Board, Player, From, To, NewBoard), !.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

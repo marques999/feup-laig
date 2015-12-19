@@ -249,7 +249,7 @@ GameServer.prototype.requestStatus = function()
 };
 //--------------------------------------------------------
 GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, DestinationY) {
-	var sourceString = this.formatMoveCoords('moveDisc', SourceX, SourceY, DestinationX, DestinationY);
+	var requestString = this.formatMoveCoords('moveDisc', SourceX, SourceY, DestinationX, DestinationY);
 	var self = this;
 	this.getPrologRequest(requestString, function(httpResponse) 
 	{	
@@ -263,7 +263,7 @@ GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, 
 };
 //--------------------------------------------------------
 GameServer.prototype.requestMoveRing = function(SourceX, SourceY, DestinationX, DestinationY) {
-	var sourceString = this.formatMoveCoords('moveRing', SourceX, SourceY, DestinationX, DestinationY);
+	var requestString = this.formatMoveCoords('moveRing', SourceX, SourceY, DestinationX, DestinationY);
 	var self = this;
 	this.getPrologRequest(requestString, function(httpResponse) 
 	{	
@@ -302,34 +302,6 @@ GameServer.prototype.requestPlaceRing = function(DestinationX, DestinationY) {
 			self.gameBoard.onResetPlace();
 		}
 	});
-};
-//--------------------------------------------------------
-GameServer.prototype.handleMove = function(httpResponse) {
-
-	var serverResponse = httpResponse.currentTarget;
-
-	if (serverResponse.status == 200) {
-		this.validResponse = true;
-	}
-	else {
-		this.validResponse = false;
-	}
-
-	return this.validResponse;
-};
-//--------------------------------------------------------
-GameServer.prototype.handlePlace = function(httpResponse) {
-
-	var serverResponse = httpResponse.currentTarget;
-
-	if (serverResponse.status == 200) {
-		this.board.onPlacePiece();
-	}
-	else {
-		this.validResponse = false;
-	}
-
-	return this.validResponse;
 };
 //--------------------------------------------------------
 GameServer.prototype.formatPlaceCoords = function(Command, SourceX, SourceY) {

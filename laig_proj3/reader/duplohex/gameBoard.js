@@ -428,11 +428,11 @@ GameBoard.prototype.placePieceHandler = function() {
 	if (selectedPiece.wasPlaced()) { // MOVE
 
 		if (isDisc) {
-			this.server.requestMoveDisc(selectPiece.cellX + 1, selectedPiece.cellY + 1,
+			this.server.requestMoveDisc(selectedPiece.cellX + 1, selectedPiece.cellY + 1,
 				selectedCellX + 1, selectedCellY + 1);
 		}
 		else {
-			this.server.requestMoveRing(selectPiece.cellX + 1, selectedPiece.cellY + 1,
+			this.server.requestMoveRing(selectedPiece.cellX + 1, selectedPiece.cellY + 1,
 				selectedCellX + 1, selectedCellY + 1);
 		}
 	}
