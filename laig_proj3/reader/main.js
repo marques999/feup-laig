@@ -40,6 +40,9 @@ serialInclude([
 	'geometry/MyVehicleFront.js',
 	'geometry/MyVehicleWing.js',
 	'geometry/MyVehicle.js',
+	'geometry/Plane.js',
+	'geometry/MyModdedCircle.js',
+	'geometry/MyModdedCylinder.js',
 	'parser/BaseParser.js',
 	'parser/AnimationParser.js',
 	'parser/BoardParser.js',
@@ -63,6 +66,7 @@ serialInclude([
 	'duplohex/objectRing.js',
 	'duplohex/objectScore.js',
 	'duplohex/pieceController.js',
+	'duplohex/boardBorder.js',	
 	'XMLscene.js',
 	'MySceneGraph.js',
 
