@@ -54,8 +54,12 @@ XMLscene.prototype.initGL = function() {
 
 XMLscene.prototype.initServer = function() {
 	this.httpServer = new GameServer(this.board, 'localhost', 8081);
-	this.httpServer.requestPlaceDisc(5, 5);
-	this.httpServer.requestQuit();
+	//this.httpServer.requestPlaceDisc(5, 5);
+	this.httpServer.setMode('pvp');
+	this.httpServer.setBoard('diagonal');
+	this.httpServer.requestGame();
+	this.board.setServer(this.httpServer);
+//	this.httpServer.requestQuit();
 };
 
 XMLscene.prototype.initGame = function() {
@@ -72,7 +76,6 @@ XMLscene.prototype.updatePicking = function() {
 	}
 
 	for (var i = 0; i < this.pickResults.length; i++) {
-		
 		if (this.pickResults[i][0]) {
 			this.board.updatePicking(this.pickResults[i][1]);
 		}
@@ -80,7 +83,7 @@ XMLscene.prototype.updatePicking = function() {
 		
 	this.pickResults.splice(0,this.pickResults.length);	
 };
-
+//---------------------------------------------------------
 XMLscene.prototype.resetDisplay = function() {
 
 	this.axis = new CGFaxis(this);
@@ -94,12 +97,14 @@ XMLscene.prototype.resetDisplay = function() {
 
 	mat4.identity(this.defaultMatrix);
 }
-
+//---------------------------------------------------------
 XMLscene.prototype.loadGraph = function(lsxPath) {
+	//---------------------------------------------------------
 	this.resetDisplay();
 	this.guiInterface.reset();
-	var myGraph = new MySceneGraph(lsxPath, this);
 	this.guiInterface.setActiveCamera(this.camera);
+	//---------------------------------------------------------
+	new MySceneGraph(lsxPath, this);
 }
 
 /**
@@ -383,20 +388,20 @@ XMLscene.prototype.zoomIn = function() {
 	this.cameraZoomAmount = 4.0;
 	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
 };
-
+//--------------------------------------------------------
 XMLscene.prototype.resetPicking = function() {
 	this.currentId = 0;
 };
-
+//--------------------------------------------------------
 XMLscene.prototype.registerPicking = function(object) {
 	this.registerForPick(++this.currentId, object);
 	return this.currentId;
 };
-
+//--------------------------------------------------------
 XMLscene.prototype.defaultPicking = function(object) {
 	this.registerForPick(0, object);
 };
-
+//--------------------------------------------------------
 XMLscene.prototype.setBoardPosition = function(position) {
 	this.board != null && this.board.setPosition(position);
 };
@@ -429,20 +434,19 @@ XMLscene.prototype.update = function(currTime) {
  * callback executado periodicamente para atualizar a visualização da cena
  * @return {null}
  */
-XMLscene.prototype.display = function () {
+XMLscene.prototype.display = function() {
 
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 	this.updateProjectionMatrix();
 	this.loadIdentity();
-	
 	this.applyViewMatrix();
-	
 	this.multMatrix(this.defaultMatrix);
 	this.axis.display();
 	this.setDefaultAppearance();
 	
 	if (this.graph.loadedOk) {
+
 		this.graph.display();
 	
 		for (var i = 0; i < this.activeLights; i++) {
@@ -451,4 +455,4 @@ XMLscene.prototype.display = function () {
 
 		this.board.display();
 	}
-};
+}; 

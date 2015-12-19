@@ -58,14 +58,8 @@ function GameBoard(scene) {
 	this.baseTexture = new CGFtexture(this.scene, "scenes/images/hex_board.png");
 	//--------------------------------------------------------
 	this.guiInterface = null;
-	this.gameModes = ['pvp', 'pvb', 'bvb'];
-	this.gameBoard = ['default', 'small', 'diagonal'];
 	//--------------------------------------------------------
-	this.gameSettings = {
-		mode: 'pvp',
-		board: 'default',
-		difficulty: 0,
-	};
+
 	//--------------------------------------------------------
 	this.historyStack = new GameMove(this);
 	this.historyStack.push(14, 4, 1);
@@ -89,13 +83,15 @@ function GameBoard(scene) {
 GameBoard.prototype = Object.create(MyPrimitive.prototype);
 GameBoard.prototype.constructor = GameBoard;
 //--------------------------------------------------------
+GameBoard.prototype.setServer = function(server) {
+	this.server = server;
+};
 GameBoard.prototype.display = function() {
 
 	this.scene.resetPicking();
 	this.currentId = 0;
 	this.displayBoard();
 	this.displayPieces();
-
 	this.scene.pushMatrix();
 		this.scene.scale(this.baseSize[0]*7.5, 1.0, this.baseSize[1]*11.0);
 		this.scene.translate(-0.5, -1.0, 0.5);
@@ -103,10 +99,9 @@ GameBoard.prototype.display = function() {
 		this.scene.registerPicking(this.base);
 		this.base.display();
 	this.scene.popMatrix();
-
 	this.displayBorder();
-  	this.displayTable();
-  	this.displayChair();
+ // 	this.displayTable();
+  //	this.displayChair();
 	this.displayClock();
 };
 //--------------------------------------------------------
@@ -426,11 +421,45 @@ GameBoard.prototype.toggleCell = function(selectedId) {
 GameBoard.prototype.placePieceHandler = function() {
 
 	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
-	var index = this.cellIndex(selectedPiece.cellX,  selectedPiece.cellY);
+	var selectedCellX = ~~(this.selectedCellId/this.numberColumns);
+	var selectedCellY = this.selectedCellId % this.numberColumns;
+	var isDisc = this.pieces.isDisc(this.selectedPieceId);
+
+	if (selectedPiece.wasPlaced()) { // MOVE
+
+		if (isDisc) {
+			this.server.requestMoveDisc(selectPiece.cellX + 1, selectedPiece.cellY + 1,
+				selectedCellX + 1, selectedCellY + 1);
+		}
+		else {
+			this.server.requestMoveRing(selectPiece.cellX + 1, selectedPiece.cellY + 1,
+				selectedCellX + 1, selectedCellY + 1);
+		}
+	}
+	else { // PLACE
+
+		if (isDisc) {
+			this.server.requestPlaceDisc(selectedCellX + 1, selectedCellY + 1);
+		}
+		else {
+			this.server.requestPlaceRing(selectedCellX + 1, selectedCellY + 1);
+		}
+	}
+
+	this.unselectHints();
+};
+
+GameBoard.prototype.onPlacePiece = function() {
+	
+	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
+	var selectedCellX = ~~(this.selectedCellId/this.numberColumns);
+	var selectedCellY = this.selectedCellId % this.numberColumns;
+	var index = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
+	var isDisc = this.pieces.isDisc(this.selectedPieceId);
 
 	if (selectedPiece.wasPlaced()) {
 
-		if (this.pieces.isDisc(this.selectedPieceId)) {
+		if (isDisc) {
 			this.cells[index].disc = null;
 		}
 		else {
@@ -438,13 +467,24 @@ GameBoard.prototype.placePieceHandler = function() {
 		}
 	}
 
-	this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId/this.numberColumns), this.selectedCellId % this.numberColumns);
+	this.pieces.placePiece(this.selectedPieceId, selectedCellX, selectedCellY);
 
 	if (this.pieces.isDisc(this.selectedPieceId)) {
 		this.cells[this.selectedCellId].disc = selectedPiece.color;
 	}
 	else {
 		this.cells[this.selectedCellId].ring = selectedPiece.color;
+	}
+};
+
+GameBoard.prototype.onResetPlace = function() {
+	
+	this.selectedPieceId = null;
+	this.pieces.unselectActivePiece();
+
+	if (this.selectedCellId != undefined && this.selectedCellId != null) {
+		this.cells[this.selectedCellId].unselect();
+		this.selectedCellId = null;
 	}
 };
 
@@ -509,6 +549,5 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 	// utilizador seleccionou a célula de destino
 	if (this.selectedPieceId != null && this.selectedCellId != null) {
 		this.placePieceHandler();
-		this.unselectHints();
 	}
 };

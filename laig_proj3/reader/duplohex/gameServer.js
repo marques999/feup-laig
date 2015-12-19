@@ -1,13 +1,124 @@
 function GameServer(board, address, port) {
+	//--------------------------------------------------------
 	this.gameBoard = board;
+	this.gameRunning = false;
 	this.httpAddress = address || 'localhost';
 	this.httpPort = port || 8081;
+	this.validResponse = false;
 	this.serverAddress = 'http://' + this.httpAddress + ':' + this.httpPort + '/';
+	this.boardMatrix = {
+		'diagonal': 'diagonalMatrix',
+		'default': 'emptyMatrix',
+		'small': 'empty6x6Matrix',
+	}
+	//--------------------------------------------------------
+	this.gameSettings = {
+		color: 'whitePlayer',
+		board: 'default',
+		difficulty: 'random',
+		mode: 'pvp',
+	};
 };
-
+//--------------------------------------------------------
 GameServer.prototype = Object.create(Object.prototype);
 GameServer.prototype.constructor = GameServer;
+//--------------------------------------------------------
+GameServer.prototype.setBoard = function(boardType) {
 
+	if (this.gameBoard == null || this.gameRunning) {
+		return false;
+	}
+
+	if (boardType != 'default' && boardType != 'small' && boardType != 'diagonal') {
+		return false;
+	}
+
+	this.gameSettings["board"] = this.boardMatrix[boardType];
+};
+//--------------------------------------------------------
+GameServer.prototype.setColor = function(playerColor) {
+
+	if (this.gameBoard == null || this.gameRunning) {
+		return false;
+	}
+
+	if (playerColor != 'blackPlayer' && playerColor != 'whitePlayer')  {
+		return false;
+	}
+
+	this.gameSettings["color"] = playerColor;
+};
+//--------------------------------------------------------
+GameServer.prototype.setDifficulty = function(difficulty) {
+
+	if (this.gameBoard == null || this.gameRunning) {
+		return false;
+	}
+
+	if (difficulty != 'smart' && difficulty != 'random') {
+		return false;
+	}
+
+	this.gameSettings["difficulty"] = boardType;
+};
+//--------------------------------------------------------
+GameServer.prototype.setMode = function(gameMode) {
+
+	if (this.gameBoard == null || this.gameRunning) {
+		return false;
+	}
+
+	if (gameMode != 'pvp' && gameMode != 'pvb' && gameMode != 'bvb') {
+		return false;
+	}
+
+	this.gameSettings["mode"] = gameMode;
+};
+//--------------------------------------------------------
+GameServer.prototype.requestGame = function() {
+
+	var requestString = null;
+
+	if (this.gameSettings.mode == 'pvp') {
+		requestString = "pvp(" 
+			+ this.gameSettings.color + ","
+			+ this.gameSettings.board + ")";
+	}
+	else if (this.gameSettings.mode == 'pvb') {
+		requestString = "pvb("
+			+ this.gameSettings.color + ","
+			+ this.gameSettings.difficulty + ","
+			+ this.gameSettings.board + ")";
+	}
+	else if (this.gameSettings.mode == 'bvb') {
+		requestString = "bvb("
+			+ this.gameSettings.color + ","
+			+ this.gameSettings.difficulty + ","
+			+ this.gameSettings.board + ")";
+	}
+	else {
+		return false;
+	}
+
+	this.getPrologRequest(requestString, function()
+	{
+		var serverResponse = httpResponse.currentTarget;
+
+		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
+			console.log("SEND COMMAND COMPLETE");
+		}
+		else if (serverResponse.status && serverResponse.responseText == 'rej') {
+			console.log("MESSAGE REJECTED!");
+		}
+	});
+
+	return true;
+};
+//--------------------------------------------------------
+GameServer.prototype.checkValid = function(first_argument) {
+	return this.validResponse;
+};
+//--------------------------------------------------------
 GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onError) {
 
 	var request = new XMLHttpRequest();
@@ -15,16 +126,18 @@ GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onErr
 	request.open('GET', this.serverAddress + requestString, true);
 	request.onload = onSuccess || function(data) {
 		console.log("Request successful. Reply: " + data.target.response);
+		this.validResponse = true;
 	};
 
 	request.onerror = onError || function() {
 		console.log("Error waiting for response");
+		this.validResponse = false;
 	};
 
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	request.send();
 };
-
+//--------------------------------------------------------
 GameServer.prototype.requestReset = function()
 {
 	this.getPrologRequest('reset', function()
@@ -35,11 +148,11 @@ GameServer.prototype.requestReset = function()
 			console.log("SEND COMMAND COMPLETE");
 		}
 		else if (serverResponse.status && serverResponse.responseText == 'rej') {
-			console.log("MESsAGE REJECTED!");
+			console.log("MESSAGE REJECTED!");
 		}
 	});
 };
-
+//--------------------------------------------------------
 GameServer.prototype.requestQuit = function()
 {
 	this.getPrologRequest('quit', function(httpResponse)
@@ -53,90 +166,7 @@ GameServer.prototype.requestQuit = function()
 
 	return false;
 };
-
-GameServer.prototype.setDifficulty = function(difficulty)
-{
-	if (difficulty != 'smart' && difficulty != 'random') {
-		return false;
-	}
-
-	var requestString = 'setDifficulty(' + difficulty + ')';
-
-	this.getPrologRequest(requestString, function(httpResponse)
-	{
-		var serverResponse = httpResponse.currentTarget;
-
-		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
-			return true;
-		}
-	});
-
-	return false;
-};
-
-GameServer.prototype.setBoard = function(boardType)
-{
-	if (boardType != 'default' && boardType != 'small' && boardType != 'diagonal') {
-		return false;
-	}
-
-	var requestString = 'setBoard(' + boardType + ')';
-
-	this.getPrologRequest(requestString, function(httpResponse)
-	{
-		var serverResponse = httpResponse.currentTarget;
-
-		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
-			return true;
-		}
-	});
-
-	return false;
-}
-
-GameServer.prototype.setMode = function(gameMode) {
-
-	if (gameMode != 'pvp' && gameMode != 'pvb' && gameMode != 'bvb') {
-		return false;
-	}
-
-	var requestString = 'setMode(' + gameMode + ')';
-
-	this.getPrologRequest(requestString, function(httpResponse)
-	{
-		var serverResponse = httpResponse.currentTarget;
-
-		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
-			return true;
-		}
-	});
-
-	return false;
-}
-
-GameServer.prototype.setColor = function(playerColor)
-{
-	if (playerColor != 'black' && playerColor != 'white')  {
-		return false;
-	}
-
-	var requestString = 'setColor(' + playerColor + ')';
-
-	this.getPrologRequest(requestString, function(httpResponse)
-	{
-		var serverResponse = httpResponse.currentTarget;
-
-		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
-			return true;
-		}
-		else {
-			alert("RECEIVED MESSAGE NOT VALID...");
-		}
-	});
-
-	return false;
-}
-
+//--------------------------------------------------------
 GameServer.prototype.requestPlayerInfo = function(playerColor, boardType)
 {
 	var self = this;
@@ -160,8 +190,8 @@ GameServer.prototype.requestPlayerInfo = function(playerColor, boardType)
 			}
 		}
 	});
-}
-
+};
+//--------------------------------------------------------
 GameServer.prototype.requestBot = function()
 {
 	var self = this;
@@ -185,8 +215,8 @@ GameServer.prototype.requestBot = function()
 			}
 		}
 	});
-}
-
+};
+//--------------------------------------------------------
 GameServer.prototype.requestStatus = function()
 {
 	this.getPrologRequest('status', function()
@@ -212,80 +242,100 @@ GameServer.prototype.requestStatus = function()
 			}
 			else {
 				console.log("RECEIVED INVALID MESSAGE");
+				validResponse = false;
 			}
 		}
 	});
 };
-
-GameServer.prototype.requestMoveDisc = function(Source, Destination) {
-	var sourceString = this.formatMoveCoords('moveDisc', Source, Destination);
-	return this.getPrologRequest(requestString, this.handleMove);
+//--------------------------------------------------------
+GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, DestinationY) {
+	var sourceString = this.formatMoveCoords('moveDisc', SourceX, SourceY, DestinationX, DestinationY);
+	var self = this;
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{	
+		if (httpResponse.currentTarget.status == 200) {
+			self.gameBoard.onPlacePiece();
+		}
+		else {
+			self.gameBoard.onResetPlace();
+		}
+	});
 };
-
-GameServer.prototype.requestMoveRing = function(Source, Destination) {
-	var sourceString = this.formatMoveCoords('moveRing', Source, Destination);
-	return this.getPrologRequest(requestString, this.handleMove);
+//--------------------------------------------------------
+GameServer.prototype.requestMoveRing = function(SourceX, SourceY, DestinationX, DestinationY) {
+	var sourceString = this.formatMoveCoords('moveRing', SourceX, SourceY, DestinationX, DestinationY);
+	var self = this;
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{	
+		if (httpResponse.currentTarget.status == 200) {
+			self.gameBoard.onPlacePiece();
+		}
+		else {
+			self.gameBoard.onResetPlace();
+		}
+	});
 };
-
-GameServer.prototype.requestPlaceDisc = function(Destination) {
-	var requestString = this.formatPlaceCoords('placeDisc', Destination);
-	return this.getPrologRequest(requestString, this.handlePlace);
+//--------------------------------------------------------
+GameServer.prototype.requestPlaceDisc = function(DestinationX, DestinationY) {
+	var requestString = this.formatPlaceCoords('placeDisc', DestinationX, DestinationY);
+	var self = this;
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{	
+		if (httpResponse.currentTarget.status == 200) {
+			self.gameBoard.onPlacePiece();
+		}
+		else {
+			self.gameBoard.onResetPlace();
+		}
+	});
 };
-
-GameServer.prototype.requestPlaceRing = function(Destination) {
-	var requestString = this.formatPlaceCoords('placeRing', Destination);
-	return this.getPrologRequest(requestString, this.handlePlace);
+//--------------------------------------------------------
+GameServer.prototype.requestPlaceRing = function(DestinationX, DestinationY) {
+	var requestString = this.formatPlaceCoords('placeRing', DestinationX, DestinationY);
+	var self = this;
+	this.getPrologRequest(requestString, function(httpResponse) 
+	{	
+		if (httpResponse.currentTarget.status == 200) {
+			self.gameBoard.onPlacePiece();
+		}
+		else {
+			self.gameBoard.onResetPlace();
+		}
+	});
 };
-
+//--------------------------------------------------------
 GameServer.prototype.handleMove = function(httpResponse) {
 
 	var serverResponse = httpResponse.currentTarget;
 
 	if (serverResponse.status == 200) {
-
-		if (serverResponse.responseText == 'ack') {
-			return true;
-		}
-
-		if (serverResponse.responseText == 'dst') {
-			alert("INVALID MOVE! Destination cell invalid");
-		}
-		else if (serverResponse.responseText == 'src') {
-			alert("INVALID MOVE! Source cell invalid.");
-		}
-		else {
-			alert("RECEIVED MESSAGE NOT VALID...");
-		}
+		this.validResponse = true;
+	}
+	else {
+		this.validResponse = false;
 	}
 
-	return false;
+	return this.validResponse;
 };
-
+//--------------------------------------------------------
 GameServer.prototype.handlePlace = function(httpResponse) {
 
 	var serverResponse = httpResponse.currentTarget;
 
-	if (serverResponse.status == 200) { // HTTP OK
-
-		if (serverResponse.responseText == 'ack') {
-			return true;
-		}
-
-		if (serverResponse.responseText == 'err') {
-			alert("INVALID MOVE!");
-		}
-		else {
-			alert("RECEIVED MESSAGE NOT VALID...");
-		}
+	if (serverResponse.status == 200) {
+		this.board.onPlacePiece();
+	}
+	else {
+		this.validResponse = false;
 	}
 
-	return false;
+	return this.validResponse;
 };
-
-GameServer.prototype.formatPlaceCoords = function(Command, Source) {
-	return Command + '(' + (Source % 7) + '-' + (~~(Source / 7)) + ')';
+//--------------------------------------------------------
+GameServer.prototype.formatPlaceCoords = function(Command, SourceX, SourceY) {
+	return Command + '(' + SourceX + '-' + SourceY + ')';
 };
-
-GameServer.prototype.formatMoveCoords = function(Command, Source, Destination) {
-	return Command + '(' + (Source % 7) + '-' + (~~(Source / 7)) + "," + (Destination % 7) + '-' + (~~(Destination / 7)) + ')';
+//--------------------------------------------------------
+GameServer.prototype.formatMoveCoords = function(Command, SourceX, SourceY, DestinationX, DestinationY) {
+	return Command + '(' + SourceX + '-' + SourceY + "," + DestinationX + '-' + DestinationY + ')';
 };

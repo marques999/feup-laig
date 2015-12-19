@@ -17,11 +17,62 @@ port(8081).
 % Server Entry Point
 server :-
 	port(Port),
-	write('Opened Server'),nl,nl,
+	write('Opened Server'),nl,
 	socket_server_open(Port, Socket),
-	server_loop(Socket),
+	serverHandshake(Socket, Game, Mode),
+	startGame(Socket, Game, Mode),
 	socket_server_close(Socket),
 	write('Closed Server'),nl.
+
+readRequest(Socket, Stream, Request):-
+	socket_server_accept(Socket, _Client, Stream, [type(text)]),
+	catch((
+		read_request(Stream, Request),
+		read_header(Stream)
+	),_Exception,(
+		close_stream(Stream),
+		fail
+	)).
+
+serverReply(Stream, Request, Reply):-
+	% Generate Response
+	format('Request: ~q~n',[Request]),
+	format('Reply: ~q~n', [Reply]),
+	
+	% Output Response
+	format(Stream, 'HTTP/1.0 ~p~n', 200),
+	format(Stream, 'Access-Control-Allow-Origin: *~n', []),
+	format(Stream, 'Content-Type: text/plain~n~n', []),
+	format(Stream, '~p', [Reply]),
+	close_stream(Stream).
+
+serverHandshake(Socket, Game, Mode):-
+	repeat,
+	socket_server_accept(Socket, _Client, Stream, [type(text)]),
+	
+	catch((
+		read_request(Stream, Request),
+		read_header(Stream)
+	),_Exception,(
+		close_stream(Stream),
+		fail
+	)),
+
+	handshake_request(Request, MyReply, Status, Game, Mode),
+	format('Request: ~q~n',[Request]),
+	format('Reply: ~q~n', [MyReply]),
+	format_reply(Stream, Status, MyReply),
+	close_stream(Stream),
+	(MyReply = ack), !.
+
+format_reject(Stream):-
+	format_reply(Stream, '400 Bad Request', rej).
+
+format_reply(Stream, Status, Reply):-
+	format(Stream, 'HTTP/1.0 ~p~n', [Status]),
+	format(Stream, 'Access-Control-Allow-Origin: *~n', []),
+	format(Stream, 'Content-Type: text/plain~n~n', []),
+	format(Stream, '~p', [Reply]).
 
 % Server Loop 
 % Uncomment writes for more information on incomming connections
@@ -45,11 +96,7 @@ server_loop(Socket) :-
 		format('Reply: ~q~n', [MyReply]),
 		
 		% Output Response
-		format(Stream, 'HTTP/1.0 ~p~n', [Status]),
-		format(Stream, 'Access-Control-Allow-Origin: *~n', []),
-		format(Stream, 'Content-Type: text/plain~n~n', []),
-		format(Stream, '~p', [MyReply]),
-
+		format_reply(Stream, Status, MyReply),
 		close_stream(Stream),
 	(Request = quit), !.
 	
@@ -61,6 +108,10 @@ close_stream(Stream) :- flush_output(Stream), close(Stream).
 handle_request(Request, MyReply, '200 OK') :- catch(parse_input(Request, MyReply),error(_,_),fail), !.
 handle_request(syntax_error, 'Syntax Error', '400 Bad Request') :- !.
 handle_request(_, 'Bad Request', '400 Bad Request').
+
+handshake_request(Request, MyReply, '200 OK', Game, Mode):- catch(parse_handshake(Request, MyReply, Game, Mode),error(_,_),fail), !.
+handshake_request(syntax_error, 'rej', '400 Bad Request', _, _) :- !.
+handshake_request(_, 'rej', '400 Bad Request', _, _).
 
 % Reads first Line of HTTP Header and parses request
 % Returns term parsed from Request-URI
@@ -98,21 +149,28 @@ print_header_line(_).
 
 :- include('duplohex.pl').
 
+duplohex:-
+	initializeRandomSeed, !,
+	server.
+
 parse_input(handshake, handshake).
 parse_input(test(C,N), Res) :- test(C,Res,N).
 
 parse_input(reset, ack).
-parse_input(setDifficulty(BotDifficulty), BotDifficulty).
-parse_input(setGamemode(pvp), ack).
-parse_input(setGamemode(bvb), ack).
-parse_input(setGamemode(pvb), ack).
-
-parse_input(placeDisc(X-Y), ack).
-parse_input(placeRing(X-Y), acl).
-parse_input(moveDisc(FromX-FromY, ToX-ToY), ack).
-parse_input(moveRing(FromX-FromY, ToX-ToY), ack).
 parse_input(init(Gamemode, BotMode), GameMode).
 parse_input(quit, goodbye).
+
+parse_handshake(pvp(Player,Matrix), ack, Game, pvp):-
+	call(Matrix,Board),
+	initializePvP(Game,Board,Player).
+
+parse_handshake(pvb(Player,BotMode,Matrix), ack, Game, pvb):-
+	call(Matrix, Board),
+	initializePvB(Game, Board,Player,BotMode).
+
+parse_handshake(bvb(Player,BotMode,Matrix), ack, Game, bvb):-
+	call(Matrix, Board),
+	initializeBvB(Game,Board,Player,BotMode).
 
 parse_input(playerPieces(black, default), '{"color":"black",discs":24,"rings":24}').
 parse_input(playerPieces(white, default), '{"color":"white",discs":24,"rings":24}').

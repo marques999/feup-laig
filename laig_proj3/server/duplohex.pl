@@ -194,18 +194,6 @@ setCurrentPlayer(Board-Mode-BotMode-PlayerTurn-Player1-Player2, NewPlayer,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% pede ao utilizador para introduzir uma célula de origem válida
-askSourceCell(X, Y):-
-	nl, write('Please enter the source cell coordinates and press <ENTER>:'), nl,
-	getCoordinates(X, Y), validateCoordinates(X, Y), nl, !.
-
-% pede ao utilizador para introduzir uma célula de destino válida
-askDestinationCell(X, Y):-
-	nl, write('Please enter the destination cell coordinates and press <ENTER>:'), nl,
-	getCoordinates(X, Y), validateCoordinates(X, Y), nl, !.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % verifica se as coordenadas introduzidas pelo utilizador são válidas (célula de origem)
 validateSource(Symbol, _Piece):-
 	isTwopiece(Symbol), !,
@@ -231,6 +219,8 @@ validateDestination(Symbol, ring):-
 	isRing(Symbol, _).
 validateDestination(_Symbol, ring):- !,
 	messageDestinationNotRing.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se as coordenadas introduzidas pelo utilizador se encontram dentro do intervalo
 validateCoordinates(X, Y):-
@@ -264,25 +254,39 @@ validateRingOwnership(_X, _Y):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% acção do jogador humano: realiza um movimento do tipo "mover disco"
-askMoveDisc(Board, Player, NewBoard):-
-	askSourceCell(FromX, FromY),
+serverPlaceDisc(Board, Player, X-Y, NewBoard, NewPlayer):-
+	validateCoordinates(X, Y), !,
+	validatePlaceDisc(X, Y, Board, Player), !,
+	getPlayerColor(Player, Color),
+	placeDisc(X-Y, Color, Board, NewBoard),
+	decrementDiscs(Player, NewPlayer).
+
+serverPlaceRing(Board, Player, X-Y, NewBoard, NewPlayer):-
+	validateCoordinates(X, Y), !,
+	validatePlaceRing(X, Y, Board, Player), !,
+	getPlayerColor(Player, Color),
+	placeRing(X-Y, Color, Board, NewBoard),
+	decrementRings(Player, NewPlayer).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+serverMoveDisc(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
+	validateCoordinates(FromX, FromY),
 	getSymbol(FromX, FromY, Board, Source),
 	validateSource(Source, disc), !,
 	validateDiscOwnership(Source, Player), !,
-	askDestinationCell(ToX, ToY),
+	validateCoordinates(ToX, ToY),
 	validateBothCoordinates(FromX, FromY, ToX, ToY),
 	getSymbol(ToX, ToY, Board, Destination),
 	validateDestination(Destination, ring), !,
 	moveDisc(FromX-FromY, ToX-ToY, Board, NewBoard).
 
-% acção do jogador humano: realiza um movimento do tipo "mover anel"
-askMoveRing(Board, Player, NewBoard):-
-	askSourceCell(FromX, FromY),
+serverMoveRing(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
+	validateCoordinates(FromX, FromY),
 	getSymbol(FromX, FromY, Board, Source),
 	validateSource(Source, ring), !,
 	validateRingOwnership(Source, Player), !,
-	askDestinationCell(ToX, ToY),
+	validateCoordinates(ToX, ToY),
 	validateBothCoordinates(FromX, FromY, ToX, ToY),
 	getSymbol(ToX, ToY, Board, Destination),
 	validateDestination(Destination, disc), !,
@@ -308,6 +312,8 @@ validatePlaceDisc(X, Y, Board, _Player):-
 	messageDestinationNotRing.
 validatePlaceDisc(_X, _Y, _Board, _Player).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % verifica se o jogador pode colocar um anel numa determinada posição do tabuleiro
 validatePlaceRing(X, Y, Board, _Player):-
 	getSymbol(X, Y, Board, Symbol),
@@ -328,49 +334,31 @@ validatePlaceRing(_X, _Y, _Board, _Player).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% pede ao jogador humano para realizar um movimento do tipo "colocar disco"
-askPlaceDisc(Board, Player, NewBoard, NewPlayer):-
-	askDestinationCell(X, Y),
-	validatePlaceDisc(X, Y, Board, Player), !,
-	getPlayerColor(Player, Color),
-	placeDisc(X-Y, Color, Board, NewBoard),
-	decrementDiscs(Player, NewPlayer).
-
-% pede ao jogador humano para realizar um movimento do tipo "colocar anel"
-askPlaceRing(Board, Player, NewBoard, NewPlayer):-
-	askDestinationCell(X, Y),
-	validatePlaceRing(X, Y, Board, Player), !,
-	getPlayerColor(Player, Color),
-	placeRing(X-Y, Color, Board, NewBoard),
-	decrementRings(Player, NewPlayer).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % inicia uma nova partida no modo Player vs Player
-startGame(Game, pvp):-
-	startHuman(Game, NewGame),
-	playGame(NewGame, pvp).
+startGame(Socket, Game, pvp):-
+	startHuman(Socket, Game, NewGame),
+	playGame(Socket, NewGame, pvp).
 
 % inicia uma nova partida no modo Player vs Bot (situação 1: jogador humano começa primeiro)
-startGame(Game, pvb):-
+startGame(Socket, Game, pvb):-
 	isPlayerTurn(Game), !,
-	startHuman(Game, NewGame),
-	playGame(NewGame, pvb).
+	startHuman(Socket, Game, NewGame),
+	playGame(Socket, NewGame, pvb).
 
 % inicia uma nova partida no modo Player vs Bot (situação 2: computador começa primeiro)
-startGame(Game, pvb):-
-	startBot(Game, NewGame),
-	playGame(NewGame, pvb).
+startGame(Socket, Game, pvb):-
+	startBot(Socket, Game, NewGame),
+	playGame(Socket, NewGame, pvb).
 
 % inicia uma nova partida no modo Bot vs Bot
-startGame(Game, bvb):-
-	startBot(Game, NewGame),
-	playGame(NewGame, bvb).
+startGame(Socket, Game, bvb):-
+	startBot(Socket, Game, NewGame),
+	playGame(Socket, NewGame, bvb).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se ainda restam peças ao jogador atual
-playGame(Game, _Mode):-
+playGame(_, Game, _Mode):-
 	getCurrentPlayer(Game, Player),
 	\+hasPieces(Player), !,
 	getGameBoard(Game, Board),
@@ -378,7 +366,7 @@ playGame(Game, _Mode):-
 	messagePlayerLost(Player).
 
 % verifica se o jogador 1 venceu a partida atual
-playGame(Game, _Mode):-
+playGame(_, Game, _Mode):-
 	getGameBoard(Game, Board),
 	getPlayer1(Game, Player1),
 	hasPlayerWon(Board, Player1), !,
@@ -386,7 +374,7 @@ playGame(Game, _Mode):-
 	messagePlayerWins(Player1).
 
 % verifica se o jogador 2 venceu a partida atual
-playGame(Game, _Mode):-
+playGame(_, Game, _Mode):-
 	getGameBoard(Game, Board),
 	getPlayer2(Game, Player2),
 	hasPlayerWon(Board, Player2), !,
@@ -394,25 +382,25 @@ playGame(Game, _Mode):-
 	messagePlayerWins(Player2).
 
 % ciclo de jogo para uma partida Player vs Player
-playGame(Game, pvp):-
-	playHuman(Game, NewGame),
-	playGame(NewGame, pvp).
+playGame(Socket, Game, pvp):-
+	playHuman(Socket, Game, NewGame),
+	playGame(Socket, NewGame, pvp).
 
 % ciclo de jogo para uma partida Player vs Bot (situação 1: vez do jogador humano)
-playGame(Game, pvb):-
+playGame(Socket, Game, pvb):-
 	isPlayerTurn(Game), !,
-	playHuman(Game, NewGame),
-	playGame(NewGame, pvb).
+	playHuman(Socket, Game, NewGame),
+	playGame(Socket, NewGame, pvb).
 
 % ciclo de jogo para uma partida Player vs Bot (situação 2: vez do computador)
-playGame(Game, pvb):-
-	playBot(Game, NewGame),
-	playGame(NewGame, pvb).
+playGame(Socket, Game, pvb):-
+	playBot(Socket, Game, NewGame),
+	playGame(Socket, NewGame, pvb).
 
 % ciclo de jogo para uma partida Bot vs Bot
-playGame(Game, bvb):-
-	playBot(Game, NewGame),
-	playGame(NewGame, bvb).
+playGame(Socket, Game, bvb):-
+	playBot(Socket, Game, NewGame),
+	playGame(Socket, NewGame, bvb).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -423,7 +411,7 @@ move(Game, Board, Player, NewGame):-
 	changePlayerTurn(TempGame2, NewGame), !.
 
 % acção do computador: realizar uma jogada (constitúida por dois movimentos)
-playBot(Game, NewGame):-
+playBot(Socket, Game, NewGame):-
 	getBotMode(Game, BotMode),
 	getGameBoard(Game, Board),
 	getCurrentPlayer(Game, Player),
@@ -432,15 +420,16 @@ playBot(Game, NewGame):-
 	move(Game, NewBoard, NewPlayer, NewGame).
 
 % acção do jogador humano: realizar uma jogada (constituída por dois movimentos)
-playHuman(Game, NewGame):-
+playHuman(Socket, Game, NewGame):-
 	getGameBoard(Game, Board),
 	getCurrentPlayer(Game, Player),
 	printState(Game),
-	letHumanPlay(Board, Player, NewBoard, NewPlayer),
+	letHumanPlay(Socket, Board, Player, Reply, TempBoard, TempPlayer),
+	letHumanPlaySecond(Socket, TempBoard, TempPlayer, Reply, NewBoard, NewPlayer),
 	move(Game, NewBoard, NewPlayer, NewGame).
 
 % acção do computador: realizar a jogada inicial (apenas um movimento "colocar peça")
-startBot(Game, NewGame):-
+startBot(Socket, Game, NewGame):-
 	getGameBoard(Game, Board),
 	getCurrentPlayer(Game, Player),
 	printState(Game),
@@ -448,11 +437,11 @@ startBot(Game, NewGame):-
 	move(Game, NewBoard, NewPlayer, NewGame).
 
 % acção do jogador humano: realizar a jogada inicial (apenas um movimento "colocar peça")
-startHuman(Game, NewGame):-
+startHuman(Socket, Game, NewGame):-
 	getGameBoard(Game, Board),
 	getCurrentPlayer(Game, Player),
 	printState(Game),
-	askInitialMove(Board, Player, NewBoard, NewPlayer), !,
+	letHumanPlayInitial(Socket, Board, Player, NewBoard, NewPlayer), !,
 	move(Game, NewBoard, NewPlayer, NewGame).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -467,15 +456,6 @@ isBotTurn(Game):-
 	getCurrentPlayer(Game, Player),
 	getPlayer2(Game, Player), !.
 
-% pede ao jogador humano para realizar uma jogada (constituída por dois movimentos)
-letHumanPlay(Board, Player, NewBoard, NewPlayer):-
-	write('> SELECT FIRST MOVE:\t1. Place Disc'), nl,
-	write('\t\t\t2. Place Ring'), nl,
-	write('\t\t\t3. Move Disc'), nl,
-	write('\t\t\t4. Move Ring'), nl,
-	getInt(Choice),
-	askMoveAction(Board, Player, Choice, NewBoard, NewPlayer), !.
-
 % pede ao computador aleatório para realizar uma jogada (constituída por dois movimentos)
 letBotPlay(Board, Player, random, NewBoard, NewPlayer):-
 	botRandomMove(Board, Player, NewBoard, NewPlayer), !.
@@ -486,89 +466,96 @@ letBotPlay(Board, Player, smart, NewBoard, NewPlayer):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% pede ao jogador humano para realizar a jogada inicial
-askInitialMove(Board, Player, NewBoard, NewPlayer):-
-	write('> SELECT INITIAL MOVE:\t1. Place Disc'), nl,
-	write('\t\t\t2. Place Ring'), nl,
-	getInt(Choice),
-	askInitialAction(Board, Player, Choice, NewBoard, NewPlayer).
+letHumanPlayInitial(Socket, Board, Player, NewBoard, NewPlayer):-
+	write('> SELECT INITIAL MOVE:'), nl,
+	repeat,
+	readRequest(Socket, Stream, Request),
+	format('> Request: ~q~n', [Request]),
+	initialRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
+	format_reply(Stream, Status, MyReply),
+	close_stream(Stream),
+	(MyReply = ack), !.
 
-% pede ao jogador humano um movimento inicial ("colocar disco" || "colocar peça")
-askInitialAction(Board, Player, 1, NewBoard, NewPlayer):-
-	askPlaceDisc(Board, Player, NewBoard, NewPlayer).
-askInitialAction(Board, Player, 2, NewBoard, NewPlayer):-
-	askPlaceRing(Board, Player, NewBoard, NewPlayer).
-askInitialAction(Board, Player, Choice, NewBoard, NewPlayer):-
-	Choice > 0, Choice =< 2, !,
-	askInitialMove(Board, Player, NewBoard, NewPlayer).
-askInitialAction(Board, Player, _Choice, NewBoard, NewPlayer):-
-	messageInvalidChoice, !,
-	askInitialMove(Board, Player, NewBoard, NewPlayer).
+initialRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
+	catch(initialAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
+initialRequest(_, 'rej', '400 Bad Request', _, _, _, _).
+
+initialAction(placeDisc(Position), ack, Board, Player, NewBoard, NewPlayer):-
+	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer).
+initialAction(placeRing(Position), ack, Board, Player, NewBoard, NewPlayer):-
+	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% pede um segundo movimento ao jogador humano (após ter jogado anéis no primeiro)
-askSecondMove(Board, Player, disc, NewBoard, NewPlayer):-
+letHumanPlay(Socket, Board, Player, MyReply, NewBoard, NewPlayer):-
+	write('SELECT FIRST MOVE :'), nl, nl,
+	repeat,
+	readRequest(Socket, Stream, Request),
+	format('> Request: ~q~n',[Request]),
+	firstActionRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
+	format_reply(Stream, Status, MyReply),
+	close_stream(Stream),
+	(MyReply \= rej), !.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+firstActionRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
+	catch(firstAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
+firstActionRequest(_, 'rej', '400 Bad Request', _, _, _, _).
+
+firstAction(placeDisc(Position), ring, Board, Player, NewBoard, NewPlayer):-
+	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer), !.
+firstAction(placeRing(Position), disc, Board, Player, NewBoard, NewPlayer):-
+	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer), !.
+firstAction(moveDisc(From, To), ring, Board, Player, NewBoard, _):-
+	serverMoveDisc(Board, Player, From, To, NewBoard), !.
+firstAction(moveRing(From, To), disc, Board, Player, NewBoard, _):-
+	serverMoveRing(Board, Player, From, To, NewBoard), !.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+letHumanPlaySecond(Socket, Board, Player, disc, NewBoard, NewPlayer):-
 	printBoard(Board),
-	write('> SELECT SECOND MOVE:\t1. Place Disc'), nl,
-	write('\t\t\t2. Move Disc'), nl,
-	getInt(Choice),
-	askDiscAction(Board, Player, Choice, NewBoard, NewPlayer).
+	write('SELECT SECOND MOVE! (DISC)'), nl, nl,
+	repeat,
+	readRequest(Socket, Stream, Request),
+	format('> Request: ~q~n',[Request]),
+	secondDiscRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
+	format_reply(Stream, Status, MyReply),
+	close_stream(Stream),
+	(MyReply = ack), !.
 
-% pede um segundo movimento ao jogador humano (após ter jogado discos no primeiro)
-askSecondMove(Board, Player, ring, NewBoard, NewPlayer):-
+letHumanPlaySecond(Socket, Board, Player, ring, NewBoard, NewPlayer):-
 	printBoard(Board),
-	write('> SELECT SECOND MOVE:\t1. Place Ring'), nl,
-	write('\t\t\t2. Move Ring'), nl,
-	getInt(Choice),
-	askRingAction(Board, Player, Choice, NewBoard, NewPlayer).
+	write('SELECT SECOND MOVE! (RING)'), nl, nl,
+	repeat,
+	readRequest(Socket, Stream, Request),
+	format('> Request: ~q~n',[Request]),
+	secondRingRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
+	format_reply(Stream, Status, MyReply),
+	close_stream(Stream),
+	(MyReply = ack), !.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% pede um primeiro movimento ao jogador humano, dos quatro possíveis
-askMoveAction(Board, Player, 1, NewBoard, NewPlayer):-
-	askPlaceDisc(Board, Player, TempBoard, TempPlayer), !,
-	askSecondMove(TempBoard, TempPlayer, ring, NewBoard, NewPlayer).
-askMoveAction(Board, Player, 2, NewBoard, NewPlayer):-
-	askPlaceRing(Board, Player, TempBoard, TempPlayer), !,
-	askSecondMove(TempBoard, TempPlayer, disc, NewBoard, NewPlayer).
-askMoveAction(Board, Player, 3, NewBoard, NewPlayer):-
-	askMoveDisc(Board, Player, TempBoard), !,
-	askSecondMove(TempBoard, Player, ring, NewBoard,  NewPlayer).
-askMoveAction(Board, Player, 4, NewBoard, NewPlayer):-
-	askMoveRing(Board, Player, TempBoard), !,
-	askSecondMove(TempBoard, Player, disc, NewBoard, NewPlayer).
-askMoveAction(Board, Player, Choice, NewBoard, NewPlayer):-
-	Choice > 0, Choice =< 4, !,
-	letHumanPlay(Board, Player, NewBoard, NewPlayer).
-askMoveAction(Board, Player, _Choice, NewBoard, NewPlayer):-
-	messageInvalidChoice, !,
-	letHumanPlay(Board, Player, NewBoard, NewPlayer).
+secondDiscRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
+	catch(secondDiscAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
+secondDiscRequest(_, 'rej', '400 Bad Request', _, _, _, _).
+
+secondDiscAction(placeDisc(Position), ack, Board, Player, NewBoard, NewPlayer):-
+	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer).
+secondDiscAction(moveDisc(From,To), ack, Board, Player, NewBoard, _):-
+	serverMoveDisc(Board, Player, From, To, NewBoard).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% pede um segundo movimento com discos ao jogador humano
-askDiscAction(Board, Player, 1, NewBoard, NewPlayer):-
-	askPlaceDisc(Board, Player, NewBoard, NewPlayer).
-askDiscAction(Board, Player, 2, NewBoard, _NewPlayer):-
-	askMoveDisc(Board, Player, NewBoard).
-askDiscAction(Board, Player, Choice, NewBoard, NewPlayer):-
-	Choice > 0, Choice =< 2, !,
-	askSecondMove(Board, Player, disc, NewBoard, NewPlayer).
-askDiscAction(Board, Player, _Choice, NewBoard, NewPlayer):-
-	messageInvalidChoice, !,
-	askSecondMove(Board, Player, disc, NewBoard, NewPlayer).
+secondRingRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
+	catch(secondRingAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
+secondRingRequest(_, 'rej', '400 Bad Request', _, _, _, _).
+
+secondRingAction(placeRing(Position), ack, Board, Player, NewBoard, NewPlayer):-
+	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer).
+secondRingAction(moveRing(From,To), ack, Board, Player, NewBoard, _):-
+	serverMoveRing(Board, Player, From, To, NewBoard).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% pede um segundo movimento com anéis ao jogador humano
-askRingAction(Board, Player, 1, NewBoard, NewPlayer):-
-	askPlaceRing(Board, Player, NewBoard, NewPlayer).
-askRingAction(Board, Player, 2, NewBoard, _NewPlayer):-
-	askMoveRing(Board, Player, NewBoard).
-askRingAction(Board, Player, Choice, NewBoard, NewPlayer):-
-	Choice > 0, Choice =< 2, !,
-	askSecondMove(Board, Player, ring, NewBoard, NewPlayer).
-askRingAction(Board, Player, _Choice, NewBoard, NewPlayer):-
-	messageInvalidChoice, !,
-	askSecondMove(Board, Player, disc, NewBoard, NewPlayer).

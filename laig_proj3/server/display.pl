@@ -144,5 +144,4 @@ printState(Game):-
 	printPlayerInfo(Player1),
 	printPlayerInfo(Player2),
 	write('+---------------------------------------+'), nl, nl,
-	printTurn(PlayerTurn), nl,
-	pressEnterToContinue, nl, !.
+	printTurn(PlayerTurn), nl, nl, !.
