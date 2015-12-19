@@ -164,7 +164,7 @@ PieceController.prototype.display = function() {
  };
 //--------------------------------------------------------
 PieceController.prototype.removeFromStack = function(pieceId, x, y) {
-	//--------------------------------------------------------
+
 	if (pieceId < this.p1Discs_end) {
 
 		var nStack = pieceId % this.numberStacks;
@@ -179,8 +179,7 @@ PieceController.prototype.removeFromStack = function(pieceId, x, y) {
 			this.selectedPiece = null;
 		}
 	}
-	//--------------------------------------------------------
-	else if (pieceId >= this.p1Rings_start && pieceId < this.p1Rings_end){
+	else if (pieceId >= this.p1Rings_start && pieceId < this.p1Rings_end) {
 
 		var nStack = (pieceId - this.p1Rings_start) % this.numberStacks;
 		var top = this.p1RingStacks[nStack].length - 1;
@@ -194,7 +193,6 @@ PieceController.prototype.removeFromStack = function(pieceId, x, y) {
 			this.selectedPiece = null;
 		}
 	}
-	//--------------------------------------------------------
 	else if (pieceId >= this.p2Discs_start && pieceId < this.p2Discs_end){
 
 		var nStack = (pieceId - this.p2Discs_start) % this.numberStacks;
@@ -209,7 +207,6 @@ PieceController.prototype.removeFromStack = function(pieceId, x, y) {
 			this.selectedPiece = null;
 		}
 	}
-	//--------------------------------------------------------
 	else if (pieceId >= this.p2Rings_start && pieceId < this.p2Rings_end) {
 
 		var nStack = (pieceId - this.p2Rings_start) % this.numberStacks;

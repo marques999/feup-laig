@@ -16,6 +16,7 @@ function GameBoard(scene) {
 	this.borderAngle = Math.sin(Math.PI/3);
 	this.elapsedMillis = 0.0;
 	//--------------------------------------------------------
+	this.cells = [];
 	this.currentId = 0;
 	this.numberRows = 7;
 	this.numberColumns = 7;
@@ -37,19 +38,15 @@ function GameBoard(scene) {
 	//--------------------------------------------------------
 	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
 	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);
+	this.chair = new ObjectChair(scene);
 	this.table = new ObjectTable(scene);
 	this.whiteBorder = new ObjectBorder(scene, this.numberRows, 'white');
 	this.blackBorder = new ObjectBorder(scene, this.numberColumns, 'black');
-	this.box = new ObjectBox(scene);
-	this.numberDiscs = 19;
-	this.numberRings = 19;
 	this.pieces = new PieceController(scene, this, this.player1, this.player2);
-	this.cells = [];
 	this.clock1 = new ObjectClock(scene, this.player1);
 	this.clock2 = new ObjectClock(scene, this.player2);
-	this.guiInterface = null;
-	this.animationActive = 0;
 	//--------------------------------------------------------
+	this.animationActive = 0;
 	this.moviePlaying = false;
 	this.movieFrame = 0;
 	this.moviePaused = false;
@@ -60,6 +57,7 @@ function GameBoard(scene) {
 	this.hoverTexture = new CGFtexture(this.scene, "scenes/images/hexagon_hover.png");
 	this.baseTexture = new CGFtexture(this.scene, "scenes/images/hex_board.png");
 	//--------------------------------------------------------
+	this.guiInterface = null;
 	this.gameModes = ['pvp', 'pvb', 'bvb'];
 	this.gameBoard = ['default', 'small', 'diagonal'];
 	//--------------------------------------------------------
@@ -107,7 +105,8 @@ GameBoard.prototype.display = function() {
 	this.scene.popMatrix();
 
 	this.displayBorder();
-  //	this.displayTable();
+  	this.displayTable();
+  	this.displayChair();
 	this.displayClock();
 };
 //--------------------------------------------------------
@@ -179,7 +178,6 @@ GameBoard.prototype.displayBorder = function() {
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
 		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows/2) * 2.0 - !(this.numberRows & 1)*0.5,0.0,0.5/this.borderAngle - (-!(this.numberRows & 1)*0.5 + ~~(this.numberRows/2))*2*this.borderAngle);
-		console.log()
 		this.scene.rotate(Math.PI/2, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.blackBorder.display();
@@ -208,6 +206,19 @@ GameBoard.prototype.displayClock = function() {
 GameBoard.prototype.displayPieces = function() {
 	this.pieces.display();
 	this.defaultMaterial.apply();
+};
+//--------------------------------------------------------
+GameBoard.prototype.displayChair = function() {
+	this.scene.pushMatrix();
+	this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
+	this.scene.scale(this.baseSize[0]*2.25, 7.5, this.baseSize[1]*1.0);
+	this.scene.translate(0.0, 0.0, -this.baseSize[0]);
+	this.chair.display();
+	this.scene.translate(0.0, 0.0, this.baseSize[0]);
+	this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
+	this.scene.translate(0.0, 0.0, -this.baseSize[0]);
+	this.chair.display();
+	this.scene.popMatrix();
 };
 //--------------------------------------------------------
 GameBoard.prototype.displayTable = function() {

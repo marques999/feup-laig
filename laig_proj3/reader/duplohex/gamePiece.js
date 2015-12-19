@@ -7,7 +7,7 @@ function GamePiece(scene, position, color) {
 	this.cellX = null;
 	this.cellY = null;
 	this.color = color;
-	this.materials = {};
+	this.materials = [];
 	//--------------------------------------------------------
 	if (color == 'black') {
 		this.materials["default"] = new CGFappearance(scene);
@@ -38,29 +38,30 @@ function GamePiece(scene, position, color) {
 	//--------------------------------------------------------
 	this.material = this.materials["default"];
 };
-
+//--------------------------------------------------------
 GamePiece.prototype = Object.create(MyPrimitive.prototype);
 GamePiece.prototype.constructor = GamePiece;
-
+//--------------------------------------------------------
 GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
 	this.position[0] = coordX;
 	this.position[1] = coordY;
 	this.position[2] = coordZ;
 };
-
+//--------------------------------------------------------
 GamePiece.prototype.place = function(x, y) {
 	this.cellX = x;
 	this.cellY = y;
 };
-
+//--------------------------------------------------------
 GamePiece.prototype.wasPlaced = function() {
 	return this.cellX != null && this.cellY != null;
 };
-
+//--------------------------------------------------------
 GamePiece.prototype.setColor = function(color) {
 	this.material = this.materials[color];
 };
-
+//--------------------------------------------------------
 GamePiece.prototype.getColor = function() {
 	return this.material;
 };
+//--------------------------------------------------------

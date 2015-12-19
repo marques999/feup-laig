@@ -12,18 +12,21 @@ function ObjectTable(scene) {
 	//--------------------------------------------------------
 	this.cube = new ObjectCube(scene);
 	//--------------------------------------------------------
-	this.wood = new CGFappearance(scene);
-	this.wood.setAmbient(0.5, 0.5, 0.5, 1.0);
-	this.wood.setDiffuse(0.8, 0.8, 0.8, 1.0);
-	this.wood.setSpecular(0.8, 0.8, 0.8, 0.2);
-	this.wood.setShininess(40);
-	this.wood.loadTexture("../scenes/images/table.png");
+	this.materials = [];
+	this.materials["default"] = new CGFappearance(scene);
 	//--------------------------------------------------------
-	this.metal = new CGFappearance(scene);
-	this.metal.setAmbient(0.4, 0.4, 0.4, 1.0);
-	this.metal.setDiffuse(0.4, 0.4, 0.4, 0.8);
-	this.metal.setSpecular(0.6, 0.6, 0.6, 1.0);
-	this.metal.setShininess(10);
+	this.materials["wood"] = new CGFappearance(scene);
+	this.materials["wood"].setAmbient(0.5, 0.5, 0.5, 1.0);
+	this.materials["wood"].setDiffuse(0.8, 0.8, 0.8, 1.0);
+	this.materials["wood"].setSpecular(0.8, 0.8, 0.8, 0.2);
+	this.materials["wood"].setShininess(40);
+	this.materials["wood"].loadTexture("../scenes/images/table.png");
+	//--------------------------------------------------------
+	this.materials["metal"] = new CGFappearance(scene);
+	this.materials["metal"].setAmbient(0.4, 0.4, 0.4, 1.0);
+	this.materials["metal"].setDiffuse(0.4, 0.4, 0.4, 0.8);
+	this.materials["metal"].setSpecular(0.6, 0.6, 0.6, 1.0);
+	this.materials["metal"].setShininess(10);
 };
 
 ObjectTable.prototype = Object.create(MyPrimitive.prototype);
@@ -34,36 +37,22 @@ ObjectTable.prototype.constructor = ObjectTable;
  * @return {null}
  */
 ObjectTable.prototype.display = function() {
-	//--------------------------------------------------------
 	this.scene.pushMatrix();
+	this.materials["metal"].apply();
+	this.scene.scale(0.3, 3.5, 0.3);
+	this.scene.translate(-2.35/0.3, 1.75/3.5, 1.35/0.3);
+	this.cube.display();
+	this.scene.translate(4.7/0.3, 0.0, 0.0);
+	this.cube.display();
+	this.scene.translate(-4.7/0.3, 0.0, -2.7/0.3);
+	this.cube.display();
+	this.scene.translate(4.7/0.3, 0.0, 0.0);
+	this.cube.display();
+	this.scene.scale(1/0.3, 1/3.5, 1/0.3);
 	this.scene.translate(-2.35, 1.75, 1.35);
-	this.scene.scale(0.3, 3.5, 0.3);
-	this.metal.apply();
+	this.scene.scale(5.0, 0.5, 3.0);
+	this.materials["wood"].apply();
 	this.cube.display();
 	this.scene.popMatrix();
-	//--------------------------------------------------------
-	this.scene.pushMatrix();
-	this.scene.translate(2.35, 1.75, 1.35);
-	this.scene.scale(0.3, 3.5, 0.3);
-	this.cube.display();
-	this.scene.popMatrix();
-	//--------------------------------------------------------
-	this.scene.pushMatrix();
-	this.scene.translate(-2.35, 1.75, -1.35);
-	this.scene.scale(0.3, 3.5, 0.3);
-	this.cube.display();
-	this.scene.popMatrix();
-	//--------------------------------------------------------
-	this.scene.pushMatrix();
-	this.scene.translate(2.35, 1.75, -1.35);
-	this.scene.scale(0.3, 3.5, 0.3);
-	this.cube.display();
-	this.scene.popMatrix();
-	//--------------------------------------------------------
-	this.scene.pushMatrix();
-	this.scene.translate(0.0, 3.65, 0.0);
-	this.scene.scale(5.0, 0.3, 3.0);
-	this.wood.apply();
-	this.cube.display();
-	this.scene.popMatrix();
+	this.materials["default"].apply();
 };
