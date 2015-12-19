@@ -13,6 +13,7 @@ function GameBoard(scene) {
 	this.basePos = [-2.25, 0.0, -4.5*Math.cos(30*Math.PI/180)];
 	this.baseSize = [5.0, 5.0];
 	this.boxPos = [4, -0.4, 17];
+	this.borderAngle = Math.sin(Math.PI/3);
 	this.elapsedMillis = 0.0;
 	//--------------------------------------------------------
 	this.currentId = 0;
@@ -34,10 +35,11 @@ function GameBoard(scene) {
 		next: false
 	};
 	//--------------------------------------------------------
-	this.hexagon = new MyCircle(scene, 6);
 	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
 	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);
 	this.table = new ObjectTable(scene);
+	this.whiteBorder = new ObjectBorder(scene, this.numberRows, 'white');
+	this.blackBorder = new ObjectBorder(scene, this.numberRows, 'black');
 	this.box = new ObjectBox(scene);
 	this.numberDiscs = 19;
 	this.numberRings = 19;
@@ -97,14 +99,15 @@ GameBoard.prototype.display = function() {
 	this.displayPieces();
 
 	this.scene.pushMatrix();
-		this.scene.scale(this.baseSize[0]*7.5, 1.0, this.baseSize[1]*9.0);
-		this.scene.translate(-0.5, -0.5, 0.5);
+		this.scene.scale(this.baseSize[0]*7.5, 1.0, this.baseSize[1]*11.0);
+		this.scene.translate(-0.5, -1.0, 0.5);
 		this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
 		this.scene.registerPicking(this.base);
 		this.base.display();
 	this.scene.popMatrix();
 
-	this.displayTable();
+	this.displayBorder();
+  //	this.displayTable();
 	this.displayClock();
 };
 //--------------------------------------------------------
@@ -154,6 +157,38 @@ GameBoard.prototype.displayBoard = function() {
 	}
 
 	this.hexTexture.unbind();
+	this.scene.popMatrix();
+};
+//--------------------------------------------------------
+GameBoard.prototype.displayBorder = function() {
+
+	this.scene.pushMatrix();
+	this.scene.scale(this.baseSize[0] * 0.5, 1.0, this.baseSize[1] * 0.5);
+	this.scene.translate(this.basePos[0] * 2.0, -0.5 + this.basePos[1] * 2.0, -this.basePos[2] * 2.0);
+	this.scene.pushMatrix();
+		this.scene.translate(-2*this.borderAngle*this.borderAngle + 0.5, 0.0, 2*this.borderAngle*0.5 + this.borderAngle);
+		this.scene.rotate(Math.PI/6, 0, 1, 0);
+		this.scene.rotate(-Math.PI/2, 1, 0, 0);
+		this.whiteBorder.display();
+	this.scene.popMatrix();
+	this.scene.pushMatrix();
+		this.scene.translate(7*2*this.borderAngle*this.borderAngle - 0.5, 0.0, -7*2*this.borderAngle*0.5 - 7*2*this.borderAngle + this.borderAngle);
+		this.scene.rotate(Math.PI/6 + Math.PI, 0,1,0);
+		this.scene.rotate(-Math.PI/2, 1,0,0);
+		this.whiteBorder.display();
+	this.scene.popMatrix();
+	this.scene.pushMatrix();
+		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows/2) * 2.0,0.0,0.5/this.borderAngle - 3*2*this.borderAngle);
+		this.scene.rotate(Math.PI/2, 0,1,0);
+		this.scene.rotate(-Math.PI/2, 1,0,0);
+		this.blackBorder.display();
+	this.scene.popMatrix();
+	this.scene.pushMatrix();
+		this.scene.translate(-1.0, 0.0, -6*2*this.borderAngle -0.5/this.borderAngle);
+		this.scene.rotate(-Math.PI/2, 0,1,0);
+		this.scene.rotate(-Math.PI/2, 1,0,0);
+		this.blackBorder.display();
+	this.scene.popMatrix();
 	this.scene.popMatrix();
 };
 //--------------------------------------------------------

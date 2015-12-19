@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'MyBoardBorder'
+ * construtor default da classe 'ObjectBorder'
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
@@ -7,16 +7,16 @@
  * @param {Number} slices - número de divisões do círculo em torno do raio
  * @return {null}
  */
-function MyBoardBorder(scene, size, type) {
+function ObjectBorder(scene, size, color) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
 	//--------------------------------------------------------
-	this.size = size-1;
-	this.type = type;
-	this.defaultAngle = Math.sin(Math.PI/3);
+	this.size = size - 1;
+	this.color = color;
+	this.defaultAngle = Math.sin(Math.PI / 3);
 	this.invertedAngle = Math.sin(Math.PI / 6);
 	this.defaultScale = 0.5 / this.defaultAngle + 7 * 2 * this.defaultAngle;
-	this.material= new CGFappearance(scene);
+	this.material = new CGFappearance(scene);
 	//--------------------------------------------------------
 	this.plane = new ObjectPlane(scene, 15);
 	this.triangle = new MyTriangle(scene, [0.0, 0.0, 0.0], [2 * this.defaultAngle, 0.0, 0.0], [this.defaultAngle, 0.5, 0.0]);
@@ -28,7 +28,7 @@ function MyBoardBorder(scene, size, type) {
 	this.moddedCylinder = new CustomCylinder(scene, 0.5, 0.5, 0.5, 20, 20, Math.PI / 6);
 	this.moddedCylinder2 = new CustomCylinder(scene, 0.5, 0.5, 0.5, 20, 20, Math.PI / 3);
 	//--------------------------------------------------------
-	if (type == 1) {
+	if (color == 'white') {
 		this.material.setDiffuse(0.95, 0.95, 0.95, 0.6);
 		this.material.setAmbient(0.95, 0.95, 0.95, 0.2);
 		this.material.setSpecular(1.0, 1.0, 1.0, 0.5);
@@ -42,65 +42,36 @@ function MyBoardBorder(scene, size, type) {
 	}
 };
 
-MyBoardBorder.prototype = Object.create(MyPrimitive.prototype);
-MyBoardBorder.prototype.constructor = MyBoardBorder;
+ObjectBorder.prototype = Object.create(MyPrimitive.prototype);
+ObjectBorder.prototype.constructor = ObjectBorder;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyBoardBorder'
+ * inicializa os buffers WebGL da primitiva 'ObjectBorder'
  * @return {null}
  */
-MyBoardBorder.prototype.display = function() {
+ObjectBorder.prototype.display = function() {
 
 	this.scene.pushMatrix();
 		this.material.apply();
 		this.scene.rotate(Math.PI/2,1,0,0);
 		this.scene.translate(0.0, -0.5, 0.5);
 		this.rectangle.display();
-		this.scene.rotate(-Math.PI/2,1,0,0);
+		this.scene.translate(0.0, 0.5, -0.5);
+		this.scene.rotate(Math.PI/2,-1,0,0);
 		this.scene.scale(this.defaultScale,0.5,1.0);
-		this.scene.translate(0.5, 0.0, -0.5);
+		this.scene.translate(0.5, -0.5, 0.0);
 		this.plane.display();
 	this.scene.popMatrix();
 
-	if (this.type == 1) {
-		this.displayBlack();		
+	if (this.color == 'white') {
+		this.displayWhite();		
 	}
 	else {
-		this.displayWhite();
+		this.displayBlack();
 	}
 };
 
-MyBoardBorder.prototype.displayBlack = function() {
-	
-	this.scene.pushMatrix();
-		this.scene.translate(this.defaultScale,0.0,0.0);
-		this.scene.rotate(-Math.PI/2,0.0,0.0,1.0);
-		this.moddedCircle.display();
-		this.scene.translate(0.0,0.0,-0.5);
-		this.moddedCylinder.display();
-	this.scene.popMatrix();
-
-	this.scene.pushMatrix();	
-	this.triangle.display();
-		
-	for (var i = 0; i < this.size; i++) {
-		this.scene.translate(2.0*this.defaultAngle,0.0,0.0);
-		this.triangle.display();
-	}
-		
-	this.scene.translate(2.0*this.defaultAngle,0.0,0.0);
-	this.halftriangle.display();
-	this.scene.popMatrix();
-
-	this.scene.pushMatrix();
-		this.scene.rotate(-5*Math.PI/6,0.0,0.0,1.0);
-		this.moddedCircle2.display();
-		this.scene.translate(0.0,0.0,-0.5);
-		this.moddedCylinder2.display();
-	this.scene.popMatrix();
-};
-
-MyBoardBorder.prototype.displayWhite = function() {
+ObjectBorder.prototype.displayBlack = function() {
 
 	this.scene.pushMatrix();
 		this.scene.rotate(4*Math.PI/3,0.0,0.0,1.0);
@@ -114,7 +85,7 @@ MyBoardBorder.prototype.displayWhite = function() {
 
 	for (var i = 0; i < this.size; i++) {
 
-		if (i == 0){
+		if (i == 0) {
 			this.scene.translate(0.5/this.defaultAngle,0.0,0.0);
 		}
 		else {
@@ -130,7 +101,37 @@ MyBoardBorder.prototype.displayWhite = function() {
 
 	this.scene.pushMatrix();
 		this.scene.translate(this.defaultScale,0.0,0.0);
-		this.scene.rotate(-Math.PI/2,0.0,0.0,1.0);
+		this.scene.rotate(Math.PI/2,0.0,0.0,-1.0);
+		this.moddedCircle2.display();
+		this.scene.translate(0.0,0.0,-0.5);
+		this.moddedCylinder2.display();
+	this.scene.popMatrix();
+};
+
+ObjectBorder.prototype.displayWhite = function() {
+	
+	this.scene.pushMatrix();
+		this.scene.translate(this.defaultScale,0.0,0.0);
+		this.scene.rotate(Math.PI/2,0.0,0.0,-1.0);
+		this.moddedCircle.display();
+		this.scene.translate(0.0,0.0,-0.5);
+		this.moddedCylinder.display();
+	this.scene.popMatrix();
+
+	this.scene.pushMatrix();	
+	this.triangle.display();
+		
+	for (var i = 0; i < this.size; i++) {
+		this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
+		this.triangle.display();
+	}
+		
+	this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
+	this.halftriangle.display();
+	this.scene.popMatrix();
+
+	this.scene.pushMatrix();
+		this.scene.rotate(5*Math.PI/6,0,0,-1);
 		this.moddedCircle2.display();
 		this.scene.translate(0.0,0.0,-0.5);
 		this.moddedCylinder2.display();
