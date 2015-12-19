@@ -7,9 +7,8 @@
  * @return {null}
  */
 function GameBoard(scene) {
-
+	//--------------------------------------------------------		
 	MyPrimitive.call(this, scene);
-
 	//--------------------------------------------------------		
 	this.basePos = [-2.25, 0.0, -4.5*Math.cos(30*Math.PI/180)];
 	this.baseSize = [5.0, 5.0];
@@ -26,27 +25,27 @@ function GameBoard(scene) {
 		discs: 21,
 		rings: 18,
 		next: true
-	}
+	};
 	//--------------------------------------------------------	
 	this.player2 = {
 		color: 'black',
 		discs: 19,
 		rings: 19,
 		next: false
-	}
+	};
 	//--------------------------------------------------------
 	this.hexagon = new MyCircle(scene, 6);
 	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
 	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);		
+	this.table = new ObjectTable(scene);
 	this.box = new ObjectBox(scene);
 	this.numberDiscs = 19;
 	this.numberRings = 19;
 	this.pieces = new PieceController(scene, this, this.player1, this.player2);	
 	this.cells = [];
-	this.clock = new ObjectClock(scene);
+	this.clock1 = new ObjectClock(scene, this.player1);
+	this.clock2 = new ObjectClock(scene, this.player2);
 	this.guiInterface = null;
-	this.score1 = new ObjectScore(scene);
-	this.score2 = new ObjectScore(scene);
 	this.animationActive = 0;
 	//--------------------------------------------------------
 	this.moviePlaying = false;
@@ -142,24 +141,31 @@ GameBoard.prototype.display = function() {
 	this.scene.popMatrix();
 	this.pieces.display();
 	this.defaultMaterial.apply();
+	
+	this.scene.pushMatrix();		
+		this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
+		this.scene.scale(this.baseSize[0]*3.0, 5.0, this.baseSize[1]*3.0);	
+		this.table.display();
+	this.scene.popMatrix();
+
+	this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
+	this.scene.translate(this.baseSize[0]*5.0, 0.0, this.baseSize[0]);
+	this.clock1.display();
+	this.scene.translate(-this.baseSize[0]*5.0, 0.0, -this.baseSize[0]);
+	this.scene.rotate(-Math.PI, 0.0, 1.0, 0.0);
+	this.scene.translate(this.baseSize[0]*5.0, 0.0, this.baseSize[0]);
+	this.clock2.display();
+	this.scene.translate(-this.baseSize[0]*5.0, 0.0, -this.baseSize[0]);
+	this.scene.rotate(-Math.PI/2, 0.0, 1.0, 0.0);
 
 	this.scene.pushMatrix();						
-		this.scene.scale(this.baseSize[0]*8.0, 1.0, this.baseSize[1]*16.0);	
+		this.scene.scale(this.baseSize[0]*7.5, 1.0, this.baseSize[1]*9.0);	
 		this.scene.translate(-0.5, -0.5, 0.5);					
 		this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);		
 		this.scene.registerPicking(this.base);			
 		this.base.display();	
 	this.scene.popMatrix();
 
-	this.scene.pushMatrix();
-		this.scene.translate(-12.0, 4.0, 0.0);
-		this.clock.display();
-		this.scene.translate(6.0, 0.0, 0.0);
-		this.score1.display();
-		this.scene.translate(0.0, 4.0, 0.0);
-		this.score2.display();
-		this.scene.translate(6.0, -8.0, 0.0);
-	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
 		//this.box.display();		
@@ -218,10 +224,9 @@ GameBoard.prototype.setPlayer2 = function(playerState) {
 //--------------------------------------------------------	
 GameBoard.prototype.update = function(currTime, lastUpdate) {
 		
-	this.clock.update(currTime, lastUpdate);
-	this.score1.update(this.pieces.p1Discs, this.pieces.p1Rings);
-	this.score2.update(this.pieces.p2Discs, this.pieces.p2Rings);
-	
+	this.clock1.update(currTime, lastUpdate);
+	this.clock2.update(currTime, lastUpdate);
+
 	if (lastUpdate == 0) {
 		lastUpdate = currTime;
 	}
