@@ -1,16 +1,14 @@
 /**
- * construtor default da classe 'ObjectClockDigit'
+ * construtor default da classe 'ObjectDigit'
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
  * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
- * @param {Number} minX - coordenada X do vértice superior esquerdo do retângulo
- * @param {Number} maxY - coordenada Y do vértice superior esquerdo do retângulo
- * @param {Number} maxX - coordenada X do vértice inferior direito do retângulo
- * @param {Number} minY - coordenada Y do vértice inferior direito do retângulo
+ * @param {Number} minS - coordenada S do vértice superior esquerdo do retângulo
+ * @param {Number} maxS - coordenada S do vértice superior esquerdo do retângulo
  * @return {null}
  */
-function ObjectClockDigit(scene, minS, maxS) {
+function ObjectDigit(scene, minS, maxS) {
 
 	MyPrimitive.call(this, scene);
 
@@ -43,5 +41,5 @@ function ObjectClockDigit(scene, minS, maxS) {
 	this.initGLBuffers();
 };
 
-ObjectClockDigit.prototype = Object.create(MyPrimitive.prototype);
-ObjectClockDigit.prototype.constructor = ObjectClockDigit;
+ObjectDigit.prototype = Object.create(MyPrimitive.prototype);
+ObjectDigit.prototype.constructor = ObjectDigit;

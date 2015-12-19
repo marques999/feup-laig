@@ -1,7 +1,7 @@
 ﻿/**
  * construtor default da classe 'LinearAnimation'
  * @constructor
- * @author Diogo Marques
+ * @author Carlos Samouco, Diogo Marques
  * @param {Number} span - duração da animação (em segundos)
  * @param {Number[]} points - pontos de controlo da trajetória
  * @return {null}
@@ -110,7 +110,6 @@ LinearAnimation.prototype.update = function() {
  */
 LinearAnimation.prototype.step = function(deltaTime) {
 
-	
 	if (this.active) {
 
 		this.currentTime += deltaTime;
@@ -121,18 +120,18 @@ LinearAnimation.prototype.step = function(deltaTime) {
 
 			vec3.scale(this.currentDelta, this.velocity[this.currentSection], difDelta);
 			vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
-			
+
 			deltaTime -= difDelta;
-						
+
 			if (++this.currentSection == this.sections) {
-				this.currentSection--;				
+				this.currentSection--;
 				this.stop();
 				deltaTime = 0;
 				break;
-			}				
+			}
 		}
 
 		vec3.scale(this.currentDelta, this.velocity[this.currentSection], deltaTime);
 		vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
 	}
-}; 
+};

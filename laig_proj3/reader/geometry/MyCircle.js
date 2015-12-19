@@ -5,6 +5,7 @@
  * @author Diogo Marques
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
  * @param {Number} slices - número de divisões do círculo em torno do raio
+ * @param {Number} radius - raio do círculo
  * @return {null}
  */
 function MyCircle(scene, slices, radius) {

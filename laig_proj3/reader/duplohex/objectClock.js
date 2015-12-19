@@ -30,11 +30,11 @@ function ObjectClock(scene, player) {
 	this.defaultMaterial = new CGFappearance(scene);
 	//--------------------------------------------------------
 	for (var i = 0; i <= 10; i++) {
-		this.DIGITS[i] = new ObjectClockDigit(scene, this.texelLength * i, this.texelLength * (i + 1));
+		this.DIGITS[i] = new ObjectDigit(scene, this.texelLength * i, this.texelLength * (i + 1));
 	}
 	//--------------------------------------------------------
-	this.DIGITS[11] = new ObjectClockDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
-	this.DIGITS[12] = new ObjectClockDigit(scene, (12/16), (13/16));
+	this.DIGITS[11] = new ObjectDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
+	this.DIGITS[12] = new ObjectDigit(scene, (12/16), (13/16));
 	this.CLOCK_material = new CGFappearance(scene);
 	this.CLOCK_material.loadTexture("scenes/images/clock.png");
 };
@@ -49,14 +49,6 @@ ObjectClock.prototype.constructor = ObjectClock;
 ObjectClock.prototype.display = function() {
 	this.scene.pushMatrix();
 	this.redMaterial.apply();
-	//--------------------------------------------------------
-	this.scene.pushMatrix();
-	//	this.scene.scale(12.0, 2.0, 0.8);
-	//	this.cube.display();
-	//	this.scene.translate(-2.0, 0.0, 13.0);
-	//	this.cube.display();
-	this.scene.popMatrix();
-
 	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(0.0, 0.5, 3.0);
@@ -127,7 +119,7 @@ ObjectClock.prototype.display = function() {
 	this.DIGITS[this.RIGHT[0]].display();
 	this.scene.translate(1.0, 0.0, 0.0);
 	this.DIGITS[this.RIGHT[1]].display();
-		//--------------------------------------------------------
+	//--------------------------------------------------------
 	this.scene.translate(-0.5, -0.5, -3.5);
 	this.defaultMaterial.apply();
 	this.scene.popMatrix();

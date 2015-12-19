@@ -1,8 +1,8 @@
 /**
- * construtor default da classe 'MyModdedCylinder'
+ * construtor default da classe 'CustomCylinder'
  * @constructor
  * @augments MyPrimitive
- * @author Diogo Marques
+ * @author Carlos Samouco
  * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
  * @param {Number} height - altura do cilindro
  * @param {Number} radiusBottom - raio da base inferior do cilindro
@@ -11,10 +11,10 @@
  * @param {Number} slices - número de secçoes do cilindro em torno dos raios
  * @return {null}
  */
-function MyModdedCylinder(scene, height, radiusBottom, radiusTop, stacks, slices, angle) {
-
+function CustomCylinder(scene, height, radiusBottom, radiusTop, stacks, slices, angle) {
+	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
-
+	//--------------------------------------------------------
 	this.radiusBottom = radiusBottom;
 	this.radiusTop = radiusTop;
 	this.height = height;
@@ -28,14 +28,14 @@ function MyModdedCylinder(scene, height, radiusBottom, radiusTop, stacks, slices
 	this.initBuffers();
 };
 
-MyModdedCylinder.prototype = Object.create(MyPrimitive.prototype);
-MyModdedCylinder.prototype.constructor = MyModdedCylinder;
+CustomCylinder.prototype = Object.create(MyPrimitive.prototype);
+CustomCylinder.prototype.constructor = CustomCylinder;
 
 /**
- * inicializa os buffers WebGL da primitiva 'MyModdedCylinder'
+ * inicializa os buffers WebGL da primitiva 'CustomCylinder'
  * @return {null}
  */
-MyModdedCylinder.prototype.initBuffers = function() {
+CustomCylinder.prototype.initBuffers = function() {
 
 	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;
 	var stackIncrement = this.height / this.stacks;
