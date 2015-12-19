@@ -6,6 +6,7 @@ function GameServer(board, address, port) {
 	this.httpPort = port || 8081;
 	this.validResponse = false;
 	this.serverAddress = 'http://' + this.httpAddress + ':' + this.httpPort + '/';
+	//--------------------------------------------------------
 	this.boardMatrix = {
 		'diagonal': 'diagonalMatrix',
 		'default': 'emptyMatrix',
@@ -259,6 +260,9 @@ GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, 
 		else {
 			self.gameBoard.onResetPlace();
 		}
+	}, function(e)
+	{
+		self.gameBoard.onResetPlace();
 	});
 };
 //--------------------------------------------------------
@@ -273,6 +277,9 @@ GameServer.prototype.requestMoveRing = function(SourceX, SourceY, DestinationX, 
 		else {
 			self.gameBoard.onResetPlace();
 		}
+	}, function(e)
+	{
+		self.gameBoard.onResetPlace();
 	});
 };
 //--------------------------------------------------------
@@ -287,6 +294,9 @@ GameServer.prototype.requestPlaceDisc = function(DestinationX, DestinationY) {
 		else {
 			self.gameBoard.onResetPlace();
 		}
+	}, function(e)
+	{
+		self.gameBoard.onResetPlace();
 	});
 };
 //--------------------------------------------------------
@@ -301,6 +311,9 @@ GameServer.prototype.requestPlaceRing = function(DestinationX, DestinationY) {
 		else {
 			self.gameBoard.onResetPlace();
 		}
+	}, function(e)
+	{
+		self.gameBoard.onResetPlace();
 	});
 };
 //--------------------------------------------------------
