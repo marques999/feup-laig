@@ -54,7 +54,6 @@ XMLscene.prototype.initGL = function() {
 
 XMLscene.prototype.initServer = function() {
 	this.httpServer = new GameServer(this.board, 'localhost', 8081);
-	//this.httpServer.requestPlaceDisc(5, 5);
 	this.httpServer.setMode('pvp');
 	this.httpServer.setBoard('default');
 	this.httpServer.requestGame();

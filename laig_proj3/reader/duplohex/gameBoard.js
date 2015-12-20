@@ -53,13 +53,11 @@ function GameBoard(scene) {
 	this.movieSpeed = 2;
 	this.movieDelay = 200;
 	//--------------------------------------------------------
-	this.hexTexture = new CGFtexture(this.scene, "scenes/images/hexagon.png");
-	this.hoverTexture = new CGFtexture(this.scene, "scenes/images/hexagon_hover.png");
-	this.baseTexture = new CGFtexture(this.scene, "scenes/images/hex_board.png");
+	this.hexTexture = new CGFtexture(this.scene, "resources/hexagon.png");
+	this.hoverTexture = new CGFtexture(this.scene, "resources/hexagon_hover.png");
+	this.baseTexture = new CGFtexture(this.scene, "resources/duplohex_base.png");
 	//--------------------------------------------------------
 	this.guiInterface = null;
-	//--------------------------------------------------------
-
 	//--------------------------------------------------------
 	this.historyStack = new GameMove(this);
 	this.historyStack.push(14, 4, 1);
@@ -93,11 +91,13 @@ GameBoard.prototype.display = function() {
 	this.displayBoard();
 	this.displayPieces();
 	this.scene.pushMatrix();
+	this.baseTexture.bind()
 		this.scene.scale(this.baseSize[0]*7.5, 1.0, this.baseSize[1]*11.0);
 		this.scene.translate(-0.5, -1.0, 0.5);
 		this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
 		this.scene.registerPicking(this.base);
 		this.base.display();
+	this.baseTexture.unbind();
 	this.scene.popMatrix();
 	this.displayBorder();
  // 	this.displayTable();

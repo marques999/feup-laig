@@ -31,8 +31,8 @@ function ObjectBorder(scene, size, color) {
 	this.customCylinder2 = new CustomCylinder(scene, 0.5, 0.5, 0.5, 20, 20, Math.PI / 3);
 	//--------------------------------------------------------
 	if (color == 'white') {
-		this.material.setDiffuse(0.95, 0.95, 0.95, 0.6);
-		this.material.setAmbient(0.95, 0.95, 0.95, 0.2);
+		this.material.setDiffuse(0.70, 0.70, 0.70, 0.6);
+		this.material.setAmbient(0.70, 0.70, 0.70, 0.2);
 		this.material.setSpecular(1.0, 1.0, 1.0, 0.5);
 		this.material.setShininess(30);
 	}

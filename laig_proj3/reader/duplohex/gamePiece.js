@@ -12,14 +12,14 @@ function GamePiece(scene, position, color) {
 	if (color == 'black') {
 		this.materials["default"] = new CGFappearance(scene);
 		this.materials["default"].setDiffuse(0.05, 0.05, 0.05, 0.6);
-		this.materials["default"].setAmbient(0.05, 0.05, 0.05, 0.2);
+		this.materials["default"].setAmbient(0.08, 0.08, 0.08, 0.2);
 		this.materials["default"].setSpecular(1.0, 1.0, 1.0, 0.5);
 		this.materials["default"].setShininess(30);
 	}
 	else if (color == 'white') {
 		this.materials["default"] = new CGFappearance(scene);
-		this.materials["default"].setDiffuse(0.95, 0.95, 0.95, 0.6);
-		this.materials["default"].setAmbient(0.95, 0.95, 0.95, 0.2);
+		this.materials["default"].setDiffuse(0.7, 0.7, 0.7, 0.6);
+		this.materials["default"].setAmbient(0.50, 0.50, 0.50, 0.2);
 		this.materials["default"].setSpecular(1.0, 1.0, 1.0, 0.5);
 		this.materials["default"].setShininess(30);
 	}

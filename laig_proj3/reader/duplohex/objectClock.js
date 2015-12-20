@@ -21,7 +21,11 @@ function ObjectClock(scene, player) {
 	this.player = player;
 	//--------------------------------------------------------
 	this.materials["clock"] = new CGFappearance(scene);
-	this.materials["clock"].loadTexture("scenes/images/clock.png");
+	this.materials["clock"].loadTexture("resources/clock.png");
+	this.materials["body"] = new CGFappearance(scene);
+	this.materials["body"].loadTexture("resources/clock_black.png");
+	this.materials["top"] = new CGFappearance(scene);
+	this.materials["top"].loadTexture("resources/clock_top.png");
 	this.materials["default"] = new CGFappearance(scene);
 	this.materials["red"] = new CGFappearance(scene);
 	this.materials["red"].setDiffuse(0.9, 0.05, 0.05, 0.6);
@@ -50,7 +54,7 @@ ObjectClock.prototype.constructor = ObjectClock;
  */
 ObjectClock.prototype.display = function() {
 	this.scene.pushMatrix();
-	this.materials["red"].apply();
+	this.materials["body"].apply();
 	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(0.0, 0.5, 3.0);
@@ -69,20 +73,13 @@ ObjectClock.prototype.display = function() {
 		this.cube.display();
 	this.scene.popMatrix();
 	//--------------------------------------------------------
-	// top cover
-	this.scene.pushMatrix();
-		this.scene.translate(0.0, 0.5+2.0*Math.cos(Math.PI/4), 0.0);
-		this.scene.scale(10.5, 0.5, 2.2);
-		this.cube.display();
-	this.scene.popMatrix();
-	//--------------------------------------------------------
 	//left side
 	this.scene.pushMatrix();
 		this.scene.translate(0.0, 0.5, 0.0);
 		this.scene.scale(0.5, 2.0*Math.cos(Math.PI/4), 2.2);
 		this.cube.display();
 	this.scene.popMatrix();
-
+	//--------------------------------------------------------
 	// right side
 	this.scene.pushMatrix();
 		this.scene.translate(10.0, 0.5, 0.0);
@@ -93,6 +90,14 @@ ObjectClock.prototype.display = function() {
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, -0.5);
 		this.scene.scale(10.5, 1.0+2.0*Math.cos(Math.PI/4), 0.5);
+		this.cube.display();
+	this.scene.popMatrix();
+	//--------------------------------------------------------
+	// top cover	
+	this.scene.pushMatrix();
+		this.materials["top"].apply();
+		this.scene.translate(0.0, 0.5+2.0*Math.cos(Math.PI/4), 0.0);
+		this.scene.scale(10.5, 0.5, 2.2);
 		this.cube.display();
 	this.scene.popMatrix();
 	//--------------------------------------------------------
