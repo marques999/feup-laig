@@ -457,7 +457,7 @@ GameBoard.prototype.updateMoveHints = function() {
 
 	return i;
 }
-
+//--------------------------------------------------------
 GameBoard.prototype.unselectHints = function() {
 
 	for (var i = 0; i < this.numberCells; i++) {
@@ -466,7 +466,7 @@ GameBoard.prototype.unselectHints = function() {
 		}
 	}
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.unselectActiveCell = function() {
 
 	if (this.selectedCellId != null && this.selectedCellId != undefined) {
@@ -474,7 +474,7 @@ GameBoard.prototype.unselectActiveCell = function() {
 		this.selectedPieceId = null;
 	}
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.toggleCell = function(selectedId) {
 
 	if (selectedId > this.numberCells) {
@@ -495,7 +495,7 @@ GameBoard.prototype.toggleCell = function(selectedId) {
 		this.cells[this.selectedCellId].select();
 	}
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.placePieceHandler = function() {
 
 	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
@@ -526,7 +526,7 @@ GameBoard.prototype.placePieceHandler = function() {
 
 	this.unselectHints();
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.onPlacePiece = function() {
 	
 	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
@@ -554,7 +554,7 @@ GameBoard.prototype.onPlacePiece = function() {
 		this.cells[this.selectedCellId].ring = selectedPiece.color;
 	}
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.onResetPlace = function() {
 	
 	this.selectedPieceId = null;
@@ -565,7 +565,7 @@ GameBoard.prototype.onResetPlace = function() {
 		this.selectedCellId = null;
 	}
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.updateMovie = function(delta) {
 
 	if (this.animationActive) {
@@ -588,12 +588,12 @@ GameBoard.prototype.updateMovie = function(delta) {
 		this.elapsedMillis = 0;
 	}
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.processFrame = function(id, x, y) {
 	this.updatePicking(this.cellIndex(x, y) + 1);
 	this.pieces.placePiece(id, x, y);
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.updatePicking = function(selectedId) {
 
 	if (this.animationActive) {
@@ -609,7 +609,6 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 		this.selectedPieceId = id;
 	}
 
-	// mostra as hints disponiveis se houver uma peça selecionada
 	if (this.selectedPieceId != null && this.selectedPieceId != -1) {
 		this.unselectHints();
 		this.updatePlaceHints();
@@ -618,13 +617,11 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 		this.unselectHints();
 	}
 
-	// utilizador seleccionou uma célula primeiro
 	if (this.selectedPieceId == -1 && this.selectedCellId != null) {
 		this.selectedPieceId = null;
 		this.pieces.unselectActivePiece();
 	}
 
-	// utilizador seleccionou a célula de destino
 	if (this.selectedPieceId != null && this.selectedCellId != null) {
 		this.placePieceHandler();
 	}
