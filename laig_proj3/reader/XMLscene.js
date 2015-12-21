@@ -16,6 +16,9 @@ XMLscene.prototype.init = function(application) {
 	//---------------------------------------------------------
 	CGFscene.prototype.init.call(this, application);
 	//---------------------------------------------------------
+	this.cameraPosition = 0.0;
+	this.cameraTarget = 2.0;
+	//---------------------------------------------------------
 	this.initCameras();
 	this.initDefaults();
 	this.initGL();
@@ -25,10 +28,6 @@ XMLscene.prototype.init = function(application) {
 	this.enableTextures(true);
 	this.setPickEnabled(true);
 	this.resetDisplay();
-	//---------------------------------------------------------
-	this.cameraPosition = 0.0;
-	this.cameraTarget = 2.0;
-	this.updatePeriod = 60;
 };
 //--------------------------------------------------------
 XMLscene.prototype.initGame = function() {
@@ -55,6 +54,7 @@ XMLscene.prototype.initServer = function() {
 //--------------------------------------------------------
 XMLscene.prototype.initSettings = function() {
 	this.gameSettings = new GameSettings();
+	this.setUpdatePeriod(1000 / this.gameSettings.getFps());
 };
 //--------------------------------------------------------
 XMLscene.prototype.getPreferences = function() {
@@ -97,7 +97,6 @@ XMLscene.prototype.resetDisplay = function() {
 	this.cameraZoom = 0.0;
 	this.animationSpeed = 1.0;
 	this.pauseAnimations = false;
-	this.setUpdatePeriod(1000 / this.updatePeriod);
 
 	mat4.identity(this.defaultMatrix);
 }
