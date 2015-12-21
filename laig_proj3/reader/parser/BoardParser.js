@@ -10,9 +10,8 @@
 		<position x="ff" y="ff" z="ff" />
 		<size x="ff" y="ff" b="ff" z="ff" />
 		<rotation axis="x" angle="0" />
-		<rotation axis="x" angle="0" />
-		<rotation axis="x" angle="0" />
-		<rotation axis="x" angle="0" />
+		<rotation axis="y" angle="0" />
+		<rotation axis="z" angle="0" />
 	</BOARD>
 */
 
@@ -32,8 +31,8 @@ BoardParser.prototype = Object.create(BaseParser.prototype);
 BoardParser.prototype.constructor = BoardParser;
 
 /**
- * processa todas as entidades presentes no bloco <ILLUMINATION>
- * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <ILLUMINATION>
+ * processa todas as entidades presentes no bloco <BOARD>
+ * @param {XMLElement} root - estrutura de dados XML que contém as entidades descendentes de <BOARD>
  * @param {Number} id - identificador do elemento a ser processado
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
@@ -44,6 +43,7 @@ BoardParser.prototype.parse = function(root) {
 	mat4.identity(this.boardMatrix);
 
 	var parseErrors = 0;
+	var nodeSize = root.children.length;
 	var boardPosition = this.parseCoordinatesXYZ(root, 'position');
 	var error = checkValue(boardPosition, 'position', root.nodeName);
 
@@ -70,26 +70,30 @@ BoardParser.prototype.parse = function(root) {
 		printXYZ('size', boardSize);
 	}
 
-	/*for (; xmlIndex < node_sz; xmlIndex++) {
+	for (var xmlIndex = 2; xmlIndex < nodeSize; xmlIndex++) {
 
 		var child = root.children[xmlIndex];
-		var error = null;
 
-		if (child.nodeName == 'ROTATION') {
-			error = this.parseRotation(child, node);
+		if (child.nodeName == 'rotation') {
+			 this.parseRotation(child);
 		}
 	}
-*/
+
 	mat4.translate(this.boardMatrix, this.boardMatrix, boardPosition);
 	mat4.scale(this.boardMatrix, this.boardMatrix, boardSize);
 };
 
-BoardParser.prototype.parseRotation = function(root, node) {
+/**
+ * processa uma rotação presente num bloco <BOARD>
+ * @param {XMLelement} root - estrutura que dados XML que contém o atributo <rotation>
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+BoardParser.prototype.parseRotation = function(root) {
 
 	var parent = root.nodeName;
 	var parseErrors = 0;
 	var axis = this.reader.getString(root, 'axis', true);
-	var error = checkValue(axis, 'axis', parent, node.id);
+	var error = checkValue(axis, 'axis', parent);
 
 	if (error != null) {
 		return error;
@@ -100,7 +104,7 @@ BoardParser.prototype.parseRotation = function(root, node) {
 	}
 
 	var angle = this.reader.getFloat(root, 'angle', true);
-	var error = checkValue(angle, 'angle', parent, node.id);
+	var error = checkValue(angle, 'angle', parent);
 
 	if (error != null) {
 		parseErrors++;
@@ -108,7 +112,7 @@ BoardParser.prototype.parseRotation = function(root, node) {
 	}
 
 	if (parseErrors != 0) {
-		return onParseError(parent, parseErrors, node.id);
+		return onParseError(parent, parseErrors);
 	}
 
 	if (axis == 'x') {
