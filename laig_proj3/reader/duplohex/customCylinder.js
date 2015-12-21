@@ -36,7 +36,7 @@ CustomCylinder.prototype.constructor = CustomCylinder;
  * @return {null}
  */
 CustomCylinder.prototype.initBuffers = function() {
-
+	//--------------------------------------------------------
 	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;
 	var stackIncrement = this.height / this.stacks;
 	var thetaIncrement = this.angle / this.slices;
@@ -45,7 +45,7 @@ CustomCylinder.prototype.initBuffers = function() {
 	var vertexNumber = 1;
 	var sCoord = 0.0;
 	var theta = 0;
-
+	//--------------------------------------------------------
 	for (var i = 0; i <= this.slices; i++) {
 
 		var tCoord = 1.0;
@@ -80,7 +80,7 @@ CustomCylinder.prototype.initBuffers = function() {
 		theta += thetaIncrement;
 		sCoord += texelIncrementS;
 	}
-
+	//--------------------------------------------------------
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };

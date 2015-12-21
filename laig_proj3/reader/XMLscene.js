@@ -41,16 +41,16 @@ XMLscene.prototype.setCameraPosition = function(x) {
 };
 
 XMLscene.prototype.setCameraTarget = function(x) {
-	
+
 };
 
 XMLscene.prototype.initSettings = function() {
 	this.gameSettings = new GameSettings();
-}
+};
 
 XMLscene.prototype.getPreferences = function() {
 	return this.gameSettings;
-}
+};
 
 XMLscene.updateMatrix = function(boardMatrix) {
 	this.board.setMatrix(boardMatrix);
@@ -89,8 +89,8 @@ XMLscene.prototype.updatePicking = function() {
 			this.board.updatePicking(this.pickResults[i][1]);
 		}
 	}
-		
-	this.pickResults.splice(0,this.pickResults.length);	
+
+	this.pickResults.splice(0,this.pickResults.length);
 };
 //---------------------------------------------------------
 XMLscene.prototype.resetDisplay = function() {
@@ -426,7 +426,7 @@ XMLscene.prototype.setBoardDimensions = function(width, height) {
  * @return {null}
  */
 XMLscene.prototype.update = function(currTime) {
-	
+
 	this.updatePicking();
 	this.clearPickRegistration();
 
@@ -454,15 +454,15 @@ XMLscene.prototype.display = function() {
 	this.multMatrix(this.defaultMatrix);
 	this.axis.display();
 	this.setDefaultAppearance();
-	
+
 	if (this.graph.loadedOk) {
 
 		this.graph.display();
-	
+
 		for (var i = 0; i < this.activeLights; i++) {
 			this.lights[i].update();
 		}
 
 		this.board.display();
 	}
-}; 
+};

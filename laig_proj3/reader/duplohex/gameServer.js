@@ -171,8 +171,8 @@ GameServer.prototype.requestStatus = function()
 GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, DestinationY) {
 	var requestString = this.formatMoveCoords('moveDisc', SourceX, SourceY, DestinationX, DestinationY);
 	var self = this;
-	this.getPrologRequest(requestString, function(httpResponse) 
-	{	
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
 		if (httpResponse.currentTarget.status == 200) {
 			self.gameBoard.onPlacePiece();
 		}
@@ -188,8 +188,8 @@ GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, 
 GameServer.prototype.requestMoveRing = function(SourceX, SourceY, DestinationX, DestinationY) {
 	var requestString = this.formatMoveCoords('moveRing', SourceX, SourceY, DestinationX, DestinationY);
 	var self = this;
-	this.getPrologRequest(requestString, function(httpResponse) 
-	{	
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
 		if (httpResponse.currentTarget.status == 200) {
 			self.gameBoard.onPlacePiece();
 		}
@@ -205,8 +205,8 @@ GameServer.prototype.requestMoveRing = function(SourceX, SourceY, DestinationX, 
 GameServer.prototype.requestPlaceDisc = function(DestinationX, DestinationY) {
 	var requestString = this.formatPlaceCoords('placeDisc', DestinationX, DestinationY);
 	var self = this;
-	this.getPrologRequest(requestString, function(httpResponse) 
-	{	
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
 		if (httpResponse.currentTarget.status == 200) {
 			self.gameBoard.onPlacePiece();
 		}
@@ -222,8 +222,8 @@ GameServer.prototype.requestPlaceDisc = function(DestinationX, DestinationY) {
 GameServer.prototype.requestPlaceRing = function(DestinationX, DestinationY) {
 	var requestString = this.formatPlaceCoords('placeRing', DestinationX, DestinationY);
 	var self = this;
-	this.getPrologRequest(requestString, function(httpResponse) 
-	{	
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
 		if (httpResponse.currentTarget.status == 200) {
 			self.gameBoard.onPlacePiece();
 		}

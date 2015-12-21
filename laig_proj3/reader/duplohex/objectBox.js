@@ -12,14 +12,10 @@ function ObjectBox(scene) {
 	//--------------------------------------------------------
 	this.cube = new ObjectCube(scene);
 };
-
+//--------------------------------------------------------
 ObjectBox.prototype = Object.create(MyPrimitive.prototype);
 ObjectBox.prototype.constructor = ObjectBox;
-
-/**
- * desenha a primitva 'ObjectBox' na respetiva cena
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectBox.prototype.display = function() {
 
 	this.scene.pushMatrix()

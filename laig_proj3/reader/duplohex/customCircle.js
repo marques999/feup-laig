@@ -35,6 +35,7 @@ CustomCircle.prototype.initBuffers = function() {
 	var halfRadius = this.radius / 2;
 	var thetaIncrement = this.angle / this.slices;
 	var vertexNumber = 1;
+	//--------------------------------------------------------
 	this.vertices.push(0, 0, 0);
 	this.texCoords.push(halfRadius, halfRadius);
 	this.normals.push(0, 0, 1);

@@ -18,7 +18,6 @@ function ObjectBorder(scene, size, color) {
 	this.invertedAngle = Math.sin(Math.PI / 6);
 	this.defaultTangent = Math.tan(Math.PI / 6);
 	this.defaultScale = 0.5 / this.defaultAngle + 2.0 * size * this.defaultAngle;
-	this.material = new CGFappearance(scene);
 	//--------------------------------------------------------
 	this.plane = new ObjectPlane(scene, 16);
 	this.rectangle = new MyRectangle(scene, 0.0, 0.5, this.defaultScale, 0.0);
@@ -31,12 +30,14 @@ function ObjectBorder(scene, size, color) {
 	this.customCylinder2 = new CustomCylinder(scene, 0.5, 0.5, 0.5, 20, 20, Math.PI / 3);
 	//--------------------------------------------------------
 	if (color == 'white') {
+		this.material = new CGFappearance(scene);
 		this.material.setDiffuse(0.70, 0.70, 0.70, 0.6);
 		this.material.setAmbient(0.70, 0.70, 0.70, 0.2);
 		this.material.setSpecular(1.0, 1.0, 1.0, 0.5);
 		this.material.setShininess(30);
 	}
 	else {
+		this.material = new CGFappearance(scene);
 		this.material.setDiffuse(0.05, 0.05, 0.05, 0.6);
 		this.material.setAmbient(0.05, 0.05, 0.05, 0.2);
 		this.material.setSpecular(1.0, 1.0, 1.0, 0.5);

@@ -55,7 +55,7 @@ GameMenu.prototype.parseMenu = function(data) {
 	this.buttonHeight = 8.0;
 	this.buttonWidth = 12.0/this.numberItems;
 	this.objects = [];
-	
+
 	for ( var i = 0; i < this.numberItems; i++) {
 		this.objects[i] = new ObjectCube(this.scene);
 	}
@@ -70,7 +70,7 @@ GameMenu.prototype.display = function() {
 	var scaleFactorZ = this.buttonWidth + Math.abs(0.5 * this.cosAngle);
 	this.scene.rotate(Math.PI/2, 0, 0, 1);
 	this.scene.rotate(Math.PI/2, 0, 1, 0);
-	
+
 	for ( var i = 0; i < this.numberItems; i++) {
 		this.scene.scale(scaleFactorX, scaleFactorY, scaleFactorZ);
 		this.scene.translate(-0.5, 0.0, currentPositionX);
@@ -89,7 +89,7 @@ GameMenu.prototype.parseColor = function(hex) {
     });
 
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    
+
     return result ? {
         r: parseInt(result[1], 16) / 255,
         g: parseInt(result[2], 16) / 255,
@@ -99,7 +99,7 @@ GameMenu.prototype.parseColor = function(hex) {
 };
 
 GameMenu.prototype.update = function(delta) {
-	
+
 	this.animationAngle += delta * 0.003;
 	this.cosAngle = Math.cos(this.animationAngle);
 };

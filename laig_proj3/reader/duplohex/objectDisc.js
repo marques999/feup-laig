@@ -15,14 +15,10 @@ function ObjectDisc(scene, color, position) {
 	this.cylinder = new MyCylinder(scene, 1.0, 0.65, 0.65, 16, 32);
 	this.circle = new MyCircle(scene, 32, 0.65);
 };
-
+//--------------------------------------------------------
 ObjectDisc.prototype = Object.create(GamePiece.prototype);
 ObjectDisc.prototype.constructor = ObjectDisc;
-
-/**
- * desenha a primitva 'ObjectDisc' na respetiva cena
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectDisc.prototype.display = function() {
 	this.material.apply();
 	this.cylinder.display();

@@ -93,7 +93,7 @@ ObjectClock.prototype.display = function() {
 		this.cube.display();
 	this.scene.popMatrix();
 	//--------------------------------------------------------
-	// top cover	
+	// top cover
 	this.scene.pushMatrix();
 		this.materials["top"].apply();
 		this.scene.translate(0.0, 0.5+2.0*Math.cos(Math.PI/4), 0.0);
@@ -153,7 +153,7 @@ ObjectClock.prototype.update = function(currTime, lastUpdate, gameRunning) {
 	if (this.RIGHT[1] < 0) {
 		this.RIGHT[1] = 9;
 	}
-	
+
 	if (!gameRunning) {
 		return false;
 	}

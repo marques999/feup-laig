@@ -1,10 +1,10 @@
 /*
-  ____   ____          _____  _____  
- |  _ \ / __ \   /\   |  __ \|  __ \ 
+  ____   ____          _____  _____
+ |  _ \ / __ \   /\   |  __ \|  __ \
  | |_) | |  | | /  \  | |__) | |  | |
  |  _ <| |  | |/ /\ \ |  _  /| |  | |
  | |_) | |__| / ____ \| | \ \| |__| |
- |____/ \____/_/    \_\_|  \_\_____/ 
+ |____/ \____/_/    \_\_|  \_\_____/
 
 	<BOARD>
 		<position x="ff" y="ff" z="ff" />
@@ -40,7 +40,7 @@ BoardParser.prototype.constructor = BoardParser;
 BoardParser.prototype.parse = function(root) {
 
 	this.boardMatrix = mat4.create();
-	
+
 	mat4.identity(this.boardMatrix);
 
 	var parseErrors = 0;
@@ -59,11 +59,11 @@ BoardParser.prototype.parse = function(root) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
-	
+
 	if (parseErrors != 0) {
 		return onParseError(root.nodeName, parseErrors);
 	}
-	
+
 	if (this.verbose) {
 		printHeader('BOARD');
 		printXYZ('position', boardPosition);

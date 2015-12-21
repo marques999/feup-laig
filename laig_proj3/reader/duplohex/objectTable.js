@@ -28,14 +28,10 @@ function ObjectTable(scene) {
 	this.materials["metal"].setSpecular(0.6, 0.6, 0.6, 1.0);
 	this.materials["metal"].setShininess(10);
 };
-
+//--------------------------------------------------------
 ObjectTable.prototype = Object.create(MyPrimitive.prototype);
 ObjectTable.prototype.constructor = ObjectTable;
-
-/**
- * desenha a primitva 'ObjectTable' na respetiva cena
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectTable.prototype.display = function() {
 	this.scene.pushMatrix();
 	this.materials["metal"].apply();

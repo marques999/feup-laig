@@ -11,9 +11,7 @@ function ObjectPlane(scene, nrDivs) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this,scene);
 	//--------------------------------------------------------
-	nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 1;
-	//--------------------------------------------------------
-	this.nrDivs = nrDivs;
+	this.nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 1;
 	this.patchLength = 1.0 / nrDivs;
 	this.indices = [];
 	this.normals = [];
@@ -21,19 +19,16 @@ function ObjectPlane(scene, nrDivs) {
 	this.vertices = [];
 	this.initBuffers();
 };
-
+//--------------------------------------------------------
 ObjectPlane.prototype = Object.create(MyPrimitive.prototype);
 ObjectPlane.prototype.constructor = ObjectPlane;
-
-/**
- * inicializa os buffers WebGL da primitiva 'ObjectPlane'
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectPlane.prototype.initBuffers = function() {
-
+	//--------------------------------------------------------
 	var yCoord = 0.5;
 	var tCoord = 0;
-
+	var vertexNumber = 0;
+	//--------------------------------------------------------
 	for (var j = 0; j <= this.nrDivs; j++, tCoord += this.patchLength) {
 
 		var xCoord = -0.5;
@@ -48,9 +43,7 @@ ObjectPlane.prototype.initBuffers = function() {
 
 		yCoord -= this.patchLength;
 	}
-
-	var vertexNumber = 0;
-
+	//--------------------------------------------------------
 	for (var j = 0; j < this.nrDivs; j++) {
 
 		for (var i = 0; i <= this.nrDivs; i++, vertexNumber++) {
@@ -63,7 +56,7 @@ ObjectPlane.prototype.initBuffers = function() {
 			this.indices.push(vertexNumber);
 		}
 	}
-
+	//--------------------------------------------------------
 	this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
 	this.initGLBuffers();
 };

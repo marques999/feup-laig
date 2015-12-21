@@ -14,14 +14,10 @@ function ObjectCube(scene) {
 	this.fullAngle = Math.PI;
 	this.halfAngle = Math.PI / 2;
 };
-
+//--------------------------------------------------------
 ObjectCube.prototype = Object.create(MyPrimitive.prototype);
 ObjectCube.prototype.constructor = ObjectCube;
-
-/**
- * desenha a primitva 'ObjectCube' na respetiva cena
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectCube.prototype.display = function() {
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, 0.5);
