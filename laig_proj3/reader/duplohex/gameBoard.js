@@ -24,15 +24,15 @@ function GameBoard(scene) {
 	//--------------------------------------------------------
 	this.player1 = {
 		color: 'white',
-		discs: 21,
-		rings: 18,
+		discs: 24,
+		rings: 24,
 		next: true
 	};
 	//--------------------------------------------------------
 	this.player2 = {
 		color: 'black',
-		discs: 19,
-		rings: 19,
+		discs: 24,
+		rings: 24,
 		next: false
 	};
 	//--------------------------------------------------------
@@ -46,6 +46,7 @@ function GameBoard(scene) {
 	this.clock1 = new ObjectClock(scene, this.player1);
 	this.clock2 = new ObjectClock(scene, this.player2);
 	//--------------------------------------------------------
+	this.gameRunning = false;
 	this.animationActive = 0;
 	this.moviePlaying = false;
 	this.movieFrame = 0;
@@ -65,6 +66,44 @@ function GameBoard(scene) {
 	this.historyStack.push(22, 5, 1);
 	this.historyStack.push(24, 2, 2);
 	//--------------------------------------------------------
+	this.smallMatrix = [
+		// WHITE RINGS
+		[47, 1, 0],
+		[39, 3, 0],
+		[31, 5, 0],
+		[46, 2, 6],
+		[38, 4, 6],
+		[30, 6, 6],
+		// WHITE DISCS
+		[23, 2, 0],
+		[15, 4, 0],
+		[7, 6, 0],
+		[22, 1, 6],
+		[14, 3, 6],
+		[6, 5, 6],
+		// BLACK RINGS
+		[89, 0, 1],
+		[81, 0, 3],
+		[73, 0, 5],
+		[88, 6, 2],
+		[80, 6, 4],
+		// BLACK DISCS
+		[65, 0, 0],
+		[57, 0, 2],
+		[49, 0, 4],
+		[64, 0, 6],
+		[56, 6, 1],
+		[48, 6, 4],
+		[67, 6, 6],
+	];
+	//--------------------------------------------------------
+	this.diagonalMatrix = [
+		[49, 0, 4],
+		[64, 0, 6],	
+		[7, 6, 0],
+		[22, 1, 6],
+	]
+	//--------------------------------------------------------
 	this.defaultMaterial = new CGFappearance(scene);
 	this.HEX_MATERIAL = new CGFappearance(scene);
 	this.HEX_MATERIAL.setSpecular(0.2, 0.2, 0.2, 0.6);
@@ -75,15 +114,58 @@ function GameBoard(scene) {
 	for (var i = 0; i < this.numberCells; i++) {
 		this.cells[i] = new ObjectHexagon(scene);
 		this.cells[i].setCoords(~~(i / this.numberColumns), i % this.numberColumns, 0.0);
-	}	
+	}
 };
 //--------------------------------------------------------
 GameBoard.prototype = Object.create(MyPrimitive.prototype);
 GameBoard.prototype.constructor = GameBoard;
 //--------------------------------------------------------
+GameBoard.prototype.updateMatrix = function(currentMatrix) {
+	
+	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
+
+	if (currentMatrix == 'diagonal') {
+		for (var i = 0; i < this.diagonalMatrix.length; i++) {
+			this.pieces.placeFast.apply(this.pieces, this.diagonalMatrix[i]);
+		}
+	}
+	else if (currentMatrix = 'small') {
+		for (var i = 0; i < this.smallMatrix.length; i++) {
+			this.pieces.placeFast.apply(this.pieces, this.smallMatrix[i]);
+		}
+	}
+};
+//--------------------------------------------------------
+GameBoard.prototype.updatePlayer = function(playerColor) {
+
+	if (playerColor == 'whitePlayer') {
+		this.player1.color = 'white';
+		this.player1.next = true;
+		this.player2.color = 'black';
+		this.player2.next = false;
+	}
+	else {
+		this.player1.color = 'black';
+		this.player1.next = false;
+		this.player2.color = 'white';
+		this.player2.next = true;
+	}
+	
+	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
+};
+//--------------------------------------------------------
 GameBoard.prototype.setServer = function(server) {
 	this.server = server;
 };
+//--------------------------------------------------------
+GameBoard.prototype.setMatrix = function(boardMatrix) {
+	this.boardMatrix = boardMatrix;
+};
+//--------------------------------------------------------
+GameBoard.prototype.startGame = function(server) {
+	this.gameRunning = true;
+};
+//--------------------------------------------------------
 GameBoard.prototype.display = function() {
 
 	this.scene.resetPicking();
@@ -273,8 +355,8 @@ GameBoard.prototype.setPlayer2 = function(playerState) {
 //--------------------------------------------------------
 GameBoard.prototype.update = function(currTime, lastUpdate) {
 
-	this.clock1.update(currTime, lastUpdate);
-	this.clock2.update(currTime, lastUpdate);
+	this.clock1.update(currTime, lastUpdate, this.gameRunning);
+	this.clock2.update(currTime, lastUpdate, this.gameRunning);
 
 	if (lastUpdate == 0) {
 		lastUpdate = currTime;

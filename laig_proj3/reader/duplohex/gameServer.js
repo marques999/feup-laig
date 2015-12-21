@@ -1,105 +1,24 @@
-function GameServer(board, address, port) {
+function GameServer(board, setings, address, port) {
 	//--------------------------------------------------------
 	this.gameBoard = board;
 	this.gameRunning = false;
 	this.httpAddress = address || 'localhost';
 	this.httpPort = port || 8081;
 	this.validResponse = false;
+	this.gameSettings = setings;
 	this.serverAddress = 'http://' + this.httpAddress + ':' + this.httpPort + '/';
-	//--------------------------------------------------------
-	this.boardMatrix = {
-		'diagonal': 'diagonalMatrix',
-		'default': 'emptyMatrix',
-		'small': 'empty6x6Matrix',
-	}
-	//--------------------------------------------------------
-	this.gameSettings = {
-		color: 'whitePlayer',
-		board: 'default',
-		difficulty: 'random',
-		mode: 'pvp',
-	};
 };
 //--------------------------------------------------------
 GameServer.prototype = Object.create(Object.prototype);
 GameServer.prototype.constructor = GameServer;
 //--------------------------------------------------------
-GameServer.prototype.setBoard = function(boardType) {
-
-	if (this.gameBoard == null || this.gameRunning) {
-		return false;
-	}
-
-	if (boardType != 'default' && boardType != 'small' && boardType != 'diagonal') {
-		return false;
-	}
-
-	this.gameSettings["board"] = this.boardMatrix[boardType];
-};
-//--------------------------------------------------------
-GameServer.prototype.setColor = function(playerColor) {
-
-	if (this.gameBoard == null || this.gameRunning) {
-		return false;
-	}
-
-	if (playerColor != 'blackPlayer' && playerColor != 'whitePlayer')  {
-		return false;
-	}
-
-	this.gameSettings["color"] = playerColor;
-};
-//--------------------------------------------------------
-GameServer.prototype.setDifficulty = function(difficulty) {
-
-	if (this.gameBoard == null || this.gameRunning) {
-		return false;
-	}
-
-	if (difficulty != 'smart' && difficulty != 'random') {
-		return false;
-	}
-
-	this.gameSettings["difficulty"] = boardType;
-};
-//--------------------------------------------------------
-GameServer.prototype.setMode = function(gameMode) {
-
-	if (this.gameBoard == null || this.gameRunning) {
-		return false;
-	}
-
-	if (gameMode != 'pvp' && gameMode != 'pvb' && gameMode != 'bvb') {
-		return false;
-	}
-
-	this.gameSettings["mode"] = gameMode;
-};
-//--------------------------------------------------------
 GameServer.prototype.requestGame = function() {
 
-	var requestString = null;
-
-	if (this.gameSettings.mode == 'pvp') {
-		requestString = "pvp(" 
-			+ this.gameSettings.color + ","
-			+ this.gameSettings.board + ")";
-	}
-	else if (this.gameSettings.mode == 'pvb') {
-		requestString = "pvb("
-			+ this.gameSettings.color + ","
-			+ this.gameSettings.difficulty + ","
-			+ this.gameSettings.board + ")";
-	}
-	else if (this.gameSettings.mode == 'bvb') {
-		requestString = "bvb("
-			+ this.gameSettings.color + ","
-			+ this.gameSettings.difficulty + ","
-			+ this.gameSettings.board + ")";
-	}
-	else {
+	if (this.gameSettings == null) {
 		return false;
 	}
+
+	var requestString = this.gameSettings.toString();
 
 	this.getPrologRequest(requestString, function()
 	{

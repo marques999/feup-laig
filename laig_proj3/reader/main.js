@@ -59,6 +59,7 @@ serialInclude([
 	'duplohex/gameMove.js',
 	'duplohex/gamePiece.js',
 	'duplohex/gameServer.js',
+	'duplohex/gameSettings.js',
 	'duplohex/objectBox.js',
 	'duplohex/objectBorder.js',
 	'duplohex/objectChair.js',

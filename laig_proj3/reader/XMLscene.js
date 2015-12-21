@@ -24,8 +24,8 @@ XMLscene.prototype.init = function(application) {
 	this.initCameras();
 	this.initDefaults();
 	this.initGL();
+	this.initSettings();
 	this.initGame();
-	this.initServer();
 	//---------------------------------------------------------
 	this.enableTextures(true);
 	this.setPickEnabled(true);
@@ -44,6 +44,18 @@ XMLscene.prototype.setCameraTarget = function(x) {
 	
 };
 
+XMLscene.prototype.initSettings = function() {
+	this.gameSettings = new GameSettings();
+}
+
+XMLscene.prototype.getPreferences = function() {
+	return this.gameSettings;
+}
+
+XMLscene.updateMatrix = function(boardMatrix) {
+	this.board.setMatrix(boardMatrix);
+};
+
 XMLscene.prototype.initGL = function() {
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(1000.0);
@@ -53,19 +65,17 @@ XMLscene.prototype.initGL = function() {
 };
 
 XMLscene.prototype.initServer = function() {
-	this.httpServer = new GameServer(this.board, 'localhost', 8081);
-	this.httpServer.setMode('pvp');
-	this.httpServer.setBoard('default');
+	this.httpServer = new GameServer(this.board, this.gameSettings, 'localhost', 8081);
 	this.httpServer.requestGame();
 	this.board.setServer(this.httpServer);
+	this.board.startGame();
 //	this.httpServer.requestQuit();
 };
 
 XMLscene.prototype.initGame = function() {
-	this.currentId = 0.0;
+	this.currentId = 0;
 	this.board = new GameBoard(this);
-	this.menu = new GameMenu(this);
-	this.menu.loadJSON('menu_difficulty.json');
+	this.board.updatePlayer(this.gameSettings.getColor());
 };
 
 XMLscene.prototype.updatePicking = function() {
@@ -177,6 +187,7 @@ XMLscene.prototype.initTranslate = function(matrix) {
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
 	this.guiInterface.setActiveCamera(this.camera);
+	this.guiInterface.setScene(this);
 	this.board.setInterface(this.guiInterface);
 };
 

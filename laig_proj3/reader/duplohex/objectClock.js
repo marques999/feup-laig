@@ -11,7 +11,7 @@ function ObjectClock(scene, player) {
 	MyPrimitive.call(this, scene);
 	//--------------------------------------------------------
 	this.DIGITS = [];
-	this.CLOCK = [10, 10, 11, 10, 10];
+	this.CLOCK = [10, 10, 12, 10, 10];
 	this.LEFT = [10, 1];
 	this.RIGHT = [10, 2];
 	this.materials = [];
@@ -132,7 +132,31 @@ ObjectClock.prototype.display = function() {
 	this.scene.popMatrix();
 };
 
-ObjectClock.prototype.update = function(currTime, lastUpdate) {
+ObjectClock.prototype.update = function(currTime, lastUpdate, gameRunning) {
+
+	this.LEFT[0] = ~~(this.player.discs / 10) % 10 - 1;
+	if (this.LEFT[0] < 0) {
+		this.LEFT[0] = 10;
+	}
+
+	this.LEFT[1] = ~~(this.player.discs % 10) - 1;
+	if (this.LEFT[1] < 0) {
+		this.LEFT[1] = 9;
+	}
+
+	this.RIGHT[0] = ~~(this.player.rings / 10) % 10 - 1;
+	if (this.RIGHT[0] < 0) {
+		this.RIGHT[0] = 10;
+	}
+
+	this.RIGHT[1] = ~~(this.player.rings % 10) - 1;
+	if (this.RIGHT[1] < 0) {
+		this.RIGHT[1] = 9;
+	}
+	
+	if (!gameRunning) {
+		return false;
+	}
 
 	this.currentMillis += currTime - lastUpdate;
 
@@ -167,25 +191,5 @@ ObjectClock.prototype.update = function(currTime, lastUpdate) {
 	this.CLOCK[4] = ~~(elapsedMinutes % 10) - 1;
 	if (this.CLOCK[4] < 0) {
 		this.CLOCK[4] = 9;
-	}
-
-	this.LEFT[0] = ~~(this.player.discs / 10) % 10 - 1;
-	if (this.LEFT[0] < 0) {
-		this.LEFT[0] = 10;
-	}
-
-	this.LEFT[1] = ~~(this.player.discs % 10) - 1;
-	if (this.LEFT[1] < 0) {
-		this.LEFT[1] = 9;
-	}
-
-	this.RIGHT[0] = ~~(this.player.rings / 10) % 10 - 1;
-	if (this.RIGHT[0] < 0) {
-		this.RIGHT[0] = 10;
-	}
-
-	this.RIGHT[1] = ~~(this.player.rings % 10) - 1;
-	if (this.RIGHT[1] < 0) {
-		this.RIGHT[1] = 9;
 	}
 };

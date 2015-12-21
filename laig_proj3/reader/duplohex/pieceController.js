@@ -36,12 +36,6 @@ function PieceController(scene, board, player1, player2) {
 		this.baseSize[0] * 1.5 / 5.0
 	];
 	//--------------------------------------------------------	
-	this.pieces = [];
-	this.p1RingStacks = [];
-	this.p1DiscStacks = [];
-	this.p2RingStacks = [];
-	this.p2DiscStacks = [];
-	//--------------------------------------------------------	
 	this.initialize();
 };
 //--------------------------------------------------------	
@@ -53,6 +47,11 @@ PieceController.prototype.generateRandom = function() {
 };
 //--------------------------------------------------------	
 PieceController.prototype.initialize = function() {
+	this.pieces = [];
+	this.p1RingStacks = [];
+	this.p1DiscStacks = [];
+	this.p2RingStacks = [];
+	this.p2DiscStacks = [];
 	//--------------------------------------------------------	
 	this.p1Discs_start = 0;
 	this.p1Discs_end = this.p1Discs_start + this.player1.discs;
@@ -228,6 +227,7 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 	var piece = this.pieces[pieceId];
 	//--------------------------------------------------------	
 	if (!piece.wasPlaced()) {
+		console.log("removig from stack");
 		this.removeFromStack(pieceId, x, y);		
 	}
 	//--------------------------------------------------------	
@@ -250,6 +250,20 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 	//--------------------------------------------------------	
 	this.animationId = pieceId;
 	this.animation.start();
+	//--------------------------------------------------------	
+	piece.setPosition(newX, newY, newZ);
+	piece.setColor('default');
+	piece.place(x, y);
+};
+//--------------------------------------------------------
+PieceController.prototype.placeFast = function(pieceId, x, y)  {
+	//--------------------------------------------------------	
+	var piece = this.pieces[pieceId];
+	//--------------------------------------------------------	
+	this.removeFromStack(pieceId, x, y);		
+	var newX = this.baseSize[0] * 0.5 * x + this.baseSize[0] * this.basePos[0] / 1.5;
+	var newY = this.basePos[1];
+	var newZ = -(this.baseSize[1] * 0.5) * this.defaultAngle * x - this.baseSize[1] * this.defaultAngle * y - this.baseSize[1] * this.basePos[2] / 1.5;
 	//--------------------------------------------------------	
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
@@ -313,7 +327,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 		else {
 			this.pieces[this.selectedPiece].setColor('default');
 		}
-
+	console.log("picked piece" + id);
 		if (id < this.p1Discs_end) {
 
 			var nStack = id % this.numberStacks;
