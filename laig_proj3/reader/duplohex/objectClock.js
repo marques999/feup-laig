@@ -16,8 +16,8 @@ function ObjectClock(scene, player) {
 	this.RIGHT = [10, 2];
 	this.materials = [];
 	//--------------------------------------------------------
-	this.plane = new MyPlane(scene,5);
-	this.top = new MyRectangle(scene,-0.5, 0.5, 0.5, -0.5);
+	this.plane = new MyPlane(scene, 5);
+	this.top = new MyRectangle(scene, -0.5, 0.5, 0.5, -0.5);
 	this.ramp = new ObjectRamp(scene);
 	this.player = player;
 	//--------------------------------------------------------
@@ -51,9 +51,8 @@ ObjectClock.prototype.constructor = ObjectClock;
 //--------------------------------------------------------
 ObjectClock.prototype.display = function() {
 
-	this.materials["body"].apply();
-	//--------------------------------------------------------
 	this.scene.pushMatrix();
+		this.materials["body"].apply();
 		this.ramp.display();
 		this.scene.translate(2.5, 0.0, 0.0);
 		this.ramp.display();

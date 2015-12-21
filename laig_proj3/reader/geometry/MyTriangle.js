@@ -33,7 +33,6 @@ function MyTriangle(scene, v1, v2, v3) {
 
 	var vertexBminusA = vec3.create();
 	var vertexCminusA = vec3.create();
-
 	this.vertexNormal = vec3.create();
 	this.cosBeta = (this.a * this.a - this.b * this.b + this.c * this.c) / (2 * this.a * this.c);
 	this.sinBeta = Math.sin(Math.acos(this.cosBeta));
@@ -44,6 +43,7 @@ function MyTriangle(scene, v1, v2, v3) {
 	vec3.normalize(this.vertexNormal, this.vertexNormal);
 
 	this.initBuffers();
+	this.updateTexCoords(1.0, 1.0);
 };
 
 MyTriangle.prototype = Object.create(MyPrimitive.prototype);
