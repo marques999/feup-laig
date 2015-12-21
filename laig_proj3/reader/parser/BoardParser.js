@@ -82,7 +82,7 @@ BoardParser.prototype.parse = function(root) {
 	}
 
 	mat4.scale(this.boardMatrix, this.boardMatrix, boardSize);
-	
+
 	this.scene.setBoardMatrix(this.boardMatrix);
 };
 

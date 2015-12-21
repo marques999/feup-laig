@@ -8,7 +8,7 @@
 function MyInterface() {
 	CGFinterface.call(this);
 };
-
+//--------------------------------------------------------
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
 
@@ -54,26 +54,25 @@ MyInterface.prototype.init = function(application) {
 
 	this.playerColor = 'blackPlayer';
 	this.gui = new dat.GUI();
-	this.reset();
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.setScene = function(xmlScene) {
 	this.scene = xmlScene;
 	this.mainMenu();
-}
-
+};
+//--------------------------------------------------------
 MyInterface.prototype.deleteFolder = function(folderName) {
 	this.gui.__folders[folderName].close();
 	this.gui.__folders[folderName].domElement.parentNode.parentNode.removeChild(this.gui.__folders[folderName].domElement.parentNode);
 	this.gui.__folders[folderName] = undefined;
 	this.gui.onResize();
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.initGame = function(gameBoard) {
 	this.board = gameBoard;
 	//this.gui.add(this, "movieMenu").name("View Replay");
-}
-
+};
+//--------------------------------------------------------
 MyInterface.prototype.readPreferences = function() {
 
 	if (this.scene == undefined || this.scene == null) {
@@ -87,7 +86,7 @@ MyInterface.prototype.readPreferences = function() {
 	this.toggleBoolean(this.gameBoard, preferencesArray.board);
 	this.toggleBoolean(this.gameDifficulty, preferencesArray.difficulty);
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.savePreferences = function() {
 
 	if (this.scene == undefined || this.scene == null) {
@@ -107,7 +106,7 @@ MyInterface.prototype.savePreferences = function() {
 	this.settingsMenu_close();
 	this.mainMenu();
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.mainMenu_close = function() {
 
 	if (this.mainGroup != undefined && this.mainGroup != null) {
@@ -115,9 +114,9 @@ MyInterface.prototype.mainMenu_close = function() {
 		this.mainGroup = undefined;
 	}
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.settingsMenu = function() {
-	//---------------------------------------------------------
+
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
@@ -181,9 +180,9 @@ MyInterface.prototype.settingsMenu = function() {
 		self.gameDifficulty["smart"] = true;
 	});
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.settingsMenu_close = function(self) {
-	//---------------------------------------------------------
+
 	if (this.settingsGroup != undefined && this.settingsGroup != null) {
 		this.deleteFolder("Settings");
 		this.settingsGroup = undefined;
@@ -203,43 +202,18 @@ MyInterface.prototype.settingsMenu_close = function(self) {
 		this.deleteFolder("Difficulty");
 		this.difficultyGroup = undefined;
 	}
-	//---------------------------------------------------------
 };
-
-MyInterface.prototype.aboutMenu = function() {
-	alert("HELLO");
-};
-
-MyInterface.prototype.getBoolean = function(array) {
-
-	for (var key in array) {
-		if (array[key]) {
-			return key;
-		}
-	}
-}
-
-MyInterface.prototype.toggleBoolean = function(array, element) {
-
-	for (var key in array) {
-		if (key != element) {
-			array[key] = false;
-		}
-	}
-
-	array[element] = true;
-};
-
+//--------------------------------------------------------
 MyInterface.prototype.gameMenu = function() {
 
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
-
-	var self = this;
+	//---------------------------------------------------------
 	this.mainMenu_close();
 	this.scene.initServer();
 	//---------------------------------------------------------
+	var self = this;
 	this.gameGroup = this.gui.addFolder("Game");
 	this.camerasGroup = this.gui.addFolder("Cameras");
 	//---------------------------------------------------------
@@ -265,20 +239,20 @@ MyInterface.prototype.gameMenu = function() {
 		self.scene.setCameraTarget(value);
 	});
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.gameMenu_close = function() {
 
 	if (this.gameGroup != undefined && this.gameGroup != null) {
 		this.deleteFolder("Game");
 		this.gameGroup = undefined;
 	}
-
+	//--------------------------------------------------------
 	if (this.camerasGroup != undefined && this.camerasGroup != null) {
 		this.deleteFolder("Cameras");
 		this.camerasGroup = undefined;
 	}
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.mainMenu = function() {
 
 	if (this.scene == undefined || this.scene == null) {
@@ -295,7 +269,7 @@ MyInterface.prototype.mainMenu = function() {
 		self.movieGroup = undefined;
 	});
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.movieMenu = function() {
 
 	if (this.board == undefined || this.board == null) {
@@ -317,7 +291,7 @@ MyInterface.prototype.movieMenu = function() {
 	this.movieGroup.add(this.board, "movieSpeed", 1, 5).step(0.1).name("Animation Speed");
 	this.movieGroup.add(this.board, "movieFrame", 0, 4).step(1).name("Current Move").listen();
 };
-
+//--------------------------------------------------------
 MyInterface.prototype.lightsMenu = function() {
 
 	if (this.lightsGroup != undefined && this.lightsGroup != null) {
@@ -329,13 +303,72 @@ MyInterface.prototype.lightsMenu = function() {
 	this.lightsGroup.open();
 	this.lights = {};
 }
+//--------------------------------------------------------
 
-MyInterface.prototype.reset = function() {
-	//--------------------------------------------------------
-//	this.sceneMenu();
-	//--------------------------------------------------------
-//	this.lightsMenu();
+MyInterface.prototype.aboutMenu = function() {
+	alert("HELLO");
 };
+
+MyInterface.prototype.getBoolean = function(array) {
+
+	for (var key in array) {
+		if (array[key]) {
+			return key;
+		}
+	}
+}
+
+MyInterface.prototype.toggleBoolean = function(array, element) {
+
+	for (var key in array) {
+		if (key != element) {
+			array[key] = false;
+		}
+	}
+
+	array[element] = true;
+};
+
+MyInterface.prototype.getBoolean = function(array) {
+
+	for (var key in array) {
+		if (array[key]) {
+			return key;
+		}
+	}
+}
+
+MyInterface.prototype.toggleBoolean = function(array, element) {
+
+	for (var key in array) {
+		if (key != element) {
+			array[key] = false;
+		}
+	}
+
+	array[element] = true;
+};
+//--------------------------------------------------------
+MyInterface.prototype.getBoolean = function(array) {
+
+	for (var key in array) {
+		if (array[key]) {
+			return key;
+		}
+	}
+}
+//--------------------------------------------------------
+MyInterface.prototype.toggleBoolean = function(array, element) {
+
+	for (var key in array) {
+		if (key != element) {
+			array[key] = false;
+		}
+	}
+
+	array[element] = true;
+};
+//--------------------------------------------------------
 
 /**
  * adiciona uma nova luz ao menu da interface
