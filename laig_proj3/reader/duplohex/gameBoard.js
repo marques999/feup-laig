@@ -158,10 +158,6 @@ GameBoard.prototype.setServer = function(server) {
 	this.server = server;
 };
 //--------------------------------------------------------
-GameBoard.prototype.setMatrix = function(boardMatrix) {
-	this.boardMatrix = boardMatrix;
-};
-//--------------------------------------------------------
 GameBoard.prototype.startGame = function(server) {
 	this.gameRunning = true;
 };

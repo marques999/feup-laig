@@ -52,8 +52,8 @@ XMLscene.prototype.getPreferences = function() {
 	return this.gameSettings;
 };
 
-XMLscene.updateMatrix = function(boardMatrix) {
-	this.board.setMatrix(boardMatrix);
+XMLscene.prototype.setBoardMatrix = function(boardMatrix) {
+	this.boardMatrix = boardMatrix;
 };
 
 XMLscene.prototype.initGL = function() {
@@ -74,6 +74,7 @@ XMLscene.prototype.initServer = function() {
 
 XMLscene.prototype.initGame = function() {
 	this.currentId = 0;
+	this.boardMatrix = null;
 	this.board = new GameBoard(this);
 	this.board.updatePlayer(this.gameSettings.getColor());
 };
@@ -461,6 +462,10 @@ XMLscene.prototype.display = function() {
 
 		for (var i = 0; i < this.activeLights; i++) {
 			this.lights[i].update();
+		}
+
+		if (this.boardMatrix != null) {
+			this.multMatrix(this.boardMatrix);
 		}
 
 		this.board.display();

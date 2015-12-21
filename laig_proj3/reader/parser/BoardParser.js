@@ -70,6 +70,8 @@ BoardParser.prototype.parse = function(root) {
 		printXYZ('size', boardSize);
 	}
 
+	mat4.translate(this.boardMatrix, this.boardMatrix, boardPosition);
+
 	for (var xmlIndex = 2; xmlIndex < nodeSize; xmlIndex++) {
 
 		var child = root.children[xmlIndex];
@@ -79,8 +81,9 @@ BoardParser.prototype.parse = function(root) {
 		}
 	}
 
-	mat4.translate(this.boardMatrix, this.boardMatrix, boardPosition);
 	mat4.scale(this.boardMatrix, this.boardMatrix, boardSize);
+	
+	this.scene.setBoardMatrix(this.boardMatrix);
 };
 
 /**
