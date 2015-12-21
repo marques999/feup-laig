@@ -37,33 +37,31 @@ BoardParser.prototype.constructor = BoardParser;
  * @param {Number} id - identificador do elemento a ser processado
  * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
  */
-BoardParser.prototype.parse = function(root, id) {
+BoardParser.prototype.parse = function(root) {
 
 	this.boardMatrix = mat4.create();
 	
 	mat4.identity(this.boardMatrix);
 
+	var parseErrors = 0;
 	var boardPosition = this.parseCoordinatesXYZ(root, 'position');
 	var error = checkValue(boardPosition, 'position', root.nodeName);
 
 	if (error != null) {
-		return error;
+		parseErrors++;
+		onXMLWarning(error);
 	}
 
-	var boardWidth = this.parseFloat(root, 'dimensions', 'width');
-	var error = checkValue(boardWidth, 'board width', root.nodeName, id);
+	var boardSize = this.parseCoordinatesXYZ(root, 'size');
+	var error = checkValue(boardSize, 'size', root.nodeName);
 
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
-
-	var boardHeight = this.parseFloat(root, 'dimensions', 'height');
-	var error = checkValue(boardHeight, 'board height', root.nodeName, id);
-
-	if (error != null) {
-		parseErrors++;
-		onXMLWarning(error);
+	
+	if (parseErrors != 0) {
+		return onParseError(root.nodeName, parseErrors);
 	}
 	
 	if (this.verbose) {
@@ -72,7 +70,7 @@ BoardParser.prototype.parse = function(root, id) {
 		printXYZ('size', boardSize);
 	}
 
-	for (; xmlIndex < node_sz; xmlIndex++) {
+	/*for (; xmlIndex < node_sz; xmlIndex++) {
 
 		var child = root.children[xmlIndex];
 		var error = null;
@@ -81,7 +79,7 @@ BoardParser.prototype.parse = function(root, id) {
 			error = this.parseRotation(child, node);
 		}
 	}
-
+*/
 	mat4.translate(this.boardMatrix, this.boardMatrix, boardPosition);
 	mat4.scale(this.boardMatrix, this.boardMatrix, boardSize);
 };
