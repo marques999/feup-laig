@@ -189,7 +189,9 @@ GameBoard.prototype.display = function() {
 	this.scene.pushMatrix();
 		this.scene.translate(0.0,-(this.baseSize[0] + this.baseSize[1])/20,0.0);
 		this.displayBorder();
+		this.scene.rotate(Math.PI /2, 0, 1, 0);
 		this.displayClock();
+		this.scene.rotate(-Math.PI / 2, 0, 1, 0);
 	this.scene.popMatrix();	
 };
 //--------------------------------------------------------
@@ -272,14 +274,14 @@ GameBoard.prototype.displayBorder = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayClock = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(+this.baseSize[0]*this.numberRows*0.5, 0, 0);
+		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0, this.baseSize[0] * this.numberColumns * 0.1);
 		this.scene.scale(this.baseSize[0]/5.0, (this.baseSize[0] + this.baseSize[1])/10.0, this.baseSize[1]/5.0);					
 		this.clock1.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();		
-		this.scene.translate(-this.baseSize[0]*this.numberRows*0.5, 0, 0);	
+		this.scene.translate(-this.baseSize[0] * this.numberRows*0.725, 0, -this.baseSize[0] * this.numberColumns * 0.1);	
 		this.scene.scale(this.baseSize[0]/5.0, (this.baseSize[0] + this.baseSize[1])/10.0, this.baseSize[1]/5.0);
-		this.scene.rotate(Math.PI, 0, 1, 0);			
+		this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);			
 		this.clock2.display();
 	this.scene.popMatrix();
 };
@@ -292,7 +294,7 @@ GameBoard.prototype.displayPieces = function() {
 GameBoard.prototype.displayChair = function() {
 	this.scene.pushMatrix();
 	this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
-	this.scene.scale(this.baseSize[0]*2.25, 7.5, this.baseSize[1]*1.0);
+	this.scene.scale(this.baseSize[0] * 2.25, 7.5, this.baseSize[1]);
 	this.scene.translate(0.0, 0.0, -this.baseSize[0]);
 	this.chair.display();
 	this.scene.translate(0.0, 0.0, this.baseSize[0]);
@@ -305,7 +307,7 @@ GameBoard.prototype.displayChair = function() {
 GameBoard.prototype.displayTable = function() {
 	this.scene.pushMatrix();
 	this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
-	this.scene.scale(this.baseSize[0]*3.0, 5.0, this.baseSize[1]*3.0);
+	this.scene.scale(this.baseSize[0] * 3.0, 5.0, this.baseSize[1] * 3.0);
 	this.table.display();
 	this.scene.popMatrix();
 };
