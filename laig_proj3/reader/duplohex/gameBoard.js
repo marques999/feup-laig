@@ -9,10 +9,12 @@
 function GameBoard(scene) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
+
+	this.testMode = true;
 	//--------------------------------------------------------
-	this.basePos = [-2.25, 0.0, -4.5*Math.cos(30*Math.PI/180)];
-	this.baseSize = [5.0, 5.0];
-	this.boxPos = [4, -0.4, 17];
+	this.basePos = [0.0, 0.0, 0.0];
+	this.baseSize = [5.0, 5.0];	
+	this.boxPos = [3, 0.0, 17];
 	this.borderAngle = Math.sin(Math.PI/3);
 	this.elapsedMillis = 0.0;
 	//--------------------------------------------------------
@@ -21,6 +23,10 @@ function GameBoard(scene) {
 	this.numberRows = 7;
 	this.numberColumns = 7;
 	this.numberCells = this.numberRows * this.numberColumns;
+	//--------------------------------------------------------
+	this.basePos[0] = this.basePos[0] - (this.baseSize[0]/5.0)*1.875*(this.numberColumns-1);
+	this.basePos[1] = this.basePos[1];
+	this.basePos[2] = this.basePos[2] + (this.baseSize[1]/5.0)*3.75*Math.cos(30*Math.PI/180)*(this.numberRows-1);
 	//--------------------------------------------------------
 	this.player1 = {
 		color: 'white',
@@ -166,33 +172,32 @@ GameBoard.prototype.display = function() {
 
 	this.scene.resetPicking();
 	this.currentId = 0;
+	
 	this.displayBoard();
 	this.displayPieces();
+	
 	this.scene.pushMatrix();
-	this.baseTexture.bind()
+		this.baseTexture.bind()
 		this.scene.scale(this.baseSize[0]*7.5, 1.0, this.baseSize[1]*11.0);
-		this.scene.translate(-0.5, -1.0, 0.5);
+		this.scene.translate(-0.5, -(this.baseSize[0] + this.baseSize[1])/10, 0.5);
 		this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
 		this.scene.registerPicking(this.base);
 		this.base.display();
-	this.baseTexture.unbind();
-	this.scene.popMatrix();
-	this.displayBorder();
- // 	this.displayTable();
-  //	this.displayChair();
-	this.displayClock();
-};
-//--------------------------------------------------------
-GameBoard.prototype.setPosition = function(position) {
-	this.basePos = position;
-};
-//--------------------------------------------------------
-GameBoard.prototype.displayBoard = function() {
+		this.baseTexture.unbind();
+	this.scene.popMatrix();	
 
 	this.scene.pushMatrix();
-	this.scene.scale(this.baseSize[0], 1.0, this.baseSize[1]);
-	this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
-	this.scene.translate(this.basePos[0], this.basePos[2], this.basePos[1]);
+		this.scene.translate(0.0,-(this.baseSize[0] + this.baseSize[1])/20,0.0);
+		this.displayBorder();
+		this.displayClock();
+	this.scene.popMatrix();	
+};
+//--------------------------------------------------------
+GameBoard.prototype.displayBoard = function() {	
+	this.scene.pushMatrix();
+	this.scene.translate(this.basePos[0], this.basePos[1], this.basePos[2]);
+	this.scene.scale(this.baseSize[0], (this.baseSize[0] + this.baseSize[1])/10, this.baseSize[1]);
+	this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);		
 	this.hexTexture.bind();
 
 	for (var i = 0; i < this.numberCells; i++) {
@@ -235,8 +240,8 @@ GameBoard.prototype.displayBoard = function() {
 GameBoard.prototype.displayBorder = function() {
 
 	this.scene.pushMatrix();
-	this.scene.scale(this.baseSize[0] * 0.5, 1.0, this.baseSize[1] * 0.5);
-	this.scene.translate(this.basePos[0] * 2.0, -0.5 + this.basePos[1] * 2.0, -this.basePos[2] * 2.0);
+	this.scene.translate(this.basePos[0], this.basePos[1], this.basePos[2]);
+	this.scene.scale(this.baseSize[0]*0.5, (this.baseSize[0] + this.baseSize[1])/10, this.baseSize[1]*0.5);
 	this.scene.pushMatrix();
 		this.scene.translate(-2*this.borderAngle*this.borderAngle + 0.5, 0.0, 2*this.borderAngle*0.5 + this.borderAngle);
 		this.scene.rotate(Math.PI/6, 0, 1, 0);
@@ -251,6 +256,7 @@ GameBoard.prototype.displayBorder = function() {
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
 		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows/2) * 2.0 - !(this.numberRows & 1)*0.5,0.0,0.5/this.borderAngle - (-!(this.numberRows & 1)*0.5 + ~~(this.numberRows/2))*2*this.borderAngle);
+		console.log()
 		this.scene.rotate(Math.PI/2, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.blackBorder.display();
@@ -265,15 +271,17 @@ GameBoard.prototype.displayBorder = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.displayClock = function() {
-	this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
-	this.scene.translate(this.baseSize[0]*5.0, 0.0, this.baseSize[0]);
-	this.clock1.display();
-	this.scene.translate(-this.baseSize[0]*5.0, 0.0, -this.baseSize[0]);
-	this.scene.rotate(-Math.PI, 0.0, 1.0, 0.0);
-	this.scene.translate(this.baseSize[0]*5.0, 0.0, this.baseSize[0]);
-	this.clock2.display();
-	this.scene.translate(-this.baseSize[0]*5.0, 0.0, -this.baseSize[0]);
-	this.scene.rotate(-Math.PI/2, 0.0, 1.0, 0.0);
+	this.scene.pushMatrix();
+		this.scene.translate(+this.baseSize[0]*this.numberRows*0.5, 0, 0);
+		this.scene.scale(this.baseSize[0]/5.0, (this.baseSize[0] + this.baseSize[1])/10.0, this.baseSize[1]/5.0);					
+		this.clock1.display();
+	this.scene.popMatrix();
+	this.scene.pushMatrix();		
+		this.scene.translate(-this.baseSize[0]*this.numberRows*0.5, 0, 0);	
+		this.scene.scale(this.baseSize[0]/5.0, (this.baseSize[0] + this.baseSize[1])/10.0, this.baseSize[1]/5.0);
+		this.scene.rotate(Math.PI, 0, 1, 0);			
+		this.clock2.display();
+	this.scene.popMatrix();
 };
 //--------------------------------------------------------
 GameBoard.prototype.displayPieces = function() {
@@ -503,6 +511,32 @@ GameBoard.prototype.placePieceHandler = function() {
 	var selectedCellY = this.selectedCellId % this.numberColumns;
 	var isDisc = this.pieces.isDisc(this.selectedPieceId);
 
+
+	if(this.testMode) {		
+		var index = this.cellIndex(selectedPiece.cellX,  selectedPiece.cellY);
+
+		if (selectedPiece.wasPlaced()) {
+
+			if (this.pieces.isDisc(this.selectedPieceId)) {
+				this.cells[index].disc = null;
+			}
+			else {
+				this.cells[index].ring = null;
+			}
+		}
+
+		this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId/this.numberColumns), this.selectedCellId % this.numberColumns);
+
+		if (this.pieces.isDisc(this.selectedPieceId)) {
+			this.cells[this.selectedCellId].disc = selectedPiece.color;
+		}
+		else {
+			this.cells[this.selectedCellId].ring = selectedPiece.color;
+		}
+		return;
+	}
+
+
 	if (selectedPiece.wasPlaced()) { // MOVE
 
 		if (isDisc) {
@@ -523,6 +557,8 @@ GameBoard.prototype.placePieceHandler = function() {
 			this.server.requestPlaceRing(selectedCellX + 1, selectedCellY + 1);
 		}
 	}
+
+	
 
 	this.unselectHints();
 };

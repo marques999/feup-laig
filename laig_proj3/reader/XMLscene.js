@@ -413,14 +413,6 @@ XMLscene.prototype.defaultPicking = function(object) {
 	this.registerForPick(0, object);
 };
 //--------------------------------------------------------
-XMLscene.prototype.setBoardPosition = function(position) {
-	this.board != null && this.board.setPosition(position);
-};
-
-XMLscene.prototype.setBoardDimensions = function(width, height) {
-	this.board != null && this.board.setDimensions(width, height);
-};
-
 /**
  * callback executado periodicamente para atualizar as animações presentes na cena
  * @param {Number} currTime - tempo atual (em milisegundos)

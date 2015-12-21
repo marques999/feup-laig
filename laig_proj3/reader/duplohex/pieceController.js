@@ -22,20 +22,16 @@ function PieceController(scene, board, player1, player2) {
 	//--------------------------------------------------------
 	this.player1 = player1;
 	this.player2 = player2;
-	//--------------------------------------------------------
-	this.gameBoard = board;
+	//--------------------------------------------------------	
 	this.defaultAngle = 2 * Math.cos(Math.PI / 6) / 3;
 	this.selectedPiece = null;
-	this.baseSize = board.baseSize;
+	this.scaleFactor = [1.5 / 5.0, 1.3 / 5.0, 1.5 / 5.0];
+	this.pieceSize = [board.baseSize[0]*this.scaleFactor[0], board.baseSize[1]*this.scaleFactor[1], board.baseSize[0]*this.scaleFactor[2]];	
 	this.basePos = board.basePos;
 	this.boxPos = board.boxPos;
-	//--------------------------------------------------------
-	this.defaultScale = [
-		this.baseSize[0] * 1.5 / 5.0,
-		this.baseSize [1] * 1.3 / 5.0,
-		this.baseSize[0] * 1.5 / 5.0
-	];
-	//--------------------------------------------------------
+	this.numberCells = board.numberCells;
+	this.boardHeight = (board.baseSize[0] + board.baseSize[1])/20*1.3;
+	//--------------------------------------------------------	
 	this.initialize();
 };
 //--------------------------------------------------------
@@ -74,7 +70,7 @@ PieceController.prototype.initialize = function() {
 		this.pieces[i] = new ObjectDisc(this.scene, this.player1.color,
 		[
 			(nStack % 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[0],
-			this.p1DiscStacks[nStack].length + this.boxPos[1],
+			this.p1DiscStacks[nStack].length + this.boxPos[1] - this.boardHeight,
 			Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2]
 		]);
 
@@ -92,7 +88,7 @@ PieceController.prototype.initialize = function() {
 		this.pieces[i] = new ObjectRing(this.scene, this.player1.color,
 		[
 			(nStack % 2) * this.horizontalSpace + this.generateRandom() + this.stackSpace + this.boxPos[0],
-			this.p1RingStacks[nStack].length * this.verticalSpace + this.boxPos[1],
+			this.p1RingStacks[nStack].length * this.verticalSpace + this.boxPos[1] - this.boardHeight,
 			Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2]
 		]);
 
@@ -110,7 +106,7 @@ PieceController.prototype.initialize = function() {
 		this.pieces[i] = new ObjectDisc(this.scene, this.player2.color,
 		[
 			-((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[0]),
-			+(this.p2DiscStacks[nStack].length + this.boxPos[1]),
+			+(this.p2DiscStacks[nStack].length + this.boxPos[1] - this.boardHeight),
 			-(Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2])
 		]);
 
@@ -128,7 +124,7 @@ PieceController.prototype.initialize = function() {
 		this.pieces[i] = new ObjectRing(this.scene, this.player2.color,
 		[
 			-((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.stackSpace + this.boxPos[0]),
-			+(this.p2RingStacks[nStack].length * this.verticalSpace + this.boxPos[1]),
+			+(this.p2RingStacks[nStack].length * this.verticalSpace + this.boxPos[1] - this.boardHeight),
 			-(Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2])
 		]);
 
@@ -139,7 +135,7 @@ PieceController.prototype.initialize = function() {
 PieceController.prototype.display = function() {
 
 	this.scene.pushMatrix();
-	this.scene.scale(this.defaultScale[0], this.defaultScale[1], this.defaultScale[2]);
+	this.scene.scale(this.pieceSize[0], this.pieceSize[1], this.pieceSize[2]);
 
 	for (var i = 0; i < this.pieces.length; i++) {
 
@@ -158,7 +154,7 @@ PieceController.prototype.display = function() {
 		this.pieces[i].display();
 		this.scene.popMatrix();
 	}
-
+	
 	this.scene.popMatrix();
  };
 //--------------------------------------------------------
@@ -223,34 +219,33 @@ PieceController.prototype.removeFromStack = function(pieceId, x, y) {
 };
 //--------------------------------------------------------
 PieceController.prototype.placePiece = function(pieceId, x, y)  {
-	//--------------------------------------------------------
+	//--------------------------------------------------------	
 	var piece = this.pieces[pieceId];
-	//--------------------------------------------------------
+	//--------------------------------------------------------	
 	if (!piece.wasPlaced()) {
-		console.log("removig from stack");
-		this.removeFromStack(pieceId, x, y);
+		this.removeFromStack(pieceId, x, y);		
 	}
-	//--------------------------------------------------------
+	//--------------------------------------------------------	
 	piece.setColor('default');
-	//--------------------------------------------------------
-	var newX = this.baseSize[0] * 0.5 * x + this.baseSize[0] * this.basePos[0] / 1.5;
-	var newY = this.basePos[1];
-	var newZ = -(this.baseSize[1] * 0.5) * this.defaultAngle * x - this.baseSize[1] * this.defaultAngle * y - this.baseSize[1] * this.basePos[2] / 1.5;
-	//--------------------------------------------------------
+	//--------------------------------------------------------	
+	var newX = 3.75/1.5*x + this.basePos[0]/this.pieceSize[0];
+	var newY = this.basePos[1]/this.pieceSize[1];
+	var newZ = -2.5/1.5*Math.cos(Math.PI/6)*x - 5/1.5*Math.cos(Math.PI/6)*y + this.basePos[2]/this.pieceSize[2];
+	//--------------------------------------------------------	
 	var piecePosition = this.pieces[pieceId].position;
 	var pieceDistance = vec3.dist([newX, newY + 6, newZ], piecePosition);
-	//--------------------------------------------------------
+	//--------------------------------------------------------	
 	this.animation = new LinearAnimation(pieceDistance * 0.2,
 	[
-		piecePosition,
-		[piecePosition[0], 3.0, piecePosition[2]],
-		[newX, newY + 3, newZ],
+		piecePosition, 
+		[piecePosition[0], piecePosition[1] + 3.0, piecePosition[2]],
+		[newX, newY + 3, newZ], 
 		[newX, newY, newZ]
 	]);
-	//--------------------------------------------------------
+	//--------------------------------------------------------	
 	this.animationId = pieceId;
 	this.animation.start();
-	//--------------------------------------------------------
+	//--------------------------------------------------------	
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
 	piece.place(x, y);
@@ -261,9 +256,9 @@ PieceController.prototype.placeFast = function(pieceId, x, y)  {
 	var piece = this.pieces[pieceId];
 	//--------------------------------------------------------
 	this.removeFromStack(pieceId, x, y);
-	var newX = this.baseSize[0] * 0.5 * x + this.baseSize[0] * this.basePos[0] / 1.5;
-	var newY = this.basePos[1];
-	var newZ = -(this.baseSize[1] * 0.5) * this.defaultAngle * x - this.baseSize[1] * this.defaultAngle * y - this.baseSize[1] * this.basePos[2] / 1.5;
+	var newX = 3.75/1.5*x + this.basePos[0]/this.pieceSize[0];
+	var newY = this.basePos[1]/this.pieceSize[1];
+	var newZ = -2.5/1.5*Math.cos(Math.PI/6)*x - 5/1.5*Math.cos(Math.PI/6)*y + this.basePos[2]/this.pieceSize[2];
 	//--------------------------------------------------------
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
@@ -310,11 +305,9 @@ PieceController.prototype.unselectActivePiece = function() {
 //--------------------------------------------------------
 PieceController.prototype.selectPiece = function(pickingId) {
 
-	var boardSize = this.gameBoard.numberCells;
+	if (pickingId >= this.numberCells + 1 && pickingId <= this.numberCells + this.pieces.length) {
 
-	if (pickingId >= boardSize + 1 && pickingId <= boardSize + this.pieces.length) {
-
-		var id = pickingId - boardSize - 1;
+		var id = pickingId - this.numberCells - 1;
 
 		if (this.selectedPiece == id) {
 			this.unselectActivePiece();
