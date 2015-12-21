@@ -25,7 +25,7 @@ function ObjectClock(scene, player) {
 	this.materials["clock"].loadTexture("resources/clock.png");
 	this.materials["body"] = new CGFappearance(scene);
 	this.materials["body"].loadTexture("resources/clock_black.png");
-	this.materials["top"] = new CGFappearance(scene);	
+	this.materials["top"] = new CGFappearance(scene);
 	this.materials["top"].loadTexture("resources/clock_top.png");
 	this.materials["default"] = new CGFappearance(scene);
 	this.materials["red"] = new CGFappearance(scene);
@@ -45,89 +45,85 @@ function ObjectClock(scene, player) {
 	this.DIGITS[11] = new ObjectDigit(scene, (11/16) + this.texelLength / 4, (12/16) - this.texelLength / 4);
 	this.DIGITS[12] = new ObjectDigit(scene, (12/16), (13/16));
 };
-
+//--------------------------------------------------------
 ObjectClock.prototype = Object.create(MyPrimitive.prototype);
 ObjectClock.prototype.constructor = ObjectClock;
-
-/**
- * desenha a primitva 'objectClock' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectClock.prototype.display = function() {
 
 	this.materials["body"].apply();
-
-	this.scene.pushMatrix();					
+	//--------------------------------------------------------
+	this.scene.pushMatrix();
 		this.ramp.display();
 		this.scene.translate(2.5, 0.0, 0.0);
 		this.ramp.display();
 		this.scene.translate(5,0.0, 0.0);
 		this.ramp.display();
 		this.scene.translate(2.5, 0.0, 0.0);
-		this.ramp.display();			
+		this.ramp.display();
 	this.scene.popMatrix();
-
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(5.25, -0.5, 0);
 		this.scene.scale(10.5, -1.0, 5*Math.cos(Math.PI/4));
 		this.plane.display();
 	this.scene.popMatrix();
-
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(5.25, 0.0, 1.25*Math.cos(Math.PI/4));
 		this.scene.scale(10.5, 1.0, 2.5*Math.cos(Math.PI/4));
 		this.plane.display();
 	this.scene.popMatrix();
-	
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(10.5, -0.25, 0.0);
 		this.scene.scale(1.0, 0.5, 5*Math.cos(Math.PI/4));
 		this.scene.rotate(Math.PI, 1, 1, 0);
 		this.plane.display();
 	this.scene.popMatrix();
-
-	this.scene.pushMatrix();	
-		this.scene.translate(0.0, -0.25, 0.0);	
+	//--------------------------------------------------------
+	this.scene.pushMatrix();
+		this.scene.translate(0.0, -0.25, 0.0);
 		this.scene.scale(-1.0, -0.5, 5*Math.cos(Math.PI/4));
 		this.scene.rotate(Math.PI, 1, 1, 0);
 		this.plane.display();
 	this.scene.popMatrix();
-
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(10.5, 1.25*Math.cos(Math.PI/4), -1.25*Math.cos(Math.PI/4));
 		this.scene.scale(1.0, 2.5*Math.cos(Math.PI/4), 2.5*Math.cos(Math.PI/4));
 		this.scene.rotate(Math.PI, 1, 1, 0);
 		this.plane.display();
 	this.scene.popMatrix();
-
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.scene.translate(0.0, 1.25*Math.cos(Math.PI/4), -1.25*Math.cos(Math.PI/4));
 		this.scene.scale(-1.0, -2.5*Math.cos(Math.PI/4), 2.5*Math.cos(Math.PI/4));
 		this.scene.rotate(Math.PI, 1, 1, 0);
 		this.plane.display();
 	this.scene.popMatrix();
-
-	this.scene.pushMatrix();	
-		this.scene.translate(5.25, -0.25, 2.5*Math.cos(Math.PI/4));	
+	//--------------------------------------------------------
+	this.scene.pushMatrix();
+		this.scene.translate(5.25, -0.25, 2.5*Math.cos(Math.PI/4));
 		this.scene.scale(10.5, 0.5, 1.0);
 		this.scene.rotate(Math.PI/2, 1, 0, 0);
 		this.plane.display();
 	this.scene.popMatrix();
-
-	this.scene.pushMatrix();	
-		this.scene.translate(5.25, 2.5*Math.cos(Math.PI/4) -0.25, 0.0);	
+	//--------------------------------------------------------
+	this.scene.pushMatrix();
+		this.scene.translate(5.25, 2.5*Math.cos(Math.PI/4) -0.25, 0.0);
 		this.scene.scale(10.5, 0.5, 1.0);
 		this.scene.rotate(Math.PI/2, 1, 0, 0);
 		this.plane.display();
 	this.scene.popMatrix();
-
-	this.scene.pushMatrix();	
-		this.scene.translate(5.25, 1.25*Math.cos(Math.PI/4) - 0.25, -2.5*Math.cos(Math.PI/4));	
+	//--------------------------------------------------------
+	this.scene.pushMatrix();
+		this.scene.translate(5.25, 1.25*Math.cos(Math.PI/4) - 0.25, -2.5*Math.cos(Math.PI/4));
 		this.scene.scale(10.5, 2.5*Math.cos(Math.PI/4) + 0.5, 1.0);
 		this.scene.rotate(-Math.PI/2, 1, 0, 0);
 		this.plane.display();
 	this.scene.popMatrix();
-
+	//--------------------------------------------------------
 	this.materials["top"].apply();
 	this.scene.pushMatrix();
 		this.scene.translate(5.25, 2.5*Math.cos(Math.PI/4), -1.25*Math.cos(Math.PI/4));
@@ -135,10 +131,9 @@ ObjectClock.prototype.display = function() {
 		this.scene.rotate(-Math.PI/2, 1, 0, 0);
 		this.top.display();
 	this.scene.popMatrix();
-
-
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
-		this.materials["clock"].apply();	
+		this.materials["clock"].apply();
 		this.scene.translate(0.5, 0.0, 2*Math.sqrt(Math.cos(Math.PI/4)*Math.cos(Math.PI/4)));
 		this.scene.rotate(-Math.PI/4, 1, 0, 0);
 		//--------------------------------------------------------
@@ -162,11 +157,11 @@ ObjectClock.prototype.display = function() {
 		//--------------------------------------------------------
 		this.DIGITS[this.RIGHT[0]].display();
 		this.scene.translate(1.0, 0.0, 0.0);
-		this.DIGITS[this.RIGHT[1]].display();		
+		this.DIGITS[this.RIGHT[1]].display();
 	this.scene.popMatrix();
 	this.materials["default"].apply();
 };
-
+//--------------------------------------------------------
 ObjectClock.prototype.update = function(currTime, lastUpdate, gameRunning) {
 
 	this.LEFT[0] = ~~(this.player.discs / 10) % 10 - 1;
