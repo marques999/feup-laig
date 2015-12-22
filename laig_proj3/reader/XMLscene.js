@@ -34,6 +34,7 @@ XMLscene.prototype.initGame = function() {
 	this.currentId = 0;
 	this.boardMatrix = null;
 	this.board = new GameBoard(this);
+	this.board.updateMatrix(this.gameSettings.getBoard());
 	this.board.updatePlayer(this.gameSettings.getColor());
 };
 //--------------------------------------------------------

@@ -48,12 +48,12 @@ ObjectHexagon.prototype.removeRing = function() {
 	this.ring = null;
 };
 //--------------------------------------------------------
-ObjectHexagon.prototype.setDisc = function(disc) {
-	this.disc = disc;
+ObjectHexagon.prototype.insertDisc = function(disc) {
+	this.disc = disc.color;
 };
 //--------------------------------------------------------
-ObjectHexagon.prototype.setRing = function(ring) {
-	this.ring = ring;
+ObjectHexagon.prototype.insertRing = function(ring) {
+	this.ring = ring.color;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.hasDisc = function() {

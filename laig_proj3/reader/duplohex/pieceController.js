@@ -131,6 +131,12 @@ PieceController.prototype.initialize = function() {
 
 		this.p2RingStacks[nStack].push(i);
 	}
+	//--------------------------------------------------------
+	this.stackLength = [];
+	this.stackLength["p1Discs"] = this.p1DiscStacks.length;
+	this.stackLength["p1Rings"] = this.p1RingStacks.length;
+	this.stackLength["p2Discs"] = this.p2DiscStacks.length;
+	this.stackLength["p2Rings"] = this.p2RingStacks.length;
 };
 //--------------------------------------------------------
 PieceController.prototype.display = function() {
@@ -159,7 +165,7 @@ PieceController.prototype.display = function() {
 	this.scene.popMatrix();
  };
 //--------------------------------------------------------
-PieceController.prototype.removeFromStack = function(pieceId, x, y) {
+PieceController.prototype.removeFromStack = function(pieceId) {
 
 	if (pieceId < this.p1Discs_end) {
 
@@ -224,7 +230,7 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 	var piece = this.pieces[pieceId];
 	//--------------------------------------------------------
 	if (!piece.wasPlaced()) {
-		this.removeFromStack(pieceId, x, y);
+		this.removeFromStack(pieceId);
 	}
 	//--------------------------------------------------------
 	piece.setColor('default');
@@ -252,10 +258,80 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 	piece.place(x, y);
 };
 //--------------------------------------------------------
-PieceController.prototype.placeFast = function(pieceId, x, y)  {
+PieceController.prototype.randomBlackDisc = function() {
+	
+	if (this.player1.color == 'white') {
+		return this.randomPiece(this.p2DiscStacks, "p2Discs");
+	}
+
+	return this.randomPiece(this.p1DiscStacks, "p1Discs");
+};
+//--------------------------------------------------------
+PieceController.prototype.randomBlackRing = function() {
+	
+	if (this.player1.color == 'white') {
+		return this.randomPiece(this.p2RingStacks, "p2Rings");
+	}
+
+	return this.randomPiece(this.p1RingStacks, "p1Rings");
+};
+//--------------------------------------------------------
+PieceController.prototype.randomWhiteDisc = function() {
+	
+	if (this.player1.color == 'white') {
+		return this.randomPiece(this.p1DiscStacks, "p1Discs");
+	}
+
+	return this.randomPiece(this.p2DiscStacks, "p2Discs");
+};
+//--------------------------------------------------------
+PieceController.prototype.randomWhiteRing = function() {
+	
+	if (this.player1.color == 'white') {
+		return this.randomPiece(this.p1RingStacks, "p1Rings");
+	}
+
+	return this.randomPiece(this.p2RingStacks, "p2Rings");
+};
+//--------------------------------------------------------
+PieceController.prototype.randomPiece = function(playerStack, stackName) {
+	
+	var stackId = this.stackLength[stackName] - 1;
+	var stackLength = playerStack[stackId].length - 1;
+	
+	if (stackLength == 0) {
+		this.stackLength[stackName]--;
+	}
+
+	return playerStack[stackId][stackLength];
+};
+//--------------------------------------------------------
+PieceController.prototype.placeRandom = function(typeId, x, y)  {
 	//--------------------------------------------------------
-	this.removeFromStack(pieceId, x, y);
+	var pieceId = 0;
+	var pieceName = null;
 	//--------------------------------------------------------
+	if (typeId == 1) {
+		pieceId = this.randomBlackDisc();
+		pieceName = 'disc';
+	}
+	else if (typeId == 2) {
+		pieceId = this.randomWhiteDisc();
+		pieceName = 'disc';
+	}
+	else if (typeId == 4) {
+		pieceId = this.randomBlackRing();
+		pieceName = 'ring';
+	}
+	else if (typeId == 8) {
+		pieceId = this.randomWhiteRing();
+		pieceName = 'ring';
+	}
+	else {
+		return false;
+	}
+	//--------------------------------------------------------
+	this.removeFromStack(pieceId);
 	var piece = this.pieces[pieceId];
 	var newX = 2.5 * x + this.basePos[0] / this.pieceSize[0];
 	var newY = this.basePos[1] / this.pieceSize[1];
@@ -264,6 +340,8 @@ PieceController.prototype.placeFast = function(pieceId, x, y)  {
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
 	piece.place(x, y);
+	//--------------------------------------------------------
+	return pieceName;
 };
 //--------------------------------------------------------
 PieceController.prototype.pieceAt = function(pieceId) {

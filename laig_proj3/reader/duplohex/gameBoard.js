@@ -9,13 +9,12 @@
 function GameBoard(scene) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
-
-	this.testMode = true;
 	//--------------------------------------------------------
 	this.basePos = [0.0, 0.0, 0.0];
 	this.baseSize = [5.0, 5.0];
 	this.boxPos = [3, 0.0, 17];
 	this.borderAngle = Math.sin(Math.PI/3);
+	this.doubleAngle = 2.0 * this.borderAngle;
 	this.elapsedMillis = 0.0;
 	//--------------------------------------------------------
 	this.cells = [];
@@ -24,9 +23,9 @@ function GameBoard(scene) {
 	this.numberColumns = 7;
 	this.numberCells = this.numberRows * this.numberColumns;
 	//--------------------------------------------------------
-	this.basePos[0] = this.basePos[0] - (this.baseSize[0]/5.0) * 1.875*(this.numberColumns - 1);
+	this.basePos[0] = this.basePos[0] - (this.baseSize[0] / 5.0) * 1.875*(this.numberColumns - 1);
 	this.basePos[1] = this.basePos[1];
-	this.basePos[2] = this.basePos[2] + (this.baseSize[1]/5.0) * 3.75 * this.borderAngle * (this.numberRows - 1);
+	this.basePos[2] = this.basePos[2] + (this.baseSize[1] / 5.0) * 3.75 * this.borderAngle * (this.numberRows - 1);
 	//--------------------------------------------------------
 	this.player1 = {
 		color: 'white',
@@ -67,7 +66,7 @@ function GameBoard(scene) {
 	this.currentPlayer = null;
 	this.guiInterface = null;
 	this.piecePlayed = null;
-	this.nextTurn = 0;
+	this.testMode = true;
 	//--------------------------------------------------------
 	this.historyStack = new GameMove(this);
 	this.historyStack.push(14, 4, 1);
@@ -76,43 +75,57 @@ function GameBoard(scene) {
 	this.historyStack.push(24, 2, 2);
 	//--------------------------------------------------------
 	this.smallMatrix = [
-		// WHITE RINGS
-		[47, 1, 0],
-		[39, 3, 0],
-		[31, 5, 0],
-		[46, 2, 6],
-		[38, 4, 6],
-		[30, 6, 6],
-		// WHITE DISCS
-		[23, 2, 0],
-		[15, 4, 0],
-		[7, 6, 0],
-		[22, 1, 6],
-		[14, 3, 6],
-		[6, 5, 6],
-		// BLACK RINGS
-		[89, 0, 1],
-		[81, 0, 3],
-		[73, 0, 5],
-		[88, 6, 2],
-		[80, 6, 4],
 		// BLACK DISCS
-		[65, 0, 0],
-		[57, 0, 2],
-		[49, 0, 4],
-		[64, 0, 6],
-		[56, 6, 1],
-		[48, 6, 4],
-		[67, 6, 6],
+		[1, 0, 0],
+		[1, 0, 2],
+		[1, 0, 4],
+		[1, 0, 6],
+		[1, 6, 1],
+		[1, 6, 3],
+		[1, 6, 5],
+		// BLACK RINGS
+		[4, 0, 1],
+		[4, 0, 3],
+		[4, 0, 5],
+		[4, 6, 2],
+		[4, 6, 4],
+		// WHITE DISCS
+		[2, 2, 0],
+		[2, 4, 0],
+		[2, 6, 0],
+		[2, 1, 6],
+		[2, 3, 6],
+		[2, 5, 6],
+		// WHITE RINGS
+		[8, 1, 0],
+		[8, 3, 0],
+		[8, 5, 0],
+		[8, 2, 6],
+		[8, 4, 6],
+		[8, 6, 6],
 	];
 	//--------------------------------------------------------
 	this.diagonalMatrix = [
-		[49, 0, 4],
-		[64, 0, 6],
-		[7, 6, 0],
-		[22, 1, 6],
+		// BLACK DISCS
+		[1, 0, 0],
+		[1, 2, 2],
+		[1, 4, 4],
+		// BLACK RINGS
+		[4, 5, 1],
+		[4, 3, 3],
+		[4, 1, 5],
+		[4, 6, 6],
+		// WHITE DISCS
+		[2, 0, 6],
+		[2, 2, 4],
+		[2, 4, 2],
+		// WHITE RINGS
+		[8, 1, 1],
+		[8, 6, 0],
+		[8, 5, 5],
 	]
 	//--------------------------------------------------------
+	this.currentMatrix = 'small';
 	this.defaultMaterial = new CGFappearance(scene);
 	this.HEX_MATERIAL = new CGFappearance(scene);
 	this.HEX_MATERIAL.setSpecular(0.2, 0.2, 0.2, 0.6);
@@ -131,22 +144,38 @@ GameBoard.prototype.constructor = GameBoard;
 //--------------------------------------------------------
 GameBoard.prototype.updateMatrix = function(currentMatrix) {
 
-	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
+	this.currentMatrix = currentMatrix;
+	this.initialMove = true;
+	this.nextTurn = 0;
+	this.resetController();
 
 	if (currentMatrix == 'diagonal') {
-		for (var i = 0; i < this.diagonalMatrix.length; i++) {
-			this.pieces.placeFast.apply(this.pieces, this.diagonalMatrix[i]);
-		}
+		this.applyMatrix(this.diagonalMatrix);
 	}
-	else if (currentMatrix = 'small') {
-		for (var i = 0; i < this.smallMatrix.length; i++) {
-			this.pieces.placeFast.apply(this.pieces, this.smallMatrix[i]);
-		}
+	else if (currentMatrix == 'small') {
+		this.applyMatrix(this.smallMatrix);
 	}
 };
 //--------------------------------------------------------
+GameBoard.prototype.applyMatrix = function(currentMatrix) {
+	
+	for (var i = 0; i < currentMatrix.length; i++) {
+		var currentPiece = currentMatrix[i];
+		var cellIndex =  this.cellIndex(currentPiece[1], currentPiece[2]);
+		var pieceName = this.pieces.placeRandom.apply(this.pieces, currentPiece);
+	}
+}
+//--------------------------------------------------------
 GameBoard.prototype.getPlayer = function() {
 	return this.currentPlayer;
+};
+//--------------------------------------------------------
+GameBoard.prototype.resetController = function() {
+	this.player1.discs = 24;
+	this.player1.rings = 24;
+	this.player2.discs = 24;
+	this.player2.rings = 24;
+	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
 };
 //--------------------------------------------------------
 GameBoard.prototype.updatePlayer = function(playerColor) {
@@ -161,23 +190,30 @@ GameBoard.prototype.updatePlayer = function(playerColor) {
 		this.player2.color = 'white';
 		this.currentPlayer = this.player2;
 	}
+	
+	this.updateMatrix(this.currentMatrix);
+};
+//--------------------------------------------------------
+GameBoard.prototype.changeTurn = function() {
 
-	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
+	if (this.currentPlayer.color == this.player1.color) {
+		this.currentPlayer = this.player2;
+	}
+	else {
+		this.currentPlayer = this.player1;
+	}
 };
 //--------------------------------------------------------
 GameBoard.prototype.registerTurn = function(currentPiece) {
 
-	if (this.nextTurn++ == 1) {
-		//--------------------------------------------------------
+	if (this.initialMove) {
+		this.changeTurn();
+		this.initialMove = false;
+	}
+	else if (this.nextTurn++ == 1) {
 		this.nextTurn = 0;
 		this.piecePlayed = null;
-		//--------------------------------------------------------
-		if (this.currentPlayer.color == this.player1.color) {
-			this.currentPlayer = this.player2;
-		}
-		else {
-			this.currentPlayer = this.player1;
-		}
+		this.changeTurn();
 	}
 	else {
 		this.piecePlayed = currentPiece;
@@ -196,26 +232,26 @@ GameBoard.prototype.display = function() {
 
 	this.scene.resetPicking();
 	this.currentId = 0;
-
 	this.displayBoard();
 	this.displayPieces();
-
+	this.displayBase();
 	this.scene.pushMatrix();
-		this.baseTexture.bind()
-		this.scene.scale(this.baseSize[0] * 7.5, 1.0, this.baseSize[1]*11.0);
-		this.scene.translate(-0.5, -(this.baseSize[0] + this.baseSize[1])/10, 0.5);
-		this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
-		this.scene.registerPicking(this.base);
-		this.base.display();
-		this.baseTexture.unbind();
-	this.scene.popMatrix();
-
-	this.scene.pushMatrix();
-		this.scene.translate(0.0,-(this.baseSize[0] + this.baseSize[1])/20,0.0);
+		this.scene.translate(0.0, -(this.baseSize[0] + this.baseSize[1]) / 20.0, 0.0);
 		this.displayBorder();
-		this.scene.rotate(Math.PI /2, 0, 1, 0);
+		this.scene.rotate(Math.PI / 2, 0.0, 1.0, 0.0);
 		this.displayClock();
-		this.scene.rotate(-Math.PI / 2, 0, 1, 0);
+	this.scene.popMatrix();
+};
+//--------------------------------------------------------
+GameBoard.prototype.displayBase = function() {
+	this.scene.pushMatrix();
+	this.baseTexture.bind()
+	this.scene.scale(this.baseSize[0] * 7.5, 1.0, this.baseSize[1] * 11.0);
+	this.scene.translate(-0.5, -(this.baseSize[0] + this.baseSize[1]) / 10.0, 0.5);
+	this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
+	this.scene.registerPicking(this.base);
+	this.base.display();
+	this.baseTexture.unbind();
 	this.scene.popMatrix();
 };
 //--------------------------------------------------------
@@ -223,7 +259,7 @@ GameBoard.prototype.displayBoard = function() {
 	//--------------------------------------------------------
 	this.scene.pushMatrix();
 	this.scene.translate(this.basePos[0], this.basePos[1], this.basePos[2]);
-	this.scene.scale(this.baseSize[0], (this.baseSize[0] + this.baseSize[1])/10, this.baseSize[1]);
+	this.scene.scale(this.baseSize[0], (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1]);
 	this.scene.rotate(Math.PI/2, -1.0, 0.0, 0.0);
 	this.hexTexture.bind();
 	//--------------------------------------------------------
@@ -270,27 +306,27 @@ GameBoard.prototype.displayBorder = function() {
 	this.scene.translate(this.basePos[0], this.basePos[1], this.basePos[2]);
 	this.scene.scale(this.baseSize[0] * 0.5, (this.baseSize[0] + this.baseSize[1]) * 0.1, this.baseSize[1] * 0.5);
 	this.scene.pushMatrix();
-		this.scene.translate(-2.0 * this.borderAngle * this.borderAngle + 0.5, 0.0, 2.0 * this.borderAngle);
-		this.scene.rotate(Math.PI/6, 0.0, 1.0, 0.0);
-		this.scene.rotate(Math.PI/2, -1.0, 0.0, 0.0);
+		this.scene.translate(-this.doubleAngle * this.borderAngle + 0.5, 0.0, this.doubleAngle);
+		this.scene.rotate(Math.PI / 6, 0.0, 1.0, 0.0);
+		this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
 		this.whiteBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(this.numberRows * 2 * this.borderAngle * this.borderAngle - 0.5, 0.0, -this.numberRows*2*this.borderAngle*0.5 - this.numberColumns*2*this.borderAngle + this.borderAngle);
-		this.scene.rotate(Math.PI/6 + Math.PI, 0,1,0);
-		this.scene.rotate(-Math.PI/2, 1,0,0);
+		this.scene.translate(this.numberRows * this.doubleAngle * this.borderAngle - 0.5, 0.0, -this.numberRows * this.borderAngle - this.numberColumns * this.doubleAngle + this.borderAngle);
+		this.scene.rotate(7 * Math.PI / 6, 0.0, 1.0, 0.0);
+		this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
 		this.whiteBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows / 2) * 2.0 - !(this.numberRows & 1)*0.5,0.0,0.5/this.borderAngle - (-!(this.numberRows & 1)*0.5 + ~~(this.numberRows/2))*2*this.borderAngle);
-		this.scene.rotate(Math.PI/2, 0,1,0);
-		this.scene.rotate(-Math.PI/2, 1,0,0);
+		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows / 2) * 2.0 - !(this.numberRows & 1)*0.5, 0.0, 0.5 / this.borderAngle - (-!(this.numberRows & 1)*0.5 + ~~(this.numberRows/2)) * this.doubleAngle);
+		this.scene.rotate(Math.PI / 2, 0.0, 1.0, 0.0);
+		this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
 		this.blackBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-1.0, 0.0, -(this.numberColumns - 1) * 2 * this.borderAngle - 0.5 / this.borderAngle);
-		this.scene.rotate(-Math.PI/2, 0,1,0);
-		this.scene.rotate(-Math.PI/2, 1,0,0);
+		this.scene.translate(-1.0, 0.0, -(this.numberColumns - 1) * this.doubleAngle - 0.5 / this.borderAngle);
+		this.scene.rotate(-Math.PI / 2, 0.0, 1.0, 0.0);
+		this.scene.rotate(-Math.PI / 2, 1.0, 0.0, 0.0);
 		this.blackBorder.display();
 	this.scene.popMatrix();
 	this.scene.popMatrix();
@@ -298,13 +334,13 @@ GameBoard.prototype.displayBorder = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayClock = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0.0, this.baseSize[0] * this.numberColumns * 0.1);
-		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1]/5.0);
+		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0.0, this.baseSize[0] * this.numberColumns / 10.0);
+		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.clock1.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.725, 0.0, -this.baseSize[0] * this.numberColumns * 0.1);
-		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1]/5.0);
+		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.725, 0.0, -this.baseSize[0] * this.numberColumns / 10.0);
+		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
 		this.clock2.display();
 	this.scene.popMatrix();
@@ -317,7 +353,7 @@ GameBoard.prototype.displayPieces = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayChair = function() {
 	this.scene.pushMatrix();
-	this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
+	this.scene.rotate(Math.PI / 2, 0.0, 1.0, 0.0);
 	this.scene.scale(this.baseSize[0] * 2.25, 7.5, this.baseSize[1]);
 	this.scene.translate(0.0, 0.0, -this.baseSize[0]);
 	this.chair.display();
@@ -330,7 +366,7 @@ GameBoard.prototype.displayChair = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayTable = function() {
 	this.scene.pushMatrix();
-	this.scene.rotate(Math.PI/2, 0.0, 1.0, 0.0);
+	this.scene.rotate(Math.PI / 2, 0.0, 1.0, 0.0);
 	this.scene.scale(this.baseSize[0] * 3.0, 5.0, this.baseSize[1] * 3.0);
 	this.table.display();
 	this.scene.popMatrix();
@@ -373,16 +409,6 @@ GameBoard.prototype.setDimensions = function(newWidth, newHeight) {
 	this.baseSize = [newWidth, newHeight];
 };
 //--------------------------------------------------------
-GameBoard.prototype.setPlayer1 = function(playerState) {
-	this.player1.discs = playerState.discs;
-	this.player1.rings = playerState.rings;
-};
-//--------------------------------------------------------
-GameBoard.prototype.setPlayer2 = function(playerState) {
-	this.player2.discs = playerState.discs;
-	this.player2.rings = playerState.rings;
-};
-//--------------------------------------------------------
 GameBoard.prototype.update = function(currTime, lastUpdate) {
 
 	this.clock1.update(currTime, lastUpdate, this.gameRunning);
@@ -409,8 +435,6 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 	if (this.animationActive == 1 && !animationPlaying) {
 		this.animationActive = 0;
 		this.unselectActiveCell();
-		this.selectedCellId = null;
-		this.selectedPieceId = null;
 	}
 	else if (this.animationActive == 0 && animationPlaying) {
 		this.animationActive = 1;
@@ -461,11 +485,11 @@ GameBoard.prototype.validateMove = function(cellX, cellY) {
 	var selectedCell = this.cells[this.cellIndex(cellX, cellY)];
 	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
 
-	if (selectedCell.disc != null && selectedCell.ring == null && selectedPiece.isRing()) {
+	if (selectedCell.hasDisc() && !selectedCell.hasRing() && selectedPiece.isRing()) {
 		return true;
 	}
 
-	if (selectedCell.ring != null && selectedCell.disc == null && selectedPiece.isDisc()) {
+	if (selectedCell.hasRing() && !selectedCell.hasDisc() && selectedPiece.isDisc()) {
 		return true;
 	}
 
@@ -523,6 +547,7 @@ GameBoard.prototype.unselectActiveCell = function() {
 
 	if (this.selectedCellId != null && this.selectedCellId != undefined) {
 		this.cells[this.selectedCellId].unselect();
+		this.selectedCellId = null;
 		this.selectedPieceId = null;
 	}
 };
@@ -556,32 +581,31 @@ GameBoard.prototype.placePieceHandler = function() {
 
 	if (this.testMode) {
 
-		var index = this.cellIndex(selectedPiece.cellX,  selectedPiece.cellY);
+		var sourceCell = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
+		var selectedCell = this.cells[this.selectedCellId];
 
 		if (selectedPiece.wasPlaced()) {
 
 			if (selectedPiece.isDisc()) {
-				this.cells[index].disc = null;
+				this.cells[sourceCell].removeDisc();
 			}
 			else {
-				this.cells[index].ring = null;
+				this.cells[sourceCell].removeRing();
 			}
 		}
 
-		this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId/this.numberColumns), this.selectedCellId % this.numberColumns);
+		this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId / this.numberColumns), this.selectedCellId % this.numberColumns);
 
 		if (selectedPiece.isDisc()) {
-			this.cells[this.selectedCellId].disc = selectedPiece.color;
+			selectedCell.insertDisc(selectedPiece);
 		}
 		else {
-			this.cells[this.selectedCellId].ring = selectedPiece.color;
+			selectedCell.insertRing(selectedPiece);
 		}
-
+		
 		this.registerTurn(selectedPiece);
-		return true;
 	}
-
-	if (selectedPiece.wasPlaced()) { // MOVE
+	else if (selectedPiece.wasPlaced()) { // MOVE
 
 		if (selectedPiece.isDisc()) {
 			this.server.requestMoveDisc(selectedPiece.cellX + 1, selectedPiece.cellY + 1,
@@ -608,27 +632,29 @@ GameBoard.prototype.placePieceHandler = function() {
 GameBoard.prototype.onPlacePiece = function() {
 
 	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
-	var selectedCellX = ~~(this.selectedCellId/this.numberColumns);
+	var selectedCellX = ~~(this.selectedCellId / this.numberColumns);
 	var selectedCellY = this.selectedCellId % this.numberColumns;
-	var index = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
+	var sourceCell = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
+	var destinationCell =  this.cells[this.selectedCellId];
 
 	if (selectedPiece.wasPlaced()) {
 
 		if (selectedPiece.isDisc()) {
-			this.cells[index].disc = null;
+			this.cells[sourceCell].removeDisc();
 		}
 		else {
-			this.cells[index].ring = null;
+			this.cells[sourceCell].removeRing();
 		}
 	}
 
 	this.pieces.placePiece(this.selectedPieceId, selectedCellX, selectedCellY);
+	this.registerTurn(selectedPiece);
 
 	if (selectedPiece.isDisc()) {
-		this.cells[this.selectedCellId].disc = selectedPiece.color;
+		destinationCell.insertDisc(selectedPiece);
 	}
 	else {
-		this.cells[this.selectedCellId].ring = selectedPiece.color;
+		destinationCell.insertRing(selectedPiece);
 	}
 };
 //--------------------------------------------------------
