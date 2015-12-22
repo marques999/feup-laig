@@ -3,9 +3,9 @@
  * @constructor
  * @author Carlos Samouco, Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
- * @param {GameBoard} board - qwertyuiop asdfghjkl zxcvbnm
- * @param {Object} player1 - qwertyuiop asdfghjkl zxcvbnm
- * @param {Object} player2 - qwertyuiop asdfghjkl zxcvbnm
+ * @param {GameBoard} board - referência para a primitiva "tabuleiro"
+ * @param {Object} player1 - estrutura de dados do jogador 1
+ * @param {Object} player2 - estrutura de dados do jogador 2
  * @return {null}
 */
 function PieceController(scene, board, player1, player2) {
@@ -22,16 +22,17 @@ function PieceController(scene, board, player1, player2) {
 	//--------------------------------------------------------
 	this.player1 = player1;
 	this.player2 = player2;
-	//--------------------------------------------------------	
+	this.board = board;
+	//--------------------------------------------------------
 	this.defaultAngle = 2 * Math.cos(Math.PI / 6) / 3;
-	this.selectedPiece = null;
 	this.scaleFactor = [1.5 / 5.0, 1.3 / 5.0, 1.5 / 5.0];
-	this.pieceSize = [board.baseSize[0]*this.scaleFactor[0], board.baseSize[1]*this.scaleFactor[1], board.baseSize[0]*this.scaleFactor[2]];	
+	this.pieceSize = [board.baseSize[0] * this.scaleFactor[0], board.baseSize[1] * this.scaleFactor[1], board.baseSize[0] * this.scaleFactor[2]];
+	this.boardHeight = (board.baseSize[0] + board.baseSize[1]) / 20 * 1.3;
 	this.basePos = board.basePos;
 	this.boxPos = board.boxPos;
 	this.numberCells = board.numberCells;
-	this.boardHeight = (board.baseSize[0] + board.baseSize[1])/20*1.3;
-	//--------------------------------------------------------	
+	this.selectedPiece = null;
+	//--------------------------------------------------------
 	this.initialize();
 };
 //--------------------------------------------------------
@@ -149,12 +150,12 @@ PieceController.prototype.display = function() {
 			this.scene.translate(piecePosition[0], piecePosition[1], piecePosition[2]);
 		}
 
-		this.scene.rotate(Math.PI/2, -1.0, 0.0, 0.0);
+		this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
 		this.scene.registerPicking(this.pieces[i]);
 		this.pieces[i].display();
 		this.scene.popMatrix();
 	}
-	
+
 	this.scene.popMatrix();
  };
 //--------------------------------------------------------
@@ -219,33 +220,33 @@ PieceController.prototype.removeFromStack = function(pieceId, x, y) {
 };
 //--------------------------------------------------------
 PieceController.prototype.placePiece = function(pieceId, x, y)  {
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
 	var piece = this.pieces[pieceId];
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
 	if (!piece.wasPlaced()) {
-		this.removeFromStack(pieceId, x, y);		
+		this.removeFromStack(pieceId, x, y);
 	}
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
 	piece.setColor('default');
-	//--------------------------------------------------------	
-	var newX = 3.75/1.5*x + this.basePos[0]/this.pieceSize[0];
-	var newY = this.basePos[1]/this.pieceSize[1];
-	var newZ = -2.5/1.5*Math.cos(Math.PI/6)*x - 5/1.5*Math.cos(Math.PI/6)*y + this.basePos[2]/this.pieceSize[2];
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
+	var newX = 2.5 * x + this.basePos[0] / this.pieceSize[0];
+	var newY = this.basePos[1] / this.pieceSize[1];
+	var newZ = -2.5 * this.defaultAngle * x - 5 * this.defaultAngle * y + this.basePos[2] / this.pieceSize[2];
+	//--------------------------------------------------------
 	var piecePosition = this.pieces[pieceId].position;
 	var pieceDistance = vec3.dist([newX, newY + 6, newZ], piecePosition);
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
 	this.animation = new LinearAnimation(pieceDistance * 0.2,
 	[
-		piecePosition, 
+		piecePosition,
 		[piecePosition[0], piecePosition[1] + 3.0, piecePosition[2]],
-		[newX, newY + 3, newZ], 
+		[newX, newY + 3.0, newZ],
 		[newX, newY, newZ]
 	]);
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
 	this.animationId = pieceId;
 	this.animation.start();
-	//--------------------------------------------------------	
+	//--------------------------------------------------------
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
 	piece.place(x, y);
@@ -253,12 +254,12 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 //--------------------------------------------------------
 PieceController.prototype.placeFast = function(pieceId, x, y)  {
 	//--------------------------------------------------------
-	var piece = this.pieces[pieceId];
-	//--------------------------------------------------------
 	this.removeFromStack(pieceId, x, y);
-	var newX = 3.75/1.5*x + this.basePos[0]/this.pieceSize[0];
-	var newY = this.basePos[1]/this.pieceSize[1];
-	var newZ = -2.5/1.5*Math.cos(Math.PI/6)*x - 5/1.5*Math.cos(Math.PI/6)*y + this.basePos[2]/this.pieceSize[2];
+	//--------------------------------------------------------
+	var piece = this.pieces[pieceId];
+	var newX = 2.5 * x + this.basePos[0] / this.pieceSize[0];
+	var newY = this.basePos[1] / this.pieceSize[1];
+	var newZ = -2.5 * this.defaultAngle * x - 5 * this.defaultAngle * y + this.basePos[2] / this.pieceSize[2];
 	//--------------------------------------------------------
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
@@ -267,14 +268,6 @@ PieceController.prototype.placeFast = function(pieceId, x, y)  {
 //--------------------------------------------------------
 PieceController.prototype.pieceAt = function(pieceId) {
 	return this.pieces[pieceId];
-};
-//--------------------------------------------------------
-PieceController.prototype.isDisc = function(pieceId) {
-	return (pieceId >= this.p1Discs_start && pieceId < this.p1Discs_end) || (pieceId >= this.p2Discs_start && pieceId < this.p2Discs_end);
-};
-//--------------------------------------------------------
-PieceController.prototype.isRing = function(pieceId) {
-	return (pieceId >= this.p1Rings_start && pieceId < this.p1Rings_end) || (pieceId >= this.p2Rings_start && pieceId < this.p2Rings_end);
 };
 //--------------------------------------------------------
 PieceController.prototype.update = function(delta) {
@@ -308,6 +301,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 	if (pickingId >= this.numberCells + 1 && pickingId <= this.numberCells + this.pieces.length) {
 
 		var id = pickingId - this.numberCells - 1;
+		var currentPlayer = this.board.getPlayer();
 
 		if (this.selectedPiece == id) {
 			this.unselectActivePiece();
@@ -320,13 +314,25 @@ PieceController.prototype.selectPiece = function(pickingId) {
 		else {
 			this.pieces[this.selectedPiece].setColor('default');
 		}
-	console.log("picked piece" + id);
+
+		if (currentPlayer.color != this.pieces[id].getColor() || !this.board.validateSecond(this.pieces[id])) {
+			this.selectedPiece = id;
+			this.pieces[id].setColor('red');
+			return -1;
+		}
+
+		if (this.pieces[id].wasPlaced()) {
+			this.selectedPiece = id;
+			this.pieces[id].setColor('yellow');
+			return id;
+		}
+
 		if (id < this.p1Discs_end) {
 
 			var nStack = id % this.numberStacks;
 			var top = this.p1DiscStacks[nStack].length - 1;
 
-			if (this.p1DiscStacks[nStack][top] == id || this.p1DiscStacks[nStack].indexOf(id) == -1) {
+			if (this.p1DiscStacks[nStack][top] == id) {
 				this.selectedPiece = id;
 				this.pieces[id].setColor('yellow');
 				return id;
@@ -337,7 +343,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 			var nStack = (id - this.p1Rings_start) % this.numberStacks;
 			var top = this.p1RingStacks[nStack].length - 1;
 
-			if (this.p1RingStacks[nStack][top] == id || this.p1RingStacks[nStack].indexOf(id) == -1) {
+			if (this.p1RingStacks[nStack][top] == id) {
 				this.selectedPiece = id;
 				this.pieces[id].setColor('yellow');
 				return id;
@@ -348,7 +354,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 			var nStack = (id - this.p2Discs_start) % this.numberStacks;
 			var top = this.p2DiscStacks[nStack].length - 1;
 
-			if (this.p2DiscStacks[nStack][top] == id || this.p2DiscStacks[nStack].indexOf(id) == -1) {
+			if (this.p2DiscStacks[nStack][top] == id) {
 				this.selectedPiece = id;
 				this.pieces[id].setColor('yellow');
 				return id;
@@ -359,7 +365,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 			var nStack = (id - this.p2Rings_start) % this.numberStacks;
 			var top = this.p2RingStacks[nStack].length - 1;
 
-			if (this.p2RingStacks[nStack][top] == id || this.p2RingStacks[nStack].indexOf(id) == -1) {
+			if (this.p2RingStacks[nStack][top] == id) {
 				this.selectedPiece = id;
 				this.pieces[id].setColor('yellow');
 				return id;
@@ -368,7 +374,6 @@ PieceController.prototype.selectPiece = function(pickingId) {
 
 		this.selectedPiece = id;
 		this.pieces[id].setColor('red');
-
 		return -1;
 	}
 };

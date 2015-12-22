@@ -13,7 +13,7 @@ function GameBoard(scene) {
 	this.testMode = true;
 	//--------------------------------------------------------
 	this.basePos = [0.0, 0.0, 0.0];
-	this.baseSize = [5.0, 5.0];	
+	this.baseSize = [5.0, 5.0];
 	this.boxPos = [3, 0.0, 17];
 	this.borderAngle = Math.sin(Math.PI/3);
 	this.elapsedMillis = 0.0;
@@ -24,22 +24,22 @@ function GameBoard(scene) {
 	this.numberColumns = 7;
 	this.numberCells = this.numberRows * this.numberColumns;
 	//--------------------------------------------------------
-	this.basePos[0] = this.basePos[0] - (this.baseSize[0]/5.0)*1.875*(this.numberColumns-1);
+	this.basePos[0] = this.basePos[0] - (this.baseSize[0]/5.0) * 1.875*(this.numberColumns - 1);
 	this.basePos[1] = this.basePos[1];
-	this.basePos[2] = this.basePos[2] + (this.baseSize[1]/5.0)*3.75*Math.cos(30*Math.PI/180)*(this.numberRows-1);
+	this.basePos[2] = this.basePos[2] + (this.baseSize[1]/5.0) * 3.75 * this.borderAngle * (this.numberRows - 1);
 	//--------------------------------------------------------
 	this.player1 = {
 		color: 'white',
 		discs: 24,
 		rings: 24,
-		next: true
+		stuck: false
 	};
 	//--------------------------------------------------------
 	this.player2 = {
 		color: 'black',
 		discs: 24,
 		rings: 24,
-		next: false
+		stuck: false
 	};
 	//--------------------------------------------------------
 	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
@@ -64,7 +64,10 @@ function GameBoard(scene) {
 	this.hoverTexture = new CGFtexture(this.scene, "resources/hexagon_hover.png");
 	this.baseTexture = new CGFtexture(this.scene, "resources/duplohex_base.png");
 	//--------------------------------------------------------
+	this.currentPlayer = null;
 	this.guiInterface = null;
+	this.piecePlayed = null;
+	this.nextTurn = 0;
 	//--------------------------------------------------------
 	this.historyStack = new GameMove(this);
 	this.historyStack.push(14, 4, 1);
@@ -105,7 +108,7 @@ function GameBoard(scene) {
 	//--------------------------------------------------------
 	this.diagonalMatrix = [
 		[49, 0, 4],
-		[64, 0, 6],	
+		[64, 0, 6],
 		[7, 6, 0],
 		[22, 1, 6],
 	]
@@ -127,7 +130,7 @@ GameBoard.prototype = Object.create(MyPrimitive.prototype);
 GameBoard.prototype.constructor = GameBoard;
 //--------------------------------------------------------
 GameBoard.prototype.updateMatrix = function(currentMatrix) {
-	
+
 	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
 
 	if (currentMatrix == 'diagonal') {
@@ -142,22 +145,43 @@ GameBoard.prototype.updateMatrix = function(currentMatrix) {
 	}
 };
 //--------------------------------------------------------
+GameBoard.prototype.getPlayer = function() {
+	return this.currentPlayer;
+};
+//--------------------------------------------------------
 GameBoard.prototype.updatePlayer = function(playerColor) {
 
 	if (playerColor == 'whitePlayer') {
 		this.player1.color = 'white';
-		this.player1.next = true;
 		this.player2.color = 'black';
-		this.player2.next = false;
+		this.currentPlayer = this.player1;
 	}
 	else {
 		this.player1.color = 'black';
-		this.player1.next = false;
 		this.player2.color = 'white';
-		this.player2.next = true;
+		this.currentPlayer = this.player2;
 	}
-	
+
 	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
+};
+//--------------------------------------------------------
+GameBoard.prototype.registerTurn = function(currentPiece) {
+
+	if (this.nextTurn++ == 1) {
+		//--------------------------------------------------------
+		this.nextTurn = 0;
+		this.piecePlayed = null;
+		//--------------------------------------------------------
+		if (this.currentPlayer.color == this.player1.color) {
+			this.currentPlayer = this.player2;
+		}
+		else {
+			this.currentPlayer = this.player1;
+		}
+	}
+	else {
+		this.piecePlayed = currentPiece;
+	}
 };
 //--------------------------------------------------------
 GameBoard.prototype.setServer = function(server) {
@@ -172,19 +196,19 @@ GameBoard.prototype.display = function() {
 
 	this.scene.resetPicking();
 	this.currentId = 0;
-	
+
 	this.displayBoard();
 	this.displayPieces();
-	
+
 	this.scene.pushMatrix();
 		this.baseTexture.bind()
-		this.scene.scale(this.baseSize[0]*7.5, 1.0, this.baseSize[1]*11.0);
+		this.scene.scale(this.baseSize[0] * 7.5, 1.0, this.baseSize[1]*11.0);
 		this.scene.translate(-0.5, -(this.baseSize[0] + this.baseSize[1])/10, 0.5);
 		this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);
 		this.scene.registerPicking(this.base);
 		this.base.display();
 		this.baseTexture.unbind();
-	this.scene.popMatrix();	
+	this.scene.popMatrix();
 
 	this.scene.pushMatrix();
 		this.scene.translate(0.0,-(this.baseSize[0] + this.baseSize[1])/20,0.0);
@@ -192,26 +216,27 @@ GameBoard.prototype.display = function() {
 		this.scene.rotate(Math.PI /2, 0, 1, 0);
 		this.displayClock();
 		this.scene.rotate(-Math.PI / 2, 0, 1, 0);
-	this.scene.popMatrix();	
+	this.scene.popMatrix();
 };
 //--------------------------------------------------------
-GameBoard.prototype.displayBoard = function() {	
+GameBoard.prototype.displayBoard = function() {
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 	this.scene.translate(this.basePos[0], this.basePos[1], this.basePos[2]);
 	this.scene.scale(this.baseSize[0], (this.baseSize[0] + this.baseSize[1])/10, this.baseSize[1]);
-	this.scene.rotate(-Math.PI/2, 1.0, 0.0, 0.0);		
+	this.scene.rotate(Math.PI/2, -1.0, 0.0, 0.0);
 	this.hexTexture.bind();
-
+	//--------------------------------------------------------
 	for (var i = 0; i < this.numberCells; i++) {
-
+		//--------------------------------------------------------
 		var x = ~~(i / this.numberColumns);
 		var y = i % this.numberColumns;
 		var currentPosition = this.cells[i].position;
-
+		//--------------------------------------------------------
 		this.scene.translate(currentPosition[0], currentPosition[1], currentPosition[2]);
 		this.scene.scale(0.5, 0.5, 0.5);
 		this.scene.registerPicking(this.cells[i]);
-
+		//--------------------------------------------------------
 		if (this.cells[i].selected) {
 			this.hexTexture.unbind();
 			this.hoverTexture.bind();
@@ -222,7 +247,7 @@ GameBoard.prototype.displayBoard = function() {
 		else {
 			this.cells[i].display();
 		}
-
+		//--------------------------------------------------------
 		if (y == 0 || x == 0 || x == this.numberRows - 1 || y == this.numberColumns - 1) {
 			this.hexTexture.unbind();
 			this.scene.translate(0.0, 0.0, -1.0);
@@ -230,11 +255,11 @@ GameBoard.prototype.displayBoard = function() {
 			this.scene.translate(0.0, 0.0, 1.0);
 			this.hexTexture.bind();
 		}
-
+		//--------------------------------------------------------
 		this.scene.scale(2.0, 2.0, 2.0);
 		this.scene.translate(-currentPosition[0], -currentPosition[1], -currentPosition[2]);
 	}
-
+	//--------------------------------------------------------
 	this.hexTexture.unbind();
 	this.scene.popMatrix();
 };
@@ -243,28 +268,27 @@ GameBoard.prototype.displayBorder = function() {
 
 	this.scene.pushMatrix();
 	this.scene.translate(this.basePos[0], this.basePos[1], this.basePos[2]);
-	this.scene.scale(this.baseSize[0]*0.5, (this.baseSize[0] + this.baseSize[1])/10, this.baseSize[1]*0.5);
+	this.scene.scale(this.baseSize[0] * 0.5, (this.baseSize[0] + this.baseSize[1]) * 0.1, this.baseSize[1] * 0.5);
 	this.scene.pushMatrix();
-		this.scene.translate(-2*this.borderAngle*this.borderAngle + 0.5, 0.0, 2*this.borderAngle*0.5 + this.borderAngle);
-		this.scene.rotate(Math.PI/6, 0, 1, 0);
-		this.scene.rotate(-Math.PI/2, 1, 0, 0);
+		this.scene.translate(-2.0 * this.borderAngle * this.borderAngle + 0.5, 0.0, 2.0 * this.borderAngle);
+		this.scene.rotate(Math.PI/6, 0.0, 1.0, 0.0);
+		this.scene.rotate(Math.PI/2, -1.0, 0.0, 0.0);
 		this.whiteBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(this.numberRows*2*this.borderAngle*this.borderAngle - 0.5, 0.0, -this.numberRows*2*this.borderAngle*0.5 - this.numberColumns*2*this.borderAngle + this.borderAngle);
+		this.scene.translate(this.numberRows * 2 * this.borderAngle * this.borderAngle - 0.5, 0.0, -this.numberRows*2*this.borderAngle*0.5 - this.numberColumns*2*this.borderAngle + this.borderAngle);
 		this.scene.rotate(Math.PI/6 + Math.PI, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.whiteBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows/2) * 2.0 - !(this.numberRows & 1)*0.5,0.0,0.5/this.borderAngle - (-!(this.numberRows & 1)*0.5 + ~~(this.numberRows/2))*2*this.borderAngle);
-		console.log()
+		this.scene.translate(Math.ceil(this.numberRows / 2) + ~~(this.numberRows / 2) * 2.0 - !(this.numberRows & 1)*0.5,0.0,0.5/this.borderAngle - (-!(this.numberRows & 1)*0.5 + ~~(this.numberRows/2))*2*this.borderAngle);
 		this.scene.rotate(Math.PI/2, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.blackBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-1.0, 0.0, -(this.numberColumns - 1)*2*this.borderAngle -0.5/this.borderAngle);
+		this.scene.translate(-1.0, 0.0, -(this.numberColumns - 1) * 2 * this.borderAngle - 0.5 / this.borderAngle);
 		this.scene.rotate(-Math.PI/2, 0,1,0);
 		this.scene.rotate(-Math.PI/2, 1,0,0);
 		this.blackBorder.display();
@@ -274,14 +298,14 @@ GameBoard.prototype.displayBorder = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayClock = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0, this.baseSize[0] * this.numberColumns * 0.1);
-		this.scene.scale(this.baseSize[0]/5.0, (this.baseSize[0] + this.baseSize[1])/10.0, this.baseSize[1]/5.0);					
+		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0.0, this.baseSize[0] * this.numberColumns * 0.1);
+		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1]/5.0);
 		this.clock1.display();
 	this.scene.popMatrix();
-	this.scene.pushMatrix();		
-		this.scene.translate(-this.baseSize[0] * this.numberRows*0.725, 0, -this.baseSize[0] * this.numberColumns * 0.1);	
-		this.scene.scale(this.baseSize[0]/5.0, (this.baseSize[0] + this.baseSize[1])/10.0, this.baseSize[1]/5.0);
-		this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);			
+	this.scene.pushMatrix();
+		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.725, 0.0, -this.baseSize[0] * this.numberColumns * 0.1);
+		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1]/5.0);
+		this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
 		this.clock2.display();
 	this.scene.popMatrix();
 };
@@ -396,8 +420,16 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 GameBoard.prototype.updatePlaceHints = function() {
 
 	if (!this.pieces.pieceAt(this.selectedPieceId).wasPlaced()) {
+
 		for (var i = 0; i < this.numberCells; i++) {
-			if (this.cells[i].isEmpty()) {
+
+			var validateCell = this.cells[i].isEmpty();
+
+			if (this.currentPlayer.stuck) {
+				validateCell = validateCell || !this.cells[i].isTwopiece();
+			}
+
+			if (validateCell) {
 				this.cells[i].select();
 			}
 		}
@@ -406,6 +438,15 @@ GameBoard.prototype.updatePlaceHints = function() {
 		this.pieces.pieceAt(this.selectedPieceId).setColor("red");
 	}
 };
+//--------------------------------------------------------
+GameBoard.prototype.validateSecond = function(nextPiece) {
+
+	if (this.piecePlayed != null) {
+		return (this.piecePlayed.isDisc() && nextPiece.isRing()) ||	(this.piecePlayed.isRing() && nextPiece.isDisc());
+	}
+
+	return true;
+}
 //--------------------------------------------------------
 GameBoard.prototype.validateMove = function(cellX, cellY) {
 
@@ -418,12 +459,13 @@ GameBoard.prototype.validateMove = function(cellX, cellY) {
 	}
 
 	var selectedCell = this.cells[this.cellIndex(cellX, cellY)];
+	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
 
-	if (selectedCell.disc != null && selectedCell.ring == null && this.pieces.isRing(this.selectedPieceId)) {
+	if (selectedCell.disc != null && selectedCell.ring == null && selectedPiece.isRing()) {
 		return true;
 	}
 
-	if (selectedCell.ring != null && selectedCell.disc == null && this.pieces.isDisc(this.selectedPieceId)) {
+	if (selectedCell.ring != null && selectedCell.disc == null && selectedPiece.isDisc()) {
 		return true;
 	}
 
@@ -511,15 +553,14 @@ GameBoard.prototype.placePieceHandler = function() {
 	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
 	var selectedCellX = ~~(this.selectedCellId/this.numberColumns);
 	var selectedCellY = this.selectedCellId % this.numberColumns;
-	var isDisc = this.pieces.isDisc(this.selectedPieceId);
 
+	if (this.testMode) {
 
-	if(this.testMode) {		
 		var index = this.cellIndex(selectedPiece.cellX,  selectedPiece.cellY);
 
 		if (selectedPiece.wasPlaced()) {
 
-			if (this.pieces.isDisc(this.selectedPieceId)) {
+			if (selectedPiece.isDisc()) {
 				this.cells[index].disc = null;
 			}
 			else {
@@ -529,19 +570,20 @@ GameBoard.prototype.placePieceHandler = function() {
 
 		this.pieces.placePiece(this.selectedPieceId, ~~(this.selectedCellId/this.numberColumns), this.selectedCellId % this.numberColumns);
 
-		if (this.pieces.isDisc(this.selectedPieceId)) {
+		if (selectedPiece.isDisc()) {
 			this.cells[this.selectedCellId].disc = selectedPiece.color;
 		}
 		else {
 			this.cells[this.selectedCellId].ring = selectedPiece.color;
 		}
-		return;
-	}
 
+		this.registerTurn(selectedPiece);
+		return true;
+	}
 
 	if (selectedPiece.wasPlaced()) { // MOVE
 
-		if (isDisc) {
+		if (selectedPiece.isDisc()) {
 			this.server.requestMoveDisc(selectedPiece.cellX + 1, selectedPiece.cellY + 1,
 				selectedCellX + 1, selectedCellY + 1);
 		}
@@ -552,7 +594,7 @@ GameBoard.prototype.placePieceHandler = function() {
 	}
 	else { // PLACE
 
-		if (isDisc) {
+		if (selectedPiece.isDisc()) {
 			this.server.requestPlaceDisc(selectedCellX + 1, selectedCellY + 1);
 		}
 		else {
@@ -560,22 +602,19 @@ GameBoard.prototype.placePieceHandler = function() {
 		}
 	}
 
-	
-
 	this.unselectHints();
 };
 //--------------------------------------------------------
 GameBoard.prototype.onPlacePiece = function() {
-	
+
 	var selectedPiece = this.pieces.pieceAt(this.selectedPieceId);
 	var selectedCellX = ~~(this.selectedCellId/this.numberColumns);
 	var selectedCellY = this.selectedCellId % this.numberColumns;
 	var index = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
-	var isDisc = this.pieces.isDisc(this.selectedPieceId);
 
 	if (selectedPiece.wasPlaced()) {
 
-		if (isDisc) {
+		if (selectedPiece.isDisc()) {
 			this.cells[index].disc = null;
 		}
 		else {
@@ -585,7 +624,7 @@ GameBoard.prototype.onPlacePiece = function() {
 
 	this.pieces.placePiece(this.selectedPieceId, selectedCellX, selectedCellY);
 
-	if (this.pieces.isDisc(this.selectedPieceId)) {
+	if (selectedPiece.isDisc()) {
 		this.cells[this.selectedCellId].disc = selectedPiece.color;
 	}
 	else {
@@ -594,7 +633,7 @@ GameBoard.prototype.onPlacePiece = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.onResetPlace = function() {
-	
+
 	this.selectedPieceId = null;
 	this.pieces.unselectActivePiece();
 
@@ -646,7 +685,7 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 	else {
 		this.selectedPieceId = id;
 	}
-	
+
 	// mostra as hints disponiveis se houver uma peça selecionada
 	if (this.selectedPieceId != null && this.selectedPieceId != -1) {
 		this.unselectHints();

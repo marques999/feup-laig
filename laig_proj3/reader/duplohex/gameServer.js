@@ -1,11 +1,22 @@
-function GameServer(board, setings, address, port) {
+/**
+ * construtor default da classe 'GameServer'
+ * @constructor
+ * @augments MyPrimitive
+ * @author Diogo Marques
+ * @param {GameBoard} board - apontador para uma primitiva "tabuleiro"
+ * @param {GameSettings} settings - estrutura de dados contendo as configurações do jogo
+ * @param {String} address - endereço IP ou hostname do servidor HTTP
+ * @param {String} port - porta de rede onde o servidor HTTP se encontra a correr
+ * @return {null}
+ */
+function GameServer(board, settings, address, port) {
 	//--------------------------------------------------------
 	this.gameBoard = board;
 	this.gameRunning = false;
 	this.httpAddress = address || 'localhost';
 	this.httpPort = port || 8081;
 	this.validResponse = false;
-	this.gameSettings = setings;
+	this.gameSettings = settings;
 	this.serverAddress = 'http://' + this.httpAddress + ':' + this.httpPort + '/';
 };
 //--------------------------------------------------------

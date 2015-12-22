@@ -33,3 +33,11 @@ ObjectRing.prototype.display = function() {
 	this.invertedCylinder.display();
 	this.scene.popMatrix();
 };
+//--------------------------------------------------------
+ObjectRing.prototype.isDisc = function() {
+	return false;
+};
+//--------------------------------------------------------
+ObjectRing.prototype.isRing = function() {
+	return true;
+};

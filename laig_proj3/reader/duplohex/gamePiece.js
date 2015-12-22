@@ -7,6 +7,7 @@ function GamePiece(scene, position, color) {
 	this.cellX = null;
 	this.cellY = null;
 	this.color = color;
+	this.placed = false;
 	this.materials = [];
 	//--------------------------------------------------------
 	if (color == 'black') {
@@ -36,6 +37,7 @@ function GamePiece(scene, position, color) {
 	this.materials["red"].setSpecular(1.0, 1.0, 1.0, 0.5);
 	this.materials["red"].setShininess(30);
 	//--------------------------------------------------------
+	this.color = color;
 	this.material = this.materials["default"];
 };
 //--------------------------------------------------------
@@ -51,10 +53,11 @@ GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
 GamePiece.prototype.place = function(x, y) {
 	this.cellX = x;
 	this.cellY = y;
+	this.placed = true;
 };
 //--------------------------------------------------------
 GamePiece.prototype.wasPlaced = function() {
-	return this.cellX != null && this.cellY != null;
+	return this.placed;
 };
 //--------------------------------------------------------
 GamePiece.prototype.setColor = function(color) {
@@ -62,6 +65,13 @@ GamePiece.prototype.setColor = function(color) {
 };
 //--------------------------------------------------------
 GamePiece.prototype.getColor = function() {
-	return this.material;
+	return this.color;
 };
 //--------------------------------------------------------
+GamePiece.prototype.isDisc = function() {
+	return false;
+};
+//--------------------------------------------------------
+GamePiece.prototype.isRing = function() {
+	return false;
+};

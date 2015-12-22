@@ -29,3 +29,11 @@ ObjectDisc.prototype.display = function() {
 	this.circle.display();
 	this.scene.scale(1.0, -1.0, -1.0);
 };
+//--------------------------------------------------------
+ObjectDisc.prototype.isDisc = function() {
+	return true;
+};
+//--------------------------------------------------------
+ObjectDisc.prototype.isRing = function() {
+	return false;
+};
