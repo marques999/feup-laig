@@ -119,13 +119,13 @@ BoardParser.prototype.parseRotation = function(root) {
 	}
 
 	if (axis == 'x') {
-		mat4.rotateX(this.boardMatrix, this.boardMatrix, angle);
+		mat4.rotateX(this.boardMatrix, this.boardMatrix, angle * Math.PI / 180);
 	}
 	else if (axis == 'y') {
-		mat4.rotateY(this.boardMatrix, this.boardMatrix, angle);
+		mat4.rotateY(this.boardMatrix, this.boardMatrix, angle * Math.PI / 180);
 	}
 	else if (axis == 'z') {
-		mat4.rotateZ(this.boardMatrix, this.boardMatrix, angle);
+		mat4.rotateZ(this.boardMatrix, this.boardMatrix, angle * Math.PI / 180);
 	}
 
 	if (this.verbose) {

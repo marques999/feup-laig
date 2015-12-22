@@ -1,17 +1,22 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="-6.0" y="-1.0" z="5.0" />
+		<translation x="-8.0" y="4.0" z="2.0" />
 		<rotation axis="y" angle="45.0" />
-		<rotation axis="x" angle="-25.0" />
+		<rotation axis="x" angle="20.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
-		<reference length="4.0" />
+		<reference length="1.0" />
 	</INITIALS>
 	<ILLUMINATION>
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
+	<BOARD>
+		<position x="8.5" y="2.75" z="7.5" />
+		<size x="0.12" y="0.12" z="0.12" />
+		<rotation axis="y" angle="-90" />
+	</BOARD>
 	<LIGHTS>
 		<LIGHT id="l1">
 			<enable value="1" />
@@ -638,7 +643,7 @@
 		<NODE id="ball1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="2.3" y="2.75" z="4.9" />
+			<TRANSLATION x="1.0" y="2.75" z="1.0" />
 			<DESCENDANTS>
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
@@ -646,7 +651,7 @@
 		<NODE id="ball2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="8.8" y="2.75" z="1.9" />
+			<TRANSLATION x="1.2" y="2.75" z="1.6" />
 			<DESCENDANTS>
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
@@ -654,7 +659,7 @@
 		<NODE id="ball3">
 			<MATERIAL id="ball_white" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="7.5" y="2.75" z="4.3" />
+			<TRANSLATION x="1.5" y="2.75" z="1.25" />
 			<DESCENDANTS>
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
@@ -662,7 +667,7 @@
 		<NODE id="ball4">
 			<MATERIAL id="ball_black" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="3.8" y="2.75" z="5.1" />
+			<TRANSLATION x="8.4" y="2.75" z="4.8" />
 			<DESCENDANTS>
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
@@ -670,7 +675,7 @@
 		<NODE id="ball5">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="6.4" y="2.75" z="1.1" />
+			<TRANSLATION x="8.75" y="2.75" z="4.5" />
 			<DESCENDANTS>
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
@@ -678,7 +683,7 @@
 		<NODE id="ball6">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="4.2" y="2.75" z="3.9" />
+			<TRANSLATION x="9.0" y="2.75" z="5.0" />
 			<DESCENDANTS>
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>
@@ -686,7 +691,7 @@
 		<NODE id="ball7">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="2.9" y="2.75" z="1.8" />
+			<TRANSLATION x="2.8" y="2.75" z="4.8" />
 			<DESCENDANTS>
 				<DESCENDANT id="myball" />
 			</DESCENDANTS>

@@ -158,7 +158,7 @@ GameBoard.prototype.updateMatrix = function(currentMatrix) {
 };
 //--------------------------------------------------------
 GameBoard.prototype.applyMatrix = function(currentMatrix) {
-	
+
 	for (var i = 0; i < currentMatrix.length; i++) {
 		var currentPiece = currentMatrix[i];
 		var cellIndex =  this.cellIndex(currentPiece[1], currentPiece[2]);
@@ -190,7 +190,7 @@ GameBoard.prototype.updatePlayer = function(playerColor) {
 		this.player2.color = 'white';
 		this.currentPlayer = this.player2;
 	}
-	
+
 	this.updateMatrix(this.currentMatrix);
 };
 //--------------------------------------------------------
@@ -246,7 +246,7 @@ GameBoard.prototype.display = function() {
 GameBoard.prototype.displayBase = function() {
 	this.scene.pushMatrix();
 	this.baseTexture.bind()
-	this.scene.scale(this.baseSize[0] * 7.5, 1.0, this.baseSize[1] * 11.0);
+	this.scene.scale(this.baseSize[0] * 8.0, 1.0, this.baseSize[1] * 15.0);
 	this.scene.translate(-0.5, -(this.baseSize[0] + this.baseSize[1]) / 10.0, 0.5);
 	this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
 	this.scene.registerPicking(this.base);
@@ -334,12 +334,12 @@ GameBoard.prototype.displayBorder = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayClock = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0.0, this.baseSize[0] * this.numberColumns / 10.0);
+		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0.0, this.baseSize[0] * this.numberColumns / 6.0);
 		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.clock1.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.725, 0.0, -this.baseSize[0] * this.numberColumns / 10.0);
+		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.725, 0.0, -this.baseSize[0] * this.numberColumns / 6.0);
 		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
 		this.clock2.display();
@@ -602,7 +602,7 @@ GameBoard.prototype.placePieceHandler = function() {
 		else {
 			selectedCell.insertRing(selectedPiece);
 		}
-		
+
 		this.registerTurn(selectedPiece);
 	}
 	else if (selectedPiece.wasPlaced()) { // MOVE
