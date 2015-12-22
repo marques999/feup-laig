@@ -88,7 +88,6 @@ MySceneGraph.prototype.onXMLReady = function() {
 			}
 
 			this.onXMLError(onElementMissing(current, 'SCENE'));
-
 			return false;
 		}
 
@@ -97,7 +96,6 @@ MySceneGraph.prototype.onXMLReady = function() {
 		}
 
 		var error = rootParsers[current].call(this, currentElement[0]);
-
 		if (error != null) {
 			this.onXMLError(error);
 			return false;
@@ -125,7 +123,6 @@ MySceneGraph.prototype.display = function() {
 
 	var rootNode = this.nodes[this.graphRoot];
 	var rootMaterial = this.defaultMaterial;
-
 	this.scene.pushMatrix();
 
 	if (rootNode.materialId != null && rootNode.materialId != 'null') {
@@ -235,7 +232,6 @@ MySceneGraph.prototype.getNodeMaterial = function(currMaterialId, nextElement) {
  * @return {null}
  */
 MySceneGraph.prototype.processAnimations = function(deltaTime) {
-
 	for (var node in this.nodes) {
 		this.nodes[node].updateAnimation(deltaTime);
 	}
@@ -247,7 +243,6 @@ MySceneGraph.prototype.processAnimations = function(deltaTime) {
  * @return {null}
  */
 MySceneGraph.prototype.setAnimationLoop = function(loopValue) {
-
 	for (var node in this.nodes) {
 		this.nodes[node].setLoop(loopValue);
 	}
@@ -594,7 +589,6 @@ MySceneGraph.prototype.parseLeaf = function(id, root) {
  * @return {null}
  */
 MySceneGraph.prototype.resetIndegree = function() {
-
 	for (var node in this.nodes) {
 		var children = this.nodes[node].children;
 		for (var i = 0; i < children.length; i++) {

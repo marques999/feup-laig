@@ -6,7 +6,7 @@
  * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
  * @param {Number} slices - número de divisões do círculo em torno do raio
  * @param {Number} angle - comprimento do arco de circunferência
- * @param {Number} radius - raio do círculo
+ * @param {Number} radius - raio da circunferência
  * @return {null}
  */
 function CustomCircle(scene, slices, radius, angle) {
@@ -22,23 +22,19 @@ function CustomCircle(scene, slices, radius, angle) {
 	this.angle = angle;
 	this.initBuffers();
 };
-
+//--------------------------------------------------------
 CustomCircle.prototype = Object.create(MyPrimitive.prototype);
 CustomCircle.prototype.constructor = CustomCircle;
-
-/**
- * inicializa os buffers WebGL da primitiva 'CustomCircle'
- * @return {null}
- */
+//--------------------------------------------------------
 CustomCircle.prototype.initBuffers = function() {
 	//--------------------------------------------------------
 	var halfRadius = this.radius / 2;
 	var thetaIncrement = this.angle / this.slices;
 	var vertexNumber = 1;
 	//--------------------------------------------------------
-	this.vertices.push(0, 0, 0);
+	this.vertices.push(0.0, 0.0, 0.0);
 	this.texCoords.push(halfRadius, halfRadius);
-	this.normals.push(0, 0, 1);
+	this.normals.push(0.0, 0.0, 1.0);
 	//--------------------------------------------------------
 	for (var i = 0; i <= this.slices; i++) {
 		var x = this.radius * Math.cos(thetaIncrement * i);

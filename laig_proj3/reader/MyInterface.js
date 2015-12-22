@@ -11,11 +11,7 @@ function MyInterface() {
 //--------------------------------------------------------
 MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
-
-/**
- * inicializa a interface gráfica do utilizador
- * @return {null}
- */
+//--------------------------------------------------------
 MyInterface.prototype.init = function(application) {
 
 	CGFinterface.prototype.init.call(this, application);
@@ -107,14 +103,6 @@ MyInterface.prototype.savePreferences = function() {
 	this.mainMenu();
 };
 //--------------------------------------------------------
-MyInterface.prototype.mainMenu_close = function() {
-
-	if (this.mainGroup != undefined && this.mainGroup != null) {
-		this.deleteFolder("Main Menu");
-		this.mainGroup = undefined;
-	}
-};
-//--------------------------------------------------------
 MyInterface.prototype.settingsMenu = function() {
 
 	if (this.scene == undefined || this.scene == null) {
@@ -159,7 +147,7 @@ MyInterface.prototype.settingsMenu = function() {
 	});
 	//---------------------------------------------------------
 	this.modeGroup.add(this.gameMode, "pvp").name("Player VS Player").listen().onChange(function(value) {
-		self.toggleBoolean(self.gameMode, "pvo");
+		self.toggleBoolean(self.gameMode, "pvp");
 	});
 	//---------------------------------------------------------
 	this.modeGroup.add(this.gameMode, "pvb").name("Player VS Bot").listen().onChange(function(value) {
@@ -216,6 +204,7 @@ MyInterface.prototype.gameMenu = function() {
 	var self = this;
 	this.gameGroup = this.gui.addFolder("Game");
 	this.camerasGroup = this.gui.addFolder("Cameras");
+	this.lightsMenu();
 	//---------------------------------------------------------
 	this.gameGroup.open();
 	this.camerasGroup.open();
@@ -270,6 +259,14 @@ MyInterface.prototype.mainMenu = function() {
 	});
 };
 //--------------------------------------------------------
+MyInterface.prototype.mainMenu_close = function() {
+
+	if (this.mainGroup != undefined && this.mainGroup != null) {
+		this.deleteFolder("Main Menu");
+		this.mainGroup = undefined;
+	}
+};
+//--------------------------------------------------------
 MyInterface.prototype.movieMenu = function() {
 
 	if (this.board == undefined || this.board == null) {
@@ -292,6 +289,16 @@ MyInterface.prototype.movieMenu = function() {
 	this.movieGroup.add(this.board, "movieFrame", 0, 4).step(1).name("Current Move").listen();
 };
 //--------------------------------------------------------
+MyInterface.prototype.movieMenu_close = function() {
+
+	if (this.movieGroup != undefined && this.movieGroup != null) {
+		this.deleteFolder("Movie");
+		this.movieGroup = undefined;
+	}
+
+	// STOP MOVIE
+};
+//--------------------------------------------------------
 MyInterface.prototype.lightsMenu = function() {
 
 	if (this.lightsGroup != undefined && this.lightsGroup != null) {
@@ -302,52 +309,19 @@ MyInterface.prototype.lightsMenu = function() {
 	this.lightsGroup = this.gui.addFolder("Lights");
 	this.lightsGroup.open();
 	this.lights = {};
-}
+};
 //--------------------------------------------------------
+MyInterface.prototype.lightsMenu_close = function() {
 
+	if (this.lightsGroup != undefined && this.lightsGroup != null) {
+		this.deleteFolder("Lights");
+		this.lightsGroup = undefined;
+	}
+};
+//--------------------------------------------------------
 MyInterface.prototype.aboutMenu = function() {
 	alert("HELLO");
 };
-
-MyInterface.prototype.getBoolean = function(array) {
-
-	for (var key in array) {
-		if (array[key]) {
-			return key;
-		}
-	}
-}
-
-MyInterface.prototype.toggleBoolean = function(array, element) {
-
-	for (var key in array) {
-		if (key != element) {
-			array[key] = false;
-		}
-	}
-
-	array[element] = true;
-};
-
-MyInterface.prototype.getBoolean = function(array) {
-
-	for (var key in array) {
-		if (array[key]) {
-			return key;
-		}
-	}
-}
-
-MyInterface.prototype.toggleBoolean = function(array, element) {
-
-	for (var key in array) {
-		if (key != element) {
-			array[key] = false;
-		}
-	}
-
-	array[element] = true;
-};
 //--------------------------------------------------------
 MyInterface.prototype.getBoolean = function(array) {
 
@@ -356,7 +330,7 @@ MyInterface.prototype.getBoolean = function(array) {
 			return key;
 		}
 	}
-}
+};
 //--------------------------------------------------------
 MyInterface.prototype.toggleBoolean = function(array, element) {
 
@@ -369,14 +343,6 @@ MyInterface.prototype.toggleBoolean = function(array, element) {
 	array[element] = true;
 };
 //--------------------------------------------------------
-
-/**
- * adiciona uma nova luz ao menu da interface
- * @param {String} name - identificador da CGFlight
- * @param {Number} id - posição (índice) desta CGFlight no array de luzes da CGFscene
- * @param {Boolean} enabled - estado ON/OFF inicial desta CGFlight
- * @return {null}
- */
 MyInterface.prototype.pushLight = function(name, id, enabled) {
 
 	if (this.lightsGroup == undefined || this.lightsGroup == null) {

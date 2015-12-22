@@ -9,6 +9,7 @@
  * @param {Number} radiusTop - radio da base superior do cilindro
  * @param {Number} stacks - número de secções do cilindro em altura
  * @param {Number} slices - número de secçoes do cilindro em torno dos raios
+ * @param {Number} angle - comprimento do arco de circunferência da base
  * @return {null}
  */
 function CustomCylinder(scene, height, radiusBottom, radiusTop, stacks, slices, angle) {
@@ -27,16 +28,12 @@ function CustomCylinder(scene, height, radiusBottom, radiusTop, stacks, slices, 
 	this.vertices = [];
 	this.initBuffers();
 };
-
+//--------------------------------------------------------
 CustomCylinder.prototype = Object.create(MyPrimitive.prototype);
 CustomCylinder.prototype.constructor = CustomCylinder;
-
-/**
- * inicializa os buffers WebGL da primitiva 'CustomCylinder'
- * @return {null}
- */
+//--------------------------------------------------------
 CustomCylinder.prototype.initBuffers = function() {
-	//--------------------------------------------------------
+
 	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;
 	var stackIncrement = this.height / this.stacks;
 	var thetaIncrement = this.angle / this.slices;
@@ -45,9 +42,8 @@ CustomCylinder.prototype.initBuffers = function() {
 	var vertexNumber = 1;
 	var sCoord = 0.0;
 	var theta = 0;
-	//--------------------------------------------------------
-	for (var i = 0; i <= this.slices; i++) {
 
+	for (var i = 0; i <= this.slices; i++) {
 		var tCoord = 1.0;
 		var nRadius = this.radiusBottom;
 		var x = Math.cos(theta);
@@ -55,13 +51,11 @@ CustomCylinder.prototype.initBuffers = function() {
 		var z = 0;
 
 		for (var j = 0; j <= this.stacks; j++) {
-
 			this.vertices.push(x * nRadius, y * nRadius, z) ;
 			this.normals.push(x * nRadius, y * nRadius, 0);
 			this.texCoords.push(sCoord, tCoord);
 
 			if (i > 0 && j > 0) {
-
 				this.indices.push(vertexNumber, vertexNumber + this.stacks, vertexNumber + this.stacks + 1);
 				this.indices.push(vertexNumber + this.stacks, vertexNumber, vertexNumber - 1);
 
@@ -80,7 +74,7 @@ CustomCylinder.prototype.initBuffers = function() {
 		theta += thetaIncrement;
 		sCoord += texelIncrementS;
 	}
-	//--------------------------------------------------------
+
 	this.primitiveType = this.scene.gl.TRIANGLES;
 	this.initGLBuffers();
 };

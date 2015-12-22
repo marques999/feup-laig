@@ -1,3 +1,10 @@
+/**
+ * construtor default da classe 'GameSettings'
+ * @constructor
+ * @augments MyPrimitive
+ * @author Diogo Marques
+ * @return {null}
+ */
 function GameSettings() {
 	//--------------------------------------------------------
 	if (localStorage["playerColor"] == undefined) {
