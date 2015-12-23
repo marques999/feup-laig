@@ -16,9 +16,6 @@ MyInterface.prototype.init = function(application) {
 
 	CGFinterface.prototype.init.call(this, application);
 
-	this.currentScene = 'None';
-	this.updatePeriod = 60.0;
-
 	this.gameScenes = {
 		'None': 'example.lsx',
 		'Apollo PT': 'MyShuttle.lsx',
@@ -54,6 +51,7 @@ MyInterface.prototype.init = function(application) {
 //--------------------------------------------------------
 MyInterface.prototype.setScene = function(xmlScene) {
 	this.scene = xmlScene;
+	this.board = xmlScene.board;
 	this.mainMenu();
 };
 //--------------------------------------------------------
@@ -64,11 +62,6 @@ MyInterface.prototype.deleteFolder = function(folderName) {
 	this.gui.onResize();
 };
 //--------------------------------------------------------
-MyInterface.prototype.initGame = function(gameBoard) {
-	this.board = gameBoard;
-	//this.gui.add(this, "movieMenu").name("View Replay");
-};
-//--------------------------------------------------------
 MyInterface.prototype.readPreferences = function() {
 
 	if (this.scene == undefined || this.scene == null) {
@@ -76,6 +69,7 @@ MyInterface.prototype.readPreferences = function() {
 	}
 
 	var preferencesArray = this.scene.getPreferences();
+	this.currentScene = preferencesArray.getScene();
 	this.playerColor = preferencesArray.color;
 	this.updatePeriod = preferencesArray.getFps();
 	this.toggleBoolean(this.gameMode, preferencesArray.mode);
@@ -94,6 +88,7 @@ MyInterface.prototype.savePreferences = function() {
 	preferencesArray.setColor(this.playerColor);
 	preferencesArray.setMode(this.getBoolean(this.gameMode));
 	preferencesArray.setBoard(this.getBoolean(this.gameBoard));
+	preferencesArray.setScene(this.currentScene);
 	preferencesArray.setDifficulty(this.getBoolean(this.gameDifficulty));
 	preferencesArray.setFps(this.updatePeriod);
 	preferencesArray.save();
@@ -118,10 +113,13 @@ MyInterface.prototype.settingsMenu = function() {
 	//---------------------------------------------------------
 	this.settingsGroup.add(this, "savePreferences").name("Save Settings");
 	this.settingsGroup.add(this, "readPreferences").name("Reset Settings");
-	this.settingsGroup.add(this, "updatePeriod", 1, 60).name("Target FPS").listen();
-	this.settingsGroup.add(this, "playerColor", this.playerColors).name("Player Color").listen().onChange(function() {
+	this.settingsGroup.add(this, "currentScene", this.gameScenes).name("Environment").onChange(function(currentScene) {
+		self.scene.loadGraph(currentScene);
+	}).listen();
+	this.settingsGroup.add(this, "playerColor", this.playerColors).name("Player Color").onChange(function() {
 		self.board.updatePlayer(self.playerColor);
-	});
+	}).listen();
+	this.settingsGroup.add(this, "updatePeriod", 1, 60).name("Target FPS").listen();
 	//---------------------------------------------------------
 	this.boardGroup = this.gui.addFolder("Board");
 	this.modeGroup = this.gui.addFolder("Mode");
@@ -211,22 +209,22 @@ MyInterface.prototype.gameMenu = function() {
 	//---------------------------------------------------------
 	this.gameGroup.add(this, "mainMenu").name("Quit Game").onChange(function(){
 		self.gameMenu_close();
+		self.lightsMenu_close();
+		self.scene.resetDisplay();
 	});
 	//---------------------------------------------------------
-	this.gameGroup.add(this, "currentScene", this.gameScenes).onChange(function(currentScene) {
-		self.scene.loadGraph(currentScene);
-	});
 	//---------------------------------------------------------
 	this.camerasGroup.add(this.scene, "zoomIn").name("Zoom In");
 	this.camerasGroup.add(this.scene, "zoomOut").name("Zoom Out");
+	this.camerasGroup.add(this.scene, "rotateCamera").name("Rotate View");
+	this.camerasGroup.add(this.scene, "resetCamera").name("Reset View");
 	//---------------------------------------------------------
-	this.camerasGroup.add(this.scene, "cameraPosition", 0, 60.0).name("Position").onChange(function(value) {
-		self.scene.setCameraPosition(value);
+	this.camerasGroup.add(this.scene, "cameraTiltAmount", -1.0, 1.0).name("Tilt").listen().onChange(function(){
+		self.scene.cameraTilt();
+	}).onFinishChange(function() {
+		self.scene.resetRotation();
 	});
 	//---------------------------------------------------------
-	this.camerasGroup.add(this.scene, "cameraTarget", 0, 360.0).name("Target").onChange(function(value) {
-		self.scene.setCameraTarget(value);
-	});
 };
 //--------------------------------------------------------
 MyInterface.prototype.gameMenu_close = function() {
@@ -306,9 +304,9 @@ MyInterface.prototype.lightsMenu = function() {
 		this.lightsGroup = undefined;
 	}
 
+	this.lights = {};
 	this.lightsGroup = this.gui.addFolder("Lights");
 	this.lightsGroup.open();
-	this.lights = {};
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu_close = function() {
@@ -355,3 +353,8 @@ MyInterface.prototype.pushLight = function(name, id, enabled) {
 		self.scene.toggleLight(id, value);
 	});
 };
+//--------------------------------------------------------
+MyInterface.prototype.resetLights = function() {
+	this.lightsMenu_close();
+	this.lightsMenu();
+}

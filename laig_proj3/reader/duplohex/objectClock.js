@@ -161,7 +161,7 @@ ObjectClock.prototype.display = function() {
 	this.materials["default"].apply();
 };
 //--------------------------------------------------------
-ObjectClock.prototype.update = function(currTime, lastUpdate, gameRunning) {
+ObjectClock.prototype.update = function(currTime, lastUpdate) {
 
 	this.LEFT[0] = ~~(this.player.discs / 10) % 10 - 1;
 	if (this.LEFT[0] < 0) {
@@ -182,10 +182,9 @@ ObjectClock.prototype.update = function(currTime, lastUpdate, gameRunning) {
 	if (this.RIGHT[1] < 0) {
 		this.RIGHT[1] = 9;
 	}
-
-	if (!gameRunning) {
-		return false;
-	}
+};
+//--------------------------------------------------------
+ObjectClock.prototype.updateClock = function(currTime, lastUpdate) {
 
 	this.currentMillis += currTime - lastUpdate;
 
@@ -220,5 +219,5 @@ ObjectClock.prototype.update = function(currTime, lastUpdate, gameRunning) {
 	this.CLOCK[4] = ~~(elapsedMinutes % 10) - 1;
 	if (this.CLOCK[4] < 0) {
 		this.CLOCK[4] = 9;
-	}
+	}	
 };

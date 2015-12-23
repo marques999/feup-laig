@@ -13,17 +13,22 @@ XMLscene.prototype = Object.create(CGFscene.prototype);
 XMLscene.prototype.constructor = XMLscene;
 //--------------------------------------------------------
 XMLscene.prototype.init = function(application) {
-	//---------------------------------------------------------
+
 	CGFscene.prototype.init.call(this, application);
 	//---------------------------------------------------------
 	this.cameraPosition = 0.0;
+	this.cameraOrbit = 0.002;
 	this.cameraTarget = 2.0;
+	this.finalPosition = vec3.fromValues(5.0, 12.0, 5.0);
+	this.cameraDelta = vec3.create();
+	this.cameraRotate = true;
+	this.sceneRotate = 0;
+	//---------------------------------------------------------
+	vec3.scale(this.cameraDelta, this.finalPosition, 1 / 200);
 	//---------------------------------------------------------
 	this.initCameras();
 	this.initDefaults();
 	this.initGL();
-	this.initSettings();
-	this.initGame();
 	//---------------------------------------------------------
 	this.enableTextures(true);
 	this.setPickEnabled(true);
@@ -53,9 +58,10 @@ XMLscene.prototype.initServer = function() {
 	this.board.startGame();
 };
 //--------------------------------------------------------
-XMLscene.prototype.initSettings = function() {
-	this.gameSettings = new GameSettings();
+XMLscene.prototype.setSettings = function(gameSettings) {
+	this.gameSettings = gameSettings;
 	this.setUpdatePeriod(1000 / this.gameSettings.getFps());
+	this.initGame();
 };
 //--------------------------------------------------------
 XMLscene.prototype.getPreferences = function() {
@@ -67,7 +73,7 @@ XMLscene.prototype.setBoardMatrix = function(boardMatrix) {
 };
 //--------------------------------------------------------
 XMLscene.prototype.setCameraPosition = function(x) {
-	this.camera.setPosition([0.0, 15.0, 0.0]);
+	this.cameraPosition = x;
 };
 //--------------------------------------------------------
 XMLscene.prototype.setCameraTarget = function(x) {
@@ -90,51 +96,149 @@ XMLscene.prototype.updatePicking = function() {
 };
 //---------------------------------------------------------
 XMLscene.prototype.resetDisplay = function() {
-
+	//---------------------------------------------------------
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
-	this.cameraActive = false;
-	this.cameraAngle = 0.0;
-	this.cameraZoom = 0.0;
-	this.animationSpeed = 1.0;
-	this.pauseAnimations = false;
-
+	//---------------------------------------------------------
+	this.cameraRotationActive = false;
+	this.cameraTiltActive = false;
+	this.cameraZoomActive = false;
+	//---------------------------------------------------------
+	this.currentCameraRotation = Math.PI / 4;
+	this.currentCameraTilt = 0.0;
+	this.currentCameraZoom = 0.0;
+	//---------------------------------------------------------
+	this.cameraRotationAmount = 0.0;
+	this.cameraTiltAmount = 0.0;
+	this.cameraZoomAmount = 0.0;
+	//---------------------------------------------------------
+	this.targetCameraRotation = 0.0;
+	this.targetCameraZoom = 0.0;
+	this.initialCameraTilt = this.initialCameraPosition;
+	//---------------------------------------------------------
 	mat4.identity(this.defaultMatrix);
 }
 //---------------------------------------------------------
 XMLscene.prototype.loadGraph = function(lsxPath) {
 	this.resetDisplay();
-	this.guiInterface.reset();
-	this.guiInterface.setActiveCamera(this.camera);
+	this.guiInterface.resetLights();
+	this.guiInterface.setActiveCamera(null);
 	new MySceneGraph(lsxPath, this);
-}
-//--------------------------------------------------------
-XMLscene.prototype.processCamera = function(deltaTime) {
+};
+//---------------------------------------------------------
+XMLscene.prototype.resetCamera = function() {
 
-	if (this.cameraZoomAmount > 0 && this.cameraZoom < this.cameraTargetZoom) {
-		this.cameraZoom += this.cameraZoomAmount * deltaTime;
+	if (this.cameraZoomActive || this.cameraTiltActive || this.cameraRotationActive) {
+		return;
+	}
+
+	this.camera.setPosition(this.initialCameraPosition);
+	this.initialCameraTilt = this.initialCameraPosition;
+};
+//---------------------------------------------------------
+XMLscene.prototype.cameraTilt = function() {
+
+	if (this.cameraZoomActive || this.cameraRotationActive) {
+		return;
+	}
+
+	this.cameraTiltActive = true;
+}
+//---------------------------------------------------------
+XMLscene.prototype.processCameraZoom = function(deltaTime) {
+
+	if (this.cameraZoomAmount > 0 && this.currentCameraZoom < this.targetCameraZoom) {
+		this.currentCameraZoom += this.cameraZoomAmount * deltaTime;
 		this.camera.zoom(this.cameraZoomAmount * deltaTime);
 	}
-	else if (this.cameraZoomAmount < 0 && this.cameraZoom > this.cameraTargetZoom ) {
-		this.cameraZoom += this.cameraZoomAmount * deltaTime;
+	else if (this.cameraZoomAmount < 0 && this.currentCameraZoom > this.targetCameraZoom ) {
+		this.currentCameraZoom += this.cameraZoomAmount * deltaTime;
 		this.camera.zoom(this.cameraZoomAmount * deltaTime);
 	}
 	else {
-		this.cameraActive = false;
+		this.cameraZoomActive = false;
+		this.initialCameraTilt = vec3.clone(this.camera.position);
 	}
 };
 //--------------------------------------------------------
+XMLscene.prototype.processCameraRotation = function(deltaTime) {
+
+	if (this.cameraRotationAmount > 0 && this.currentCameraRotation <= this.targetCameraRotation) {
+		this.currentCameraRotation += this.cameraRotationAmount * deltaTime;
+	}
+	else if (this.cameraRotationAmount < 0 && this.currentCameraRotation >= this.targetCameraRotation) {
+		this.currentCameraRotation += this.cameraRotationAmount * deltaTime;
+	}
+	else {
+		this.currentCameraRotation = this.targetCameraRotation;
+		this.initialCameraTilt = vec3.clone(this.camera.position);
+		this.board.onRotationDone();
+		this.cameraRotationActive = false;
+	}
+};
+//--------------------------------------------------------
+XMLscene.prototype.processCameraTilt = function(deltaTime) {
+
+	if (this.cameraTiltAmount < 0.0 && this.currentCameraTilt > -25.0) {
+		this.currentCameraTilt += this.cameraTiltAmount;
+		this.camera.orbit([0,1,0],2 * this.cameraTiltAmount * deltaTime);
+	}
+	else if (this.cameraTiltAmount > 0.0 && this.currentCameraTilt < 25.0) {
+		this.currentCameraTilt += this.cameraTiltAmount;
+		this.camera.orbit([0,1,0],2 * this.cameraTiltAmount * deltaTime);
+	}
+	else {
+		this.cameraTiltActive = false;
+	}
+};
+//--------------------------------------------------------
+XMLscene.prototype.centerCamera = function(deltaTime) {
+
+	this.cameraPan = true;
+	this.cameraRotate = false;
+	this.currentDistance = 0.0;
+	this.lastDistance = vec3.dist(this.camera.position, this.finalPosition);
+	//--------------------------------------------------------
+	var directionX = this.camera.direction[0];
+	var directionZ = this.camera.direction[2];
+	//--------------------------------------------------------
+	if (directionX > directionZ) {
+		this.targetRotation = directionZ - directionX;
+	}
+	else {
+		this.targetRotation = directionX - directionZ;
+	}
+	//--------------------------------------------------------
+	this.deltaRotation = 0.001 / this.targetRotation;
+};
+//--------------------------------------------------------
 XMLscene.prototype.zoomOut = function() {
-	this.cameraActive = true;
+
+	if (this.cameraTiltActive || this.cameraRotationActive) {
+		return;
+	}
+
+	this.cameraZoomActive = true;
 	this.cameraZoomAmount = -4.0;
-	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
+	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
 };
 //--------------------------------------------------------
 XMLscene.prototype.zoomIn = function() {
-	this.cameraActive = true;
+
+	if (this.cameraTiltActive || this.cameraRotationActive) {
+		return;
+	}
+
+	this.cameraZoomActive = true;
 	this.cameraZoomAmount = 4.0;
-	this.cameraTargetZoom = this.cameraZoom + this.cameraZoomAmount;
+	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
 };
+//--------------------------------------------------------
+XMLscene.prototype.rotateCamera = function() {
+	this.cameraRotationActive = true;
+	this.cameraRotationAmount = Math.PI;
+	this.targetCameraRotation = this.currentCameraRotation + Math.PI;
+}
 //--------------------------------------------------------
 XMLscene.prototype.resetPicking = function() {
 	this.currentId = 0;
@@ -183,8 +287,10 @@ XMLscene.prototype.initAxis = function(length) {
  */
 XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-	this.cameraPosition = this.camera.position[1];
-	this.cameraTarget = this.camera.target[1];
+	this.camera.setTarget([0.0, 0.0,0.0]);
+	this.camera.setPosition([7.5, 8.5, 7.5]);
+	this.initialCameraPosition = vec3.clone(this.camera.position);
+	this.initialCameraTilt = vec3.clone(this.camera.position);
 };
 
 /**
@@ -238,9 +344,8 @@ XMLscene.prototype.initTranslate = function(matrix) {
  */
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
-	this.guiInterface.setActiveCamera(this.camera);
+	this.guiInterface.setActiveCamera(null);
 	this.guiInterface.setScene(this);
-	this.board.setInterface(this.guiInterface);
 };
 
 /**
@@ -263,7 +368,7 @@ XMLscene.prototype.getNumberLights = function() {
  * inicializa a aparência por omissão dos objetos
  * @return {null}
  */
-XMLscene.prototype.setDefaultAppearance = function() {
+XMLscene.prototype.resetAppearance = function() {
 	this.setAmbient(0.5, 0.5, 0.5, 1.0);
 	this.setDiffuse(0.5, 0.5, 0.5, 1.0);
 	this.setSpecular(0.5, 0.5, 0.5, 1.0);
@@ -393,11 +498,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 							   this.defaultAmbient[2], this.defaultAmbient[3]);
 
 	// SET TRANSFORMATIONS
-	mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);
-	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[0], this.defaultRotationAxis[0]);
-	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[1], this.defaultRotationAxis[1]);
-	mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[2], this.defaultRotationAxis[2]);
-	mat4.scale(this.defaultMatrix, this.defaultMatrix, this.defaultScale);
+	vec3.multiply(this.boardPosition, this.boardPosition, [-1, -1, -1]);
 
 	if (this.activeLights == 0) {
 		this.initLights();
@@ -423,6 +524,15 @@ XMLscene.prototype.setAnimationLoop = function(loopValue) {
 	this.graph.loadedOk && this.graph.setAnimationLoop(loopValue);
 };
 
+XMLscene.prototype.setBoardPosition = function(position) {
+	this.boardPosition = position;
+}
+
+XMLscene.prototype.resetRotation = function() {
+	this.cameraTiltAmount = 0.0;
+	this.currentCameraTilt = 0.0;
+	this.camera.setPosition(this.initialCameraTilt);
+};
 /**
  * callback executado periodicamente para atualizar as animações presentes na cena
  * @param {Number} currTime - tempo atual (em milisegundos)
@@ -430,18 +540,43 @@ XMLscene.prototype.setAnimationLoop = function(loopValue) {
  */
 XMLscene.prototype.update = function(currTime) {
 
-	var delta = currTime - this.lastUpdate;
+	var deltaTime = (currTime - this.lastUpdate) / 1000;
+	//--------------------------------------------------------
 	this.updatePicking();
 	this.clearPickRegistration();
 	this.board.update(currTime, this.lastUpdate);
+	//--------------------------------------------------------
+	/*if (this.cameraPan) {
 
-	if (this.cameraActive) {
-		this.processCamera(3.0 * delta * 0.001);
+		//this.currentDistance += vec3.len(this.cameraDelta);
+		//console.log(this.currentDistance);
+		if (Math.abs(this.camera.direction[0] - this.camera.direction[2]) > 0.01) {
+			this.camera.pan(this.cameraDelta);
+			this.camera.orbit([0,1,0],this.deltaRotation);
+		}
+		else {
+			this.cameraPan = false;
+		}
 	}
-
-	this.graph.processAnimations(this.animationSpeed * delta * 0.001);
+	else if (this.cameraRotate) {
+		this.camera.orbit([0,1,0], this.cameraOrbit);
+		if (this.camera.position[2] <= 0.0) {
+			this.cameraOrbit = -this.cameraOrbit;
+		}
+		else if (this.camera.position[2] >= 20.0) {
+			this.cameraOrbit = -this.cameraOrbit;
+		}
+	}
+	*/
+	//--------------------------------------------------------
+	this.cameraZoomActive && this.processCameraZoom(deltaTime);
+	this.cameraRotationActive && this.processCameraRotation(deltaTime);
+	this.cameraTiltActive && this.processCameraTilt(deltaTime);
+	//--------------------------------------------------------
+	if (this.graph.loadedOk) {
+		this.graph.processAnimations(deltaTime);
+	}
 };
-
 /**
  * callback executado periodicamente para atualizar a visualização da cena
  * @return {null}
@@ -453,10 +588,13 @@ XMLscene.prototype.display = function() {
 	this.updateProjectionMatrix();
 	this.loadIdentity();
 	this.applyViewMatrix();
-	this.multMatrix(this.defaultMatrix);
+	//--------------------------------------------------------
+	this.rotate(this.currentCameraRotation, 0, 1, 0);
+	this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
+	//--------------------------------------------------------
 	this.axis.display();
-	this.setDefaultAppearance();
-
+	this.resetAppearance();
+	//--------------------------------------------------------
 	if (this.graph.loadedOk) {
 		this.displayGraph();
 		this.displayBoard();

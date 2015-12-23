@@ -28,7 +28,7 @@
 function BaseParser(reader, scene) {
 	this.reader = reader;
 	this.scene = scene;
-	this.verbose = true;
+	this.verbose = false;
 };
 
 BaseParser.prototype = Object.create(Object.prototype);

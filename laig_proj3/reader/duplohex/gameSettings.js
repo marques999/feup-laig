@@ -35,6 +35,13 @@ function GameSettings() {
 		this["mode"] = localStorage["gameMode"];
 	}
 	//--------------------------------------------------------
+	if (localStorage["gameScene"] == undefined) {
+		this["scene"] = 'None';
+	}
+	else {
+		this["scene"] = localStorage["gameScene"];
+	}
+	//--------------------------------------------------------
 	if (localStorage["updatePeriod"] == undefined) {
 		this["fps"] = 60;
 	}
@@ -58,6 +65,7 @@ GameSettings.prototype.save = function() {
 	localStorage["gameBoard"] = this["board"];
 	localStorage["gameDifficulty"] = this["difficulty"];
 	localStorage["gameMode"] = this["mode"];
+	localStorage["gameScene"] = this["scene"];
 };
 //--------------------------------------------------------
 GameSettings.prototype.setBoard = function(boardType) {
@@ -88,6 +96,10 @@ GameSettings.prototype.setMode = function(gameMode) {
 	}
 };
 //--------------------------------------------------------
+GameSettings.prototype.setScene = function(gameScene) {
+	this["scene"] = gameScene;
+};
+//--------------------------------------------------------
 GameSettings.prototype.setFps = function(targetFps) {
 
 	if (targetFps > 0 && targetFps <= 60) {
@@ -109,6 +121,11 @@ GameSettings.prototype.getDifficulty = function() {
 //--------------------------------------------------------
 GameSettings.prototype.getMode = function() {
 	return this["mode"];
+};
+//--------------------------------------------------------
+GameSettings.prototype.getScene = function() {
+	console.log(this["scene"]);
+	return this["scene"];
 };
 //--------------------------------------------------------
 GameSettings.prototype.getFps = function() {

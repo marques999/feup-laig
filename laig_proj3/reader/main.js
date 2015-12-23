@@ -79,15 +79,17 @@ main=function() {
 	//--------------------------------------------------------
 	var app = new CGFapplication(document.body);
 	var myScene = new XMLscene();
+	var mySettings = new GameSettings();
 	var myInterface = new MyInterface();
 	//--------------------------------------------------------
 	app.init();
 	app.setScene(myScene);
 	app.setInterface(myInterface);
-	myInterface.setActiveCamera(myScene.camera);
+	myInterface.setActiveCamera(null);
+	myScene.setSettings(mySettings);
 	myScene.setInterface(myInterface);
 	//--------------------------------------------------------
-	var filename = getUrlVars()['file'] || "example.lsx";
+	var filename = mySettings.getScene();
 	var myGraph = new MySceneGraph(filename, myScene);
 	//--------------------------------------------------------
 	app.run();

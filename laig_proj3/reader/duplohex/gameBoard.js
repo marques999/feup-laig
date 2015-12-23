@@ -64,8 +64,8 @@ function GameBoard(scene) {
 	this.baseTexture = new CGFtexture(this.scene, "resources/duplohex_base.png");
 	//--------------------------------------------------------
 	this.currentPlayer = null;
-	this.guiInterface = null;
 	this.piecePlayed = null;
+	this.rotateCamera = false;
 	this.testMode = true;
 	//--------------------------------------------------------
 	this.historyStack = new GameMove(this);
@@ -177,6 +177,7 @@ GameBoard.prototype.resetController = function() {
 	this.player2.rings = 24;
 	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
 };
+
 //--------------------------------------------------------
 GameBoard.prototype.updatePlayer = function(playerColor) {
 
@@ -188,7 +189,7 @@ GameBoard.prototype.updatePlayer = function(playerColor) {
 	else {
 		this.player1.color = 'black';
 		this.player2.color = 'white';
-		this.currentPlayer = this.player2;
+		this.currentPlayer = this.player2;	
 	}
 
 	this.updateMatrix(this.currentMatrix);
@@ -202,6 +203,8 @@ GameBoard.prototype.changeTurn = function() {
 	else {
 		this.currentPlayer = this.player1;
 	}
+	
+	this.rotateCamera = true;
 };
 //--------------------------------------------------------
 GameBoard.prototype.registerTurn = function(currentPiece) {
@@ -225,6 +228,11 @@ GameBoard.prototype.setServer = function(server) {
 };
 //--------------------------------------------------------
 GameBoard.prototype.startGame = function(server) {
+	
+	if (this.player2.color == 'white') {
+		this.scene.rotateCamera();
+	}
+
 	this.gameRunning = true;
 };
 //--------------------------------------------------------
@@ -381,11 +389,6 @@ GameBoard.prototype.pauseMovie = function() {
 	this.moviePaused = !this.moviePaused;
 };
 //--------------------------------------------------------
-GameBoard.prototype.setInterface = function(guiInterface) {
-	this.guiInterface = guiInterface;
-	this.guiInterface.initGame(this);
-}
-//--------------------------------------------------------
 GameBoard.prototype.resetMovie = function() {
 	this.moviePaused = false;
 	this.movieFrame = 0;
@@ -399,6 +402,9 @@ GameBoard.prototype.skipFrame = function() {
 		this.elapsedMillis = 5000;
 	}
 };
+GameBoard.prototype.onRotationDone = function() {
+	this.rotateCamera = false;
+};
 //--------------------------------------------------------
 GameBoard.prototype.stopMovie = function() {
 	this.moviePlaying = false;
@@ -411,19 +417,15 @@ GameBoard.prototype.setDimensions = function(newWidth, newHeight) {
 //--------------------------------------------------------
 GameBoard.prototype.update = function(currTime, lastUpdate) {
 
-	this.clock1.update(currTime, lastUpdate, this.gameRunning);
-	this.clock2.update(currTime, lastUpdate, this.gameRunning);
-
 	if (lastUpdate == 0) {
 		lastUpdate = currTime;
 	}
-
+	
+	this.clock1.update(currTime, lastUpdate);
+	this.clock2.update(currTime, lastUpdate);
+	
 	var delta = currTime - lastUpdate;
-
-	if (this.moviePaused) {
-		return;
-	}
-
+	
 	if (this.moviePlaying) {
 		var animationPlaying = this.pieces.update(delta * this.movieSpeed * 0.0008);
 		this.updateMovie(delta);
@@ -432,12 +434,27 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 		var animationPlaying = this.pieces.update(delta * 0.001);
 	}
 
+	if (!this.gameRunning || this.moviePaused) {
+		return;
+	}
+
 	if (this.animationActive == 1 && !animationPlaying) {
 		this.animationActive = 0;
 		this.unselectActiveCell();
+		this.rotateCamera && this.scene.rotateCamera();		
 	}
 	else if (this.animationActive == 0 && animationPlaying) {
 		this.animationActive = 1;
+	}
+	
+	if (this.animationActive == 0 && !this.rotateCamera) {
+		
+		if (this.currentPlayer == this.player1) {
+			this.clock1.updateClock(currTime, lastUpdate);
+		}
+		else {
+			this.clock2.updateClock(currTime, lastUpdate);
+		}
 	}
 };
 //--------------------------------------------------------
@@ -453,9 +470,7 @@ GameBoard.prototype.updatePlaceHints = function() {
 				validateCell = validateCell || !this.cells[i].isTwopiece();
 			}
 
-			if (validateCell) {
-				this.cells[i].select();
-			}
+			validateCell && this.cells[i].select();
 		}
 	}
 	else if (this.updateMoveHints() == 0) {
@@ -608,12 +623,10 @@ GameBoard.prototype.placePieceHandler = function() {
 	else if (selectedPiece.wasPlaced()) { // MOVE
 
 		if (selectedPiece.isDisc()) {
-			this.server.requestMoveDisc(selectedPiece.cellX + 1, selectedPiece.cellY + 1,
-				selectedCellX + 1, selectedCellY + 1);
+			this.server.requestMoveDisc(selectedPiece.cellX + 1, selectedPiece.cellY + 1, selectedCellX + 1, selectedCellY + 1);
 		}
 		else {
-			this.server.requestMoveRing(selectedPiece.cellX + 1, selectedPiece.cellY + 1,
-				selectedCellX + 1, selectedCellY + 1);
+			this.server.requestMoveRing(selectedPiece.cellX + 1, selectedPiece.cellY + 1, selectedCellX + 1, selectedCellY + 1);
 		}
 	}
 	else { // PLACE
@@ -699,7 +712,7 @@ GameBoard.prototype.processFrame = function(id, x, y) {
 //--------------------------------------------------------
 GameBoard.prototype.updatePicking = function(selectedId) {
 
-	if (this.animationActive) {
+	if (!this.gameRunning || this.animationActive) {
 		return;
 	}
 
@@ -712,13 +725,11 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 		this.selectedPieceId = id;
 	}
 
+	this.unselectHints();
+
 	// mostra as hints disponiveis se houver uma peça selecionada
 	if (this.selectedPieceId != null && this.selectedPieceId != -1) {
-		this.unselectHints();
 		this.updatePlaceHints();
-	}
-	else {
-		this.unselectHints();
 	}
 
 	// utilizador seleccionou uma célula primeiro
