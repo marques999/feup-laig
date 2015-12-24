@@ -309,23 +309,18 @@ PieceController.prototype.randomPiece = function(playerStack, stackName) {
 PieceController.prototype.placeRandom = function(typeId, x, y)  {
 	//--------------------------------------------------------
 	var pieceId = 0;
-	var pieceName = null;
 	//--------------------------------------------------------
 	if (typeId == 1) {
 		pieceId = this.randomBlackDisc();
-		pieceName = 'disc';
 	}
 	else if (typeId == 2) {
 		pieceId = this.randomWhiteDisc();
-		pieceName = 'disc';
 	}
 	else if (typeId == 4) {
 		pieceId = this.randomBlackRing();
-		pieceName = 'ring';
 	}
 	else if (typeId == 8) {
 		pieceId = this.randomWhiteRing();
-		pieceName = 'ring';
 	}
 	else {
 		return false;
@@ -341,7 +336,7 @@ PieceController.prototype.placeRandom = function(typeId, x, y)  {
 	piece.setColor('default');
 	piece.place(x, y);
 	//--------------------------------------------------------
-	return pieceName;
+	return piece;
 };
 //--------------------------------------------------------
 PieceController.prototype.pieceAt = function(pieceId) {

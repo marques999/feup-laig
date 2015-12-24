@@ -167,11 +167,9 @@ GameBoard.prototype.applyMatrix = function(currentMatrix) {
 		//--------------------------------------------------------
 		var currentPiece = currentMatrix[i];
 		var cellIndex =  this.cellIndex(currentPiece[1], currentPiece[2]);
+		var pieceObject = this.pieces.placeRandom.apply(this.pieces, currentPiece);
 		//--------------------------------------------------------
-		this.pieces.placeRandom.apply(this.pieces, currentPiece);
 		this.historyPieces.placeRandom.apply(this.historyPieces, currentPiece);
-		//--------------------------------------------------------
-		var pieceObject = this.pieces.pieceAt(currentPiece[0]);
 		//--------------------------------------------------------
 		if (pieceObject.isDisc()) {
 			this.cells[cellIndex].insertDisc(pieceObject);

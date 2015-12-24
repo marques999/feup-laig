@@ -253,7 +253,7 @@ XMLscene.prototype.switchFrontView = function() {
 	if (this.frontViewMode || this.cameraAnimationActive()) {
 		return;
 	}
-	
+
 	this.frontViewMode = true;
 	this.topViewMode = false;
 	this.camera.setPosition(this.cameraFrontView);
@@ -262,11 +262,11 @@ XMLscene.prototype.switchFrontView = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.switchTopView = function() {
-	
+
 	if (this.topViewMode || this.cameraAnimationActive()) {
 		return;
 	}
-	
+
 	this.frontViewMode = false;
 	this.topViewMode = true;
 	this.camera.setPosition(this.cameraTopView);
@@ -279,6 +279,12 @@ XMLscene.prototype.rotateCamera = function() {
 	this.cameraRotationAmount = Math.PI;
 	this.targetCameraRotation = this.currentCameraRotation + Math.PI;
 }
+//--------------------------------------------------------
+XMLscene.prototype.resetRotation = function() {
+	this.cameraTiltAmount = 0.0;
+	this.currentCameraTilt = 0.0;
+	this.camera.setPosition(this.initialCameraTilt);
+};
 //--------------------------------------------------------
 XMLscene.prototype.cameraAnimationActive = function() {
 	return this.cameraRotationActive || this.cameraTiltActive || this.cameraZoomActive;
@@ -575,12 +581,6 @@ XMLscene.prototype.setAnimationLoop = function(loopValue) {
 	this.graph.loadedOk && this.graph.setAnimationLoop(loopValue);
 };
 
-
-XMLscene.prototype.resetRotation = function() {
-	this.cameraTiltAmount = 0.0;
-	this.currentCameraTilt = 0.0;
-	this.camera.setPosition(this.initialCameraTilt);
-};
 /**
  * callback executado periodicamente para atualizar as animações presentes na cena
  * @param {Number} currTime - tempo atual (em milisegundos)

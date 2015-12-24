@@ -203,7 +203,6 @@ MyInterface.prototype.gameMenu = function() {
 	var self = this;
 	//---------------------------------------------------------
 	this.mainMenu_close();
-	//---------------------------------------------------------
 	this.gameGroup = this.gui.addFolder("Game");
 	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
 	this.cameraViewsGroup = this.gui.addFolder("Camera Views");
@@ -252,7 +251,7 @@ MyInterface.prototype.gameMenu_close = function() {
 		this.deleteFolder("Camera Views");
 		this.cameraViewsGroup = undefined;
 	}
-
+	//--------------------------------------------------------
 	this.lightsMenu_close();
 };
 //--------------------------------------------------------
@@ -263,6 +262,7 @@ MyInterface.prototype.mainMenu = function() {
 	}
 	//--------------------------------------------------------
 	var self = this;
+	//--------------------------------------------------------
 	this.mainGroup = this.gui.addFolder("Main Menu");
 	this.mainGroup.open();
 	//--------------------------------------------------------
