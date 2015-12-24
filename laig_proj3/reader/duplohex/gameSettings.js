@@ -36,7 +36,7 @@ function GameSettings() {
 	}
 	//--------------------------------------------------------
 	if (localStorage["gameScene"] == undefined) {
-		this["scene"] = 'None';
+		this["scene"] = 'example.lsx';
 	}
 	else {
 		this["scene"] = localStorage["gameScene"];

@@ -18,7 +18,7 @@ MyInterface.prototype.init = function(application) {
 
 	this.gameScenes = {
 		'None': 'example.lsx',
-		'Apollo PT': 'MyShuttle.lsx',
+		'Apollo': 'MyShuttle.lsx',
 		'Billiards': 'MyBilliards.lsx',
 		'Solar System': 'MyPlanets.lsx'
 	};
@@ -196,16 +196,19 @@ MyInterface.prototype.gameMenu = function() {
 		return;
 	}
 	//---------------------------------------------------------
+	var self = this;
+	//---------------------------------------------------------
 	this.mainMenu_close();
 	this.scene.initServer();
 	//---------------------------------------------------------
-	var self = this;
 	this.gameGroup = this.gui.addFolder("Game");
-	this.camerasGroup = this.gui.addFolder("Cameras");
+	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
+	this.cameraViewsGroup = this.gui.addFolder("Camera Views");
 	this.lightsMenu();
 	//---------------------------------------------------------
 	this.gameGroup.open();
-	this.camerasGroup.open();
+	this.cameraZoomGroup.open();
+	this.cameraViewsGroup.open()
 	//---------------------------------------------------------
 	this.gameGroup.add(this, "mainMenu").name("Quit Game").onChange(function(){
 		self.gameMenu_close();
@@ -213,13 +216,14 @@ MyInterface.prototype.gameMenu = function() {
 		self.scene.resetDisplay();
 	});
 	//---------------------------------------------------------
+	this.cameraZoomGroup.add(this.scene, "zoomIn").name("Zoom In");
+	this.cameraZoomGroup.add(this.scene, "zoomOut").name("Zoom Out");
 	//---------------------------------------------------------
-	this.camerasGroup.add(this.scene, "zoomIn").name("Zoom In");
-	this.camerasGroup.add(this.scene, "zoomOut").name("Zoom Out");
-	this.camerasGroup.add(this.scene, "rotateCamera").name("Rotate View");
-	this.camerasGroup.add(this.scene, "resetCamera").name("Reset View");
+	this.cameraViewsGroup.add(this.scene, "switchFrontView").name("Front View");
+	this.cameraViewsGroup.add(this.scene, "switchTopView").name("Top View");
+	this.cameraViewsGroup.add(this.scene, "resetCamera").name("Reset View");
 	//---------------------------------------------------------
-	this.camerasGroup.add(this.scene, "cameraTiltAmount", -1.0, 1.0).name("Tilt").listen().onChange(function(){
+	this.cameraZoomGroup.add(this.scene, "cameraTiltAmount", -1.0, 1.0).name("Tilt").listen().onChange(function(){
 		self.scene.cameraTilt();
 	}).onFinishChange(function() {
 		self.scene.resetRotation();
@@ -235,9 +239,14 @@ MyInterface.prototype.gameMenu_close = function() {
 		this.gameGroup = undefined;
 	}
 	//--------------------------------------------------------
-	if (this.camerasGroup != undefined && this.camerasGroup != null) {
-		this.deleteFolder("Cameras");
-		this.camerasGroup = undefined;
+	if (this.cameraZoomGroup != undefined && this.cameraZoomGroup != null) {
+		this.deleteFolder("Camera Controls");
+		this.cameraZoomGroup = undefined;
+	}
+	//--------------------------------------------------------
+	if (this.cameraViewsGroup != undefined && this.cameraViewsGroup != null) {
+		this.deleteFolder("Camera Views");
+		this.cameraViewsGroup = undefined;
 	}
 };
 //--------------------------------------------------------
@@ -294,8 +303,6 @@ MyInterface.prototype.movieMenu_close = function() {
 		this.deleteFolder("Movie");
 		this.movieGroup = undefined;
 	}
-
-	// STOP MOVIE
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu = function() {

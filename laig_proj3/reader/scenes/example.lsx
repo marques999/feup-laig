@@ -1,23 +1,23 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="-45.0" y="-50.0" z="-45.0" />
-		<rotation axis="y" angle="-45.0" />
+		<translation x="0.0" y="0.0" z="0.0" />
+		<rotation axis="y" angle="0.0" />
 		<rotation axis="x" angle="0.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
-		<reference length="20.0" />
+		<reference length="1.0" />
 	</INITIALS>
 	<ILLUMINATION>
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
 		<background r="0.08" g="0.08" b="0.12" a="1.0" />
 	</ILLUMINATION>
 	<BOARD>
-		<position x="5" y="2.0" z="-3" />
+		<position x="0.0" y="0.0" z="0.0" />
 		<size x="0.5" y="0.5" z="0.5" />
-		<rotation axis="x" angle="0" />
-		<rotation axis="y" angle="0" />
-		<rotation axis="z" angle="0" />
+		<topview x="7.5" y="67.5" z="7.5" />
+		<frontview x="31.25" y="35.0" z="31.25" />
+		<rotation axis="y" angle="-90" />
 	</BOARD>
 	<LIGHTS>
 		<LIGHT id="luz1">
@@ -33,7 +33,7 @@
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
-		</LIGHT>	
+		</LIGHT>
 		<LIGHT id="luz3">
 			<enable value="1" />
 			<position x="10.0" y="2.0" z="5.0" w="1.0" />
@@ -41,14 +41,8 @@
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
 		</LIGHT>
-	</LIGHTS>	
-	<TEXTURES>
-		<TEXTURE id="hex">
-			<file path="images/hexagon.png" />
-			<amplif_factor s="1.0" t="1.0" />
-		</TEXTURE>		
-	</TEXTURES>	
-	<LEAVES>		
+	</LIGHTS>
+	<LEAVES>
 		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />
 	</LEAVES>
 	<NODES>
@@ -57,8 +51,8 @@
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
 			<DESCENDANTS>
-				<DESCENDANT id="myrectangle" />				
+				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
-		</NODE>	
+		</NODE>
 	</NODES>
 </SCENE>

@@ -23,6 +23,7 @@ XMLscene.prototype.init = function(application) {
 	this.cameraDelta = vec3.create();
 	this.cameraRotate = true;
 	this.sceneRotate = 0;
+	this.gameMode = true;
 	//---------------------------------------------------------
 	vec3.scale(this.cameraDelta, this.finalPosition, 1 / 200);
 	//---------------------------------------------------------
@@ -72,13 +73,17 @@ XMLscene.prototype.setBoardMatrix = function(boardMatrix) {
 	this.boardMatrix = boardMatrix;
 };
 //--------------------------------------------------------
-XMLscene.prototype.setCameraPosition = function(x) {
-	this.cameraPosition = x;
-};
+XMLscene.prototype.setBoardPosition = function(vec3) {
+	this.boardPosition = vec3;
+}
 //--------------------------------------------------------
-XMLscene.prototype.setCameraTarget = function(x) {
-	this.camera.setTarget([15.0 * Math.sin(x * Math.PI / 180), 5.0, 15.0 * Math.sin(x * Math.PI / 180)]);
-};
+XMLscene.prototype.setTopView = function(vec3) {
+	this.cameraTopView = vec3;
+}
+//--------------------------------------------------------
+XMLscene.prototype.setFrontView = function(vector3) {
+	this.cameraFrontView = vector3;
+}
 //--------------------------------------------------------
 XMLscene.prototype.updatePicking = function() {
 
@@ -114,7 +119,16 @@ XMLscene.prototype.resetDisplay = function() {
 	//---------------------------------------------------------
 	this.targetCameraRotation = 0.0;
 	this.targetCameraZoom = 0.0;
-	this.initialCameraTilt = this.initialCameraPosition;
+	//---------------------------------------------------------
+	this.initialCameraPosition = vec3.clone(this.camera.position);
+	this.initialCameraTilt = vec3.clone(this.camera.position);
+	//---------------------------------------------------------
+	this.frontViewMode = true;
+	this.topViewMode = false;
+	//---------------------------------------------------------
+	for (var i = 0; i < this.lights; i++) {
+		this.lights[i].disable();
+	}
 	//---------------------------------------------------------
 	mat4.identity(this.defaultMatrix);
 }
@@ -234,10 +248,40 @@ XMLscene.prototype.zoomIn = function() {
 	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
 };
 //--------------------------------------------------------
+XMLscene.prototype.switchFrontView = function() {
+
+	if (this.frontViewMode || this.cameraAnimationActive()) {
+		return;
+	}
+	
+	this.frontViewMode = true;
+	this.topViewMode = false;
+	this.camera.setPosition(this.cameraFrontView);
+	this.initialCameraPosition = vec3.clone(this.camera.position);
+	this.initialCameraTilt = vec3.clone(this.camera.position);
+};
+//--------------------------------------------------------
+XMLscene.prototype.switchTopView = function() {
+	
+	if (this.topViewMode || this.cameraAnimationActive()) {
+		return;
+	}
+	
+	this.frontViewMode = false;
+	this.topViewMode = true;
+	this.camera.setPosition(this.cameraTopView);
+	this.initialCameraPosition = vec3.clone(this.camera.position);
+	this.initialCameraTilt = vec3.clone(this.camera.position);
+};
+//--------------------------------------------------------
 XMLscene.prototype.rotateCamera = function() {
 	this.cameraRotationActive = true;
 	this.cameraRotationAmount = Math.PI;
 	this.targetCameraRotation = this.currentCameraRotation + Math.PI;
+}
+//--------------------------------------------------------
+XMLscene.prototype.cameraAnimationActive = function() {
+	return this.cameraRotationActive || this.cameraTiltActive || this.cameraZoomActive;
 }
 //--------------------------------------------------------
 XMLscene.prototype.resetPicking = function() {
@@ -288,9 +332,6 @@ XMLscene.prototype.initAxis = function(length) {
 XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 	this.camera.setTarget([0.0, 0.0,0.0]);
-	this.camera.setPosition([7.5, 8.5, 7.5]);
-	this.initialCameraPosition = vec3.clone(this.camera.position);
-	this.initialCameraTilt = vec3.clone(this.camera.position);
 };
 
 /**
@@ -482,26 +523,36 @@ XMLscene.prototype.toggleLight = function(id, enabled) {
  */
 XMLscene.prototype.onGraphLoaded = function() {
 
-	// SET FRUSTUM
+	//--------------------------------------------------------
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
-
-	// SET AXIS
 	this.axis = new CGFaxis(this, this.defaultReference);
-
-	// SET BACKGROUND
+	//--------------------------------------------------------
 	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1],
 					   this.defaultBackground[2], this.defaultBackground[3]);
-
-	// SET GLOBAL ILLUMINATION
+	//--------------------------------------------------------
 	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1],
 							   this.defaultAmbient[2], this.defaultAmbient[3]);
-
-	// SET TRANSFORMATIONS
-	vec3.multiply(this.boardPosition, this.boardPosition, [-1, -1, -1]);
-
+	//--------------------------------------------------------
+	if (this.gameMode) {
+		vec3.multiply(this.boardPosition, this.boardPosition, [-1, -1, -1]);
+	}
+	else {
+		mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);
+		mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[0], this.defaultRotationAxis[0]);
+		mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[1], this.defaultRotationAxis[1]);
+		mat4.rotate(this.defaultMatrix, this.defaultMatrix, this.defaultRotationAngle[2], this.defaultRotationAxis[2]);
+		mat4.scale(this.defaultMatrix, this.defaultMatrix, this.defaultScale);
+	}
+	//--------------------------------------------------------
 	if (this.activeLights == 0) {
 		this.initLights();
+	}
+	//--------------------------------------------------------
+	if (this.gameMode) {
+		this.camera.setPosition(this.cameraFrontView);
+		this.initialCameraPosition = vec3.clone(this.camera.position);
+		this.initialCameraTilt = vec3.clone(this.camera.position);
 	}
 };
 
@@ -524,9 +575,6 @@ XMLscene.prototype.setAnimationLoop = function(loopValue) {
 	this.graph.loadedOk && this.graph.setAnimationLoop(loopValue);
 };
 
-XMLscene.prototype.setBoardPosition = function(position) {
-	this.boardPosition = position;
-}
 
 XMLscene.prototype.resetRotation = function() {
 	this.cameraTiltAmount = 0.0;
@@ -542,9 +590,11 @@ XMLscene.prototype.update = function(currTime) {
 
 	var deltaTime = (currTime - this.lastUpdate) / 1000;
 	//--------------------------------------------------------
-	this.updatePicking();
-	this.clearPickRegistration();
-	this.board.update(currTime, this.lastUpdate);
+	if (this.gameMode) {
+		this.updatePicking();
+		this.clearPickRegistration();
+		this.board.update(currTime, this.lastUpdate);
+	}
 	//--------------------------------------------------------
 	/*if (this.cameraPan) {
 
@@ -589,14 +639,21 @@ XMLscene.prototype.display = function() {
 	this.loadIdentity();
 	this.applyViewMatrix();
 	//--------------------------------------------------------
-	this.rotate(this.currentCameraRotation, 0, 1, 0);
-	this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
+	if (this.gameMode) {
+		this.rotate(this.currentCameraRotation, 0, 1, 0);
+		this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
+	}
+	else {
+		this.multMatrix(this.defaultMatrix);
+	}
 	//--------------------------------------------------------
 	this.axis.display();
 	this.resetAppearance();
 	//--------------------------------------------------------
 	if (this.graph.loadedOk) {
 		this.displayGraph();
-		this.displayBoard();
+		if (this.gameMode) {
+			this.displayBoard();
+		}
 	}
 };
