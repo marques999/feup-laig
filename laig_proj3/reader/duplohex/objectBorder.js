@@ -55,15 +55,15 @@ ObjectBorder.prototype.constructor = ObjectBorder;
 ObjectBorder.prototype.display = function() {
 
 	this.scene.pushMatrix();
-		this.material.apply();
-		this.scene.rotate(Math.PI / 2, 1.0, 0.0, 0.0);
-		this.scene.translate(0.0, -0.5, 0.5);
-		this.rectangle.display();
-		this.scene.translate(0.0, 0.5, -0.5);
-		this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
-		this.scene.scale(this.defaultScale, 0.5, 1.0);
-		this.scene.translate(0.5, -0.5, 0.0);
-		this.plane.display();
+	this.material.apply();
+	this.scene.rotate(Math.PI / 2, 1.0, 0.0, 0.0);
+	this.scene.translate(0.0, -0.5, 0.5);
+	this.rectangle.display();
+	this.scene.translate(0.0, 0.5, -0.5);
+	this.scene.rotate(Math.PI / 2, -1.0, 0.0, 0.0);
+	this.scene.scale(this.defaultScale, 0.5, 1.0);
+	this.scene.translate(0.5, -0.5, 0.0);
+	this.plane.display();
 	this.scene.popMatrix();
 
 	if (this.color == 'white') {
@@ -77,10 +77,10 @@ ObjectBorder.prototype.display = function() {
 ObjectBorder.prototype.displayBlack = function() {
 
 	this.scene.pushMatrix();
-		this.scene.rotate(4 * Math.PI / 3, 0.0, 0.0, 1.0);
-		this.customCircle1.display();
-		this.scene.translate(0.0, 0.0, -0.5);
-		this.customCylinder1.display();
+	this.scene.rotate(4 * Math.PI / 3, 0.0, 0.0, 1.0);
+	this.customCircle1.display();
+	this.scene.translate(0.0, 0.0, -0.5);
+	this.customCylinder1.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
 	this.halfTriangle2.display();
@@ -88,29 +88,28 @@ ObjectBorder.prototype.displayBlack = function() {
 
 	for (var i = 0; i < this.numberCells; i++) {
 		this.triangle.display();
-		this.scene.translate(2 * this.defaultAngle, 0.0, 0.0);
+		this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
 	}
 
 	this.triangle.display();
 	this.scene.popMatrix();
-
 	this.scene.pushMatrix();
-		this.scene.translate(this.defaultScale, 0.0, 0.0);
-		this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
-		this.customCircle2.display();
-		this.scene.translate(0.0, 0.0, -0.5);
-		this.customCylinder2.display();
+	this.scene.translate(this.defaultScale, 0.0, 0.0);
+	this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
+	this.customCircle2.display();
+	this.scene.translate(0.0, 0.0, -0.5);
+	this.customCylinder2.display();
 	this.scene.popMatrix();
 };
 
 ObjectBorder.prototype.displayWhite = function() {
 
 	this.scene.pushMatrix();
-		this.scene.translate(this.defaultScale, 0.0, 0.0);
-		this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
-		this.customCircle1.display();
-		this.scene.translate(0.0, 0.0, -0.5);
-		this.customCylinder1.display();
+	this.scene.translate(this.defaultScale, 0.0, 0.0);
+	this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
+	this.customCircle1.display();
+	this.scene.translate(0.0, 0.0, -0.5);
+	this.customCylinder1.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
 	this.triangle.display();
@@ -123,11 +122,10 @@ ObjectBorder.prototype.displayWhite = function() {
 	this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
 	this.halfTriangle.display();
 	this.scene.popMatrix();
-
 	this.scene.pushMatrix();
-		this.scene.rotate(5 * Math.PI / 6, 0.0, 0.0, -1.0);
-		this.customCircle2.display();
-		this.scene.translate(0.0, 0.0, -0.5);
-		this.customCylinder2.display();
+	this.scene.rotate(5 * Math.PI / 6, 0.0, 0.0, -1.0);
+	this.customCircle2.display();
+	this.scene.translate(0.0, 0.0, -0.5);
+	this.customCylinder2.display();
 	this.scene.popMatrix();
 };

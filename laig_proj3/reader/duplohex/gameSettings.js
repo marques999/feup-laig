@@ -124,7 +124,6 @@ GameSettings.prototype.getMode = function() {
 };
 //--------------------------------------------------------
 GameSettings.prototype.getScene = function() {
-	console.log(this["scene"]);
 	return this["scene"];
 };
 //--------------------------------------------------------

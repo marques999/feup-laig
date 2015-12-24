@@ -259,7 +259,7 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 };
 //--------------------------------------------------------
 PieceController.prototype.randomBlackDisc = function() {
-	
+
 	if (this.player1.color == 'white') {
 		return this.randomPiece(this.p2DiscStacks, "p2Discs");
 	}
@@ -268,7 +268,7 @@ PieceController.prototype.randomBlackDisc = function() {
 };
 //--------------------------------------------------------
 PieceController.prototype.randomBlackRing = function() {
-	
+
 	if (this.player1.color == 'white') {
 		return this.randomPiece(this.p2RingStacks, "p2Rings");
 	}
@@ -277,7 +277,7 @@ PieceController.prototype.randomBlackRing = function() {
 };
 //--------------------------------------------------------
 PieceController.prototype.randomWhiteDisc = function() {
-	
+
 	if (this.player1.color == 'white') {
 		return this.randomPiece(this.p1DiscStacks, "p1Discs");
 	}
@@ -286,7 +286,7 @@ PieceController.prototype.randomWhiteDisc = function() {
 };
 //--------------------------------------------------------
 PieceController.prototype.randomWhiteRing = function() {
-	
+
 	if (this.player1.color == 'white') {
 		return this.randomPiece(this.p1RingStacks, "p1Rings");
 	}
@@ -295,10 +295,10 @@ PieceController.prototype.randomWhiteRing = function() {
 };
 //--------------------------------------------------------
 PieceController.prototype.randomPiece = function(playerStack, stackName) {
-	
+
 	var stackId = this.stackLength[stackName] - 1;
 	var stackLength = playerStack[stackId].length - 1;
-	
+
 	if (stackLength == 0) {
 		this.stackLength[stackName]--;
 	}

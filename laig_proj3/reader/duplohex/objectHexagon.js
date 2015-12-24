@@ -83,3 +83,8 @@ ObjectHexagon.prototype.select = function() {
 ObjectHexagon.prototype.unselect = function() {
 	this.selected = false;
 };
+ObjectHexagon.prototype.reset = function() {
+	this.selected = false;
+	this.disc = null;
+	this.ring = null;
+};
