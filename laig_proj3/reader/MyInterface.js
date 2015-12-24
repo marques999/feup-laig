@@ -13,38 +13,41 @@ MyInterface.prototype = Object.create(CGFinterface.prototype);
 MyInterface.prototype.constructor = MyInterface;
 //--------------------------------------------------------
 MyInterface.prototype.init = function(application) {
-
+	//--------------------------------------------------------
 	CGFinterface.prototype.init.call(this, application);
-
+	//--------------------------------------------------------
 	this.gameScenes = {
 		'None': 'example.lsx',
 		'Apollo': 'MyShuttle.lsx',
 		'Billiards': 'MyBilliards.lsx',
 		'Solar System': 'MyPlanets.lsx'
 	};
-
+	//--------------------------------------------------------
 	this.playerColors = {
 		'Black': 'blackPlayer',
 		'White': 'whitePlayer'
 	};
-
+	//--------------------------------------------------------
 	this.gameBoard = {
 		'default': true,
 		'diagonal': false,
 		'small': false
 	};
-
+	//--------------------------------------------------------
 	this.gameMode = {
 		'pvp': true,
 		'pvb': false,
 		'bvb': false
 	};
-
+	//--------------------------------------------------------
 	this.gameDifficulty =  {
 		'random': true,
 		'smart': false
 	}
-
+	//--------------------------------------------------------
+	this.lightsState = {};
+	this.lightsId = [];
+	//--------------------------------------------------------
 	this.playerColor = 'blackPlayer';
 	this.gui = new dat.GUI();
 };
@@ -110,17 +113,18 @@ MyInterface.prototype.settingsMenu = function() {
 	var self = this;
 	this.settingsGroup = this.gui.addFolder("Settings");
 	this.settingsGroup.open();
-	//---------------------------------------------------------
 	this.settingsGroup.add(this, "savePreferences").name("Save Settings");
 	this.settingsGroup.add(this, "readPreferences").name("Reset Settings");
+	//---------------------------------------------------------
 	this.settingsGroup.add(this, "currentScene", this.gameScenes).name("Environment").onChange(function(currentScene) {
 		self.scene.loadGraph(currentScene);
 	}).listen();
+	//---------------------------------------------------------
 	this.settingsGroup.add(this, "playerColor", this.playerColors).name("Player Color").onChange(function() {
 		self.board.updatePlayer(self.playerColor);
 	}).listen();
-	this.settingsGroup.add(this, "updatePeriod", 1, 60).name("Target FPS").listen();
 	//---------------------------------------------------------
+	this.settingsGroup.add(this, "updatePeriod", 1, 60).name("Target FPS").listen();
 	this.boardGroup = this.gui.addFolder("Board");
 	this.modeGroup = this.gui.addFolder("Mode");
 	this.difficultyGroup = this.gui.addFolder("Difficulty");
@@ -199,7 +203,6 @@ MyInterface.prototype.gameMenu = function() {
 	var self = this;
 	//---------------------------------------------------------
 	this.mainMenu_close();
-	this.scene.initServer();
 	//---------------------------------------------------------
 	this.gameGroup = this.gui.addFolder("Game");
 	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
@@ -212,7 +215,6 @@ MyInterface.prototype.gameMenu = function() {
 	//---------------------------------------------------------
 	this.gameGroup.add(this, "mainMenu").name("Quit Game").onChange(function(){
 		self.gameMenu_close();
-		self.lightsMenu_close();
 		self.scene.resetDisplay();
 	});
 	//---------------------------------------------------------
@@ -229,7 +231,9 @@ MyInterface.prototype.gameMenu = function() {
 		self.scene.resetRotation();
 	});
 	//---------------------------------------------------------
-	this.gameGroup.add(this, "movieMenu").name("View Replay");
+	this.gameGroup.add(this, "movieMenu").name("View Replay").onChange(function(){
+		self.gameMenu_close();
+	});
 };
 //--------------------------------------------------------
 MyInterface.prototype.gameMenu_close = function() {
@@ -248,6 +252,8 @@ MyInterface.prototype.gameMenu_close = function() {
 		this.deleteFolder("Camera Views");
 		this.cameraViewsGroup = undefined;
 	}
+
+	this.lightsMenu_close();
 };
 //--------------------------------------------------------
 MyInterface.prototype.mainMenu = function() {
@@ -255,16 +261,16 @@ MyInterface.prototype.mainMenu = function() {
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
-
+	//--------------------------------------------------------
 	var self = this;
 	this.mainGroup = this.gui.addFolder("Main Menu");
 	this.mainGroup.open();
-	this.mainGroup.add(this, "gameMenu").name("Start Game");
-	this.mainGroup.add(this, "settingsMenu").name("Settings");
-	this.mainGroup.add(this, "aboutMenu").name("About").onChange(function() {
-		self.deleteFolder("Main Menu");
-		self.movieGroup = undefined;
+	//--------------------------------------------------------
+	this.mainGroup.add(this, "gameMenu").name("Start Game").onChange(function() {
+		self.scene.initServer();
 	});
+	this.mainGroup.add(this, "settingsMenu").name("Settings");
+	this.mainGroup.add(this, "aboutMenu").name("About");
 };
 //--------------------------------------------------------
 MyInterface.prototype.mainMenu_close = function() {
@@ -280,17 +286,19 @@ MyInterface.prototype.movieMenu = function() {
 	if (this.board == undefined || this.board == null) {
 		return;
 	}
-
+	//--------------------------------------------------------
 	var self = this;
+	//--------------------------------------------------------
 	this.board.startMovie();
-	this.movieGroup = this.gui.addFolder("Movie");
+	this.movieGroup = this.gui.addFolder("Movie Controls");
 	this.movieGroup.open();
 	this.movieGroup.add(this.board, "pauseMovie").name("Pause Movie");
+	//--------------------------------------------------------
 	this.movieGroup.add(this.board, "stopMovie").name("Stop Movie").onChange(function(value) {
-		self.deleteFolder("Movie");
-		self.movieGroup = undefined;
+		self.movieMenu_close();
+		self.gameMenu();
 	});
-
+	//--------------------------------------------------------
 	this.movieGroup.add(this.board, "skipMovieFrame").name("Skip Move");
 	this.movieGroup.add(this.board, "movieDelay", 100, 5000).step(100).name("Animation Delay");
 	this.movieGroup.add(this.board, "movieSpeed", 1, 5).step(0.1).name("Animation Speed");
@@ -300,21 +308,23 @@ MyInterface.prototype.movieMenu = function() {
 MyInterface.prototype.movieMenu_close = function() {
 
 	if (this.movieGroup != undefined && this.movieGroup != null) {
-		this.deleteFolder("Movie");
+		this.deleteFolder("Movie Controls");
 		this.movieGroup = undefined;
 	}
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu = function() {
 
-	if (this.lightsGroup != undefined && this.lightsGroup != null) {
-		this.deleteFolder("Lights");
-		this.lightsGroup = undefined;
+	if (this.scene == undefined || this.scene == null) {
+		return;
 	}
-
-	this.lights = {};
+	//--------------------------------------------------------
 	this.lightsGroup = this.gui.addFolder("Lights");
 	this.lightsGroup.open();
+	//--------------------------------------------------------
+	for (var i = 0; i < this.lightsId.length; i++) {
+		this.lightsGroup.add(this.lightsState, this.lightsId[i]).onChange(this.lightAction(this, i));
+	}
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu_close = function() {
@@ -325,8 +335,40 @@ MyInterface.prototype.lightsMenu_close = function() {
 	}
 };
 //--------------------------------------------------------
+MyInterface.prototype.pushLight = function(name, id, enabled) {
+	this.lightsState[name] = enabled;
+	this.lightsId[id] = name;
+};
+//--------------------------------------------------------
+MyInterface.prototype.resetLights = function() {
+	this.lightsId.length = 0;
+	this.lightsState = {};
+};
+//--------------------------------------------------------
+MyInterface.prototype.lightAction = function(self, id) {
+
+	return function(value) {
+		self.scene.toggleLight(id, value);
+	};
+}
+//--------------------------------------------------------
 MyInterface.prototype.aboutMenu = function() {
-	alert("HELLO");
+	alert('DuploHex is a connection game related to Hex that includes discs and rings. '
+		+ 'In order to play DuploHex you need an 7x7 hex board, 24 black and 24 white rings, and 24 black and 24 white discs.\n\n'
+		+ 'Objective: Each player must connect the two opposing sides of the board marked by their colors either with their discs or their rings.'
+		+ '\n\nStart: game starts with an empty board. White starts by placing one disc or ring on any cell.'
+		);
+	alert('Each player in turn must perform two mandatory actions:\n\n'
+		+ '(1) add one of her discs to an empty cell or move one of her discs on the board into any ring located in a neighbour cell (must not be already occupied by both).\n\n'
+		+ '(2) one of her rings to an empty cell or move one of her rings on the board to a neighbour cell occupied by a disc (must not be already occupied by both).\n\n'
+		+ 'The disc-ring pair (a disc inside a ring) cannot be moved for the rest of the game.'
+		);
+	alert('Players may not pass. Pieces cannot be stacked.\n\n'
+		+ 'Finally, if a player cannot perform a legal action, she must in her turn add one of their discs or rings on any cell of the board occupied by a ring or a disc, respectively. '
+		+ 'For a shorter game, you can play on a 6x6 board. '
+		+ 'To set up such board simply fill two adjacent border rows with rings and discs of the corresponding colour before the game starts.\n\n'
+		+ 'DuploHex @ BoardGameGeek\nhttps://boardgamegeek.com/boardgame/174474/duplohex'
+		);
 };
 //--------------------------------------------------------
 MyInterface.prototype.getBoolean = function(array) {
@@ -348,21 +390,3 @@ MyInterface.prototype.toggleBoolean = function(array, element) {
 
 	array[element] = true;
 };
-//--------------------------------------------------------
-MyInterface.prototype.pushLight = function(name, id, enabled) {
-
-	if (this.lightsGroup == undefined || this.lightsGroup == null) {
-		return;
-	}
-
-	var self = this;
-	this.lights[name] = enabled;
-	this.lightsGroup.add(this.lights, name).onChange(function(value) {
-		self.scene.toggleLight(id, value);
-	});
-};
-//--------------------------------------------------------
-MyInterface.prototype.resetLights = function() {
-	this.lightsMenu_close();
-	this.lightsMenu();
-}
