@@ -293,8 +293,9 @@ MyInterface.prototype.movieMenu = function() {
 	this.movieGroup = this.gui.addFolder("Movie Controls");
 	this.movieGroup.open();
 	this.movieGroup.add(this.board, "pauseMovie").name("Pause Movie");
+	this.movieGroup.add(this.board, "resetMovie").name("Reset Movie");
 	//--------------------------------------------------------
-	this.movieGroup.add(this.board, "stopMovie").name("Stop Movie").onChange(function(value) {
+	this.movieGroup.add(this.board, "exitMovie").name("Stop Movie").onChange(function(value) {
 		self.movieMenu_close();
 		self.gameMenu();
 	});
