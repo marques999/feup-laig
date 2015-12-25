@@ -228,188 +228,120 @@ botSmartPlaceDisc(Board, Player, Position):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % acção inicial do computador: colocar um disco
-botInitialMove(Board, Player, NewBoard, NewPlayer):-
+botInitialMove(Board, _, Player, Reply):-
 	random(0, 2, Action),
 	Action > 0, !,
 	botRandomPlace(Board, Player, Position, disc),
-	botAction(1, Position, Board, Player, NewBoard, NewPlayer).
+	botAction(1, Position, Board, Player, Reply).
 
 % acção inicial do computador: colocar um anel
-botInitialMove(Board, Player, NewBoard, NewPlayer):-
+botInitialMove(Board, _, Player, Reply):-
 	botRandomPlace(Board, Player, Position, ring),
-	botAction(3, Position, Board, Player, NewBoard, NewPlayer).
+	botAction(3, Position, Board, Player, Reply).
 
 % predicado gerador de movimentos aleatórios do computador
-botRandomMove(Board, Player, NewBoard, NewPlayer):-
+botRandomMove(Board, Piece, Player, Reply):-
 	random(1, 5, Number),
-	hasDiscs(Player),
-	hasRings(Player), !,
-	botRandomAction(Number, Board, Player, NewBoard, NewPlayer).
+	botRandomAction(Number, Piece, Board, Player, Reply).
 
 % predicado gerador de movimentos inteligentes do computador
-botSmartMove(Board, Player, NewBoard, NewPlayer):-
+botSmartMove(Board, Piece, Player, Reply):-
 	random(1, 5, Number),
-	hasDiscs(Player),
-	hasRings(Player), !,
-	botSmartAction(Number, Board, Player, NewBoard, NewPlayer).
+	botSmartAction(Number, Piece, Board, Player, Reply).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % acção do computador: colocar um disco no tabuleiro
-botAction(1, Position, Board, Player, NewBoard, NewPlayer):-
+botAction(1, Position, Board, Player, placeAction(disc, Position)):-
 	hasDiscs(Player), !,
 	getPlayerColor(Player, Color),
-	printPlaceAction(Player, disc, Position),
-	placeDisc(Position, Color, Board, NewBoard),
-	decrementDiscs(Player, NewPlayer).
+	printPlaceAction(Player, disc, Position).
 
 % acção do computador: colocar um anel no tabuleiro
-botAction(3, Position, Board, Player, NewBoard, NewPlayer):-
+botAction(3, Position, Board, Player, placeAction(ring, Position)):-
 	hasRings(Player), !,
 	getPlayerColor(Player, Color),
-	printPlaceAction(Player, ring, Position),
-	placeRing(Position, Color, Board, NewBoard),
-	decrementRings(Player, NewPlayer).
+	printPlaceAction(Player, ring, Position).
 
 % acção do computador: mover um disco para uma célula ocupada por um anel
-botAction(2, From, To, Board, Player, NewBoard, Player):-
+botAction(2, From, To, Board, Player, moveAction(disc, From, To)):-
 	botCanMoveDisc(From, To, Board, Player), !,
-	printMoveAction(Player, disc, From, To),
-	moveDisc(From, To, Board, NewBoard).
+	printMoveAction(Player, disc, From, To).
 
 % acção do computador: mover um anel para uma célula ocupada por um disco
-botAction(4, From, To, Board, Player, NewBoard, Player):-
+botAction(4, From, To, Board, Player, moveAction(ring, From, To)):-
 	botCanMoveRing(From, To, Board, Player),
-	printMoveAction(Player, ring, From, To),
-	moveRing(From, To, Board, NewBoard).
+	printMoveAction(Player, ring, From, To).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % imprime no ecrã informações relativas ao movimento "colocar peça" do computador
 printPlaceAction(Player, Piece, Position):-
 	getPlayerName(Player, PlayerName),
-	format('~w placed ~w at position ~w\n', [PlayerName, Piece, Position]), nl.
+	format('~w placed ~w at position ~w\n', [PlayerName, Piece, Position]).
 
 % imprime no ecrã informações relativas ao movimento "mover peça" do computador
 printMoveAction(Player, Piece, From, To):-
 	getPlayerName(Player, PlayerName),
-	format('~w moving ~w from position ~w to position ~w\n', [PlayerName, Piece, From, To]), nl.
+	format('~w moving ~w from position ~w to position ~w\n', [PlayerName, Piece, From, To]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % acção do computador: realiza um movimento aleatório do tipo "colocar disco"
-botRandomAction(1, Board, Player, NewBoard, NewPlayer):-
+botRandomAction(1, disc, Board, Player, Reply):-
+	hasDiscs(Player), !,
 	botRandomPlace(Board, Player, Position, disc),
-	botAction(1, Position, Board, Player, TempBoard, TempPlayer), !,
-	botSecondRandom(ring, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(1, Position, Board, Player, Reply).
 
 % acção do computador: realiza um movimento aleatório do tipo "mover disco"
-botRandomAction(2, Board, Player, NewBoard, NewPlayer):-
+botRandomAction(2, disc, Board, Player, Reply):-
 	botRandomSource(Board, disc, Player, From),
 	botRandomDestination(From, To),
-	botAction(2, From, To, Board, Player, TempBoard, TempPlayer), !,
-	botSecondRandom(ring, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(2, From, To, Board, Player, Reply).
 
 % acção do computador: realiza um movimento aleatório do tipo "colocar anel"
-botRandomAction(3, Board, Player, NewBoard, NewPlayer):-
+botRandomAction(3, ring, Board, Player, Reply):-
+	hasRings(Player), !,
 	botRandomPlace(Board, Player, Position, ring),
-	botAction(3, Position, Board, Player,TempBoard,TempPlayer), !,
-	botSecondRandom(disc, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(3, Position, Board, Player, Reply).
 
 % acção do computador: realiza um movimento aleatório do tipo "mover anel"
-botRandomAction(4, Board, Player, NewBoard, NewPlayer):-
+botRandomAction(4, ring, Board, Player, Reply):-
 	botRandomSource(Board, ring, Player, From),
 	botRandomDestination(From, To),
-	botAction(4, From, To, Board, Player, TempBoard,TempPlayer), !,
-	botSecondRandom(disc, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(4, From, To, Board, Player, Reply).
 
 % acção do computador: fallback
-botRandomAction(_, Board, Player, NewBoard, NewPlayer):-
-	botRandomMove(Board, Player, NewBoard, NewPlayer).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% acção do computador: realiza um segundo movimento aleatório com um disco
-botSecondRandom(disc, Board, Player, NewBoard, NewPlayer):-
-	random(1, 11, Action),
-	Action > 5, !,
-	botRandomPlace(Board, Player, Position, disc),
-	botAction(1, Position, Board, Player, NewBoard, NewPlayer).
-botSecondRandom(disc, Board, Player, NewBoard, NewPlayer):-
-	botRandomSource(Board, disc, Player, From),
-	botRandomDestination(From, To),
-	botAction(2, From, To, Board, Player, NewBoard, NewPlayer).
-
-% acção do computador: realiza um segundo movimento aleatório com um anel
-botSecondRandom(ring, Board, Player, NewBoard, NewPlayer):-
-	random(1, 11, Action),
-	Action > 5, !,
-	botRandomPlace(Board, Player, Position, ring),
-	botAction(3, Position, Board, Player, NewBoard, NewPlayer).
-botSecondRandom(ring, Board, Player, NewBoard, NewPlayer):-
-	botRandomSource(Board, ring, Player, From),
-	botRandomDestination(From, To),
-	botAction(4, From, To, Board, Player, NewBoard, NewPlayer).
-
-% acção do computador: fallback
-botSecondRandom(Piece, Board, Player, NewBoard, NewPlayer):-
-	botSecondRandom(Piece, Board, Player, NewBoard, NewPlayer).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% acção do computador: realiza um segundo movimento inteligente com um disco
-botSecondSmart(disc, Board, Player, NewBoard, NewPlayer):-
-	random(1, 11, Action),
-	Action > 5,
-	botSmartPlaceDisc(Board, Player, Position),
-	botAction(1, Position, Board, Player, NewBoard, NewPlayer).
-botSecondSmart(disc, Board, Player, NewBoard, NewPlayer):-
-	botSmartMoveDisc(Board, Player, From, To),
-	botAction(2, From, To, Board, Player, NewBoard, NewPlayer).
-
-% acção do computador: realiza um segundo movimento inteligente com um anel
-botSecondSmart(ring, Board, Player, NewBoard, NewPlayer):-
-	random(1, 11, Action),
-	Action > 5,
-	botSmartPlaceRing(Board, Player, Position),
-	botAction(3, Position, Board, Player, NewBoard, NewPlayer).
-botSecondSmart(ring, Board, Player, NewBoard, NewPlayer):-
-	botSmartMoveRing(Board, Player, From, To),
-	botAction(4, From, To, Board, Player, NewBoard, NewPlayer).
-
-% acção do computador: fallback
-botSecondSmart(Piece, Board, Player, NewBoard, NewPlayer):-
-	botSecondSmart(Piece, Board, Player, NewBoard, NewPlayer).
+botRandomAction(_, Piece, Board, Player, Reply):-
+	botRandomMove(Piece, Board, Player, Reply).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % acção do computador: realiza um movimento ganancioso do tipo "colocar disco"
-botSmartAction(1, Board, Player, NewBoard, NewPlayer):-
+botSmartAction(1, disc, Board, Player, Reply):-
+	hasDiscs(Player), !,
 	botSmartPlaceDisc(Board, Player, Position),
-	botAction(1, Position, Board, Player, TempBoard, TempPlayer), !,
-	botSecondSmart(ring, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(1, Position, Board, Player, Reply).
 
 % acção do computador: realiza um movimento ganancioso do tipo "mover disco"
-botSmartAction(2, Board, Player, NewBoard, NewPlayer):-
+botSmartAction(2, disc, Board, Player, Reply):-
 	botSmartMoveDisc(Board, Player, From, To),
-	botAction(2, From, To, Board, Player, TempBoard, TempPlayer), !,
-	botSecondSmart(ring, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(2, To, Board, Player, Reply).
 
 % acção do computador: realiza um movimento ganancioso do tipo "colocar anel"
-botSmartAction(3, Board, Player, NewBoard, NewPlayer):-
+botSmartAction(3, ring, Board, Player, Reply):-
+	hasRings(Player), !,
 	botSmartPlaceRing(Board, Player, Position),
-	botAction(3, Position, Board, Player,TempBoard,TempPlayer), !,
-	botSecondSmart(disc, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(3, Position, Board, Player, Reply).
 
 % acção do computador: realiza um movimento ganancioso do tipo "mover anel"
-botSmartAction(4, Board, Player, NewBoard, NewPlayer):-
+botSmartAction(4, ring, Board, Player, Reply):-
 	botSmartMoveRing(Board, Player, From, To),
-	botAction(4, From, To, Board, Player, TempBoard, TempPlayer), !,
-	botSecondSmart(disc, TempBoard, TempPlayer, NewBoard, NewPlayer).
+	botAction(4, From, To, Board, Player, Reply).
 
 % acção do computador: fallback
-botSmartAction(_, Board, Player, NewBoard, NewPlayer):-
-	botSmartMove(Board, Player, NewBoard, NewPlayer).
+botSmartAction(_, Piece, Board, Player, Reply):-
+	botSmartMove(Piece, Board, Player, Reply).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

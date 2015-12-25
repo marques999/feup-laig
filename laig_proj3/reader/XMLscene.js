@@ -25,6 +25,9 @@ XMLscene.prototype.init = function(application) {
 	this.sceneRotate = 0;
 	this.gameMode = true;
 	//---------------------------------------------------------
+	this.serverHostname = 'localhost';
+	this.serverPort = 8081;
+	//---------------------------------------------------------
 	vec3.scale(this.cameraDelta, this.finalPosition, 1 / 200);
 	//---------------------------------------------------------
 	this.initCameras();
@@ -41,7 +44,7 @@ XMLscene.prototype.initGame = function() {
 	this.boardMatrix = null;
 	this.board = new GameBoard(this);
 	this.board.updateMatrix(this.gameSettings.getBoard());
-	this.board.updatePlayer(this.gameSettings.getColor());
+	this.board.updatePlayer(this.gameSettings.getMode(), this.gameSettings.getColor());
 };
 //--------------------------------------------------------
 XMLscene.prototype.initGL = function() {
@@ -53,11 +56,35 @@ XMLscene.prototype.initGL = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.initServer = function() {
-	this.httpServer = new GameServer(this.board, this.gameSettings, 'localhost', 8081);
-	this.httpServer.requestGame();
+
+	if (this.httpServer == null || this.httpServer == undefined) {
+		this.httpServer = new GameServer(this, this.serverHostname, this.serverPort);
+		this.httpServer.requestGame();
+	}
+};;
+//--------------------------------------------------------
+XMLscene.prototype.onConnect = function() {
+	alert("connection established successfully!");
+	this.guiInterface.onConnect();
 	this.board.setServer(this.httpServer);
-	this.board.startGame();
 };
+//--------------------------------------------------------
+XMLscene.prototype.onDisconnect = function() {
+	this.guiInterface.onDisconnect();
+};
+//--------------------------------------------------------
+XMLscene.prototype.onServerError = function() {
+	this.httpServer = null;
+	this.guiInterface.onError();
+};
+//--------------------------------------------------------
+XMLscene.prototype.disconnectServer = function() {
+	if (this.httpServer == null || this.httpServer == undefined) {
+		return;
+	}
+
+	this.httpServer.requestQuit();
+}
 //--------------------------------------------------------
 XMLscene.prototype.setSettings = function(gameSettings) {
 	this.gameSettings = gameSettings;

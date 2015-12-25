@@ -14,9 +14,10 @@ function ObjectHexagon(scene) {
 	//--------------------------------------------------------
 	this.defaultAngle = Math.cos(Math.PI/6);
 	this.position = [0.0, 0.0, 0.0];
+	this.discId = null;
+	this.ringId = null;
+	this.value = 0x00;
 	this.selected = false;
-	this.disc = null;
-	this.ring = null;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype = Object.create(MyPrimitive.prototype);
@@ -32,44 +33,90 @@ ObjectHexagon.prototype.display = function() {
 	this.circle.display();
 };
 //--------------------------------------------------------
-ObjectHexagon.prototype.getDisc = function() {
-	return this.disc;
+ObjectHexagon.prototype.getDiscId = function() {
+	return this.discId;
 };
 //--------------------------------------------------------
-ObjectHexagon.prototype.getRing = function() {
-	return this.ring;
+ObjectHexagon.prototype.getRingId = function() {
+	return this.ringId;
+};
+//--------------------------------------------------------
+ObjectHexagon.prototype.getDiscColor = function() {
+
+	if ((this.value & 0x03) == 0x01) {
+		return 'black';
+	}
+
+	if ((this.value & 0x03) == 0x02) {
+		return 'white';
+	}
+
+	return null;
+};
+//--------------------------------------------------------
+ObjectHexagon.prototype.getRingColor = function() {
+
+	if ((this.value & 0x0C) == 0x04) {
+		return 'black';
+	}
+
+	if ((this.value & 0x0C) == 0x08) {
+		return 'white';
+	}
+
+	return null;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.removeDisc = function() {
-	this.disc = null;
+	this.value &= ~0x03;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.removeRing = function() {
-	this.ring = null;
+	this.value &= ~0x0C;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.insertDisc = function(disc) {
-	this.disc = disc.color;
+
+	if (disc.getColor() == 'white') {
+		this.value |= 0x02;
+	}
+	else if (disc.getColor() == 'black') {
+		this.value |= 0x01;
+	}
+
+	this.discId = disc.getId();
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.insertRing = function(ring) {
-	this.ring = ring.color;
+
+	if (ring.getColor() == 'white') {
+		this.value |= 0x08;
+	}
+	else if (ring.getColor() == 'black') {
+		this.value |= 0x04;
+	}
+
+	this.ringId = ring.getId();
 };
 //--------------------------------------------------------
+ObjectHexagon.prototype.getSymbol = function() {
+	return this.value;
+}
+//--------------------------------------------------------
 ObjectHexagon.prototype.hasDisc = function() {
-	return this.disc != null;
+	return (this.value & 0x03) == 0x01 || (this.value & 0x03) == 0x02;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.hasRing = function() {
-	return this.ring != null;
+	return (this.value & 0x0C) == 0x04 || (this.value & 0x0C) == 0x08;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.isEmpty = function() {
-	return this.disc == null && this.ring == null;
+	return this.value == 0x00;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.isTwopiece = function() {
-	return this.disc != null && this.ring != null;
+	return this.hasDisc() && this.hasRing();
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.isSingle = function() {
@@ -83,8 +130,8 @@ ObjectHexagon.prototype.select = function() {
 ObjectHexagon.prototype.unselect = function() {
 	this.selected = false;
 };
+//--------------------------------------------------------
 ObjectHexagon.prototype.reset = function() {
 	this.selected = false;
-	this.disc = null;
-	this.ring = null;
+	this.value = 0;
 };

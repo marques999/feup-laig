@@ -251,23 +251,26 @@ validateRingOwnership(_, _):- messageNotOwned.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-serverPlaceDisc(Board, Player, X-Y, NewBoard, NewPlayer):-
+serverPlaceDisc(Board, Piece, Player, X-Y):-
+	serverPieceAllowed(Piece, disc),
 	validateCoordinates(X, Y), !,
-	validatePlaceDisc(X, Y, Board, Player), !,
-	getPlayerColor(Player, Color),
-	placeDisc(X-Y, Color, Board, NewBoard),
-	decrementDiscs(Player, NewPlayer).
+	validatePlaceDisc(X, Y, Board, Player).
 
-serverPlaceRing(Board, Player, X-Y, NewBoard, NewPlayer):-
+serverPlaceRing(Board, Piece, Player, X-Y):-
+	serverPieceAllowed(Piece, ring),
 	validateCoordinates(X, Y), !,
-	validatePlaceRing(X, Y, Board, Player), !,
-	getPlayerColor(Player, Color),
-	placeRing(X-Y, Color, Board, NewBoard),
-	decrementRings(Player, NewPlayer).
+	validatePlaceRing(X, Y, Board, Player).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-serverMoveDisc(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
+serverPieceAllowed(null, _).
+serverPieceAllowed(disc, ring).
+serverPieceAllowed(ring, disc).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+serverMoveDisc(Board, Piece, Player, FromX-FromY, ToX-ToY):-
+	serverPieceAllowed(Piece, disc),
 	validateCoordinates(FromX, FromY),
 	getSymbol(FromX, FromY, Board, Source),
 	validateSource(Source, disc), !,
@@ -275,10 +278,10 @@ serverMoveDisc(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
 	validateCoordinates(ToX, ToY), !,
 	validateBothCoordinates(FromX, FromY, ToX, ToY),
 	getSymbol(ToX, ToY, Board, Destination),
-	validateDestination(Destination, ring), !,
-	moveDisc(FromX-FromY, ToX-ToY, Board, NewBoard).
+	validateDestination(Destination, ring).
 
-serverMoveRing(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
+serverMoveRing(Board, Piece, Player, FromX-FromY, ToX-ToY):-
+	serverPieceAllowed(Piece, ring),
 	validateCoordinates(FromX, FromY),
 	getSymbol(FromX, FromY, Board, Source),
 	validateSource(Source, ring), !,
@@ -286,8 +289,7 @@ serverMoveRing(Board, Player, FromX-FromY, ToX-ToY, NewBoard):-
 	validateCoordinates(ToX, ToY), !,
 	validateBothCoordinates(FromX, FromY, ToX, ToY),
 	getSymbol(ToX, ToY, Board, Destination),
-	validateDestination(Destination, disc), !,
-	moveRing(FromX-FromY, ToX-ToY, Board, NewBoard).
+	validateDestination(Destination, disc).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -354,29 +356,26 @@ startGame(Socket, Game, bvb):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% verifica se ainda restam peças ao jogador atual
-playGame(_, Game, _):-
-	getCurrentPlayer(Game, Player),
-	\+hasPieces(Player), !,
-	getGameBoard(Game, Board),
-	printBoard(Board),
-	messagePlayerLost(Player).
+% verifica se ainda restam peças ao jogador 1
+serverCheckGame(_, Player1, _, p1Defeated):-
+	\+hasPieces(Player1).
+
+% verifica se ainda restam peças ao jogador 2
+serverCheckGame(_, _, Player2, p2Defeated):-
+	\+hasPieces(Player2).
 
 % verifica se o jogador 1 venceu a partida atual
-playGame(_, Game, _):-
-	getGameBoard(Game, Board),
-	getPlayer1(Game, Player1),
-	hasPlayerWon(Board, Player1), !,
-	printBoard(Board),
-	messagePlayerWins(Player1).
+serverCheckGame(Board, Player1, _, p1Wins):-
+	hasPlayerWon(Board, Player1).
 
 % verifica se o jogador 2 venceu a partida atual
-playGame(_, Game, _):-
-	getGameBoard(Game, Board),
-	getPlayer2(Game, Player2),
-	hasPlayerWon(Board, Player2), !,
-	printBoard(Board),
-	messagePlayerWins(Player2).
+serverCheckGame(Board, _, Player2, p2Wins):-
+	hasPlayerWon(Board, Player2).
+
+% verifica se o jogo ainda não terminou
+serverCheckGame(_, _, _, continue).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % ciclo de jogo para uma partida Player vs Player
 playGame(Socket, Game, pvp):-
@@ -406,24 +405,6 @@ move(Game, Board, Player, NewGame):-
 	setGameBoard(Game, Board, TempGame),
 	setCurrentPlayer(TempGame, Player, TempGame2),
 	changePlayerTurn(TempGame2, NewGame), !.
-
-% acção do computador: realizar uma jogada (constitúida por dois movimentos)
-playBot(_, Game, NewGame):-
-	getBotMode(Game, BotMode),
-	getGameBoard(Game, Board),
-	getCurrentPlayer(Game, Player),
-	printState(Game),
-	letBotPlay(Board, Player, BotMode, NewBoard, NewPlayer),
-	move(Game, NewBoard, NewPlayer, NewGame).
-
-% acção do jogador humano: realizar uma jogada (constituída por dois movimentos)
-playHuman(Socket, Game, NewGame):-
-	getGameBoard(Game, Board),
-	getCurrentPlayer(Game, Player),
-	printState(Game),
-	letHumanPlay(Socket, Board, Player, Reply, TempBoard, TempPlayer),
-	letHumanPlaySecond(Socket, TempBoard, TempPlayer, Reply, NewBoard, NewPlayer),
-	move(Game, NewBoard, NewPlayer, NewGame).
 
 % acção do computador: realizar a jogada inicial (apenas um movimento "colocar peça")
 startBot(_, Game, NewGame):-
@@ -460,99 +441,3 @@ letBotPlay(Board, Player, random, NewBoard, NewPlayer):-
 % pede ao computador ganancioso para realizar uma jogada (constituída por dois movimentos)
 letBotPlay(Board, Player, smart, NewBoard, NewPlayer):-
 	botSmartMove(Board, Player, NewBoard, NewPlayer), !.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-letHumanPlayInitial(Socket, Board, Player, NewBoard, NewPlayer):-
-	write('> SELECT INITIAL MOVE:'), nl,
-	repeat,
-	readRequest(Socket, Stream, Request),
-	format('> Request: ~q~n', [Request]),
-	initialRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
-	format_reply(Stream, Status, MyReply),
-	close_stream(Stream),
-	(MyReply = ack), !.
-
-initialRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
-	catch(initialAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
-initialRequest(_, 'rej', '400 Bad Request', _, _, _, _).
-
-initialAction(placeDisc(Position), ack, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer).
-initialAction(placeRing(Position), ack, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-letHumanPlay(Socket, Board, Player, MyReply, NewBoard, NewPlayer):-
-	write('SELECT FIRST MOVE :'), nl, nl,
-	repeat,
-	readRequest(Socket, Stream, Request),
-	format('> Request: ~q~n',[Request]),
-	firstActionRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
-	format_reply(Stream, Status, MyReply),
-	close_stream(Stream),
-	(MyReply \= rej), !.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-firstActionRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
-	catch(firstAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
-firstActionRequest(_, 'rej', '400 Bad Request', _, _, _, _).
-
-firstAction(placeDisc(Position), ring, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer), !.
-firstAction(placeRing(Position), disc, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer), !.
-firstAction(moveDisc(From, To), ring, Board, Player, NewBoard, _):-
-	serverMoveDisc(Board, Player, From, To, NewBoard), !.
-firstAction(moveRing(From, To), disc, Board, Player, NewBoard, _):-
-	serverMoveRing(Board, Player, From, To, NewBoard), !.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-letHumanPlaySecond(Socket, Board, Player, disc, NewBoard, NewPlayer):-
-	printBoard(Board),
-	write('SELECT SECOND MOVE! (DISC)'), nl, nl,
-	repeat,
-	readRequest(Socket, Stream, Request),
-	format('> Request: ~q~n',[Request]),
-	secondDiscRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
-	format_reply(Stream, Status, MyReply),
-	close_stream(Stream),
-	(MyReply = ack), !.
-
-letHumanPlaySecond(Socket, Board, Player, ring, NewBoard, NewPlayer):-
-	printBoard(Board),
-	write('SELECT SECOND MOVE! (RING)'), nl, nl,
-	repeat,
-	readRequest(Socket, Stream, Request),
-	format('> Request: ~q~n',[Request]),
-	secondRingRequest(Request, MyReply, Status, Board, Player, NewBoard, NewPlayer),
-	format_reply(Stream, Status, MyReply),
-	close_stream(Stream),
-	(MyReply = ack), !.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-secondDiscRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
-	catch(secondDiscAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
-secondDiscRequest(_, 'rej', '400 Bad Request', _, _, _, _).
-
-secondDiscAction(placeDisc(Position), ack, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceDisc(Board, Player, Position, NewBoard, NewPlayer), !.
-secondDiscAction(moveDisc(From,To), ack, Board, Player, NewBoard, Player):-
-	serverMoveDisc(Board, Player, From, To, NewBoard), !.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-secondRingRequest(Request, MyReply, '200 OK', Board, Player, NewBoard, NewPlayer):-  
-	catch(secondRingAction(Request, MyReply, Board, Player, NewBoard, NewPlayer), error(_,_), fail), !.
-secondRingRequest(_, 'rej', '400 Bad Request', _, _, _, _).
-
-secondRingAction(placeRing(Position), ack, Board, Player, NewBoard, NewPlayer):-
-	serverPlaceRing(Board, Player, Position, NewBoard, NewPlayer), !.
-secondRingAction(moveRing(From,To), ack, Board, Player, NewBoard, Player):-
-	serverMoveRing(Board, Player, From, To, NewBoard), !.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

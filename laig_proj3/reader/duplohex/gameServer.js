@@ -9,15 +9,21 @@
  * @param {String} port - porta de rede onde o servidor HTTP se encontra a correr
  * @return {null}
  */
-function GameServer(board, settings, address, port) {
+function GameServer(scene, address, port) {
 	//--------------------------------------------------------
-	this.gameBoard = board;
+	this.xmlScene = scene;
+	this.gameBoard = scene.board;
 	this.gameRunning = false;
 	this.httpAddress = address || 'localhost';
 	this.httpPort = port || 8081;
 	this.validResponse = false;
-	this.gameSettings = settings;
+	this.gameSettings = scene.gameSettings;
 	this.serverAddress = 'http://' + this.httpAddress + ':' + this.httpPort + '/';
+	//--------------------------------------------------------
+	this.playerName = {
+		'black': 'blackPlayer',
+		'white': 'whitePlayer'
+	}
 };
 //--------------------------------------------------------
 GameServer.prototype = Object.create(Object.prototype);
@@ -30,17 +36,27 @@ GameServer.prototype.requestGame = function() {
 	}
 
 	var requestString = this.gameSettings.toString();
+	var self = this;
 
-	this.getPrologRequest(requestString, function()
+	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
 
-		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
-			console.log("SEND COMMAND COMPLETE");
+		if (serverResponse.status == 200 && serverResponse.responseText == 'ack' ) {
+			self.xmlScene.onConnect();
 		}
-		else if (serverResponse.status && serverResponse.responseText == 'rej') {
-			console.log("MESSAGE REJECTED!");
+		else if (serverResponse.responseText == 'no' || serverResponse.responseText == 'rej') {
+			alert("connection error! another game is running on that server...");
+			self.xmlScene.onServerError();
 		}
+		else {
+			alert("unknown response! are you sure it's a  valid game server?");
+			self.xmlScene.onServerError();
+		}
+	}, function(httpError)
+	{
+		alert("connection error!");
+		self.xmlScene.onServerError();
 	});
 
 	return true;
@@ -53,16 +69,15 @@ GameServer.prototype.checkValid = function(first_argument) {
 GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onError) {
 
 	var request = new XMLHttpRequest();
+	var self = this;
 
 	request.open('GET', this.serverAddress + requestString, true);
 	request.onload = onSuccess || function(data) {
-		console.log("Request successful. Reply: " + data.target.response);
 		this.validResponse = true;
 	};
 
 	request.onerror = onError || function() {
-		console.log("Error waiting for response");
-		this.validResponse = false;
+		self.gameBoard.onDisconnect();
 	};
 
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -86,12 +101,13 @@ GameServer.prototype.requestReset = function()
 //--------------------------------------------------------
 GameServer.prototype.requestQuit = function()
 {
+	var self = this;
 	this.getPrologRequest('quit', function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
 
 		if (serverResponse.status == 200 && serverResponse.responseText == 'goodbye') {
-			return true;
+			self.xmlScene.onDisconnect();
 		}
 	});
 
@@ -123,68 +139,88 @@ GameServer.prototype.requestPlayerInfo = function(playerColor, boardType)
 	});
 };
 //--------------------------------------------------------
-GameServer.prototype.requestBot = function()
+GameServer.prototype.requestStatus = function(gameBoard, player1, player2)
 {
-	var self = this;
-	var requestString = 'botMove';
+	var player1State = this.serializePlayer(player1);
+	var player2State = this.serializePlayer(player2);
+	var requestString = "getStatus(" + gameBoard + "," + player1State + "," + player2State + ")";
 
 	this.getPrologRequest(requestString, function(httpResponse)
-	{
-		var serverResponse = httpResponse.currentTarget;
-		var botStruct = null;
-
-		if (serverResponse.status == 200)
-		{
-			try
-			{
-				botStruct = JSON.parse(serverResponse.responseText);
-				self.gameMode.processMove(botStruct);
-			}
-			catch (e)
-			{
-			    alert(e);
-			}
-		}
-	});
-};
-//--------------------------------------------------------
-GameServer.prototype.requestStatus = function()
-{
-	this.getPrologRequest('status', function()
 	{
 		var serverResponse = httpResponse.currentTarget;
 
 		if (serverResponse.status == 200) { // HTTP OK
 
-			if (serverResponse.responseText = 'NOP') {
-				console.log("GAME IS STILL RUNNING");
+			if (serverResponse.responseText = 'continue') {
 			}
-			else if (serverResponse.responseText == 'P1W') {
-				console.log("PLAYER 1 WON!");
+			else if (serverResponse.responseText == 'p1Wins') {
+				alert("PLAYER 1 WON!");
 			}
-			else if(serverResponse.responseText == 'P1D') {
-				console.log("PLAYER 1 HAS NO PIECES LEFT AND WAS DEFEATED");
+			else if(serverResponse.responseText == 'p1Defeated') {
+				alert("PLAYER 1 HAS NO PIECES LEFT AND WAS DEFEATED");
 			}
-			else if (serverResponse.responseText == 'P2W') {
-				console.log("PLAYER 2 WON!");
+			else if (serverResponse.responseText == 'p2Wins') {
+				alert("PLAYER 2 WON!");
 			}
-			else if (serverResponse.responseText == 'P2D') {
-				console.log("PLAYER 2 HAS NO PIECES LEFT AND WAS DEFEATED");
+			else if (serverResponse.responseText == 'p2Defeated') {
+				alert("PLAYER 2 HAS NO PIECES LEFT AND WAS DEFEATED");
 			}
 			else {
-				console.log("RECEIVED INVALID MESSAGE");
-				validResponse = false;
+				alert("RECEIVED INVALID MESSAGE");
 			}
 		}
 	});
 };
 //--------------------------------------------------------
-GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, DestinationY) {
-	var requestString = this.formatMoveCoords('moveDisc', SourceX, SourceY, DestinationX, DestinationY);
+GameServer.prototype.requestBotAction = function(Board, currentPiece, initialMove) {
+	//--------------------------------------------------------
+	var serializedPlayer = this.serializePlayer(this.gameBoard.getPlayer());
+	var botMode = this.gameSettings.getDifficulty();
+	var requestString = null;
 	var self = this;
+	//--------------------------------------------------------
+	if (initialMove) {
+		requestString = 'getInitialMove(';
+	}
+	else {
+		if (botMode == 'smart') {
+			requestString = 'getSmartMove(';
+		}
+		else {
+			requestString = 'getRandomMove(';
+		}
+	}
+	//--------------------------------------------------------
+	requestString += Board + "," + currentPiece + "," + serializedPlayer + ")";
+	//--------------------------------------------------------
+	this.getPrologRequest(requestString, function(httpResponse) {
+		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
+		if (serverResponse.status == 200 && serverResponse.responseText != 'no') {
+			self.gameBoard.unserializeAction(serverResponse.responseText);
+		}
+		else {
+			self.gameBoard.onResetPlace();
+		}
+	}, function(e)
+	{
+		self.gameBoard.onResetPlace();
+		self.gameBoard.onDisconnect();
+	});
+};
+//--------------------------------------------------------
+GameServer.prototype.requestMoveDisc = function(Board, SourceX, SourceY, DestinationX, DestinationY) {
+	//--------------------------------------------------------
+	var serializedPlayer = this.serializePlayer(this.gameBoard.getPlayer());
+	var playedPiece = this.gameBoard.getPlayedPiece();
+	var requestString = this.serializeMoveDisc(Board, playedPiece, serializedPlayer, SourceX, SourceY, DestinationX, DestinationY);
+	var self = this;
+	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
-		if (httpResponse.currentTarget.status == 200) {
+		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
+		if (serverResponse.status == 200 && serverResponse.responseText == 'yes') {
 			self.gameBoard.onPlacePiece();
 		}
 		else {
@@ -196,12 +232,18 @@ GameServer.prototype.requestMoveDisc = function(SourceX, SourceY, DestinationX, 
 	});
 };
 //--------------------------------------------------------
-GameServer.prototype.requestMoveRing = function(SourceX, SourceY, DestinationX, DestinationY) {
-	var requestString = this.formatMoveCoords('moveRing', SourceX, SourceY, DestinationX, DestinationY);
+GameServer.prototype.requestMoveRing = function(Board, SourceX, SourceY, DestinationX, DestinationY) {
+	//--------------------------------------------------------
+	var serializedPlayer = this.serializePlayer(this.gameBoard.getPlayer());
+	var playedPiece = this.gameBoard.getPlayedPiece();
+	var requestString = this.serializeMoveRing(Board, playedPiece, serializedPlayer, SourceX, SourceY, DestinationX, DestinationY);
 	var self = this;
+	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
-		if (httpResponse.currentTarget.status == 200) {
+		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
+		if (serverResponse.status == 200 && serverResponse.responseText == 'yes') {
 			self.gameBoard.onPlacePiece();
 		}
 		else {
@@ -213,12 +255,20 @@ GameServer.prototype.requestMoveRing = function(SourceX, SourceY, DestinationX, 
 	});
 };
 //--------------------------------------------------------
-GameServer.prototype.requestPlaceDisc = function(DestinationX, DestinationY) {
-	var requestString = this.formatPlaceCoords('placeDisc', DestinationX, DestinationY);
+GameServer.prototype.requestPlaceDisc = function(Board, DestinationX, DestinationY) {
+	//--------------------------------------------------------
+	var serializedPlayer = this.serializePlayer(this.gameBoard.getPlayer());
+	var playedPiece = this.gameBoard.getPlayedPiece();
+	var requestString = this.serializePlaceDisc(Board, playedPiece, serializedPlayer, DestinationX, DestinationY);
+	console.log(requestString);
+
 	var self = this;
+	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
-		if (httpResponse.currentTarget.status == 200) {
+		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
+		if (serverResponse.status == 200 && serverResponse.responseText == 'yes') {
 			self.gameBoard.onPlacePiece();
 		}
 		else {
@@ -230,12 +280,18 @@ GameServer.prototype.requestPlaceDisc = function(DestinationX, DestinationY) {
 	});
 };
 //--------------------------------------------------------
-GameServer.prototype.requestPlaceRing = function(DestinationX, DestinationY) {
-	var requestString = this.formatPlaceCoords('placeRing', DestinationX, DestinationY);
+GameServer.prototype.requestPlaceRing = function(Board, DestinationX, DestinationY) {
+	//--------------------------------------------------------
+	var serializedPlayer = this.serializePlayer(this.gameBoard.getPlayer());
+	var playedPiece = this.gameBoard.getPlayedPiece();
+	var requestString = this.serializePlaceRing(Board, playedPiece, serializedPlayer, DestinationX, DestinationY);
 	var self = this;
+	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
-		if (httpResponse.currentTarget.status == 200) {
+		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
+		if (serverResponse.status == 200 && serverResponse.responseText == 'yes') {
 			self.gameBoard.onPlacePiece();
 		}
 		else {
@@ -247,10 +303,22 @@ GameServer.prototype.requestPlaceRing = function(DestinationX, DestinationY) {
 	});
 };
 //--------------------------------------------------------
-GameServer.prototype.formatPlaceCoords = function(Command, SourceX, SourceY) {
-	return Command + '(' + SourceX + '-' + SourceY + ')';
+GameServer.prototype.serializePlayer = function(playerState) {
+	return "playerState(" + this.playerName[playerState.color] + "," + playerState.discs + "," + playerState.rings + ")";
 };
 //--------------------------------------------------------
-GameServer.prototype.formatMoveCoords = function(Command, SourceX, SourceY, DestinationX, DestinationY) {
-	return Command + '(' + SourceX + '-' + SourceY + "," + DestinationX + '-' + DestinationY + ')';
+GameServer.prototype.serializePlaceDisc = function(Board, Piece, Player, SourceX, SourceY) {
+	return 'placeDisc(' + Board + "," + Piece + "," + Player + "," + SourceX + '-' + SourceY + ')';
+};
+//--------------------------------------------------------
+GameServer.prototype.serializePlaceRing = function(Board, Piece, Player, SourceX, SourceY) {
+	return 'placeRing(' + Board + "," + Piece + "," + Player + "," +  SourceX + '-' + SourceY + ')';
+};
+//--------------------------------------------------------
+GameServer.prototype.serializeMoveDisc = function(Board, Piece, Player, SourceX, SourceY, DestinationX, DestinationY) {
+	return 'moveDisc(' + Board + "," + Piece + "," + Player + "," + SourceX + '-' + SourceY + "," + DestinationX + '-' + DestinationY + ')';
+};
+//--------------------------------------------------------
+GameServer.prototype.serializeMoveRing = function(Board, Piece, Player, SourceX, SourceY, DestinationX, DestinationY) {
+	return 'moveRing(' + Board + "," + Piece + "," + Player + "," +  SourceX + '-' + SourceY + "," + DestinationX + '-' + DestinationY + ')';
 };

@@ -8,9 +8,9 @@
  * @param {Number} position - posição absoluta da peça
  * @return {null}
  */
-function ObjectRing(scene, color, position) {
+function ObjectRing(scene, id, color, position) {
 	//--------------------------------------------------------
-	GamePiece.call(this, scene, position, color);
+	GamePiece.call(this, scene, id, position, color);
 	//--------------------------------------------------------
 	this.invertedCylinder = new MyCylinderInverted(scene, 0.9, 1.0, 1.0, 16, 32);
 	this.cylinder = new MyCylinder(scene, 0.9, 1.0, 1.0, 16, 32);

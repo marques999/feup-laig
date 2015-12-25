@@ -47,6 +47,7 @@ MyInterface.prototype.init = function(application) {
 	//--------------------------------------------------------
 	this.lightsState = {};
 	this.lightsId = [];
+	this.serverConnected = false;
 	//--------------------------------------------------------
 	this.playerColor = 'blackPlayer';
 	this.gui = new dat.GUI();
@@ -121,7 +122,7 @@ MyInterface.prototype.settingsMenu = function() {
 	}).listen();
 	//---------------------------------------------------------
 	this.settingsGroup.add(this, "playerColor", this.playerColors).name("Player Color").onChange(function() {
-		self.board.updatePlayer(self.playerColor);
+		self.board.updatePlayer(null, self.playerColor);
 	}).listen();
 	//---------------------------------------------------------
 	this.settingsGroup.add(this, "updatePeriod", 1, 60).name("Target FPS").listen();
@@ -150,14 +151,17 @@ MyInterface.prototype.settingsMenu = function() {
 	//---------------------------------------------------------
 	this.modeGroup.add(this.gameMode, "pvp").name("Player VS Player").listen().onChange(function(value) {
 		self.toggleBoolean(self.gameMode, "pvp");
+		self.board.updateMode("pvp");
 	});
 	//---------------------------------------------------------
 	this.modeGroup.add(this.gameMode, "pvb").name("Player VS Bot").listen().onChange(function(value) {
 		self.toggleBoolean(self.gameMode, "pvb");
+		self.board.updateMode("pvb");
 	});
 	//---------------------------------------------------------
 	this.modeGroup.add(this.gameMode, "bvb").name("Bot VS Bot").listen().onChange(function(value) {
 		self.toggleBoolean(self.gameMode, "bvb");
+		self.board.updateMode("bvb");
 	});
 	//---------------------------------------------------------
 	this.difficultyGroup.add(this.gameDifficulty, "random").name("Random Bots").listen().onChange(function(value) {
@@ -194,15 +198,70 @@ MyInterface.prototype.settingsMenu_close = function(self) {
 	}
 };
 //--------------------------------------------------------
-MyInterface.prototype.gameMenu = function() {
+MyInterface.prototype.onConnect = function() {
+	this.serverConnected = true;
+	this.connectionMenu_close();
+	this.connectionMenu();
+}
+//--------------------------------------------------------
+MyInterface.prototype.onError = function() {
+	this.serverConnected = false;
+}
+//--------------------------------------------------------
+MyInterface.prototype.onDisconnect = function() {
+	this.serverConnected = false;
+	this.connectionMenu_close();
+	this.connectionMenu();
+}
+//--------------------------------------------------------
+MyInterface.prototype.connectionMenu = function() {
 
 	if (this.scene == undefined || this.scene == null) {
 		return;
+	}
+	//--------------------------------------------------------
+	var self = this;
+	//--------------------------------------------------------
+	this.connectionGroup = this.gui.addFolder("Server");
+	this.connectionGroup.open();
+	this.connectionGroup.add(this.scene, "serverHostname").name("Hostname");
+	this.connectionGroup.add(this.scene, "serverPort").name("Port");
+	//--------------------------------------------------------
+	if (this.serverConnected) {
+		this.connectionGroup.add(this.scene, "disconnectServer").name("Disconnect");
+	}
+	else {
+		this.connectionGroup.add(this.scene, "initServer").name("Connect");
+	}
+	//--------------------------------------------------------
+	this.connectionGroup.add(this, "mainMenu").name("Exit").onChange(function() {
+		self.connectionMenu_close();
+	});
+};
+//--------------------------------------------------------
+MyInterface.prototype.connectionMenu_close = function(self) {
+
+	if (this.connectionGroup != undefined && this.connectionGroup != null) {
+		this.deleteFolder("Server");
+		this.connectionGroup = undefined;
+	}
+};
+//--------------------------------------------------------
+MyInterface.prototype.gameMenu = function() {
+
+	if (this.scene == undefined || this.scene == null) {
+		return false;
+	}
+
+	if (!this.serverConnected) {
+		alert("ERROR: you are not connected to a server!");
+		return false;
 	}
 	//---------------------------------------------------------
 	var self = this;
 	//---------------------------------------------------------
 	this.mainMenu_close();
+	this.board.startGame();
 	this.gameGroup = this.gui.addFolder("Game");
 	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
 	this.cameraViewsGroup = this.gui.addFolder("Camera Views");
@@ -214,6 +273,7 @@ MyInterface.prototype.gameMenu = function() {
 	//---------------------------------------------------------
 	this.gameGroup.add(this, "mainMenu").name("Quit Game").onChange(function(){
 		self.gameMenu_close();
+		self.board.resetBoard();
 		self.scene.resetDisplay();
 	});
 	//---------------------------------------------------------
@@ -266,8 +326,9 @@ MyInterface.prototype.mainMenu = function() {
 	this.mainGroup = this.gui.addFolder("Main Menu");
 	this.mainGroup.open();
 	//--------------------------------------------------------
-	this.mainGroup.add(this, "gameMenu").name("Start Game").onChange(function() {
-		self.scene.initServer();
+	this.mainGroup.add(this, "gameMenu").name("Start Game");
+	this.mainGroup.add(this, "connectionMenu").name("Connection").onChange(function() {
+		self.mainMenu_close();
 	});
 	this.mainGroup.add(this, "settingsMenu").name("Settings");
 	this.mainGroup.add(this, "aboutMenu").name("About");

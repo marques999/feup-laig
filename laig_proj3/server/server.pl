@@ -24,7 +24,7 @@ server :-
 	write('Opened Server'),nl,
 	socket_server_open(Port, Socket),
 	serverHandshake(Socket, Game, Mode),
-	startGame(Socket, Game, Mode),
+	server_loop(Socket),
 	socket_server_close(Socket),
 	write('Closed Server'),nl.
 
@@ -42,7 +42,7 @@ serverReply(Stream, Request, Reply):-
 	% Generate Response
 	format('Request: ~q~n',[Request]),
 	format('Reply: ~q~n', [Reply]),
-	
+
 	% Output Response
 	format(Stream, 'HTTP/1.0 ~p~n', 200),
 	format(Stream, 'Access-Control-Allow-Origin: *~n', []),
@@ -53,7 +53,7 @@ serverReply(Stream, Request, Reply):-
 serverHandshake(Socket, Game, Mode):-
 	repeat,
 	socket_server_accept(Socket, _Client, Stream, [type(text)]),
-	
+
 	catch((
 		read_request(Stream, Request),
 		read_header(Stream)
@@ -78,7 +78,7 @@ format_reply(Stream, Status, Reply):-
 	format(Stream, 'Content-Type: text/plain~n~n', []),
 	format(Stream, '~p', [Reply]).
 
-% Server Loop 
+% Server Loop
 % Uncomment writes for more information on incomming connections
 server_loop(Socket) :-
 	repeat,
@@ -93,29 +93,29 @@ server_loop(Socket) :-
 			close_stream(Stream),
 			fail
 		)),
-		
+
 		% Generate Response
 		handle_request(Request, MyReply, Status),
 		format('Request: ~q~n',[Request]),
 		format('Reply: ~q~n', [MyReply]),
-		
+
 		% Output Response
 		format_reply(Stream, Status, MyReply),
 		close_stream(Stream),
 	(Request = quit), !.
-	
+
 close_stream(Stream) :- flush_output(Stream), close(Stream).
 
 % Handles parsed HTTP requests
 % Returns 200 OK on successful aplication of parse_input on request
 % Returns 400 Bad Request on syntax error (received from parser) or on failure of parse_input
 handle_request(Request, MyReply, '200 OK') :- catch(parse_input(Request, MyReply),error(_,_),fail), !.
-handle_request(syntax_error, 'Syntax Error', '400 Bad Request') :- !.
-handle_request(_, 'Bad Request', '400 Bad Request').
+handle_request(syntax_error, 'no', '400 Bad Request') :- !.
+handle_request(_, 'no', '400 Bad Request').
 
 handshake_request(Request, MyReply, '200 OK', Game, Mode):- catch(parse_handshake(Request, MyReply, Game, Mode),error(_,_),fail), !.
-handshake_request(syntax_error, 'rej', '400 Bad Request', _, _) :- !.
-handshake_request(_, 'rej', '400 Bad Request', _, _).
+handshake_request(syntax_error, 'no', '400 Bad Request', _, _) :- !.
+handshake_request(_, 'no', '400 Bad Request', _, _).
 
 % Reads first Line of HTTP Header and parses request
 % Returns term parsed from Request-URI
@@ -125,10 +125,10 @@ read_request(Stream, Request) :-
 	print_header_line(LineCodes),
 	atom_codes('GET /',Get),
 	append(Get,RL,LineCodes),
-	read_request_aux(RL,RL2),	
+	read_request_aux(RL,RL2),
 	catch(read_from_codes(RL2, Request), error(syntax_error(_),_), fail), !.
 read_request(_,syntax_error).
-	
+
 read_request_aux([32|_],[46]) :- !.
 read_request_aux([C|Cs],[C|RCs]) :- read_request_aux(Cs, RCs).
 
@@ -152,11 +152,10 @@ print_header_line(_).
 
 parse_input(handshake, handshake).
 parse_input(reset, ack).
-parse_input(init(Gamemode, BotMode), GameMode).
 parse_input(quit, goodbye).
 
 parse_handshake(pvp(Player,Matrix), ack, Game, pvp):-
-	call(Matrix,Board),
+	call(Matrix, Board),
 	initializePvP(Game,Board,Player).
 
 parse_handshake(pvb(Player,BotMode,Matrix), ack, Game, pvb):-
@@ -167,9 +166,22 @@ parse_handshake(bvb(Player,BotMode,Matrix), ack, Game, bvb):-
 	call(Matrix, Board),
 	initializeBvB(Game,Board,Player,BotMode).
 
-parse_input(playerPieces(blackPlayer, default), '{"color":"black",discs":24,"rings":24}').
-parse_input(playerPieces(whitePlayer, default), '{"color":"white",discs":24,"rings":24}').
-parse_input(playerPieces(blackPlayer, small), '{"color":"black",discs":17,"rings":19}').
-parse_input(playerPieces(whitePlayer, small), '{"color":"white",discs":18,"rings":18}').
-parse_input(playerPieces(blackPlayer, diagonal), '{"color":"black",discs":20,"rings":20}').
-parse_input(playerPieces(whitePlayer, diagonal), '{"color":"white",discs":21,"rings":21}').
+parse_input(placeDisc(Board, Piece, Player, Position), yes):-
+	serverPlaceDisc(Board, Piece, Player, Position).
+parse_input(placeRing(Board, Piece, Player, Position), yes):-
+	serverPlaceRing(Board, Piece, Player, Position).
+
+parse_input(moveDisc(Board, Piece, Player, From, To), yes):-
+	serverMoveDisc(Board, Piece, Player, From, To).
+parse_input(moveRing(Board, Piece, Player, From, To), yes):-
+	serverMoveRing(Board, Piece, Player, From, To).
+
+parse_input(getRandomMove(Board, Piece, Player), Reply):-
+	botRandomMove(Board, Piece, Player, Reply).
+parse_input(getSmartMove(Board, Piece, Player), Reply):-
+	botSmartMove(Board, Piece, Player, Reply).
+parse_input(getInitialMove(Board, Piece, Player), Reply):-
+	botInitialMove(Board, Piece, Player, Reply).
+
+parse_input(getStatus(Board, Player1, Player2), Reply):-
+	serverCheckGame(Board, Player1, Player2, Reply).

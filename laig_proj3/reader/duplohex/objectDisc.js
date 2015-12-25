@@ -8,9 +8,9 @@
  * @param {Number} position - posição absoluta da peça
  * @return {null}
  */
-function ObjectDisc(scene, color, position) {
+function ObjectDisc(scene, id, color, position) {
 	//--------------------------------------------------------
-	GamePiece.call(this, scene, position, color);
+	GamePiece.call(this, scene, id, position, color);
 	//--------------------------------------------------------
 	this.cylinder = new MyCylinder(scene, 1.0, 0.65, 0.65, 16, 32);
 	this.circle = new MyCircle(scene, 32, 0.65);

@@ -1,8 +1,9 @@
-function GamePiece(scene, position, color) {
+function GamePiece(scene, id, position, color) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
 	//--------------------------------------------------------
 	this.coords = [0.0, 0.0, 0.0];
+	this.id = id;
 	this.position = position;
 	this.cellX = null;
 	this.cellY = null;
@@ -59,6 +60,10 @@ GamePiece.prototype.place = function(x, y) {
 GamePiece.prototype.wasPlaced = function() {
 	return this.placed;
 };
+//--------------------------------------------------------
+GamePiece.prototype.getId = function() {
+	return this.id;
+}
 //--------------------------------------------------------
 GamePiece.prototype.setColor = function(color) {
 	this.material = this.materials[color];

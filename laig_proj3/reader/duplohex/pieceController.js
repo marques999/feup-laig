@@ -68,7 +68,7 @@ PieceController.prototype.initialize = function() {
 			this.p1DiscStacks[nStack] = [];
 		}
 
-		this.pieces[i] = new ObjectDisc(this.scene, this.player1.color,
+		this.pieces[i] = new ObjectDisc(this.scene, i, this.player1.color,
 		[
 			(nStack % 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[0],
 			this.p1DiscStacks[nStack].length + this.boxPos[1] - this.boardHeight,
@@ -86,7 +86,7 @@ PieceController.prototype.initialize = function() {
 			this.p1RingStacks[nStack] = [];
 		}
 
-		this.pieces[i] = new ObjectRing(this.scene, this.player1.color,
+		this.pieces[i] = new ObjectRing(this.scene, i, this.player1.color,
 		[
 			(nStack % 2) * this.horizontalSpace + this.generateRandom() + this.stackSpace + this.boxPos[0],
 			this.p1RingStacks[nStack].length * this.verticalSpace + this.boxPos[1] - this.boardHeight,
@@ -104,7 +104,7 @@ PieceController.prototype.initialize = function() {
 			this.p2DiscStacks[nStack] = [];
 		}
 
-		this.pieces[i] = new ObjectDisc(this.scene, this.player2.color,
+		this.pieces[i] = new ObjectDisc(this.scene, i, this.player2.color,
 		[
 			-((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[0]),
 			+(this.p2DiscStacks[nStack].length + this.boxPos[1] - this.boardHeight),
@@ -122,7 +122,7 @@ PieceController.prototype.initialize = function() {
 			this.p2RingStacks[nStack] = [];
 		}
 
-		this.pieces[i] = new ObjectRing(this.scene, this.player2.color,
+		this.pieces[i] = new ObjectRing(this.scene, i, this.player2.color,
 		[
 			-((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.stackSpace + this.boxPos[0]),
 			+(this.p2RingStacks[nStack].length * this.verticalSpace + this.boxPos[1] - this.boardHeight),
@@ -256,6 +256,7 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
 	piece.place(x, y);
+	console.log(pieceId);
 };
 //--------------------------------------------------------
 PieceController.prototype.randomBlackDisc = function() {
@@ -355,6 +356,7 @@ PieceController.prototype.update = function(delta) {
 		return true;
 	}
 
+	this.board.onAnimationFinished();
 	this.animationId = null;
 
 	return false;
@@ -375,7 +377,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 
 		var id = pickingId - this.numberCells - 1;
 		var currentPlayer = this.board.getPlayer();
-
+		console.log("selectPiece id = " + id);
 		if (this.selectedPiece == id) {
 			this.unselectActivePiece();
 			return -1;
