@@ -3,13 +3,6 @@
 %=======================================%
 
 %                 ------------- %
-% #factos                       %
-%                 ------------- %
-
-botMode(random).
-botMode(smart).
-
-%                 ------------- %
 % #predicados                   %
 %                 ------------- %
 
@@ -313,7 +306,7 @@ botRandomAction(4, ring, Board, Player, Reply):-
 
 % acção do computador: fallback
 botRandomAction(_, Piece, Board, Player, Reply):-
-	botRandomMove(Piece, Board, Player, Reply).
+	botRandomMove(Board, Piece, Player, Reply).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -341,7 +334,7 @@ botSmartAction(4, ring, Board, Player, Reply):-
 
 % acção do computador: fallback
 botSmartAction(_, Piece, Board, Player, Reply):-
-	botSmartMove(Piece, Board, Player, Reply).
+	botSmartMove(Board, Piece, Player, Reply).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
