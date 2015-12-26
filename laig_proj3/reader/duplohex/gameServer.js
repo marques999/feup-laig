@@ -31,14 +31,10 @@ GameServer.prototype = Object.create(Object.prototype);
 GameServer.prototype.constructor = GameServer;
 //--------------------------------------------------------
 GameServer.prototype.requestGame = function() {
-
-	if (this.gameSettings == null) {
-		return false;
-	}
-
+	//--------------------------------------------------------
 	var requestString = this.gameSettings.toString();
 	var self = this;
-
+	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
@@ -59,30 +55,28 @@ GameServer.prototype.requestGame = function() {
 		alert("connection error!");
 		self.xmlScene.onServerError();
 	});
-
-	return true;
 };
 //--------------------------------------------------------
 GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onError) {
-
+	//--------------------------------------------------------
 	var request = new XMLHttpRequest();
 	var self = this;
-
+	//--------------------------------------------------------
 	request.open('GET', this.serverAddress + requestString, true);
 	request.onload = onSuccess || function(data) {
 		this.validResponse = true;
 	};
-
+	//--------------------------------------------------------
 	request.onerror = onError || function() {
 		self.gameBoard.onDisconnect();
 	};
-
+	//--------------------------------------------------------
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	request.send();
 };
 //--------------------------------------------------------
-GameServer.prototype.requestQuit = function()
-{
+GameServer.prototype.requestQuit = function() {
+	//--------------------------------------------------------
 	var self = this;
 	//--------------------------------------------------------
 	this.getPrologRequest('quit', function(httpResponse)
@@ -110,11 +104,17 @@ GameServer.prototype.requestStatus = function(gameBoard, player1, player2) {
 			if (serverResponse.responseText == 'p1Wins') {
 				alert("PLAYER 1 WON!");
 			}
-			else if(serverResponse.responseText == 'p1Defeated') {
-				alert("PLAYER 1 HAS NO PIECES LEFT AND WAS DEFEATED");
-			}
 			else if (serverResponse.responseText == 'p2Wins') {
 				alert("PLAYER 2 WON!");
+			}
+			else if (serverResponse.responseText == 'p1Stuck') {
+				alert("PLAYER 1 STUCK!");
+			}
+			else if (serverResponse.responseText == 'p2Stuck') {
+				alert("PLAYER 2 STUCK!");
+			}
+			else if(serverResponse.responseText == 'p1Defeated') {
+				alert("PLAYER 1 HAS NO PIECES LEFT AND WAS DEFEATED");
 			}
 			else if (serverResponse.responseText == 'p2Defeated') {
 				alert("PLAYER 2 HAS NO PIECES LEFT AND WAS DEFEATED");
