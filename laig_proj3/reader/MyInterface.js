@@ -252,7 +252,11 @@ MyInterface.prototype.gameMenu = function() {
 	if (this.scene == undefined || this.scene == null) {
 		return false;
 	}
-
+	//---------------------------------------------------------
+	if (this.board == undefined || this.board == null) {
+		return false;
+	}
+	//---------------------------------------------------------
 	if (!this.serverConnected) {
 		alert("ERROR: you are not connected to a server!");
 		return false;
@@ -293,6 +297,8 @@ MyInterface.prototype.gameMenu = function() {
 	this.gameGroup.add(this, "movieMenu").name("View Replay").onChange(function(){
 		self.gameMenu_close();
 	});
+	//---------------------------------------------------------
+	this.gameGroup.add(this.board, "undoMovement").name("Undo Movement");
 };
 //--------------------------------------------------------
 MyInterface.prototype.gameMenu_close = function() {

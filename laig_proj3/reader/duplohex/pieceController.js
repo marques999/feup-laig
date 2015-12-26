@@ -177,6 +177,22 @@ PieceController.prototype.display = function() {
 	this.scene.popMatrix();
  };
 //--------------------------------------------------------
+PieceController.prototype.pushToStack = function(pieceId) {
+
+	if (pieceId < this.p1Discs_end) {
+
+	}
+	else if (pieceId >= this.p1Rings_start && pieceId < this.p1Rings_end) {
+
+	}
+	else if (pieceId >= this.p2Discs_start && pieceId < this.p2Discs_end){
+
+	}
+	else if (pieceId >= this.p2Rings_start && pieceId < this.p2Rings_end) {
+
+	}
+}
+//--------------------------------------------------------
 PieceController.prototype.removeFromStack = function(pieceId) {
 
 	if (pieceId < this.p1Discs_end) {

@@ -73,7 +73,7 @@ function GameBoard(scene) {
 	this.rotateCamera = false;
 	this.testMode = false;
 	//--------------------------------------------------------
-	this.historyPieces = new PieceController(scene, this, this.player1, this.player2);
+	this.historyPieces = new HistoryController(scene, this, this.player1, this.player2);
 	this.pieceController = this.pieces;
 	this.historyStack = new GameMove(this);
 	//--------------------------------------------------------
@@ -207,7 +207,7 @@ GameBoard.prototype.resetController = function() {
 	this.player1.discs = this.player1.rings = 24;
 	this.player2.discs = this.player2.rings = 24;
 	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
-	this.historyPieces = new PieceController(this.scene, this, this.player1, this.player2);
+	this.historyPieces = new HistoryController(this.scene, this, this.player1, this.player2);
 	this.pieceController = this.pieces;
 };
 //--------------------------------------------------------
@@ -376,6 +376,10 @@ GameBoard.prototype.startGame = function(server) {
 GameBoard.prototype.botTurn = function(piece) {
 	var serializedBoard = this.serializeBoard();
 	this.server.requestBotAction(serializedBoard, piece, this.initialMove);
+}
+//--------------------------------------------------------
+GameBoard.prototype.undoMovement = function() {
+	
 }
 //--------------------------------------------------------
 GameBoard.prototype.display = function() {

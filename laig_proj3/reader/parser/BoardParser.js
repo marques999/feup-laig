@@ -67,8 +67,6 @@ BoardParser.prototype.parse = function(root) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
-	
-	console.log(cameraTop);
 
 	var cameraFront = this.parseCoordinatesXYZ(root, 'frontview');
 	var error = checkValue(cameraFront, 'frontview', root.nodeName);

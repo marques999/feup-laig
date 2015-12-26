@@ -71,6 +71,7 @@ serialInclude([
 	'duplohex/objectRing.js',
 	'duplohex/objectTable.js',
 	'duplohex/pieceController.js',
+	'duplohex/historyController.js',
 	//--------------------------------------------------------
 	'XMLscene.js',
 	'MySceneGraph.js',
