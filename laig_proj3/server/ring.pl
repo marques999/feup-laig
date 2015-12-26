@@ -3,26 +3,20 @@
 %                 ------------- %
 
 % verifica se uma determinada célula se encontra ocupada por um anel preto
-isRing(Symbol, black):-
-	4 is Symbol /\ 12.
+isRing(Symbol, black):- 4 is Symbol /\ 12.
 
 % verifica se uma determinada célula se encontra ocupada por um anel branco
-isRing(Symbol, white):-
-	8 is Symbol /\ 12.
+isRing(Symbol, white):- 8 is Symbol /\ 12.
 
 % verifica se uma determinada célula se encontra ocupada por uma peça simples (anel preto)
-isSingleBlackRing(Symbol):-
-	4 is Symbol /\ 15.
+isSingleBlackRing(Symbol):- 4 is Symbol /\ 15.
 
 % verifica se uma determinada célula se encontra ocupada por uma peça simples (anel branco)
-isSingleWhiteRing(Symbol):-
-	8 is Symbol /\ 15.
+isSingleWhiteRing(Symbol):- 8 is Symbol /\ 15.
 
 % verifica se uma determinada célula se encontra ocupada por uma peça simples (anel qualquer)
-isSingleRing(Symbol):-
-	isSingleBlackRing(Symbol).
-isSingleRing(Symbol):-
-	isSingleWhiteRing(Symbol).
+isSingleRing(Symbol):- isSingleBlackRing(Symbol).
+isSingleRing(Symbol):- isSingleWhiteRing(Symbol).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

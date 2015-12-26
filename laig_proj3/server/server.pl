@@ -10,38 +10,21 @@
 % #server                       %
 %                 ------------- %
 
-% To run, enter 'server.' on sicstus command line after consulting this file.
-% You can test requests to this server by going to http://localhost:8081/<request>.
-% Go to http://localhost:8081/quit to close server.
-
-% Made by Luis Reis (ei12085@fe.up.pt) for LAIG course at FEUP.
-
 port(8081).
 
 % Server Entry Point
-server :-
+server:-
 	port(Port),
 	write('Opened Server'),nl,
 	socket_server_open(Port, Socket),
-	serverHandshake(Socket, Game, Mode),
+	server_handshake(Socket),
 	server_loop(Socket),
 	socket_server_close(Socket),
 	write('Closed Server'),nl.
 
-readRequest(Socket, Stream, Request):-
-	socket_server_accept(Socket, _Client, Stream, [type(text)]),
-	catch((
-		read_request(Stream, Request),
-		read_header(Stream)
-	),_Exception,(
-		close_stream(Stream),
-		fail
-	)).
-
-serverHandshake(Socket, Game, Mode):-
+server_handshake(Socket):-
 	repeat,
 	socket_server_accept(Socket, _Client, Stream, [type(text)]),
-
 	catch((
 		read_request(Stream, Request),
 		read_header(Stream)
@@ -49,16 +32,12 @@ serverHandshake(Socket, Game, Mode):-
 		close_stream(Stream),
 		fail
 	)),
-
-	handshake_request(Request, MyReply, Status, Game, Mode),
+	handshake_request(Request, MyReply, Status),
 	format('Request: ~q~n',[Request]),
 	format('Reply: ~q~n', [MyReply]),
 	format_reply(Stream, Status, MyReply),
 	close_stream(Stream),
-	(MyReply = ack), !.
-
-format_reject(Stream):-
-	format_reply(Stream, '400 Bad Request', rej).
+	(MyReply = yes), !.
 
 format_reply(Stream, Status, Reply):-
 	format(Stream, 'HTTP/1.0 ~p~n', [Status]),
@@ -68,42 +47,37 @@ format_reply(Stream, Status, Reply):-
 
 % Server Loop
 % Uncomment writes for more information on incomming connections
-server_loop(Socket) :-
+server_loop(Socket):-
 	repeat,
 	socket_server_accept(Socket, _Client, Stream, [type(text)]),
-		% write('Accepted connection'), nl,
-	    % Parse Request
-		catch((
-			read_request(Stream, Request),
-			read_header(Stream)
-		),_Exception,(
-			% write('Error parsing request.'),nl,
-			close_stream(Stream),
-			fail
-		)),
-
-		% Generate Response
-		handle_request(Request, MyReply, Status),
-		format('Request: ~q~n',[Request]),
-		format('Reply: ~q~n', [MyReply]),
-
-		% Output Response
-		format_reply(Stream, Status, MyReply),
+	catch((
+		read_request(Stream, Request),
+		read_header(Stream)
+	),_Exception,(
 		close_stream(Stream),
+		fail
+	)),
+	handle_request(Request, MyReply, Status),
+	format('Request: ~q~n',[Request]),
+	format('Reply: ~q~n', [MyReply]),
+	format_reply(Stream, Status, MyReply),
+	close_stream(Stream),
 	(Request = quit), !.
 
-close_stream(Stream) :- flush_output(Stream), close(Stream).
+close_stream(Stream):-
+	flush_output(Stream),
+	close(Stream).
 
 % Handles parsed HTTP requests
 % Returns 200 OK on successful aplication of parse_input on request
 % Returns 400 Bad Request on syntax error (received from parser) or on failure of parse_input
-handle_request(Request, MyReply, '200 OK') :- catch(parse_input(Request, MyReply),error(_,_),fail), !.
-handle_request(syntax_error, 'no', '400 Bad Request') :- !.
+handle_request(Request, MyReply, '200 OK'):- catch(parse_input(Request, MyReply),error(_,_),fail), !.
+handle_request(syntax_error, 'no', '400 Bad Request'):- !.
 handle_request(_, 'no', '400 Bad Request').
 
-handshake_request(Request, MyReply, '200 OK', Game, Mode):- catch(parse_handshake(Request, MyReply, Game, Mode),error(_,_),fail), !.
-handshake_request(syntax_error, 'no', '400 Bad Request', _, _) :- !.
-handshake_request(_, 'no', '400 Bad Request', _, _).
+handshake_request(Request, MyReply, '200 OK'):- catch(parse_handshake(Request, MyReply),error(_,_),fail), !.
+handshake_request(syntax_error, 'no', '400 Bad Request'):- !.
+handshake_request(_, 'no', '400 Bad Request').
 
 % Reads first Line of HTTP Header and parses request
 % Returns term parsed from Request-URI
@@ -138,20 +112,9 @@ print_header_line(_).
 
 :- include('duplohex.pl').
 
-parse_handshake(pvp(Player,Matrix), ack, Game, pvp):-
-	call(Matrix, Board),
-	initializePvP(Game,Board,Player).
-
-parse_handshake(pvb(Player,BotMode,Matrix), ack, Game, pvb):-
-	call(Matrix, Board),
-	initializePvB(Game, Board,Player,BotMode).
-
-parse_handshake(bvb(Player,BotMode,Matrix), ack, Game, bvb):-
-	call(Matrix, Board),
-	initializeBvB(Game,Board,Player,BotMode).
-
-parse_input(handshake, handshake).
-parse_input(reset, ack).
+parse_handshake(pvp(_,_), yes).
+parse_handshake(pvb(_,_,_), yes).
+parse_handshake(bvb(_,_,_), yes).
 parse_input(quit, goodbye).
 
 parse_input(placeDisc(Board, Piece, Player, Position), yes):-

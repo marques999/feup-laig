@@ -43,7 +43,7 @@ GameServer.prototype.requestGame = function() {
 	{
 		var serverResponse = httpResponse.currentTarget;
 
-		if (serverResponse.status == 200 && serverResponse.responseText == 'ack' ) {
+		if (serverResponse.status == 200 && serverResponse.responseText == 'yes' ) {
 			self.xmlScene.onConnect();
 		}
 		else if (serverResponse.responseText == 'no' || serverResponse.responseText == 'rej') {

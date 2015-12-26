@@ -28,28 +28,22 @@ getEnemyColor(playerState(blackPlayer, _, _), white).
 %                 ------------- %
 
 % cria um novo jogador com o número de peças especificado
-initializePlayer(Name, NumberDiscs, NumberRings, playerState(Name, NumberDiscs, NumberRings)):-
-	player(Name).
+initializePlayer(Name, NumberDiscs, NumberRings, playerState(Name, NumberDiscs, NumberRings)):- player(Name).
 
 % obtém a cor associada a um determinado jogador
-getPlayerColor(playerState(Name, _, _), Color):-
-	playerColor(Name, Color).
+getPlayerColor(playerState(Name, _, _), Color):- playerColor(Name, Color).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % verifica se determinado jogador possui discos
-hasDiscs(playerState(_, NumberDiscs, _)):-
-	NumberDiscs > 0.
+hasDiscs(playerState(_, NumberDiscs, _)):- NumberDiscs > 0.
 
 % verifica se determinado jogador possui pelo menos uma das peças
-hasPieces(playerState(_, NumberDiscs, _)):-
-	NumberDiscs > 0.
-hasPieces(playerState(_, _, NumberRings)):-
-	NumberRings > 0.
+hasPieces(playerState(_, NumberDiscs, _)):- NumberDiscs > 0.
+hasPieces(playerState(_, _, NumberRings)):- NumberRings > 0.
 
 % verifica se determinado jogador possui anéis
-hasRings(playerState(_, _, NumberRings)):-
-	NumberRings > 0.
+hasRings(playerState(_, _, NumberRings)):- NumberRings > 0.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

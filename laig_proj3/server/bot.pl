@@ -227,16 +227,22 @@ botInitialMove(Board, _, Player, Reply):-
 botInitialMove(Board, _, Player, Reply):-
 	botRandomPlace(Board, Player, Position, ring),
 	botAction(3, Position, Board, Player, Reply).
+botInitialMove(Board, Piece, Player, Reply):-
+	botInitialMove(Board, Piece, Player, Reply).
 
 % predicado gerador de movimentos aleatórios do computador
 botRandomMove(Board, Piece, Player, Reply):-
 	random(1, 5, Number),
 	botRandomAction(Number, Piece, Board, Player, Reply).
+botRandomMove(Board, Piece, Player, Reply):-
+	botRandomMove(Board, Piece, Player, Reply).
 
 % predicado gerador de movimentos inteligentes do computador
 botSmartMove(Board, Piece, Player, Reply):-
 	random(1, 5, Number),
 	botSmartAction(Number, Piece, Board, Player, Reply).
+botSmartMove(Board, Piece, Player, Reply):-
+	botSmartMove(Board, Piece, Player, Reply).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -298,10 +304,6 @@ botRandomAction(4, ring, Board, Player, Reply):-
 	botRandomDestination(From, To),
 	botAction(4, From, To, Board, Player, Reply).
 
-% acção do computador: fallback
-botRandomAction(_, Piece, Board, Player, Reply):-
-	botRandomMove(Board, Piece, Player, Reply).
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % acção do computador: realiza um movimento ganancioso do tipo "colocar disco"
@@ -325,10 +327,6 @@ botSmartAction(3, ring, Board, Player, Reply):-
 botSmartAction(4, ring, Board, Player, Reply):-
 	botSmartMoveRing(Board, Player, From, To),
 	botAction(4, From, To, Board, Player, Reply).
-
-% acção do computador: fallback
-botSmartAction(_, Piece, Board, Player, Reply):-
-	botSmartMove(Board, Piece, Player, Reply).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

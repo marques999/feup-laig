@@ -3,26 +3,20 @@
 %                 ------------- %
 
 % verifica se uma determinada célula se encontra ocupada por um disco preto
-isDisc(Symbol, black):-
-	1 is Symbol /\ 3.
+isDisc(Symbol, black):- 1 is Symbol /\ 3.
 
 % verifica se uma determinada célula se encontra ocupada por um disco branco
-isDisc(Symbol, white):-
-	2 is Symbol /\ 3.
+isDisc(Symbol, white):- 2 is Symbol /\ 3.
 
 % verifica se uma determinada célula se encontra ocupada por por uma peça simples (disco preto)
-isSingleBlackDisc(Symbol):-
-	1 is Symbol /\ 15.
+isSingleBlackDisc(Symbol):- 1 is Symbol /\ 15.
 
 % verifica se uma determinada célula se encontra ocupada por por uma peça simples (disco branco)
-isSingleWhiteDisc(Symbol):-
-	2 is Symbol /\ 15.
+isSingleWhiteDisc(Symbol):- 2 is Symbol /\ 15.
 
 % verifica se uma determinada célula se encontra ocupada por por uma peça simples (disco qualquer)
-isSingleDisc(Symbol):-
-	isSingleBlackDisc(Symbol).
-isSingleDisc(Symbol):-
-	isSingleWhiteDisc(Symbol).
+isSingleDisc(Symbol):- isSingleBlackDisc(Symbol).
+isSingleDisc(Symbol):- isSingleWhiteDisc(Symbol).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
