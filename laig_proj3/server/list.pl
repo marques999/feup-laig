@@ -1,6 +1,6 @@
-%=======================================%
-%           MATRIX OPERATIONS           %
-%=======================================%
+%                 ------------- %
+% #predicados                   %
+%                 ------------- %
 
 % altera o elemento presente na posição de coordenadas (X,Y) de uma matriz
 setSymbol(1, Y, NewElem, [OldRow|Tail], [NewRow|Tail]):-
@@ -22,10 +22,6 @@ getSymbol(X, Y, List, Symbol):-
 	list_at(Y, Row, Symbol).
 getSymbol(X-Y, List, Symbol):-
 	getSymbol(X, Y, List, Symbol).
-
-%=======================================%
-%            LIST OPERATIONS            %
-%=======================================%
 
 % determina o comprimento de uma lista
 list_size([], 0).
