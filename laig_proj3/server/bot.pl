@@ -1,7 +1,3 @@
-%=======================================%
-%               BOT CLASS               %
-%=======================================%
-
 %                 ------------- %
 % #predicados                   %
 %                 ------------- %
@@ -245,15 +241,13 @@ botSmartMove(Board, Piece, Player, Reply):-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % acção do computador: colocar um disco no tabuleiro
-botAction(1, Position, Board, Player, placeAction(disc, Position)):-
+botAction(1, Position, _Board, Player, placeAction(disc, Position)):-
 	hasDiscs(Player), !,
-	getPlayerColor(Player, Color),
 	printPlaceAction(Player, disc, Position).
 
 % acção do computador: colocar um anel no tabuleiro
-botAction(3, Position, Board, Player, placeAction(ring, Position)):-
+botAction(3, Position, _Board, Player, placeAction(ring, Position)):-
 	hasRings(Player), !,
-	getPlayerColor(Player, Color),
 	printPlaceAction(Player, ring, Position).
 
 % acção do computador: mover um disco para uma célula ocupada por um anel
@@ -319,7 +313,7 @@ botSmartAction(1, disc, Board, Player, Reply):-
 % acção do computador: realiza um movimento ganancioso do tipo "mover disco"
 botSmartAction(2, disc, Board, Player, Reply):-
 	botSmartMoveDisc(Board, Player, From, To),
-	botAction(2, To, Board, Player, Reply).
+	botAction(2, From, To, Board, Player, Reply).
 
 % acção do computador: realiza um movimento ganancioso do tipo "colocar anel"
 botSmartAction(3, ring, Board, Player, Reply):-

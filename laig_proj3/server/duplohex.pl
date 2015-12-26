@@ -1,16 +1,12 @@
-%=======================================%
-%            DUPLOHEX CLASS             %
-%=======================================%
-
 %                 ------------- %
 % #includes                     %
 %                 ------------- %
 
+:- include('globals.pl').
 :- include('player.pl').
 :- include('board.pl').
-:- include('bot.pl').
-:- include('globals.pl').
 :- include('display.pl').
+:- include('bot.pl').
 
 %                 ------------- %
 % #factos                       %
@@ -59,9 +55,15 @@ gameMode(bvb).
 % #predicados                   %
 %                 ------------- %
 
-duplohex:-
-	initializeRandomSeed, !,
-	server.
+initializeRandomSeed:-
+	now(Usec),
+	Seed is Usec mod 30269,
+	getrand(random(X, Y, Z, _)),
+	setrand(random(Seed, X, Y, Z)), !.
+
+duplohex:- initializeRandomSeed, !, server.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % inicializa uma nova partida no modo Player vs Player (situação 1: jogador 1 escolheu cor preta)
 initializePvP(Game, Board, blackPlayer):-
@@ -333,28 +335,21 @@ validatePlaceRing(_, _, _, _).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% inicia uma nova partida no modo Player vs Player
-startGame(Socket, Game, pvp):-
-	startHuman(Socket, Game, NewGame),
-	playGame(Socket, NewGame, pvp).
+% verifica se o jogador 1 venceu a partida atual
+serverCheckGame(Board, Player1, _, p1Wins):-
+	hasPlayerWon(Board, Player1).
 
-% inicia uma nova partida no modo Player vs Bot (situação 1: jogador humano começa primeiro)
-startGame(Socket, Game, pvb):-
-	isPlayerTurn(Game), !,
-	startHuman(Socket, Game, NewGame),
-	playGame(Socket, NewGame, pvb).
+% verifica se o jogador 2 venceu a partida atual
+serverCheckGame(Board, _, Player2, p2Wins):-
+	hasPlayerWon(Board, Player2).
 
-% inicia uma nova partida no modo Player vs Bot (situação 2: computador começa primeiro)
-startGame(Socket, Game, pvb):-
-	startBot(Socket, Game, NewGame),
-	playGame(Socket, NewGame, pvb).
+% verifica se o jogador 1 tem jogadas regulars disponíveis
+serverCheckGame(Board, Player1, _, p1Stuck):-
+	isPlayerStuck(Board, Player1).
 
-% inicia uma nova partida no modo Bot vs Bot
-startGame(Socket, Game, bvb):-
-	startBot(Socket, Game, NewGame),
-	playGame(Socket, NewGame, bvb).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% verifica se o jogador 2 tem jogadas regulares disponíveis
+serverCheckGame(Board, _, Player2, p2Stuck):-
+	isPlayerStuck(Board, Player2).
 
 % verifica se ainda restam peças ao jogador 1
 serverCheckGame(_, Player1, _, p1Defeated):-
@@ -364,39 +359,8 @@ serverCheckGame(_, Player1, _, p1Defeated):-
 serverCheckGame(_, _, Player2, p2Defeated):-
 	\+hasPieces(Player2).
 
-% verifica se o jogador 1 venceu a partida atual
-serverCheckGame(Board, Player1, _, p1Wins):-
-	hasPlayerWon(Board, Player1).
-
-% verifica se o jogador 2 venceu a partida atual
-serverCheckGame(Board, _, Player2, p2Wins):-
-	hasPlayerWon(Board, Player2).
-
 % verifica se o jogo ainda não terminou
 serverCheckGame(_, _, _, continue).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% ciclo de jogo para uma partida Player vs Player
-playGame(Socket, Game, pvp):-
-	playHuman(Socket, Game, NewGame),
-	playGame(Socket, NewGame, pvp).
-
-% ciclo de jogo para uma partida Player vs Bot (situação 1: vez do jogador humano)
-playGame(Socket, Game, pvb):-
-	isPlayerTurn(Game), !,
-	playHuman(Socket, Game, NewGame),
-	playGame(Socket, NewGame, pvb).
-
-% ciclo de jogo para uma partida Player vs Bot (situação 2: vez do computador)
-playGame(Socket, Game, pvb):-
-	playBot(Socket, Game, NewGame),
-	playGame(Socket, NewGame, pvb).
-
-% ciclo de jogo para uma partida Bot vs Bot
-playGame(Socket, Game, bvb):-
-	playBot(Socket, Game, NewGame),
-	playGame(Socket, NewGame, bvb).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

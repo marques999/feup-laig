@@ -22,16 +22,28 @@ function PieceController(scene, board, player1, player2) {
 	//--------------------------------------------------------
 	this.player1 = player1;
 	this.player2 = player2;
+	this.selectedPiece = null;
 	this.board = board;
 	//--------------------------------------------------------
-	this.defaultAngle = 2 * Math.cos(Math.PI / 6) / 3;
-	this.scaleFactor = [1.5 / 5.0, 1.3 / 5.0, 1.5 / 5.0];
-	this.pieceSize = [board.baseSize[0] * this.scaleFactor[0], board.baseSize[1] * this.scaleFactor[1], board.baseSize[0] * this.scaleFactor[2]];
-	this.boardHeight = (board.baseSize[0] + board.baseSize[1]) / 20 * 1.3;
 	this.basePos = board.basePos;
 	this.boxPos = board.boxPos;
 	this.numberCells = board.numberCells;
-	this.selectedPiece = null;
+	//--------------------------------------------------------
+	this.defaultAngle = 2 * Math.cos(Math.PI / 6) / 3;
+	this.scaleFactor = [1.5 / 5.0, 1.3 / 5.0, 1.5 / 5.0];
+	this.boardHeight = (board.baseSize[0] + board.baseSize[1]) / 20 * 1.3;
+	//--------------------------------------------------------
+	this.pieceSize = [
+		board.baseSize[0] * this.scaleFactor[0],
+		board.baseSize[1] * this.scaleFactor[1],
+		board.baseSize[0] * this.scaleFactor[2]
+	];
+	//--------------------------------------------------------
+	this.pieceBase = [
+		this.basePos[0] / this.pieceSize[0],
+		this.basePos[1] / this.pieceSize[1],
+		this.basePos[2] / this.pieceSize[2]
+	];
 	//--------------------------------------------------------
 	this.initialize();
 };
@@ -51,14 +63,14 @@ PieceController.prototype.initialize = function() {
 	this.p2DiscStacks = [];
 	//--------------------------------------------------------
 	this.p1Discs_start = 0;
-	this.p1Discs_end = this.p1Discs_start + this.player1.discs;
+	this.p1Discs_end = this.p1Discs_start + this.numberDiscs;
 	this.p1Rings_start = this.p1Discs_end;
-	this.p1Rings_end = this.p1Rings_start + this.player1.rings;
+	this.p1Rings_end = this.p1Rings_start + this.numberRings;
 	//--------------------------------------------------------
 	this.p2Discs_start = this.p1Rings_end;
-	this.p2Discs_end = this.p2Discs_start + this.player2.discs;
+	this.p2Discs_end = this.p2Discs_start + this.numberDiscs;
 	this.p2Rings_start = this.p2Discs_end;
-	this.p2Rings_end = this.p2Rings_start + this.player2.rings;
+	this.p2Rings_end = this.p2Rings_start + this.numberRings;
 	//--------------------------------------------------------
 	for (var i = this.p1Discs_start; i < this.p1Discs_end; i++) {
 
@@ -226,21 +238,19 @@ PieceController.prototype.removeFromStack = function(pieceId) {
 };
 //--------------------------------------------------------
 PieceController.prototype.placePiece = function(pieceId, x, y)  {
-	//--------------------------------------------------------
+
 	var piece = this.pieces[pieceId];
 	//--------------------------------------------------------
 	if (!piece.wasPlaced()) {
 		this.removeFromStack(pieceId);
 	}
 	//--------------------------------------------------------
-	piece.setColor('default');
-	//--------------------------------------------------------
-	var newX = 2.5 * x + this.basePos[0] / this.pieceSize[0];
-	var newY = this.basePos[1] / this.pieceSize[1];
-	var newZ = -2.5 * this.defaultAngle * x - 5 * this.defaultAngle * y + this.basePos[2] / this.pieceSize[2];
+	var newX = this.pieceBase[0] + 2.5 * x;
+	var newY = this.pieceBase[1];
+	var newZ = this.pieceBase[2] - 2.5 * this.defaultAngle * x - 5.0 * this.defaultAngle * y;
 	//--------------------------------------------------------
 	var piecePosition = this.pieces[pieceId].position;
-	var pieceDistance = vec3.dist([newX, newY + 6, newZ], piecePosition);
+	var pieceDistance = vec3.dist([newX, newY + 6.0, newZ], piecePosition);
 	//--------------------------------------------------------
 	this.animation = new LinearAnimation(pieceDistance * 0.2,
 	[
@@ -256,7 +266,6 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
 	piece.place(x, y);
-	console.log(pieceId);
 };
 //--------------------------------------------------------
 PieceController.prototype.randomBlackDisc = function() {
@@ -308,7 +317,7 @@ PieceController.prototype.randomPiece = function(playerStack, stackName) {
 };
 //--------------------------------------------------------
 PieceController.prototype.placeRandom = function(typeId, x, y)  {
-	//--------------------------------------------------------
+
 	var pieceId = 0;
 	//--------------------------------------------------------
 	if (typeId == 1) {
@@ -324,14 +333,15 @@ PieceController.prototype.placeRandom = function(typeId, x, y)  {
 		pieceId = this.randomWhiteRing();
 	}
 	else {
-		return false;
+		return -1;
 	}
 	//--------------------------------------------------------
 	this.removeFromStack(pieceId);
+	//--------------------------------------------------------
 	var piece = this.pieces[pieceId];
-	var newX = 2.5 * x + this.basePos[0] / this.pieceSize[0];
-	var newY = this.basePos[1] / this.pieceSize[1];
-	var newZ = -2.5 * this.defaultAngle * x - 5 * this.defaultAngle * y + this.basePos[2] / this.pieceSize[2];
+	var newX = this.pieceBase[0] + 2.5 * x;
+	var newY = this.pieceBase[1];
+	var newZ = this.pieceBase[2] - 2.5 * this.defaultAngle * x - 5.0 * this.defaultAngle * y;
 	//--------------------------------------------------------
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
@@ -377,7 +387,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 
 		var id = pickingId - this.numberCells - 1;
 		var currentPlayer = this.board.getPlayer();
-		console.log("selectPiece id = " + id);
+
 		if (this.selectedPiece == id) {
 			this.unselectActivePiece();
 			return -1;
@@ -435,7 +445,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 				return id;
 			}
 		}
-		else {
+		else if (id >= this.p2Rings_start && id < this.p2Rings_end) {
 
 			var nStack = (id - this.p2Rings_start) % this.numberStacks;
 			var top = this.p2RingStacks[nStack].length - 1;

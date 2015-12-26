@@ -1,8 +1,17 @@
+/**
+ * construtor default da classe 'GamePiece'
+ * @constructor
+ * @augments MyPrimitive
+ * @author Diogo Marques
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
+ * @param {Number} color - cor da peça para inicialização dos materiais
+ * @param {Number} position - posição absoluta da peça
+ * @return {null}
+ */
 function GamePiece(scene, id, position, color) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);
 	//--------------------------------------------------------
-	this.coords = [0.0, 0.0, 0.0];
 	this.id = id;
 	this.position = position;
 	this.cellX = null;
@@ -38,17 +47,18 @@ function GamePiece(scene, id, position, color) {
 	this.materials["red"].setSpecular(1.0, 1.0, 1.0, 0.5);
 	this.materials["red"].setShininess(30);
 	//--------------------------------------------------------
-	this.color = color;
 	this.material = this.materials["default"];
 };
 //--------------------------------------------------------
 GamePiece.prototype = Object.create(MyPrimitive.prototype);
 GamePiece.prototype.constructor = GamePiece;
 //--------------------------------------------------------
-GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
-	this.position[0] = coordX;
-	this.position[1] = coordY;
-	this.position[2] = coordZ;
+GamePiece.prototype.isDisc = function() {
+	return false;
+};
+//--------------------------------------------------------
+GamePiece.prototype.isRing = function() {
+	return false;
 };
 //--------------------------------------------------------
 GamePiece.prototype.place = function(x, y) {
@@ -61,6 +71,10 @@ GamePiece.prototype.wasPlaced = function() {
 	return this.placed;
 };
 //--------------------------------------------------------
+GamePiece.prototype.getColor = function() {
+	return this.color;
+};
+//--------------------------------------------------------
 GamePiece.prototype.getId = function() {
 	return this.id;
 }
@@ -69,14 +83,8 @@ GamePiece.prototype.setColor = function(color) {
 	this.material = this.materials[color];
 };
 //--------------------------------------------------------
-GamePiece.prototype.getColor = function() {
-	return this.color;
-};
-//--------------------------------------------------------
-GamePiece.prototype.isDisc = function() {
-	return false;
-};
-//--------------------------------------------------------
-GamePiece.prototype.isRing = function() {
-	return false;
+GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
+	this.position[0] = coordX;
+	this.position[1] = coordY;
+	this.position[2] = coordZ;
 };

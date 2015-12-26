@@ -163,22 +163,22 @@ ObjectClock.prototype.display = function() {
 };
 //--------------------------------------------------------
 ObjectClock.prototype.update = function(playerDiscs, playerRings) {
-
+	//--------------------------------------------------------
 	this.LEFT[0] = ~~(playerDiscs / 10) % 10 - 1;
 	if (this.LEFT[0] < 0) {
 		this.LEFT[0] = 10;
 	}
-
+	//--------------------------------------------------------
 	this.LEFT[1] = ~~(playerDiscs % 10) - 1;
 	if (this.LEFT[1] < 0) {
 		this.LEFT[1] = 9;
 	}
-
+	//--------------------------------------------------------
 	this.RIGHT[0] = ~~(playerRings / 10) % 10 - 1;
 	if (this.RIGHT[0] < 0) {
 		this.RIGHT[0] = 10;
 	}
-
+	//--------------------------------------------------------
 	this.RIGHT[1] = ~~(playerRings % 10) - 1;
 	if (this.RIGHT[1] < 0) {
 		this.RIGHT[1] = 9;
@@ -186,32 +186,33 @@ ObjectClock.prototype.update = function(playerDiscs, playerRings) {
 };
 //--------------------------------------------------------
 ObjectClock.prototype.updateClock = function(deltaTime) {
-
+	//--------------------------------------------------------
 	this.currentMillis += deltaTime;
 	this.elapsedSeconds += (deltaTime / 1000);
+	//--------------------------------------------------------
 	var elapsedMinutes = ~~(this.elapsedSeconds % 60);
 	var elapsedHours = ~~((this.elapsedSeconds / 60) % 60);
-
+	//--------------------------------------------------------
 	if (this.currentMillis >= 500) {
 		this.currentMillis = 0;
 		this.CLOCK[2] ^= 7;
 	}
-
+	//--------------------------------------------------------
 	this.CLOCK[0] = ~~(elapsedHours / 10) - 1;
 	if (this.CLOCK[0] < 0) {
 		this.CLOCK[0] = 10;
 	}
-
+	//--------------------------------------------------------
 	this.CLOCK[1] = ~~(elapsedHours % 10) - 1;
 	if (this.CLOCK[1] < 0) {
 		this.CLOCK[1] = 9;
 	}
-
+	//--------------------------------------------------------
 	this.CLOCK[3] = ~~(elapsedMinutes / 10) - 1;
 	if (this.CLOCK[3] < 0) {
 		this.CLOCK[3] = 9;
 	}
-
+	//--------------------------------------------------------
 	this.CLOCK[4] = ~~(elapsedMinutes % 10) - 1;
 	if (this.CLOCK[4] < 0) {
 		this.CLOCK[4] = 9;

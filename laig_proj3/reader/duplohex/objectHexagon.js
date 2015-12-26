@@ -67,13 +67,9 @@ ObjectHexagon.prototype.getRingColor = function() {
 	return null;
 };
 //--------------------------------------------------------
-ObjectHexagon.prototype.removeDisc = function() {
-	this.value &= ~0x03;
-};
-//--------------------------------------------------------
-ObjectHexagon.prototype.removeRing = function() {
-	this.value &= ~0x0C;
-};
+ObjectHexagon.prototype.getSymbol = function() {
+	return this.value;
+}
 //--------------------------------------------------------
 ObjectHexagon.prototype.insertDisc = function(disc) {
 
@@ -99,9 +95,13 @@ ObjectHexagon.prototype.insertRing = function(ring) {
 	this.ringId = ring.getId();
 };
 //--------------------------------------------------------
-ObjectHexagon.prototype.getSymbol = function() {
-	return this.value;
-}
+ObjectHexagon.prototype.removeDisc = function() {
+	this.value &= ~0x03;
+};
+//--------------------------------------------------------
+ObjectHexagon.prototype.removeRing = function() {
+	this.value &= ~0x0C;
+};
 //--------------------------------------------------------
 ObjectHexagon.prototype.hasDisc = function() {
 	return (this.value & 0x03) == 0x01 || (this.value & 0x03) == 0x02;

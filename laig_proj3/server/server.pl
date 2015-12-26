@@ -38,18 +38,6 @@ readRequest(Socket, Stream, Request):-
 		fail
 	)).
 
-serverReply(Stream, Request, Reply):-
-	% Generate Response
-	format('Request: ~q~n',[Request]),
-	format('Reply: ~q~n', [Reply]),
-
-	% Output Response
-	format(Stream, 'HTTP/1.0 ~p~n', 200),
-	format(Stream, 'Access-Control-Allow-Origin: *~n', []),
-	format(Stream, 'Content-Type: text/plain~n~n', []),
-	format(Stream, '~p', [Reply]),
-	close_stream(Stream).
-
 serverHandshake(Socket, Game, Mode):-
 	repeat,
 	socket_server_accept(Socket, _Client, Stream, [type(text)]),
@@ -150,10 +138,6 @@ print_header_line(_).
 
 :- include('duplohex.pl').
 
-parse_input(handshake, handshake).
-parse_input(reset, ack).
-parse_input(quit, goodbye).
-
 parse_handshake(pvp(Player,Matrix), ack, Game, pvp):-
 	call(Matrix, Board),
 	initializePvP(Game,Board,Player).
@@ -165,6 +149,10 @@ parse_handshake(pvb(Player,BotMode,Matrix), ack, Game, pvb):-
 parse_handshake(bvb(Player,BotMode,Matrix), ack, Game, bvb):-
 	call(Matrix, Board),
 	initializeBvB(Game,Board,Player,BotMode).
+
+parse_input(handshake, handshake).
+parse_input(reset, ack).
+parse_input(quit, goodbye).
 
 parse_input(placeDisc(Board, Piece, Player, Position), yes):-
 	serverPlaceDisc(Board, Piece, Player, Position).

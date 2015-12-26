@@ -25,7 +25,7 @@ ObjectRamp.prototype.display = function() {
 	this.scene.translate(0.5, 0.0, 0.0);
 	this.triangle2.display();
 	this.scene.translate(-0.5, 0.0, this.defaultSize);
-	this.scene.rotate(Math.PI/4, -1.0, 0.0, 0.0);
+	this.scene.rotate(Math.PI / 4, -1.0, 0.0, 0.0);
 	this.rectangle.display();
 	this.scene.popMatrix();
 };

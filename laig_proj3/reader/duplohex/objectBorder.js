@@ -2,7 +2,7 @@
  * construtor default da classe 'ObjectBorder'
  * @constructor
  * @augments MyPrimitive
- * @author Carlos Samouco
+ * @author Carlos Samouco, Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} size - qwertyuiop asdfghjkl zxcvbnm
  * @param {Number} color - qwertyuiop asdfghjkl zxcvbnm
@@ -44,16 +44,12 @@ function ObjectBorder(scene, size, color) {
 		this.material.setShininess(30);
 	}
 };
-
+//--------------------------------------------------------
 ObjectBorder.prototype = Object.create(MyPrimitive.prototype);
 ObjectBorder.prototype.constructor = ObjectBorder;
-
-/**
- * inicializa os buffers WebGL da primitiva 'ObjectBorder'
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectBorder.prototype.display = function() {
-
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 	this.material.apply();
 	this.scene.rotate(Math.PI / 2, 1.0, 0.0, 0.0);
@@ -65,67 +61,58 @@ ObjectBorder.prototype.display = function() {
 	this.scene.translate(0.5, -0.5, 0.0);
 	this.plane.display();
 	this.scene.popMatrix();
-
+	//--------------------------------------------------------
 	if (this.color == 'white') {
-		this.displayWhite();
+		this.scene.pushMatrix();
+		this.scene.translate(this.defaultScale, 0.0, 0.0);
+		this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
+		this.customCircle1.display();
+		this.scene.translate(0.0, 0.0, -0.5);
+		this.customCylinder1.display();
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+		this.triangle.display();
+		//--------------------------------------------------------
+		for (var i = 0; i < this.numberCells; i++) {
+			this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
+			this.triangle.display();
+		}
+		//--------------------------------------------------------
+		this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
+		this.halfTriangle.display();
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+		this.scene.rotate(5 * Math.PI / 6, 0.0, 0.0, -1.0);
+		this.customCircle2.display();
+		this.scene.translate(0.0, 0.0, -0.5);
+		this.customCylinder2.display();
+		this.scene.popMatrix();
 	}
+	//--------------------------------------------------------
 	else {
-		this.displayBlack();
-	}
-};
-
-ObjectBorder.prototype.displayBlack = function() {
-
-	this.scene.pushMatrix();
-	this.scene.rotate(4 * Math.PI / 3, 0.0, 0.0, 1.0);
-	this.customCircle1.display();
-	this.scene.translate(0.0, 0.0, -0.5);
-	this.customCylinder1.display();
-	this.scene.popMatrix();
-	this.scene.pushMatrix();
-	this.halfTriangle2.display();
-	this.scene.translate(0.5 /this.defaultAngle, 0.0, 0.0);
-
-	for (var i = 0; i < this.numberCells; i++) {
+		this.scene.pushMatrix();
+		this.scene.rotate(4 * Math.PI / 3, 0.0, 0.0, 1.0);
+		this.customCircle1.display();
+		this.scene.translate(0.0, 0.0, -0.5);
+		this.customCylinder1.display();
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+		this.halfTriangle2.display();
+		this.scene.translate(0.5 /this.defaultAngle, 0.0, 0.0);
+		//--------------------------------------------------------
+		for (var i = 0; i < this.numberCells; i++) {
+			this.triangle.display();
+			this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
+		}
+		//--------------------------------------------------------
 		this.triangle.display();
-		this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
+		this.scene.popMatrix();
+		this.scene.pushMatrix();
+		this.scene.translate(this.defaultScale, 0.0, 0.0);
+		this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
+		this.customCircle2.display();
+		this.scene.translate(0.0, 0.0, -0.5);
+		this.customCylinder2.display();
+		this.scene.popMatrix();
 	}
-
-	this.triangle.display();
-	this.scene.popMatrix();
-	this.scene.pushMatrix();
-	this.scene.translate(this.defaultScale, 0.0, 0.0);
-	this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
-	this.customCircle2.display();
-	this.scene.translate(0.0, 0.0, -0.5);
-	this.customCylinder2.display();
-	this.scene.popMatrix();
-};
-
-ObjectBorder.prototype.displayWhite = function() {
-
-	this.scene.pushMatrix();
-	this.scene.translate(this.defaultScale, 0.0, 0.0);
-	this.scene.rotate(Math.PI / 2, 0.0, 0.0, -1.0);
-	this.customCircle1.display();
-	this.scene.translate(0.0, 0.0, -0.5);
-	this.customCylinder1.display();
-	this.scene.popMatrix();
-	this.scene.pushMatrix();
-	this.triangle.display();
-
-	for (var i = 0; i < this.numberCells; i++) {
-		this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
-		this.triangle.display();
-	}
-
-	this.scene.translate(2.0 * this.defaultAngle, 0.0, 0.0);
-	this.halfTriangle.display();
-	this.scene.popMatrix();
-	this.scene.pushMatrix();
-	this.scene.rotate(5 * Math.PI / 6, 0.0, 0.0, -1.0);
-	this.customCircle2.display();
-	this.scene.translate(0.0, 0.0, -0.5);
-	this.customCylinder2.display();
-	this.scene.popMatrix();
 };

@@ -27,14 +27,10 @@ function ObjectChair(scene) {
 	this.materials["metal"].setSpecular(0.6, 0.6, 0.6, 1.0);
 	this.materials["metal"].setShininess(10);
 };
-
+//--------------------------------------------------------
 ObjectChair.prototype = Object.create(MyPrimitive.prototype);
 ObjectChair.prototype.constructor = ObjectChair;
-
-/**
- * desenha a primitva 'ObjectChair' na respetiva cena
- * @return {null}
- */
+//--------------------------------------------------------
 ObjectChair.prototype.display = function() {
 	//--------------------------------------------------------
 	// perna posterior esquerda

@@ -330,6 +330,9 @@ GameBoard.prototype.registerTurn = function(currentPiece) {
 	else {
 		this.piecePlayed = currentPiece;
 	}
+
+	var serializeBoard = this.serializeBoard();
+	this.server.requestStatus(serializeBoard, this.player1, this.player2);
 };
 
 GameBoard.prototype.onAnimationFinished = function() {
@@ -352,7 +355,6 @@ GameBoard.prototype.resetBoard = function() {
 //--------------------------------------------------------
 GameBoard.prototype.setServer = function(server) {
 	this.server = server;
-	this.server.requestStatus(this.serializeBoard(), this.player1, this.player2);
 };
 //--------------------------------------------------------
 GameBoard.prototype.startGame = function(server) {

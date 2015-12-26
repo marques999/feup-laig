@@ -1,7 +1,3 @@
-%=======================================%
-%                GLOBALS                %
-%=======================================%
-
 %                 ------------- %
 % #includes                     %
 %                 ------------- %
@@ -14,75 +10,60 @@
 %                 ------------- %
 
 messageInvalidValue:-
-	nl, write('ERROR: you have entered an invalid value...'), nl, !.
+	write('WARNING: you have entered an invalid value...\n'), !.
 
 messageInvalidChoice:-
-	write('INVALID INPUT!'), nl,
-	write('Please enter a valid number...'), nl, nl.
+	write('WARNING: invalid input given, please enter a valid number!\n'), fail.
 
 messageSameCoordinates:-
-	write('Source and destination cell coordinates must be different'), nl, nl, fail.
+	write('WARNING: source and destination cell coordinates must be different\n'), fail.
 
 messageInvalidCoordinates:-
-	write('Cell coordinates must be an integer between 1 and 7'), nl, nl, fail.
+	write('WARNING: cell coordinates must be an integer between 1 and 7\n'), fail.
 
 messageNoRings:-
-	write('Player has no rings left that can be played'), nl, nl, fail.
+	write('WARNING: current player has no rings left that can be played\n'), fail.
 
 messageNoDiscs:-
-	write('Player has no discs left that can be played'), nl, nl, fail.
+	write('WARNING: current player has no discs left that can be played\n'), fail.
 
 messagePieceExists:-
-	write('Destination cell should not be already occupied by a piece'), nl, nl, fail.
+	write('WARNING: destination cell should not be already occupied by a piece!\n'), fail.
 
 messageRingExists:-
-	write('Destination cell should not be already occupied by a ring'), nl, nl, fail.
+	write('WARNING: destination cell should not be already occupied by a ring!\n'), fail.
 
 messageDiscExists:-
-	write('Destination cell should not be already occupied by a disc'), nl, nl, fail.
+	write('WARNING: destination cell should not be already occupied by a disc!\n'), fail.
 
 messageSourceTwopiece:-
-	write('Source cell is already occupied by two pieces and can\'t be moved'), nl, nl, fail.
+	write('WARNING: source cell is already occupied by two pieces and thus cannot be moved...\n'), fail.
 
 messageSourceNotDisc:-
-	write('Source cell is not occupied by a disc'), nl, nl, fail.
+	write('WARNING: source cell is not occupied by a disc!\n'), fail.
 
 messageSourceNotRing:-
-	write('Source cell is not occupied by a ring'), nl, nl, fail.
+	write('WARNING: source cell is not occupied by a ring!\n'), fail.
 
 messageDestinationNotDisc:-
-	write('Destination cell is not occupied by a disc'), nl, nl, fail.
+	write('WARNING: destination cell is not occupied by a disc!\n'), fail.
 
 messageDestinationNotRing:-
-	write('Destination cell is not occupied by a ring'), nl, nl, fail.
+	write('WARNING: destination cell is not occupied by a ring!\n'), fail.
 
 messageDestinationTwopiece:-
-	write('Destination cell is already occupied by two pieces and can\'t be moved'), nl, nl, fail.
+	write('WARNING: destination cell is already occupied by two pieces and thus cannot be moved...\n'), fail.
 
 messageNotNeighbours:-
-	write('Source cell and destination cell aren\'t neighbors!'), nl, nl, fail.
+	write('WARNING: source cell and destination cell are not adjacent to each other!\n'), fail.
 
 messageNotOwned:-
-	write('A player can only move his/her own pieces!'), nl, nl, fail.
+	write('WARNING: a player can only move his/her own pieces!\n'), fail.
 
 messagePlayerWins(Player):-
 	getPlayerName(Player, PlayerName),
-	format('CONGRATULATIONS!\n~w has won the match!\n', PlayerName),
-	pressEnterToContinue, nl.
+	format('CONGRATULATIONS!\n~w has won the match!\n', PlayerName).
 
 messagePlayerLost(Player):-
 	getPlayerName(Player, PlayerName),
-	format('GAME OVER!\n~w has no pieces left and was defeated!\n', PlayerName),
-	pressEnterToContinue, nl.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-initializeRandomSeed:-
-	now(Usec),
-	Seed is Usec mod 30269,
-	getrand(random(X, Y, Z, _)),
-	setrand(random(Seed, X, Y, Z)), !.
-
-pressEnterToContinue:-
-	write('Press <Enter> to continue...'), nl,
-	get_code(_), !.
+	format('GAME OVER!\n~w has no pieces left and was defeated!\n', PlayerName).

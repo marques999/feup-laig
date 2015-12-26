@@ -1,7 +1,7 @@
 /**
  * construtor default da classe 'ObjectRing'
  * @constructor
- * @augments MyPrimitive
+ * @augments GamePiece
  * @author Carlos Samouco, Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} color - cor da peça para inicialização dos materiais

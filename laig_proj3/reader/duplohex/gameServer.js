@@ -13,11 +13,12 @@ function GameServer(scene, address, port) {
 	//--------------------------------------------------------
 	this.xmlScene = scene;
 	this.gameBoard = scene.board;
-	this.gameRunning = false;
+	this.gameSettings = scene.gameSettings;
+	//--------------------------------------------------------
 	this.httpAddress = address || 'localhost';
 	this.httpPort = port || 8081;
+	this.gameRunning = false;
 	this.validResponse = false;
-	this.gameSettings = scene.gameSettings;
 	this.serverAddress = 'http://' + this.httpAddress + ':' + this.httpPort + '/';
 	//--------------------------------------------------------
 	this.playerName = {
@@ -62,10 +63,6 @@ GameServer.prototype.requestGame = function() {
 	return true;
 };
 //--------------------------------------------------------
-GameServer.prototype.checkValid = function(first_argument) {
-	return this.validResponse;
-};
-//--------------------------------------------------------
 GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onError) {
 
 	var request = new XMLHttpRequest();
@@ -84,24 +81,10 @@ GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onErr
 	request.send();
 };
 //--------------------------------------------------------
-GameServer.prototype.requestReset = function()
-{
-	this.getPrologRequest('reset', function()
-	{
-		var serverResponse = httpResponse.currentTarget;
-
-		if (serverResponse.status == 200 && serverResponse.responseText == 'ack') {
-			console.log("SEND COMMAND COMPLETE");
-		}
-		else if (serverResponse.status && serverResponse.responseText == 'rej') {
-			console.log("MESSAGE REJECTED!");
-		}
-	});
-};
-//--------------------------------------------------------
 GameServer.prototype.requestQuit = function()
 {
 	var self = this;
+	//--------------------------------------------------------
 	this.getPrologRequest('quit', function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
@@ -110,41 +93,14 @@ GameServer.prototype.requestQuit = function()
 			self.xmlScene.onDisconnect();
 		}
 	});
-
-	return false;
 };
 //--------------------------------------------------------
-GameServer.prototype.requestPlayerInfo = function(playerColor, boardType)
-{
-	var self = this;
-	var requestString = 'playerPieces(' + playerColor + ',' + boardType + ')';
-
-	this.getPrologRequest(requestString, function(httpResponse)
-	{
-		var playerStruct = null;
-		var serverResponse = httpResponse.currentTarget;
-
-		if (serverResponse.status == 200)
-		{
-			try
-			{
-				playerStruct = JSON.parse(serverResponse.responseText);
-				self.gameBoard.setPlayer1(playerStruct);
-			}
-			catch (e)
-			{
-			    alert(e);
-			}
-		}
-	});
-};
-//--------------------------------------------------------
-GameServer.prototype.requestStatus = function(gameBoard, player1, player2)
-{
+GameServer.prototype.requestStatus = function(gameBoard, player1, player2) {
+	//--------------------------------------------------------
 	var player1State = this.serializePlayer(player1);
 	var player2State = this.serializePlayer(player2);
 	var requestString = "getStatus(" + gameBoard + "," + player1State + "," + player2State + ")";
-
+	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
@@ -152,6 +108,7 @@ GameServer.prototype.requestStatus = function(gameBoard, player1, player2)
 		if (serverResponse.status == 200) { // HTTP OK
 
 			if (serverResponse.responseText = 'continue') {
+				console.log("game is still running...");
 			}
 			else if (serverResponse.responseText == 'p1Wins') {
 				alert("PLAYER 1 WON!");
@@ -193,9 +150,10 @@ GameServer.prototype.requestBotAction = function(Board, currentPiece, initialMov
 	//--------------------------------------------------------
 	requestString += Board + "," + currentPiece + "," + serializedPlayer + ")";
 	//--------------------------------------------------------
-	this.getPrologRequest(requestString, function(httpResponse) {
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
 		var serverResponse = httpResponse.currentTarget;
-		//--------------------------------------------------------
+
 		if (serverResponse.status == 200 && serverResponse.responseText != 'no') {
 			self.gameBoard.unserializeAction(serverResponse.responseText);
 		}
@@ -242,7 +200,7 @@ GameServer.prototype.requestMoveRing = function(Board, SourceX, SourceY, Destina
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
-		//--------------------------------------------------------
+
 		if (serverResponse.status == 200 && serverResponse.responseText == 'yes') {
 			self.gameBoard.onPlacePiece();
 		}
