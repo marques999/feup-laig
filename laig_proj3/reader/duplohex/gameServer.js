@@ -46,7 +46,7 @@ GameServer.prototype.requestGame = function() {
 		if (serverResponse.status == 200 && serverResponse.responseText == 'yes' ) {
 			self.xmlScene.onConnect();
 		}
-		else if (serverResponse.responseText == 'no' || serverResponse.responseText == 'rej') {
+		else if (serverResponse.responseText == 'no') {
 			alert("connection error! another game is running on that server...");
 			self.xmlScene.onServerError();
 		}
@@ -107,10 +107,7 @@ GameServer.prototype.requestStatus = function(gameBoard, player1, player2) {
 
 		if (serverResponse.status == 200) { // HTTP OK
 
-			if (serverResponse.responseText = 'continue') {
-				console.log("game is still running...");
-			}
-			else if (serverResponse.responseText == 'p1Wins') {
+			if (serverResponse.responseText == 'p1Wins') {
 				alert("PLAYER 1 WON!");
 			}
 			else if(serverResponse.responseText == 'p1Defeated') {
@@ -122,10 +119,11 @@ GameServer.prototype.requestStatus = function(gameBoard, player1, player2) {
 			else if (serverResponse.responseText == 'p2Defeated') {
 				alert("PLAYER 2 HAS NO PIECES LEFT AND WAS DEFEATED");
 			}
-			else {
-				alert("RECEIVED INVALID MESSAGE");
-			}
 		}
+	}, function(e)
+	{
+		alert("error checking current game state!");
+		self.gameBoard.onResetPlace();
 	});
 };
 //--------------------------------------------------------
@@ -218,8 +216,6 @@ GameServer.prototype.requestPlaceDisc = function(Board, DestinationX, Destinatio
 	var serializedPlayer = this.serializePlayer(this.gameBoard.getPlayer());
 	var playedPiece = this.gameBoard.getPlayedPiece();
 	var requestString = this.serializePlaceDisc(Board, playedPiece, serializedPlayer, DestinationX, DestinationY);
-	console.log(requestString);
-
 	var self = this;
 	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
