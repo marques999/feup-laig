@@ -273,9 +273,7 @@ MyInterface.prototype.gameMenu = function() {
 		self.scene.resetDisplay();
 	});
 	//---------------------------------------------------------
-	this.gameGroup.add(this, "movieMenu").name("View Replay").onChange(function(){
-		self.gameMenu_close();
-	});
+	this.gameGroup.add(this, "movieMenu").name("View Replay");;
 	//---------------------------------------------------------
 	this.gameGroup.add(this.board, "undoMovement").name("Undo Movement");
 	this.camerasMenu();
@@ -369,7 +367,9 @@ MyInterface.prototype.movieMenu = function() {
 	}
 	//--------------------------------------------------------
 	var self = this;
+	this.gameMenu_close();
 	this.board.startMovie();
+	//--------------------------------------------------------
 	this.movieGroup = this.gui.addFolder("Movie Controls");
 	this.movieGroup.open();
 	this.movieGroup.add(this.board, "pauseMovie").name("Pause Movie");
@@ -381,6 +381,7 @@ MyInterface.prototype.movieMenu = function() {
 	});
 	//--------------------------------------------------------
 	this.camerasMenu();
+	this.movieGroup.add(this.board, "rotateMovie").name("Rotate Camera");
 	this.movieGroup.add(this.board, "skipMovieFrame").name("Skip Move");
 	this.movieGroup.add(this.board, "movieDelay", 100, 5000).step(100).name("Animation Delay");
 	this.movieGroup.add(this.board, "movieSpeed", 1, 5).step(0.1).name("Animation Speed");

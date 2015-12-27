@@ -224,7 +224,6 @@ GameBoard.prototype.resetDefaults = function() {
 	this.animationActive = 0;
 	this.currentPlayer = null;
 	this.historyStack = new GameMove(this);
-	this.moveStack = [];
 	this.piecePlayed = null;
 	this.rotateCamera = false;
 	//--------------------------------------------------------
@@ -279,6 +278,8 @@ GameBoard.prototype.changeTurn = function() {
 	else {
 		this.currentPlayer = this.player1;
 	}
+
+	this.playerChanged = true;
 
 	if (this.currentPlayer.cpu) {
 		this.botPlaying = true;
@@ -346,7 +347,7 @@ GameBoard.prototype.registerTurn = function(currentPiece) {
 //--------------------------------------------------------
 GameBoard.prototype.registerUndo = function(previousPiece) {
 
-	if (this.moveStack.length == 0) {
+	if (this.historyStack.empty()) {
 		this.initialMove = true;
 		this.piecePlayed = null;
 		this.nextTurn = 0;
@@ -420,12 +421,12 @@ GameBoard.prototype.botTurn = function() {
 //--------------------------------------------------------
 GameBoard.prototype.undoMovement = function() {
 	//--------------------------------------------------------
-	if (this.animationBusy() || this.moveStack.length == 0 || this.initialMove) {
+	if (this.animationBusy() || this.historyStack.empty() || this.initialMove) {
 		return;
 	}
 	//--------------------------------------------------------
-	var lastMove = this.moveStack.pop();
-	var sourceCell = this.cellIndex(lastMove[0].cellX, lastMove[0].cellY);
+	var lastMove = this.historyStack.pop();
+	var sourceCell = this.cellIndex(lastMove[0].getX(), lastMove[0].getY());
 	//--------------------------------------------------------
 	if (lastMove[0].isDisc()) {
 		this.cells[sourceCell].removeDisc();
@@ -592,16 +593,37 @@ GameBoard.prototype.displayTable = function() {
 	this.scene.popMatrix();
 };
 //--------------------------------------------------------
+GameBoard.prototype.backupSelection = function() {
+	this.previousSelectedPiece = this.selectedPieceId;
+	this.previousSelectedCell = this.selectedCellId;
+};
+//--------------------------------------------------------
+GameBoard.prototype.restoreSelection = function() {
+	this.unselectActiveCell();
+	this.selectedPieceId = this.previousSelectedPiece;
+	this.toggleCell(this.previousSelectedCell);
+}
+//--------------------------------------------------------
 GameBoard.prototype.exitMovie = function() {
 
 	if (this.movieRotated) {
-		this.scene.rotateCamera();
+		this.rotateCamera = true;
+		this.movieRotated = false;
 	}
 
 	this.stopMovie();
 	this.movieMode = false;
 	this.pieceController = this.pieces;
-	this.scene.enablePicking();
+
+	if (this.initialMove && this.botPlaying) {
+		this.botCanPlay = true;
+	}
+	
+	this.restoreSelection();
+	
+	if (!this.currentPlayer.cpu) {
+		this.scene.enablePicking();
+	}
 };
 //--------------------------------------------------------
 GameBoard.prototype.pauseMovie = function() {
@@ -609,35 +631,37 @@ GameBoard.prototype.pauseMovie = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.resetMovie = function() {
-
-	if (this.currentPlayer.color != 'white') {
-		this.scene.rotateCamera();
-		this.movieRotated = true;
-	}
-	else {
-		this.movieRotated = false;
-	}
-
-	this.moviePlaying = true;
 	this.scene.disablePicking();
+	this.moviePlaying = true;
 	this.movieFrame = 0;
 	this.movieSpeed = 2;
 	this.movieDelay = 200;
-	this.historyStack.reset();
+	this.historyStack.resetMovie();
+	this.historyPieces.stopAnimation();
+	this.historyPieces.resetPieces();
+};
+//--------------------------------------------------------
+GameBoard.prototype.rotateMovie = function() {
+	this.scene.rotateCamera();
+	this.movieRotated = !this.movieRotated;
 };
 //--------------------------------------------------------
 GameBoard.prototype.startMovie = function() {
 	this.scene.disablePicking();
-	this.pieceController = this.historyPieces;
-	this.movieMode = true;
-	this.historyStack.reset()
+	this.backupSelection();
 	this.resetMovie();
+	this.pieceController = this.historyPieces;
+	this.movieRotated = false;
+	this.movieMode = true;
 };
 //--------------------------------------------------------
 GameBoard.prototype.stopMovie = function() {
 	this.moviePaused = false;
 	this.moviePlaying = false;
-	this.movieRotated = false;
+	this.movieFrame = 0;
+	this.movieSpeed = 2;
+	this.movieDelay = 200;
+	this.historyStack.resetMovie();
 };
 //--------------------------------------------------------
 GameBoard.prototype.skipMovieFrame = function() {
@@ -697,7 +721,7 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 		return;
 	}
 
-	if (this.movieMode) {
+	if (this.movieMode && this.moviePlaying) {
 		var animationPlaying = this.pieceController.update(deltaTime * this.movieSpeed * 0.0008);
 		this.updateMovie(deltaTime);
 	}
@@ -802,7 +826,7 @@ GameBoard.prototype.cellIndex = function(x, y) {
 GameBoard.prototype.updateMoveHints = function() {
 
 	var selectedPiece = this.pieceController.pieceAt(this.selectedPieceId);
-	var sourceIndex = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
+	var sourceIndex = this.cellIndex(selectedPiece.getX(), selectedPiece.getY());
 	var numberHints = 0;
 
 	if (this.cells[sourceIndex].isTwopiece()) {
@@ -820,8 +844,8 @@ GameBoard.prototype.updateMoveHints = function() {
 
 	for (var j = 0; j < neighbourCells.length; j++) {
 
-		var destinationX = selectedPiece.cellX + neighbourCells[j][0];
-		var destinationY = selectedPiece.cellY + neighbourCells[j][1];
+		var destinationX = selectedPiece.getX() + neighbourCells[j][0];
+		var destinationY = selectedPiece.getY() + neighbourCells[j][1];
 		var destinationIndex = this.cellIndex(destinationX, destinationY);
 
 		if (this.validateMove(destinationX, destinationY)) {
@@ -878,6 +902,10 @@ GameBoard.prototype.toggleCell = function(selectedId) {
 //--------------------------------------------------------
 GameBoard.prototype.placePieceHandler = function() {
 
+	if (this.movieMode) {
+		return;
+	}
+
 	var selectedPiece = this.pieceController.pieceAt(this.selectedPieceId);
 	var selectedCellX = ~~(this.selectedCellId / this.numberColumns);
 	var selectedCellY = this.selectedCellId % this.numberColumns;
@@ -916,7 +944,7 @@ GameBoard.prototype.onPlacePiece = function() {
 
 	if (selectedPiece.wasPlaced()) {
 
-		this.moveStack.push([selectedPiece, sourceCell, this.piecePlayed]);
+		this.historyStack.push(selectedPiece, sourceCell, this.piecePlayed);
 
 		if (selectedPiece.isDisc()) {
 			this.cells[sourceCell].removeDisc();
@@ -933,11 +961,11 @@ GameBoard.prototype.onPlacePiece = function() {
 		else {
 			console.log("previous piece was : " + (this.piecePlayed.isDisc() ? "disc" : "ring"));
 		}
-		this.moveStack.push([selectedPiece, null, this.piecePlayed]);
+
+		this.historyStack.push(selectedPiece, null, this.piecePlayed);
 	}
 
 	this.pieceController.placePiece(this.selectedPieceId, selectedCellX, selectedCellY);
-	this.historyStack.push(this.selectedPieceId, selectedCellX, selectedCellY);
 	this.registerTurn(selectedPiece);
 
 	if (selectedPiece.isDisc()) {
@@ -963,12 +991,11 @@ GameBoard.prototype.updateMovie = function(delta) {
 
 	if (this.elapsedMillis >= this.movieDelay) {
 
-		if (this.historyStack.empty()) {
-			this.moviePlaying = false;
+		if (this.historyStack.movieFinished()) {
 			this.stopMovie();
 		}
 		else {
-			this.historyStack.step();
+			this.historyStack.movieStep();
 			this.movieFrame++;
 		}
 
@@ -1032,10 +1059,10 @@ GameBoard.prototype.processBotMove = function(piece, fromX, fromY, toX, toY) {
 	var sourcePiece = null;
 
 	if (piece == 'disc') {
-		sourcePiece = 50 + this.cells[sourceCell].getDiscId();
+		sourcePiece = this.numberCells + this.cells[sourceCell].getDiscId() + 1;
 	}
 	else if (piece == 'ring') {
-		sourcePiece = 50 + this.cells[sourceCell].getRingId();
+		sourcePiece = this.numberCells + this.cells[sourceCell].getRingId() + 1;
 	}
 	else {
 		return false;
@@ -1084,9 +1111,19 @@ GameBoard.prototype.animationBusy = function() {
 	return this.movieMode || this.rotateCamera || this.animationActive;
 };
 //--------------------------------------------------------
-GameBoard.prototype.processFrame = function(id, x, y) {
-	this.updatePicking(this.cellIndex(x, y) + 1);
-	this.pieceController.placePiece(id, x, y);
+GameBoard.prototype.processFrame = function(sourcePiece, destinationCell) {
+
+	if (destinationCell == null || destinationCell == undefined) { // PLACE
+		var sourceCell = this.cellIndex(sourcePiece.getX(), sourcePiece.getY());
+		this.updatePicking(sourceCell + 1);
+		this.historyPieces.placePiece(sourcePiece.getId(), sourcePiece.getX(), sourcePiece.getY());
+	}
+	else { // MOVE
+		this.updatePicking(destinationCell + 1);
+		var destinationX = ~~(destinationCell / this.numberColumns);
+		var destinationY = destinationCell % this.numberColumns;
+		this.historyPieces.placePiece(sourcePiece.getId(), destinationX, destinationY);
+	}
 };
 //--------------------------------------------------------
 GameBoard.prototype.updatePicking = function(selectedId) {

@@ -2,43 +2,39 @@ function GameMove(board) {
 	this.board = board;
 	this.totalFrames = 0;
 	this.moves = [];
-	this.reset();
+	this.resetMovie();
 };
 //--------------------------------------------------------
 GameMove.prototype = Object.create(Object.prototype);
 GameMove.prototype.constructor = GameMove;
 //--------------------------------------------------------
-GameMove.prototype.push = function(moveId, moveX, moveY) {
-	this.moves.push([moveId, moveX, moveY]);
+GameMove.prototype.push = function(selectedPiece, sourceCell, previousPiece) {
+	this.moves.push([selectedPiece, sourceCell, previousPiece]);
 	this.totalFrames++;
 };
 //--------------------------------------------------------
+GameMove.prototype.pop = function() {
+	this.totalFrames--;
+	return this.moves.pop();
+};
+//--------------------------------------------------------
 GameMove.prototype.empty = function() {
-	return this.currentFrame >= this.moves.length;
+	return this.moves.length <= 0;
+}
+//--------------------------------------------------------
+GameMove.prototype.movieFinished = function() {
+	return this.currentFrame >= this.totalFrames;
 };
 //--------------------------------------------------------
-GameMove.prototype.reset = function() {
+GameMove.prototype.resetMovie = function() {
 	this.currentFrame = 0;
-	this.initialMove = true;
-	this.nextTurn = 0;
 };
 //--------------------------------------------------------
-GameMove.prototype.step = function() {
+GameMove.prototype.movieStep = function() {
 
-	if (this.currentFrame >= this.moves.length) {
-		return;
-	}
-
-	var queueTop = this.moves[this.currentFrame];
-	this.board.processFrame(queueTop[0], queueTop[1], queueTop[2]);
-	this.currentFrame++;
-
-	if (this.initialMove) {
-		this.board.rotateCamera = true;
-		this.initialMove = false;
-	}
-	else if (this.nextTurn++ == 1) {
-		this.nextTurn = 0;
-		this.board.rotateCamera = true;
+	if (!this.movieFinished()) {
+		var queueTop = this.moves[this.currentFrame];
+		this.board.processFrame(queueTop[0], queueTop[1]);
+		this.currentFrame++;
 	}
 };

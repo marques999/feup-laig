@@ -77,7 +77,15 @@ GamePiece.prototype.getColor = function() {
 //--------------------------------------------------------
 GamePiece.prototype.getId = function() {
 	return this.id;
-}
+};
+//--------------------------------------------------------
+GamePiece.prototype.getX = function() {
+	return this.cellX;
+};
+//--------------------------------------------------------
+GamePiece.prototype.getY = function() {
+	return this.cellY;
+};
 //--------------------------------------------------------
 GamePiece.prototype.setColor = function(color) {
 	this.material = this.materials[color];
@@ -90,7 +98,5 @@ GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
 };
 //--------------------------------------------------------
 GamePiece.prototype.reset = function() {
-	this.cellX = null;
-	this.cellY = null;
 	this.placed = false;
 };
