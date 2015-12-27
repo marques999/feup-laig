@@ -16,27 +16,35 @@ function PieceController(scene, board, player1, player2) {
 	this.numberRings = 24;
 	this.numberStacks = 8;
 	//--------------------------------------------------------
+	this.defaultAngle = 2 * Math.cos(Math.PI / 6) / 3;
+	this.scaleFactor = [1.5 / 5.0, 1.3 / 5.0, 1.5 / 5.0];
+	//--------------------------------------------------------
 	this.horizontalSpace = 2.1;
 	this.verticalSpace = 0.9;
 	this.stackSpace = 5.0;
 	//--------------------------------------------------------
+	this.defaultMaterial = new CGFappearance(scene);
 	this.player1 = player1;
 	this.player2 = player2;
-	this.selectedPiece = null;
 	this.board = board;
+	this.resetPieces();
+};
+//--------------------------------------------------------
+PieceController.prototype = Object.create(MyPrimitive.prototype);
+PieceController.prototype.constructor = PieceController;
+//--------------------------------------------------------
+PieceController.prototype.resetPieces = function() {
 	//--------------------------------------------------------
-	this.basePos = board.basePos;
-	this.boxPos = board.boxPos;
-	this.numberCells = board.numberCells;
-	//--------------------------------------------------------
-	this.defaultAngle = 2 * Math.cos(Math.PI / 6) / 3;
-	this.scaleFactor = [1.5 / 5.0, 1.3 / 5.0, 1.5 / 5.0];
-	this.boardHeight = (board.baseSize[0] + board.baseSize[1]) / (2 * (board.baseSize[0] + board.baseSize[1])) * 1.3;
+	this.basePos = this.board.basePos;
+	this.boxPos = this.board.boxPos;
+	this.numberCells = this.board.numberCells;
+	this.selectedPiece = null;
+	this.boardHeight = (this.board.baseSize[0] + this.board.baseSize[1]) / (2 * (this.board.baseSize[0] + this.board.baseSize[1])) * 1.3;
 	//--------------------------------------------------------
 	this.pieceSize = [
-		board.baseSize[0] * this.scaleFactor[0],
-		board.baseSize[1] * this.scaleFactor[1],
-		board.baseSize[0] * this.scaleFactor[2]
+		this.board.baseSize[0] * this.scaleFactor[0],
+		this.board.baseSize[1] * this.scaleFactor[1],
+		this.board.baseSize[0] * this.scaleFactor[2]
 	];
 	//--------------------------------------------------------
 	this.pieceBase = [
@@ -45,17 +53,6 @@ function PieceController(scene, board, player1, player2) {
 		this.basePos[2] / this.pieceSize[2]
 	];
 	//--------------------------------------------------------
-	this.initialize();
-};
-//--------------------------------------------------------
-PieceController.prototype = Object.create(MyPrimitive.prototype);
-PieceController.prototype.constructor = PieceController;
-//--------------------------------------------------------
-PieceController.prototype.generateRandom = function() {
-	return (Math.random() < 0.5 ? 1 : -1) * Math.random() * 0.06;
-};
-//--------------------------------------------------------
-PieceController.prototype.initialize = function() {
 	this.pieces = [];
 	this.p1RingStacks = [];
 	this.p1DiscStacks = [];
@@ -151,6 +148,10 @@ PieceController.prototype.initialize = function() {
 	this.stackLength["p2Rings"] = this.p2RingStacks.length;
 };
 //--------------------------------------------------------
+PieceController.prototype.generateRandom = function() {
+	return (Math.random() < 0.5 ? 1 : -1) * Math.random() * 0.06;
+};
+//--------------------------------------------------------
 PieceController.prototype.display = function() {
 
 	this.scene.pushMatrix();
@@ -174,6 +175,7 @@ PieceController.prototype.display = function() {
 		this.scene.popMatrix();
 	}
 
+	this.defaultMaterial.apply();
 	this.scene.popMatrix();
  };
 //--------------------------------------------------------

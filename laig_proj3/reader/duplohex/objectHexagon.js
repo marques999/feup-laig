@@ -12,12 +12,12 @@ function ObjectHexagon(scene) {
 	//--------------------------------------------------------
 	this.circle = new MyCircle(scene, 6, 1.0);
 	//--------------------------------------------------------
-	this.defaultAngle = Math.cos(Math.PI/6);
+	this.defaultAngle = Math.cos(Math.PI / 6);
 	this.position = [0.0, 0.0, 0.0];
 	this.discId = null;
 	this.ringId = null;
-	this.value = 0x00;
 	this.selected = false;
+	this.value = 0x00;
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype = Object.create(MyPrimitive.prototype);
@@ -132,6 +132,8 @@ ObjectHexagon.prototype.unselect = function() {
 };
 //--------------------------------------------------------
 ObjectHexagon.prototype.reset = function() {
+	this.discId = null;
+	this.ringId = null;
 	this.selected = false;
-	this.value = 0;
+	this.value = 0x00;
 };

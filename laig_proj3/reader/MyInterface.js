@@ -20,7 +20,6 @@ MyInterface.prototype.init = function(application) {
 		'None': 'example.lsx',
 		'Apollo': 'MyShuttle.lsx',
 		'Billiards': 'MyBilliards.lsx',
-		'Solar System': 'MyPlanets.lsx',
 		'Park': 'MyExp.lsx'
 	};
 	//--------------------------------------------------------
@@ -278,7 +277,7 @@ MyInterface.prototype.gameMenu = function() {
 		self.gameMenu_close();
 	});
 	//---------------------------------------------------------
-	this.gameGroup.add(this.board, "undoMovement").name("Undo Movement");
+	this.gameGroup.add(this.board, "registerUndo").name("Undo Movement");
 	this.camerasMenu();
 	this.lightsMenu();
 };
@@ -289,6 +288,7 @@ MyInterface.prototype.camerasMenu = function() {
 		return false;
 	}
 	//---------------------------------------------------------
+	var self = this;
 	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
 	this.cameraViewsGroup = this.gui.addFolder("Camera Views");
 	//---------------------------------------------------------
@@ -425,8 +425,12 @@ MyInterface.prototype.pushLight = function(name, id, enabled) {
 };
 //--------------------------------------------------------
 MyInterface.prototype.resetLights = function() {
-	this.lightsId.length = 0;
-	this.lightsState = {};
+	this.lightsId.splice(0, this.lightsId.length);
+	for (var lightEntry in this.lightsState) {
+		if (this.lightsState.hasOwnProperty(lightEntry)) {
+			delete this.lightsState[lightEntry];
+		}
+	}
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightAction = function(self, id) {

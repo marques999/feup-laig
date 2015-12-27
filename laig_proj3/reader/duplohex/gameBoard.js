@@ -15,15 +15,15 @@ function GameBoard(scene) {
 	this.boxPos = [3.0, 0.0, 17.0];
 	this.borderAngle = Math.sin(Math.PI/3);
 	this.doubleAngle = 2.0 * this.borderAngle;
-	this.elapsedMillis = 0.0;
 	//--------------------------------------------------------
 	this.cells = [];
-	this.currentId = 0;
+	this.gameMode = 'pvp'
 	this.numberRows = 7;
 	this.numberColumns = 7;
 	this.numberCells = this.numberRows * this.numberColumns;
+	this.playerColor = 'white';
 	//--------------------------------------------------------
-	this.basePos[0] = this.basePos[0] - (this.baseSize[0] / 5.0) * 1.875*(this.numberColumns - 1);
+	this.basePos[0] = this.basePos[0] - (this.baseSize[0] / 5.0) * 1.875 * (this.numberColumns - 1);
 	this.basePos[1] = this.basePos[1];
 	this.basePos[2] = this.basePos[2] + (this.baseSize[1] / 5.0) * 3.75 * this.borderAngle * (this.numberRows - 1);
 	//--------------------------------------------------------
@@ -50,32 +50,17 @@ function GameBoard(scene) {
 	this.whiteBorder = new ObjectBorder(scene, this.numberRows, 'white');
 	this.blackBorder = new ObjectBorder(scene, this.numberColumns, 'black');
 	this.pieces = new PieceController(scene, this, this.player1, this.player2);
+	this.historyPieces = new HistoryController(scene, this, this.player1, this.player2);
 	this.clock1 = new ObjectClock(scene, this.player1);
 	this.clock2 = new ObjectClock(scene, this.player2);
-	//--------------------------------------------------------
-	this.gameRunning = false;
-	this.animationActive = 0;
-	this.movieRotated = false;
-	this.movieMode = false;
-	this.movieFrame = 0;
-	this.moviePaused = false;
-	this.moviePlaying = false;
-	this.botPlaying = false;
-	this.movieSpeed = 2;
-	this.movieDelay = 200;
 	//--------------------------------------------------------
 	this.hexTexture = new CGFtexture(this.scene, "resources/hexagon.png");
 	this.hoverTexture = new CGFtexture(this.scene, "resources/hexagon_hover.png");
 	this.baseTexture = new CGFtexture(this.scene, "resources/duplohex_base.png");
 	//--------------------------------------------------------
-	this.currentPlayer = null;
-	this.piecePlayed = null;
-	this.rotateCamera = false;
-	this.testMode = false;
-	//--------------------------------------------------------
-	this.historyPieces = new HistoryController(scene, this, this.player1, this.player2);
+	this.resetDefaults();
+	this.currentMatrix = 'default';
 	this.pieceController = this.pieces;
-	this.historyStack = new GameMove(this);
 	//--------------------------------------------------------
 	this.smallMatrix = [
 		// BLACK DISCS
@@ -128,14 +113,6 @@ function GameBoard(scene) {
 		[8, 5, 5],
 	]
 	//--------------------------------------------------------
-	this.currentMatrix = 'small';
-	this.defaultMaterial = new CGFappearance(scene);
-	this.HEX_MATERIAL = new CGFappearance(scene);
-	this.HEX_MATERIAL.setSpecular(0.2, 0.2, 0.2, 0.6);
-	this.HEX_MATERIAL.setDiffuse(0.2, 0.2, 0.2, 0.8);
-	this.HEX_MATERIAL.setAmbient(0.1, 0.1, 0.1, 0.2);
-	this.HEX_MATERIAL.setTexture(this.hexTexture);
-	//--------------------------------------------------------
 	for (var i = 0; i < this.numberCells; i++) {
 		this.cells[i] = new ObjectHexagon(scene);
 		this.cells[i].setCoords(~~(i / this.numberColumns), i % this.numberColumns, 0.0);
@@ -150,6 +127,7 @@ GameBoard.prototype.updateMatrix = function(currentMatrix) {
 	this.currentMatrix = currentMatrix;
 	this.initialMove = true;
 	this.nextTurn = 0;
+	this.resetCells();
 	this.resetController();
 
 	if (currentMatrix == 'diagonal') {
@@ -160,11 +138,46 @@ GameBoard.prototype.updateMatrix = function(currentMatrix) {
 	}
 };
 //--------------------------------------------------------
-GameBoard.prototype.applyMatrix = function(currentMatrix) {
+GameBoard.prototype.updateMode = function(gameMode) {
 
-	for (var i = 0; i < this.cells.length; i++) {
-		this.cells[i].reset();
+	if (gameMode == 'pvp') {
+		this.player1.cpu = false;
+		this.player2.cpu = false;
 	}
+	else if (gameMode == 'pvb') {
+		this.player1.cpu = false;
+		this.player2.cpu = true;
+	}
+	else if (gameMode == 'bvb') {
+		this.player1.cpu = true;
+		this.player2.cpu = true;
+	}
+
+	this.gameMode = gameMode;
+};
+//--------------------------------------------------------
+GameBoard.prototype.updatePlayer = function(gameMode, playerColor) {
+
+	if (playerColor == 'whitePlayer') {
+		this.player1.color = 'white';
+		this.player2.color = 'black';
+		this.currentPlayer = this.player1;
+	}
+	else {
+		this.player1.color = 'black';
+		this.player2.color = 'white';
+		this.currentPlayer = this.player2;
+	}
+
+	if (gameMode != null) {
+		this.updateMode(gameMode);
+	}
+
+	this.playerColor = playerColor;
+	this.updateMatrix(this.currentMatrix);
+};
+//--------------------------------------------------------
+GameBoard.prototype.applyMatrix = function(currentMatrix) {
 	//--------------------------------------------------------
 	for (var i = 0; i < currentMatrix.length; i++) {
 		//--------------------------------------------------------
@@ -181,6 +194,54 @@ GameBoard.prototype.applyMatrix = function(currentMatrix) {
 			this.cells[cellIndex].insertRing(pieceObject);
 		}
 	}
+};
+//--------------------------------------------------------
+GameBoard.prototype.resetBoard = function(gameMode, playerColor) {
+	this.gameRunning = false;
+	this.pieceController.stopAnimation();
+	this.resetDefaults();
+	this.updatePlayer(this.gameMode, this.playerColor);
+	this.scene.switchSceneView();
+};
+//--------------------------------------------------------
+GameBoard.prototype.resetCells = function(gameMode, playerColor) {
+	//--------------------------------------------------------
+	for (var i = 0; i < this.cells.length; i++) {
+		this.cells[i].reset();
+	}
+};
+//--------------------------------------------------------
+GameBoard.prototype.resetController = function() {
+	this.player1.discs = this.player1.rings = 24;
+	this.player2.discs = this.player2.rings = 24;
+	this.pieces.resetPieces();
+	this.historyPieces.resetPieces();
+	this.pieceController = this.pieces;
+};
+//--------------------------------------------------------
+GameBoard.prototype.resetDefaults = function() {
+	//--------------------------------------------------------
+	this.animationActive = 0;
+	this.currentPlayer = null;
+	this.historyStack = new GameMove(this);
+	this.piecePlayed = null;
+	this.rotateCamera = false;
+	//--------------------------------------------------------
+	this.elapsedMillis = 0.0;
+	this.movieDelay = 200;
+	this.movieFrame = 0;
+	this.movieMode = false;
+	this.moviePaused = false;
+	this.moviePlaying = false;
+	this.movieRotated = false;
+	this.movieSpeed = 2;
+	//--------------------------------------------------------
+	this.botPlaying = false;
+	this.gameRunning = false;
+	this.testMode = false;
+	//--------------------------------------------------------
+	this.unselectActiveCell();
+	this.unselectHints();
 };
 //--------------------------------------------------------
 GameBoard.prototype.getPlayer = function() {
@@ -201,50 +262,6 @@ GameBoard.prototype.getPlayedPiece = function() {
 	}
 
 	return 'null';
-};
-//--------------------------------------------------------
-GameBoard.prototype.resetController = function() {
-	this.player1.discs = this.player1.rings = 24;
-	this.player2.discs = this.player2.rings = 24;
-	this.pieces = new PieceController(this.scene, this, this.player1, this.player2);
-	this.historyPieces = new HistoryController(this.scene, this, this.player1, this.player2);
-	this.pieceController = this.pieces;
-};
-//--------------------------------------------------------
-GameBoard.prototype.updatePlayer = function(gameMode, playerColor) {
-
-	if (playerColor == 'whitePlayer') {
-		this.player1.color = 'white';
-		this.player2.color = 'black';
-		this.currentPlayer = this.player1;
-	}
-	else {
-		this.player1.color = 'black';
-		this.player2.color = 'white';
-		this.currentPlayer = this.player2;
-	}
-
-	if (gameMode != null) {
-		this.updateMode(gameMode);
-	}
-
-	this.updateMatrix(this.currentMatrix);
-};
-//--------------------------------------------------------
-GameBoard.prototype.updateMode = function(gameMode) {
-
-	if (gameMode == 'pvp') {
-		this.player1.cpu = false;
-		this.player2.cpu = false;
-	}
-	else if (gameMode == 'pvb') {
-		this.player1.cpu = false;
-		this.player2.cpu = true;
-	}
-	else if (gameMode == 'bvb') {
-		this.player1.cpu = true;
-		this.player2.cpu = true;
-	}
 };
 //--------------------------------------------------------
 GameBoard.prototype.onDisconnect = function() {
@@ -271,7 +288,7 @@ GameBoard.prototype.changeTurn = function() {
 	}
 
 	this.rotateCamera = true;
-	this.animationActive = true;
+	this.animationActive = 1;
 };
 //--------------------------------------------------------
 GameBoard.prototype.serializeBoard = function() {
@@ -325,6 +342,22 @@ GameBoard.prototype.registerTurn = function(currentPiece) {
 	}
 };
 //--------------------------------------------------------
+GameBoard.prototype.registerUndo = function(previousPiece) {
+
+	if (this.initialMove) {
+		return;
+	}
+	
+	if (this.nextTurn-- == 0) {
+		this.nextTurn = 1;
+		this.piecePlayed = previousPiece;
+		this.changeTurn();
+	}
+	else {
+		this.piecePlayed = previousPiece;
+	}
+};
+//--------------------------------------------------------
 GameBoard.prototype.onAnimationFinished = function() {
 
 	if (!this.gameRunning || this.movieMode) {
@@ -347,20 +380,19 @@ GameBoard.prototype.onAnimationFinished = function() {
 	}
 }
 //--------------------------------------------------------
-GameBoard.prototype.resetBoard = function() {
-	this.gameRunning = false;
-	this.scene.switchSceneView();
-	this.pieceController.stopAnimation();
-}
-//--------------------------------------------------------
 GameBoard.prototype.setServer = function(server) {
 	this.server = server;
 };
 //--------------------------------------------------------
 GameBoard.prototype.startGame = function(server) {
 
-	if (this.currentPlayer.cpu && this.currentPlayer.color == 'white') {
-		this.botPlaying = true;
+	if (this.currentPlayer.cpu) {
+		if (this.currentPlayer.color == 'white') {
+			this.botPlaying = true;
+		}
+	}
+	else {
+		this.scene.enablePicking();
 	}
 
 	if (this.currentPlayer == this.player2) {
@@ -378,16 +410,13 @@ GameBoard.prototype.botTurn = function(piece, serializedBoard) {
 }
 //--------------------------------------------------------
 GameBoard.prototype.undoMovement = function() {
-
+	//TODO
 }
 //--------------------------------------------------------
 GameBoard.prototype.display = function() {
-
 	this.scene.resetPicking();
-	this.currentId = 0;
 	this.displayBoard();
 	this.pieceController.display();
-	this.defaultMaterial.apply();
 	this.displayBase();
 	this.scene.pushMatrix();
 		this.scene.translate(0.0, -(this.baseSize[0] + this.baseSize[1]) / 20.0, 0.0);
@@ -520,23 +549,20 @@ GameBoard.prototype.displayTable = function() {
 	this.scene.popMatrix();
 };
 //--------------------------------------------------------
-GameBoard.prototype.startMovie = function() {
-	this.movieMode = true;
-	this.scene.disablePicking();
-	this.pieceController = this.historyPieces;
-	this.historyStack.reset()
-	this.resetMovie();
+GameBoard.prototype.exitMovie = function() {
+
+	if (this.movieRotated) {
+		this.scene.rotateCamera();
+	}
+
+	this.stopMovie();
+	this.movieMode = false;
+	this.pieceController = this.pieces;
+	this.scene.enablePicking();
 };
 //--------------------------------------------------------
 GameBoard.prototype.pauseMovie = function() {
 	this.moviePaused = !this.moviePaused;
-};
-//--------------------------------------------------------
-GameBoard.prototype.stopMovie = function() {
-	this.moviePaused = false;
-	this.moviePlaying = false;
-	this.movieRotated = false;
-	this.scene.enablePicking();
 };
 //--------------------------------------------------------
 GameBoard.prototype.resetMovie = function() {
@@ -555,7 +581,21 @@ GameBoard.prototype.resetMovie = function() {
 	this.movieSpeed = 2;
 	this.movieDelay = 200;
 	this.historyStack.reset();
-}
+};
+//--------------------------------------------------------
+GameBoard.prototype.startMovie = function() {
+	this.scene.disablePicking();
+	this.pieceController = this.historyPieces;
+	this.movieMode = true;
+	this.historyStack.reset()
+	this.resetMovie();
+};
+//--------------------------------------------------------
+GameBoard.prototype.stopMovie = function() {
+	this.moviePaused = false;
+	this.moviePlaying = false;
+	this.movieRotated = false;
+};
 //--------------------------------------------------------
 GameBoard.prototype.skipMovieFrame = function() {
 
@@ -578,39 +618,22 @@ GameBoard.prototype.onRotationDone = function() {
 	}
 };
 //--------------------------------------------------------
-GameBoard.prototype.exitMovie = function() {
-
-	if (this.movieRotated) {
-		this.scene.rotateCamera();
-	}
-
-	this.stopMovie();
-	this.movieMode = false;
-	this.pieceController = this.pieces;
-};
-//--------------------------------------------------------
 GameBoard.prototype.handleStatus = function(responseText) {
-	//--------------------------------------------------------
-	var gameOver = false;
-	//--------------------------------------------------------
+
 	if (responseText == 'p1Wins') {
 		$('#p1Wins').modal();
-		gameOver = true;
+		this.gameRunning = false;
 	}
 	else if (responseText == 'p2Wins') {
 		$('#p2Wins').modal();
-		gameOver = true;
+		this.gameRunning = false;
 	}
 	else if(responseText == 'p1Defeated') {
 		$('#p1Defeated').modal();
-		gameOver = true;
+		this.gameRunning = false;
 	}
 	else if (responseText == 'p2Defeated') {
 		$('#p2Defeated').modal();
-		gameOver = true;
-	}
-	//--------------------------------------------------------
-	if (gameOver) {
 		this.gameRunning = false;
 	}
 };
@@ -757,7 +780,11 @@ GameBoard.prototype.updateMoveHints = function() {
 //--------------------------------------------------------
 GameBoard.prototype.unselectHints = function() {
 
-	for (var i = 0; i < this.numberCells; i++) {
+	if (this.cells == null || this.cells == undefined) {
+		return;
+	}
+
+	for (var i = 0; i < this.cells.length; i++) {
 		if (this.cells[i].selected && i != this.selectedCellId) {
 			this.cells[i].unselect();
 		}
@@ -1008,19 +1035,22 @@ GameBoard.prototype.updatePicking = function(selectedId) {
 
 	this.unselectHints();
 
-	// mostra as hints disponiveis se houver uma peça selecionada
+	// situação : utilizador seleccionou primeiro uma peça da stack
+	// resposta : mostra as jogadas disponiveis para a peça selecionada
 	if (this.selectedPieceId != null && this.selectedPieceId != -1) {
 		this.updatePlaceHints();
 	}
 
-	// utilizador seleccionou uma célula primeiro
+	// situação : utilizador seleccionou primeiro uma célula do tabuleiro
+	// resposta : marcar essa célula, aguardando por uma segunda ordem do utilizador
 	if (this.selectedPieceId == -1 && this.selectedCellId != null) {
 		this.selectedPieceId = null;
 		this.pieceController.unselectActivePiece();
 		this.unselectActiveCell();
 	}
 
-	// utilizador seleccionou a célula de destino
+	// situação : utilizador seleccionou uma peça e uma célula do tabuleiro
+	// resposta : realizar  a jogada, caso esta seja possível
 	if (this.selectedPieceId != null && this.selectedCellId != null) {
 		this.placePieceHandler();
 		this.unselectHints();
