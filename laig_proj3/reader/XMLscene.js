@@ -310,20 +310,21 @@ XMLscene.prototype.processCameraTilt = function(deltaTime) {
 //--------------------------------------------------------
 XMLscene.prototype.processCameraTransition = function(deltaTime) {
 
-	var cameraTransitionDistance = vec3.dist(this.camera.position, this.cameraTransitionTarget);
-
-	if (cameraTransitionDistance > 0.5) {
+	if (this.currentTransitionDistance <= this.cameraTransitionDistance) {
 		var cameraPosition = vec3.create();
 		vec3.scale(cameraPosition, this.cameraTransitionDelta, deltaTime);
+		var cameraDistance = vec3.len(cameraPosition);
 		vec3.add(cameraPosition, cameraPosition, this.camera.position);
 		this.camera.setPosition(cameraPosition);
+		this.currentTransitionDistance += cameraDistance;
 	}
 	else {
 		this.initialCameraPosition = vec3.clone(this.cameraTransitionTarget);
 		this.initialCameraTilt = vec3.clone(this.cameraTransitionTarget);
 		this.camera.setPosition(this.cameraTransitionTarget);
+		this.currentTransitionDistance = 0.0;
 		this.cameraTransitionActive = false;
-		
+
 		if (this.startAfterTransition) {
 			this.startAfterTransition = false;
 			this.board.startGame();
@@ -332,7 +333,9 @@ XMLscene.prototype.processCameraTransition = function(deltaTime) {
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraDelta = function() {
-	this.cameraTransitionDelta = vec3.clone(this.cameraTransitionTarget)
+	this.currentTransitionDistance = 0.0;
+	this.cameraTransitionDelta = vec3.clone(this.cameraTransitionTarget);
+	this.cameraTransitionDistance = vec3.dist(this.camera.position, this.cameraTransitionTarget);
 	vec3.sub(this.cameraTransitionDelta, this.cameraTransitionDelta, this.camera.position);
 };
 //--------------------------------------------------------
@@ -691,19 +694,8 @@ XMLscene.prototype.display = function() {
 	this.applyViewMatrix();
 	this.applyInitialMatrix();
 	//--------------------------------------------------------
-<<<<<<< HEAD
 	for (var i = 0; i < this.activeLights; i++) {
 		this.lights[i].update();
-=======
-	if (this.gameMode) {
-		this.rotate(this.currentCameraRotation, 0, 1, 0);
-		if(this.graph.loadedOk) {		
-			this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
-		}
-	}
-	else {
-		this.multMatrix(this.defaultMatrix);
->>>>>>> origin/master
 	}
 	//--------------------------------------------------------
 	this.axis.display();
