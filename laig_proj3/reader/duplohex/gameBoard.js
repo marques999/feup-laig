@@ -11,7 +11,7 @@ function GameBoard(scene) {
 	MyPrimitive.call(this, scene);
 	//--------------------------------------------------------
 	this.basePos = [0.0, 0.0, 0.0];
-	this.baseSize = [5.0, 5.0];
+	this.baseSize = [1.0, 1.0];
 	this.boxPos = [3, 0.0, 17];
 	this.borderAngle = Math.sin(Math.PI/3);
 	this.doubleAngle = 2.0 * this.borderAngle;

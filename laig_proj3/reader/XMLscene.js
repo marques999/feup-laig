@@ -691,8 +691,19 @@ XMLscene.prototype.display = function() {
 	this.applyViewMatrix();
 	this.applyInitialMatrix();
 	//--------------------------------------------------------
+<<<<<<< HEAD
 	for (var i = 0; i < this.activeLights; i++) {
 		this.lights[i].update();
+=======
+	if (this.gameMode) {
+		this.rotate(this.currentCameraRotation, 0, 1, 0);
+		if(this.graph.loadedOk) {		
+			this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
+		}
+	}
+	else {
+		this.multMatrix(this.defaultMatrix);
+>>>>>>> origin/master
 	}
 	//--------------------------------------------------------
 	this.axis.display();

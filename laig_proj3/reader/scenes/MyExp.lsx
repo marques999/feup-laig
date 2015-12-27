@@ -1,0 +1,383 @@
+<SCENE>
+
+	<INITIALS>
+		<frustum near="0.1" far="200" />
+		<translation x="-15.0" y="-10.0" z="-15.0" />
+		<rotation axis="y" angle="0.0" />
+		<rotation axis="x" angle="0.0" />
+		<rotation axis="z" angle="0.0" />
+		<scale sx="1.0" sy="1.0" sz="1.0" />
+		<reference length="5.0" />
+	</INITIALS>
+
+	<ILLUMINATION>
+		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
+		<background r="0.1" g="0.1" b="0.1" a="1.0" />
+	</ILLUMINATION>
+	<BOARD>
+		<size x="0.5" y="0.5" z="0.5" />
+		<position x="6.5" y="2.75" z="14.5" />		
+		<topview x="1.8" y="16.48" z="1.8" />
+		<frontview x="7.5" y="8.5" z="7.5" />
+		<rotation axis="y" angle="-90" />
+	</BOARD>
+	<LIGHTS>		
+		<LIGHT id="luz1">
+			<enable value="1" />
+			<position x="10.0" y="20.0" z="10.0" w="1.0" />
+			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
+			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
+		</LIGHT>
+	</LIGHTS>
+
+	<TEXTURES>	
+	</TEXTURES>
+
+	<MATERIALS>	
+	</MATERIALS>
+
+	<ANIMATIONS>		
+	</ANIMATIONS>
+	<LEAVES>
+		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />
+		<LEAF id="leaf_terrain" type="terrain" texture="scenes/images/terrain_txt.png" heightmap="scenes/images/terrain.png" />
+		<LEAF id="treeTrunk" type="cylinder" args="1.5 0.4 0.25 16 16" />
+		<LEAF id="treeLeaves1" type="cylinder" args="1 1.2 0.8 16 16" />
+		<LEAF id="treeLeaves2" type="cylinder" args="1 0.95 0.5 16 16" />
+		<LEAF id="treeLeaves3" type="cylinder" args="1.5 0.65 0.0 16 16" />
+	</LEAVES>
+	<NODES>
+		<ROOT id="scene" />
+		<NODE id="scene">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<DESCENDANTS>				
+				<DESCENDANT id="wall" />
+				<DESCENDANT id="floor" />
+				<DESCENDANT id="tree1" />
+				<DESCENDANT id="tree2" />
+			</DESCENDANTS>
+		</NODE>	 
+		<NODE id="floor">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="8.0" y="-0.5" z="10.0"/>	
+		    <SCALE sx="18.0" sy="5.0" sz="22.0"/>						
+			<DESCENDANTS>
+				<DESCENDANT id="leaf_terrain" />
+			</DESCENDANTS>
+		</NODE>  
+		<NODE id="tree1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="5.0" y="0.0" z="3.0"/>
+			<SCALE sx="1.05" sy="1.2" sz="1.05"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="treetrunk" />
+				<DESCENDANT id="treeleaves" />
+			</DESCENDANTS>
+		</NODE> 
+		<NODE id="tree2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="13.5" y="0.0" z="10.0"/>
+			<SCALE sx="0.95" sy="1.05" sz="0.95"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="treetrunk" />
+				<DESCENDANT id="treeleaves" />
+			</DESCENDANTS>
+		</NODE> 
+		<NODE id="treetrunk">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="0.0" z="0.0"/>
+			<ROTATION axis="x" angle="-90"/>									
+			<DESCENDANTS>
+				<DESCENDANT id="treeTrunk" />
+			</DESCENDANTS>
+		</NODE>   
+		<NODE id="treeleaves">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="1.5" z="0.0"/>										
+			<DESCENDANTS>
+				<DESCENDANT id="treeleaves1" />
+				<DESCENDANT id="treeleaves2" />
+				<DESCENDANT id="treeleaves3" />
+			</DESCENDANTS>
+		</NODE>  
+		<NODE id="treeleaves1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="0.0" z="0.0"/>
+			<ROTATION axis="x" angle="-90"/>									
+			<DESCENDANTS>
+				<DESCENDANT id="treeLeaves1" />
+			</DESCENDANTS>
+		</NODE>  
+		<NODE id="treeleaves2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="1.0" z="0.0"/>
+			<ROTATION axis="x" angle="-90"/>									
+			<DESCENDANTS>
+				<DESCENDANT id="treeLeaves2" />
+			</DESCENDANTS>
+		</NODE> 
+		<NODE id="treeleaves3">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="2.0" z="0.0"/>
+			<ROTATION axis="x" angle="-90"/>									
+			<DESCENDANTS>
+				<DESCENDANT id="treeLeaves3" />
+			</DESCENDANTS>
+		</NODE>  
+		<NODE id="wall">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />				
+			<DESCENDANTS>
+				<DESCENDANT id="pillar" />
+				<DESCENDANT id="pillar2" />				
+				<DESCENDANT id="pillar4" />
+				<DESCENDANT id="pillar5" />
+				<DESCENDANT id="pillar6" />
+				<DESCENDANT id="pillar7" />
+				<DESCENDANT id="pillar8" />
+				<DESCENDANT id="longWall" />
+				<DESCENDANT id="longWall2" />
+				<DESCENDANT id="longWall3" />
+				<DESCENDANT id="longWall4" />
+				<DESCENDANT id="longWall5" />
+				<DESCENDANT id="longWall6" />
+				<DESCENDANT id="longWall7" />
+				<DESCENDANT id="longWall8" />
+				<DESCENDANT id="pillarV2" />
+				<DESCENDANT id="pillarV2.1" />
+			</DESCENDANTS>
+		</NODE>	
+             			 
+		<NODE id="longWall">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="1.0" y="0" z="0.25" />
+			<SCALE sx="7.0" sy="3.25" sz="0.50" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
+		</NODE>	
+
+		<NODE id="longWallV2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="1.0" y="0" z="0.25" />
+			<SCALE sx="8.75" sy="3.25" sz="0.50" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
+		</NODE>	
+
+			<NODE id="longWall2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="1.0" y="0.0" z="0.0" />		
+			<ROTATION axis="y" angle="-90"/>						
+			<DESCENDANTS>
+				<DESCENDANT id="longWall" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="longWall3">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="1.0" y="0.0" z="11.5" />			
+			<ROTATION axis="y" angle="-90"/>			
+			<DESCENDANTS>
+				<DESCENDANT id="longWall" />
+			</DESCENDANTS>
+		</NODE>	 
+		 	
+		<NODE id="longWall4">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="8.0" y="0.0" z="0.0" />					
+			<DESCENDANTS>
+				<DESCENDANT id="longWall" />
+			</DESCENDANTS>
+		</NODE>	 
+		<NODE id="longWall5">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="0.0" z="19.5" />					
+			<DESCENDANTS>
+				<DESCENDANT id="longWall" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="longWall6">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="8.0" y="0.0" z="19.5" />					
+			<DESCENDANTS>
+				<DESCENDANT id="longWall" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="longWall7">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="17.0" y="0.0" z="0.0" />	
+			<ROTATION axis="y" angle="-90"/>				
+			<DESCENDANTS>
+				<DESCENDANT id="longWallV2" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="longWall8">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="17.0" y="0.0" z="9.75" />	
+			<ROTATION axis="y" angle="-90"/>				
+			<DESCENDANTS>
+				<DESCENDANT id="longWallV2" />
+			</DESCENDANTS>
+		</NODE>	 
+
+		<NODE id="pillar">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<SCALE sx="1.0" sy="3.50" sz="1.0" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
+		</NODE>	
+
+         <NODE id="pillarV2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="0.0" z="8.0" />
+			<SCALE sx="1.0" sy="4.0" sz="1.0" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="pillarV2.1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="0.0" z="3.5" />			
+			<DESCENDANTS>
+				<DESCENDANT id="pillarV2" />
+			</DESCENDANTS>
+		</NODE>	
+
+		<NODE id="pillar2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />			
+			<TRANSLATION x="8.0" y="0.0" z="0.0" />
+			<DESCENDANTS>
+				<DESCENDANT id="pillar" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="pillar4">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />			
+			<TRANSLATION x="0.0" y="0.0" z="19.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="pillar" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="pillar5">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />			
+			<TRANSLATION x="16.0" y="0.0" z="0.0" />
+			<DESCENDANTS>
+				<DESCENDANT id="pillar" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="pillar6">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />			
+			<TRANSLATION x="8.0" y="0.0" z="19.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="pillar" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="pillar7">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />			
+			<TRANSLATION x="16.0" y="0.0" z="19.5" />
+			<DESCENDANTS>
+				<DESCENDANT id="pillar" />
+			</DESCENDANTS>
+		</NODE>	
+		<NODE id="pillar8">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />			
+			<TRANSLATION x="16.0" y="0.0" z="9.75" />
+			<DESCENDANTS>
+				<DESCENDANT id="pillar" />
+			</DESCENDANTS>
+		</NODE>
+				
+		<NODE id="primitive_cube">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube_front" />
+				<DESCENDANT id="primitive_cube_back" />
+				<DESCENDANT id="primitive_cube_top" />
+				<DESCENDANT id="primitive_cube_down" />
+				<DESCENDANT id="primitive_cube_left" />
+				<DESCENDANT id="primitive_cube_right" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="primitive_cube_back">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="1.0" z="0.0" />
+			<ROTATION axis="x" angle="180" />
+			<DESCENDANTS>
+				<DESCENDANT id="myrectangle" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="primitive_cube_front">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="0.0" z="1" />
+			<DESCENDANTS>
+				<DESCENDANT id="myrectangle" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="primitive_cube_down">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<ROTATION axis="x" angle="90" />
+			<DESCENDANTS>
+				<DESCENDANT id="myrectangle" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="primitive_cube_top">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="1.0" z="1.0" />
+			<ROTATION axis="x" angle="-90" />
+			<DESCENDANTS>
+				<DESCENDANT id="myrectangle" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="primitive_cube_left">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<ROTATION axis="y" angle="-90" />
+			<DESCENDANTS>
+				<DESCENDANT id="myrectangle" />
+			</DESCENDANTS>
+		</NODE>
+		<NODE id="primitive_cube_right">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="1.0" y="0.0" z="1.0" />
+			<ROTATION axis="y" angle="90" />
+			<DESCENDANTS>
+				<DESCENDANT id="myrectangle" />
+			</DESCENDANTS>
+		</NODE>
+	</NODES>
+</SCENE>
