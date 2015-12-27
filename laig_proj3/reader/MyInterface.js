@@ -226,7 +226,6 @@ MyInterface.prototype.connectionMenu = function() {
 	}
 	//--------------------------------------------------------
 	var self = this;
-	//--------------------------------------------------------
 	this.connectionGroup = this.gui.addFolder("Server");
 	this.connectionGroup.open();
 	this.connectionGroup.add(this.scene, "serverHostname").name("Hostname");
@@ -264,17 +263,10 @@ MyInterface.prototype.gameMenu = function() {
 	}
 	//---------------------------------------------------------
 	var self = this;
-	//---------------------------------------------------------
 	this.mainMenu_close();
 	this.scene.startGame();
 	this.gameGroup = this.gui.addFolder("Game");
-	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
-	this.cameraViewsGroup = this.gui.addFolder("Camera Views");
-	this.lightsMenu();
-	//---------------------------------------------------------
 	this.gameGroup.open();
-	this.cameraZoomGroup.open();
-	this.cameraViewsGroup.open()
 	//---------------------------------------------------------
 	this.gameGroup.add(this, "mainMenu").name("Quit Game").onChange(function(){
 		self.gameMenu_close();
@@ -282,13 +274,29 @@ MyInterface.prototype.gameMenu = function() {
 		self.scene.resetDisplay();
 	});
 	//---------------------------------------------------------
+	this.gameGroup.add(this, "movieMenu").name("View Replay").onChange(function(){
+		self.gameMenu_close();
+	});
+	//---------------------------------------------------------
+	this.gameGroup.add(this.board, "undoMovement").name("Undo Movement");
+	this.camerasMenu();
+	this.lightsMenu();
+};
+//---------------------------------------------------------
+MyInterface.prototype.camerasMenu = function() {
+	//---------------------------------------------------------
+	if (this.scene == undefined || this.scene == null) {
+		return false;
+	}
+	//---------------------------------------------------------
+	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
+	this.cameraViewsGroup = this.gui.addFolder("Camera Views");
+	//---------------------------------------------------------
+	this.cameraZoomGroup.open();
+	this.cameraViewsGroup.open()
+	//---------------------------------------------------------
 	this.cameraZoomGroup.add(this.scene, "zoomIn").name("Zoom In");
 	this.cameraZoomGroup.add(this.scene, "zoomOut").name("Zoom Out");
-	//---------------------------------------------------------
-	this.cameraViewsGroup.add(this.scene, "switchFrontView").name("Front View");
-	this.cameraViewsGroup.add(this.scene, "switchSceneView").name("Scene View");
-	this.cameraViewsGroup.add(this.scene, "switchTopView").name("Top View");
-	this.cameraViewsGroup.add(this.scene, "resetCamera").name("Reset View");
 	//---------------------------------------------------------
 	this.cameraZoomGroup.add(this.scene, "cameraTiltAmount", -1.0, 1.0).name("Tilt").listen().onChange(function(){
 		self.scene.cameraTilt();
@@ -296,19 +304,13 @@ MyInterface.prototype.gameMenu = function() {
 		self.scene.resetRotation();
 	});
 	//---------------------------------------------------------
-	this.gameGroup.add(this, "movieMenu").name("View Replay").onChange(function(){
-		self.gameMenu_close();
-	});
-	//---------------------------------------------------------
-	this.gameGroup.add(this.board, "undoMovement").name("Undo Movement");
+	this.cameraViewsGroup.add(this.scene, "switchFrontView").name("Front View");
+	this.cameraViewsGroup.add(this.scene, "switchSceneView").name("Scene View");
+	this.cameraViewsGroup.add(this.scene, "switchTopView").name("Top View");
+	this.cameraViewsGroup.add(this.scene, "resetCamera").name("Reset View");
 };
 //--------------------------------------------------------
-MyInterface.prototype.gameMenu_close = function() {
-
-	if (this.gameGroup != undefined && this.gameGroup != null) {
-		this.deleteFolder("Game");
-		this.gameGroup = undefined;
-	}
+MyInterface.prototype.camerasMenu_close = function() {
 	//--------------------------------------------------------
 	if (this.cameraZoomGroup != undefined && this.cameraZoomGroup != null) {
 		this.deleteFolder("Camera Controls");
@@ -319,7 +321,17 @@ MyInterface.prototype.gameMenu_close = function() {
 		this.deleteFolder("Camera Views");
 		this.cameraViewsGroup = undefined;
 	}
+};
+//--------------------------------------------------------
+MyInterface.prototype.gameMenu_close = function() {
+
+	if (this.gameGroup != undefined && this.gameGroup != null) {
+		this.deleteFolder("Game");
+		this.gameGroup = undefined;
+	}
+
 	//--------------------------------------------------------
+	this.camerasMenu_close();
 	this.lightsMenu_close();
 };
 //--------------------------------------------------------
@@ -330,7 +342,6 @@ MyInterface.prototype.mainMenu = function() {
 	}
 	//--------------------------------------------------------
 	var self = this;
-	//--------------------------------------------------------
 	this.mainMenu_close();
 	this.mainGroup = this.gui.addFolder("Main Menu");
 	this.mainGroup.open();
@@ -352,13 +363,12 @@ MyInterface.prototype.mainMenu_close = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.movieMenu = function() {
-
+	//--------------------------------------------------------
 	if (this.board == undefined || this.board == null) {
 		return;
 	}
 	//--------------------------------------------------------
 	var self = this;
-	//--------------------------------------------------------
 	this.board.startMovie();
 	this.movieGroup = this.gui.addFolder("Movie Controls");
 	this.movieGroup.open();
@@ -370,6 +380,7 @@ MyInterface.prototype.movieMenu = function() {
 		self.gameMenu();
 	});
 	//--------------------------------------------------------
+	this.camerasMenu();
 	this.movieGroup.add(this.board, "skipMovieFrame").name("Skip Move");
 	this.movieGroup.add(this.board, "movieDelay", 100, 5000).step(100).name("Animation Delay");
 	this.movieGroup.add(this.board, "movieSpeed", 1, 5).step(0.1).name("Animation Speed");
@@ -377,11 +388,13 @@ MyInterface.prototype.movieMenu = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.movieMenu_close = function() {
-
+	//--------------------------------------------------------
 	if (this.movieGroup != undefined && this.movieGroup != null) {
 		this.deleteFolder("Movie Controls");
 		this.movieGroup = undefined;
 	}
+	//--------------------------------------------------------
+	this.camerasMenu_close();
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu = function() {
