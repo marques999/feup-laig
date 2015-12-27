@@ -611,6 +611,10 @@ GameBoard.prototype.restoreSelection = function() {
 //--------------------------------------------------------
 GameBoard.prototype.exitMovie = function() {
 
+	if (!this.movieRotationDone || this.animationActive) {
+		return false;
+	}
+
 	if (this.movieRotated) {
 		this.scene.rotateCamera();
 	}
@@ -630,6 +634,7 @@ GameBoard.prototype.exitMovie = function() {
 	}
 
 	this.restoreSelection();
+	return true;
 };
 //--------------------------------------------------------
 GameBoard.prototype.pauseMovie = function() {
@@ -657,7 +662,7 @@ GameBoard.prototype.resetMovie = function() {
 //--------------------------------------------------------
 GameBoard.prototype.rotateMovie = function() {
 	
-	if (!this.movieRotationDone) {
+	if (!this.movieRotationDone || this.animationActive) {
 		return;
 	}
 	

@@ -360,6 +360,14 @@ MyInterface.prototype.mainMenu_close = function() {
 	this.connectionMenu_close();
 };
 //--------------------------------------------------------
+MyInterface.prototype.stopMovie = function() {
+
+	if (this.board.exitMovie()) {
+		this.movieMenu_close();
+		this.gameMenu();
+	}
+};
+//--------------------------------------------------------
 MyInterface.prototype.movieMenu = function() {
 	//--------------------------------------------------------
 	if (this.board == undefined || this.board == null) {
@@ -374,11 +382,7 @@ MyInterface.prototype.movieMenu = function() {
 	this.movieGroup.open();
 	this.movieGroup.add(this.board, "pauseMovie").name("Pause Movie");
 	this.movieGroup.add(this.board, "resetMovie").name("Reset Movie");
-	//--------------------------------------------------------
-	this.movieGroup.add(this.board, "exitMovie").name("Stop Movie").onChange(function(value) {
-		self.movieMenu_close();
-		self.gameMenu();
-	});
+	this.movieGroup.add(this, "stopMovie").name("Stop Movie");
 	//--------------------------------------------------------
 	this.camerasMenu();
 	this.movieGroup.add(this.board, "rotateMovie").name("Rotate Camera");
