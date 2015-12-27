@@ -20,7 +20,8 @@ MyInterface.prototype.init = function(application) {
 		'None': 'example.lsx',
 		'Apollo': 'MyShuttle.lsx',
 		'Billiards': 'MyBilliards.lsx',
-		'Solar System': 'MyPlanets.lsx'
+		'Solar System': 'MyPlanets.lsx',
+		'Park': 'MyExp.lsx'
 	};
 	//--------------------------------------------------------
 	this.playerColors = {

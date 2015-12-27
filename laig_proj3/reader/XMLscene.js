@@ -668,7 +668,9 @@ XMLscene.prototype.display = function() {
 	//--------------------------------------------------------
 	if (this.gameMode) {
 		this.rotate(this.currentCameraRotation, 0, 1, 0);
-		this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
+		if(this.graph.loadedOk) {		
+			this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
+		}
 	}
 	else {
 		this.multMatrix(this.defaultMatrix);
