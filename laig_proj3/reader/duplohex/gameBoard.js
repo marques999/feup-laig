@@ -388,7 +388,7 @@ GameBoard.prototype.startGame = function(server) {
 		if (this.currentPlayer.color == 'white') {
 			this.botPlaying = true;
 			this.scene.disablePicking();
-			this.botDelay = (Math.random() * 1.5) + 0.5;
+			this.botDelay = (Math.random() * 1.5) + 1.0;
 		}
 	}
 	else {
@@ -618,9 +618,9 @@ GameBoard.prototype.exitMovie = function() {
 	if (this.initialMove && this.botPlaying) {
 		this.botCanPlay = true;
 	}
-	
+
 	this.restoreSelection();
-	
+
 	if (!this.currentPlayer.cpu) {
 		this.scene.enablePicking();
 	}
@@ -755,7 +755,7 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 		if (this.elapsedMillis >= this.botDelay) {
 			this.botCanPlay = false;
 			this.botTurn();
-			this.botDelay = (Math.random() * 1.5) + 0.5;
+			this.botDelay = (Math.random() * 1.5) + 1.0;
 			this.elapsedMillis = 0.0;
 		}
 	}
