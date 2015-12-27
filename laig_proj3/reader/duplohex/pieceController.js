@@ -31,7 +31,7 @@ function PieceController(scene, board, player1, player2) {
 	//--------------------------------------------------------
 	this.defaultAngle = 2 * Math.cos(Math.PI / 6) / 3;
 	this.scaleFactor = [1.5 / 5.0, 1.3 / 5.0, 1.5 / 5.0];
-	this.boardHeight = (board.baseSize[0] + board.baseSize[1]) / 20 * 1.3;
+	this.boardHeight = (board.baseSize[0] + board.baseSize[1]) / (2 * (board.baseSize[0] + board.baseSize[1])) * 1.3;
 	//--------------------------------------------------------
 	this.pieceSize = [
 		board.baseSize[0] * this.scaleFactor[0],
