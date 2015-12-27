@@ -456,7 +456,7 @@ XMLscene.prototype.initTranslate = function(matrix) {
  */
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
-	this.guiInterface.setActiveCamera(null);
+	this.guiInterface.setActiveCamera(this.camera);
 	this.guiInterface.setScene(this);
 };
 

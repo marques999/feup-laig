@@ -12,7 +12,7 @@ function GameBoard(scene) {
 	//--------------------------------------------------------
 	this.basePos = [0.0, 0.0, 0.0];
 	this.baseSize = [1.0, 1.0];
-	this.boxPos = [3, 0.0, 17];
+	this.boxPos = [-5.5, 0.0, 17];
 	this.borderAngle = Math.sin(Math.PI/3);
 	this.doubleAngle = 2.0 * this.borderAngle;
 	this.elapsedMillis = 0.0;
@@ -487,12 +487,12 @@ GameBoard.prototype.displayBorder = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayClock = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0.0, this.baseSize[0] * this.numberColumns / 6.0);
+		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.85, 0.0, this.baseSize[0] * this.numberColumns / 3.0);
 		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.clock1.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.725, 0.0, -this.baseSize[0] * this.numberColumns / 6.0);
+		this.scene.translate(this.baseSize[0] * this.numberRows * 0.85, 0.0, -this.baseSize[0] * this.numberColumns / 3.0);
 		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
 		this.clock2.display();
