@@ -1163,10 +1163,13 @@ GameBoard.prototype.processFrame = function(sourcePiece, destinationCell) {
 		this.historyPieces.placePiece(sourcePiece.getId(), sourcePiece.getX(), sourcePiece.getY());
 	}
 	else { // MOVE
-		this.updatePicking(destinationCell + 1);
-		var destinationX = ~~(destinationCell / this.numberColumns);
-		var destinationY = destinationCell % this.numberColumns;
-		this.historyPieces.placePiece(sourcePiece.getId(), destinationX, destinationY);
+	//	this.updatePicking(destinationCell + 1);
+	//	var destinationX = ~~(destinationCell / this.numberColumns);
+	//	var destinationY = destinationCell % this.numberColumns;
+			var sourceCell = this.cellIndex(sourcePiece.getX(), sourcePiece.getY());
+		this.updatePicking(sourceCell + 1);
+		this.historyPieces.placePiece(sourcePiece.getId(), sourcePiece.getX(), sourcePiece.getY());
+
 	}
 };
 //--------------------------------------------------------
