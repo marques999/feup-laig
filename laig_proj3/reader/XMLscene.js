@@ -169,7 +169,7 @@ XMLscene.prototype.resetDisplay = function() {
 XMLscene.prototype.loadGraph = function(lsxPath) {
 	this.resetDisplay();
 	this.guiInterface.resetLights();
-	this.guiInterface.setActiveCamera(null);
+	this.guiInterface.setActiveCamera(this.camera);
 	new MySceneGraph(lsxPath, this);
 };
 //---------------------------------------------------------
@@ -456,7 +456,7 @@ XMLscene.prototype.initTranslate = function(matrix) {
  */
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
-	this.guiInterface.setActiveCamera(null);
+	this.guiInterface.setActiveCamera(this.camera);
 	this.guiInterface.setScene(this);
 };
 

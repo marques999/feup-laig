@@ -12,7 +12,7 @@ function GameBoard(scene) {
 	//--------------------------------------------------------
 	this.basePos = [0.0, 0.0, 0.0];
 	this.baseSize = [1.0, 1.0];
-	this.boxPos = [3.0, 0.0, 17.0];
+	this.boxPos = [-5.5, 0.0, 17];
 	this.borderAngle = Math.sin(Math.PI/3);
 	this.doubleAngle = 2.0 * this.borderAngle;
 	this.elapsedMillis = 0.0;
@@ -369,7 +369,7 @@ GameBoard.prototype.startGame = function(server) {
 	else if (this.botPlaying) {
 		this.botTurn('disc', this.serializeBoard());
 	}
-
+	this.moveStack = [];
 	this.gameRunning = true;
 };
 //--------------------------------------------------------
@@ -377,8 +377,57 @@ GameBoard.prototype.botTurn = function(piece, serializedBoard) {
 	this.server.requestBotAction(serializedBoard, piece, this.initialMove);
 }
 //--------------------------------------------------------
-GameBoard.prototype.undoMovement = function() {
+GameBoard.prototype.undoMovement = function() {	
+	var lastMove = this.moveStack.pop();
 
+	if(lastMove == null) {
+		return;
+	}
+	
+	var sourceCell = this.cellIndex(lastMove[0].cellX, lastMove[0].cellY);
+
+	if (lastMove[0].isDisc()) {
+		this.cells[sourceCell].removeDisc();
+	}
+	else {
+		this.cells[sourceCell].removeRing();
+	}
+		
+	if(lastMove[1] != null) {
+		var destCellX = ~~(lastMove[1] / this.numberColumns);
+		var destCellY = lastMove[1] % this.numberColumns;
+		var destinationCell = this.cells[lastMove[1]];
+
+		this.pieceController.placePiece(lastMove[0].id, destCellX, destCellY, true);
+
+		if (lastMove[0].isDisc()) {
+			destinationCell.insertDisc(lastMove[0]);
+		}
+		else {
+			destinationCell.insertRing(lastMove[0]);
+		}
+	}
+	else {
+		this.pieceController.placeOnStack(lastMove[0]);
+	}
+
+	if(this.moveStack.length == 0) {
+		this.initialMove = true;
+		this.piecePlayed = null;
+		this.nextTurn == 0;
+		this.changeTurn();
+	}
+	else if(this.nextTurn-- == 0) {
+		this.nextTurn = 1;
+		this.piecePlayed = lastMove[0];
+		this.changeTurn();
+	}
+	else {
+		this.piecePlayed = null;
+	}
+
+
+	console.log(this.nextTurn);
 }
 //--------------------------------------------------------
 GameBoard.prototype.display = function() {
@@ -487,12 +536,12 @@ GameBoard.prototype.displayBorder = function() {
 //--------------------------------------------------------
 GameBoard.prototype.displayClock = function() {
 	this.scene.pushMatrix();
-		this.scene.translate(this.baseSize[0] * this.numberRows * 0.725, 0.0, this.baseSize[0] * this.numberColumns / 6.0);
+		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.85, 0.0, this.baseSize[0] * this.numberColumns / 3.0);
 		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.clock1.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-this.baseSize[0] * this.numberRows * 0.725, 0.0, -this.baseSize[0] * this.numberColumns / 6.0);
+		this.scene.translate(this.baseSize[0] * this.numberRows * 0.85, 0.0, -this.baseSize[0] * this.numberColumns / 3.0);
 		this.scene.scale(this.baseSize[0] / 5.0, (this.baseSize[0] + this.baseSize[1]) / 10.0, this.baseSize[1] / 5.0);
 		this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
 		this.clock2.display();
@@ -821,7 +870,7 @@ GameBoard.prototype.placePieceHandler = function() {
 		else {
 			this.server.requestPlaceRing(serializedBoard, selectedCellX + 1, selectedCellY + 1);
 		}
-	}
+	}	
 };
 //--------------------------------------------------------
 GameBoard.prototype.onPlacePiece = function() {
@@ -831,8 +880,10 @@ GameBoard.prototype.onPlacePiece = function() {
 	var selectedCellY = this.selectedCellId % this.numberColumns;
 	var sourceCell = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
 	var destinationCell = this.cells[this.selectedCellId];
-
+		
 	if (selectedPiece.wasPlaced()) {
+		
+		this.moveStack.push([selectedPiece, sourceCell]);	
 
 		if (selectedPiece.isDisc()) {
 			this.cells[sourceCell].removeDisc();
@@ -840,6 +891,9 @@ GameBoard.prototype.onPlacePiece = function() {
 		else {
 			this.cells[sourceCell].removeRing();
 		}
+	}
+	else {
+		this.moveStack.push([selectedPiece, null]);
 	}
 
 	this.pieceController.placePiece(this.selectedPieceId, selectedCellX, selectedCellY);
@@ -852,6 +906,8 @@ GameBoard.prototype.onPlacePiece = function() {
 	else {
 		destinationCell.insertRing(selectedPiece);
 	}
+
+	
 };
 //--------------------------------------------------------
 GameBoard.prototype.onResetPlace = function() {

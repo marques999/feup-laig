@@ -253,7 +253,7 @@ PieceController.prototype.removeFromStack = function(pieceId) {
 	}
 };
 //--------------------------------------------------------
-PieceController.prototype.placePiece = function(pieceId, x, y)  {
+PieceController.prototype.placePiece = function(pieceId, x, y, skipAnimation)  {
 
 	var piece = this.pieces[pieceId];
 	//--------------------------------------------------------
@@ -265,23 +265,73 @@ PieceController.prototype.placePiece = function(pieceId, x, y)  {
 	var newY = this.pieceBase[1];
 	var newZ = this.pieceBase[2] - 2.5 * this.defaultAngle * x - 5.0 * this.defaultAngle * y;
 	//--------------------------------------------------------
-	var piecePosition = this.pieces[pieceId].position;
-	var pieceDistance = vec3.dist([newX, newY + 6.0, newZ], piecePosition);
-	//--------------------------------------------------------
-	this.animation = new LinearAnimation(pieceDistance * 0.2,
-	[
-		piecePosition,
-		[piecePosition[0], piecePosition[1] + 3.0, piecePosition[2]],
-		[newX, newY + 3.0, newZ],
-		[newX, newY, newZ]
-	]);
-	//--------------------------------------------------------
-	this.animationId = pieceId;
-	this.animation.start();
+
+	if(skipAnimation == null || skipAnimation == false) {
+
+		var piecePosition = this.pieces[pieceId].position;
+		var pieceDistance = vec3.dist([newX, newY + 6.0, newZ], piecePosition);
+		//--------------------------------------------------------
+		this.animation = new LinearAnimation(pieceDistance * 0.2,
+		[
+			piecePosition,
+			[piecePosition[0], piecePosition[1] + 3.0, piecePosition[2]],
+			[newX, newY + 3.0, newZ],
+			[newX, newY, newZ]
+		]);
+		//--------------------------------------------------------
+		this.animationId = pieceId;
+		this.animation.start();
+	}
 	//--------------------------------------------------------
 	piece.setPosition(newX, newY, newZ);
 	piece.setColor('default');
 	piece.place(x, y);
+};
+//--------------------------------------------------------
+PieceController.prototype.placeOnStack = function(piece) {
+
+	piece.placed = false;
+
+	if(piece.isDisc() && piece.getColor() == "white") {
+		var nStack = piece.id % this.numberStacks;
+
+		piece.setPosition((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[0],
+							this.p1DiscStacks[nStack].length + this.boxPos[1] - this.boardHeight,
+							Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2]);
+
+		this.p1DiscStacks[nStack].push(piece.id);
+		this.stackLength["p1Discs"]++;				
+	}
+	else if(piece.isRing() && piece.getColor() == "white") {
+		var nStack = (piece.id - this.p1Rings_start) % this.numberStacks;
+
+		piece.setPosition((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.stackSpace + this.boxPos[0],
+							this.p1RingStacks[nStack].length * this.verticalSpace + this.boxPos[1] - this.boardHeight,
+							Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2]);
+
+		this.p1RingStacks[nStack].push(piece.id);
+		this.stackLength["p1Rings"]++;
+	}
+	else if(piece.isDisc() && piece.getColor() == "black") {
+		var nStack = (piece.id - this.p2Discs_start) % this.numberStacks;
+
+		piece.setPosition(-((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[0]),
+							this.p2DiscStacks[nStack].length + this.boxPos[1] - this.boardHeight,
+							-(Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2]));
+
+		this.p2DiscStacks[nStack].push(piece.id);
+		this.stackLength["p2Discs"]++;
+	}
+	else if(piece.isRing() && piece.getColor() == "black") {
+		var nStack = (piece.id - this.p2Rings_start) % this.numberStacks;
+
+		piece.setPosition(-((nStack % 2) * this.horizontalSpace + this.generateRandom() + this.stackSpace + this.boxPos[0]),
+							this.p2RingStacks[nStack].length * this.verticalSpace + this.boxPos[1] - this.boardHeight,
+							-(Math.floor(nStack / 2) * this.horizontalSpace + this.generateRandom() + this.boxPos[2]));
+
+		this.p2RingStacks[nStack].push(piece.id);
+		this.stackLength["p2Rings"]++;
+	}	
 };
 //--------------------------------------------------------
 PieceController.prototype.randomBlackDisc = function() {
@@ -479,7 +529,7 @@ PieceController.prototype.selectPiece = function(pickingId) {
 		}
 
 		this.selectedPiece = id;
-		this.pieces[id].setColor('red');
+		this.pieces[id].setColor('red');		
 		return -1;
 	}
 };
