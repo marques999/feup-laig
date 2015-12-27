@@ -49,7 +49,7 @@
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 		<TEXTURE id="texture_space">
-			<file path="images/scape.jpg" />
+			<file path="images/stars.jpg" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 		<TEXTURE id="texture_flag">
