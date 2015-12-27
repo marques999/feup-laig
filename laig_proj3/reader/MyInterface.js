@@ -335,11 +335,9 @@ MyInterface.prototype.mainMenu = function() {
 	this.mainGroup.open();
 	//--------------------------------------------------------
 	this.mainGroup.add(this, "gameMenu").name("Start Game");
-	this.mainGroup.add(this, "connectionMenu").name("Connection").onChange(function() {
-		self.mainMenu_close();
-	});
 	this.mainGroup.add(this, "settingsMenu").name("Settings");
 	this.mainGroup.add(this, "aboutMenu").name("About");
+	this.connectionMenu();
 };
 //--------------------------------------------------------
 MyInterface.prototype.mainMenu_close = function() {
@@ -348,6 +346,8 @@ MyInterface.prototype.mainMenu_close = function() {
 		this.deleteFolder("Main Menu");
 		this.mainGroup = undefined;
 	}
+
+	this.connectionMenu_close();
 };
 //--------------------------------------------------------
 MyInterface.prototype.movieMenu = function() {

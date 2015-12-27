@@ -321,7 +321,7 @@ XMLscene.prototype.processCameraTransition = function(deltaTime) {
 	else {
 		this.initialCameraPosition = vec3.clone(this.cameraTransitionTarget);
 		this.initialCameraTilt = vec3.clone(this.cameraTransitionTarget);
-		this.camera.setPosition(this.cameraTransitionTarget);
+
 		this.currentTransitionDistance = 0.0;
 		this.cameraTransitionActive = false;
 
