@@ -88,3 +88,9 @@ GamePiece.prototype.setPosition = function(coordX, coordY, coordZ) {
 	this.position[1] = coordY;
 	this.position[2] = coordZ;
 };
+//--------------------------------------------------------
+GamePiece.prototype.reset = function() {
+	this.cellX = null;
+	this.cellY = null;
+	this.placed = false;
+};

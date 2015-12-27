@@ -277,7 +277,7 @@ MyInterface.prototype.gameMenu = function() {
 		self.gameMenu_close();
 	});
 	//---------------------------------------------------------
-	this.gameGroup.add(this.board, "registerUndo").name("Undo Movement");
+	this.gameGroup.add(this.board, "undoMovement").name("Undo Movement");
 	this.camerasMenu();
 	this.lightsMenu();
 };
