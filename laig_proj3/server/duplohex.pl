@@ -176,17 +176,14 @@ validatePlaceRing(_, _, _, _).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% verifica se o jogador atual tem jogadas regulars disponíveis
+serverCheckStuck(Board, Player, yes):- isPlayerStuck(Board, Player).
+
 % verifica se o jogador 1 venceu a partida atual
 serverCheckGame(Board, Player1, _, p1Wins):- hasPlayerWon(Board, Player1).
 
 % verifica se o jogador 2 venceu a partida atual
 serverCheckGame(Board, _, Player2, p2Wins):- hasPlayerWon(Board, Player2).
-
-% verifica se o jogador 1 tem jogadas regulars disponíveis
-serverCheckGame(Board, Player1, _, p1Stuck):- isPlayerStuck(Board, Player1).
-
-% verifica se o jogador 2 tem jogadas regulares disponíveis
-serverCheckGame(Board, _, Player2, p2Stuck):- isPlayerStuck(Board, Player2).
 
 % verifica se ainda restam peças ao jogador 1
 serverCheckGame(_, Player1, _, p1Defeated):- \+hasPieces(Player1).

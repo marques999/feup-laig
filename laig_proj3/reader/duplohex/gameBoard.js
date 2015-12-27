@@ -228,11 +228,6 @@ GameBoard.prototype.updatePlayer = function(gameMode, playerColor) {
 		this.updateMode(gameMode);
 	}
 
-	if (this.verboseMode) {
-		console.log("[board] setting game mode to " + gameMode);
-		console.log("[board] setting player color to " + playerColor);
-	}
-
 	this.updateMatrix(this.currentMatrix);
 };
 //--------------------------------------------------------
@@ -259,7 +254,7 @@ GameBoard.prototype.onDisconnect = function() {
 //--------------------------------------------------------
 GameBoard.prototype.changeTurn = function() {
 
-	if (this.currentPlayer.color == this.player1.color) {
+	if (this.currentPlayer == this.player1) {
 		this.currentPlayer = this.player2;
 	}
 	else {
@@ -268,18 +263,16 @@ GameBoard.prototype.changeTurn = function() {
 
 	if (this.currentPlayer.cpu) {
 		this.botPlaying = true;
+		this.scene.disablePicking();
 	}
 	else {
 		this.botPlaying = false;
+		this.scene.enablePicking();
 	}
 
 	this.rotateCamera = true;
 	this.animationActive = true;
 };
-//--------------------------------------------------------
-GameBoard.prototype.isPlayerTurn = function() {
-	return !this.currentPlayer.cpu;
-}
 //--------------------------------------------------------
 GameBoard.prototype.serializeBoard = function() {
 
@@ -330,27 +323,34 @@ GameBoard.prototype.registerTurn = function(currentPiece) {
 	else {
 		this.piecePlayed = currentPiece;
 	}
-
-	var serializeBoard = this.serializeBoard();
-	this.server.requestStatus(serializeBoard, this.player1, this.player2);
 };
-
+//--------------------------------------------------------
 GameBoard.prototype.onAnimationFinished = function() {
+
+	if (!this.gameRunning || this.movieMode) {
+		return;
+	}
+
+	var serializedBoard = this.serializeBoard();
+	this.server.requestStatus(serializedBoard, this.player1, this.player2);
+	this.server.requestStuck(serializedBoard, this.currentPlayer);
 
 	if (!this.botPlaying || this.piecePlayed == null) {
 		return;
 	}
 
 	if (this.piecePlayed.isDisc()) {
-		this.botTurn('ring');
+		this.botTurn('ring', serializedBoard);
 	}
 	else {
-		this.botTurn('disc');
+		this.botTurn('disc', serializedBoard);
 	}
 }
 //--------------------------------------------------------
 GameBoard.prototype.resetBoard = function() {
-	this.server.requestQuit();
+	this.gameRunning = false;
+	this.scene.switchSceneView();
+	this.pieceController.stopAnimation();
 }
 //--------------------------------------------------------
 GameBoard.prototype.setServer = function(server) {
@@ -367,19 +367,18 @@ GameBoard.prototype.startGame = function(server) {
 		this.scene.rotateCamera();
 	}
 	else if (this.botPlaying) {
-		this.botTurn('disc');
+		this.botTurn('disc', this.serializeBoard());
 	}
 
 	this.gameRunning = true;
 };
 //--------------------------------------------------------
-GameBoard.prototype.botTurn = function(piece) {
-	var serializedBoard = this.serializeBoard();
+GameBoard.prototype.botTurn = function(piece, serializedBoard) {
 	this.server.requestBotAction(serializedBoard, piece, this.initialMove);
 }
 //--------------------------------------------------------
 GameBoard.prototype.undoMovement = function() {
-	
+
 }
 //--------------------------------------------------------
 GameBoard.prototype.display = function() {
@@ -456,7 +455,6 @@ GameBoard.prototype.displayBoard = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.displayBorder = function() {
-
 	this.scene.pushMatrix();
 	this.scene.translate(this.basePos[0], this.basePos[1], this.basePos[2]);
 	this.scene.scale(this.baseSize[0] * 0.5, (this.baseSize[0] + this.baseSize[1]) * 0.1, this.baseSize[1] * 0.5);
@@ -479,7 +477,7 @@ GameBoard.prototype.displayBorder = function() {
 		this.blackBorder.display();
 	this.scene.popMatrix();
 	this.scene.pushMatrix();
-		this.scene.translate(-1.0, 0.0, -(this.numberColumns - 1) * this.doubleAngle - 0.5 / this.borderAngle);
+		this.scene.translate(-1.0, 0.0, -(this.numberColumns - 1.0) * this.doubleAngle - 0.5 / this.borderAngle);
 		this.scene.rotate(-Math.PI / 2, 0.0, 1.0, 0.0);
 		this.scene.rotate(-Math.PI / 2, 1.0, 0.0, 0.0);
 		this.blackBorder.display();
@@ -524,6 +522,7 @@ GameBoard.prototype.displayTable = function() {
 //--------------------------------------------------------
 GameBoard.prototype.startMovie = function() {
 	this.movieMode = true;
+	this.scene.disablePicking();
 	this.pieceController = this.historyPieces;
 	this.historyStack.reset()
 	this.resetMovie();
@@ -537,6 +536,7 @@ GameBoard.prototype.stopMovie = function() {
 	this.moviePaused = false;
 	this.moviePlaying = false;
 	this.movieRotated = false;
+	this.scene.enablePicking();
 };
 //--------------------------------------------------------
 GameBoard.prototype.resetMovie = function() {
@@ -550,6 +550,7 @@ GameBoard.prototype.resetMovie = function() {
 	}
 
 	this.moviePlaying = true;
+	this.scene.disablePicking();
 	this.movieFrame = 0;
 	this.movieSpeed = 2;
 	this.movieDelay = 200;
@@ -559,17 +560,21 @@ GameBoard.prototype.resetMovie = function() {
 GameBoard.prototype.skipMovieFrame = function() {
 
 	while (this.pieceController.update(this.movieSpeed)) {
-		this.elapsedMillis = 5000;
+		this.elapsedMillis = 9999;
 	}
 };
 //--------------------------------------------------------
 GameBoard.prototype.onRotationDone = function() {
 
+	if (!this.gameRunning || this.movieMode) {
+		return;
+	}
+
 	this.rotateCamera = false;
 	this.animationPlaying = false;
 
 	if (this.botPlaying && this.piecePlayed == null) {
-		this.botTurn('disc');
+		this.botTurn('disc', this.serializeBoard());
 	}
 };
 //--------------------------------------------------------
@@ -583,6 +588,36 @@ GameBoard.prototype.exitMovie = function() {
 	this.movieMode = false;
 	this.pieceController = this.pieces;
 };
+//--------------------------------------------------------
+GameBoard.prototype.handleStatus = function(responseText) {
+	//--------------------------------------------------------
+	var gameOver = false;
+	//--------------------------------------------------------
+	if (responseText == 'p1Wins') {
+		$('#p1Wins').modal();
+		gameOver = true;
+	}
+	else if (responseText == 'p2Wins') {
+		$('#p2Wins').modal();
+		gameOver = true;
+	}
+	else if(responseText == 'p1Defeated') {
+		$('#p1Defeated').modal();
+		gameOver = true;
+	}
+	else if (responseText == 'p2Defeated') {
+		$('#p2Defeated').modal();
+		gameOver = true;
+	}
+	//--------------------------------------------------------
+	if (gameOver) {
+		this.gameRunning = false;
+	}
+};
+//--------------------------------------------------------
+GameBoard.prototype.handleStuck = function(playerStuck) {
+	this.currentPlayer.stuck = playerStuck;
+}
 //--------------------------------------------------------
 GameBoard.prototype.update = function(currTime, lastUpdate) {
 
@@ -640,13 +675,12 @@ GameBoard.prototype.updatePlaceHints = function() {
 
 		for (var i = 0; i < this.numberCells; i++) {
 
-			var validateCell = this.cells[i].isEmpty();
-
 			if (this.currentPlayer.stuck) {
-				validateCell = validateCell || !this.cells[i].isTwopiece();
+				!this.cells[i].isTwopiece() && this.cells[i].select();;
 			}
-
-			validateCell && this.cells[i].select();
+			else {
+				this.cells[i].isEmpty() && this.cells[i].select();
+			}
 		}
 	}
 	else if (this.updateMoveHints() == 0) {
@@ -665,11 +699,7 @@ GameBoard.prototype.validateSecond = function(nextPiece) {
 //--------------------------------------------------------
 GameBoard.prototype.validateMove = function(cellX, cellY) {
 
-	if (cellX < 0 || cellX >= this.numberRows) {
-		return false;
-	}
-
-	if (cellY < 0 || cellY >= this.numberColumns) {
+	if (cellX < 0 || cellY < 0 || cellX >= this.numberRows || cellY >= this.numberColumns) {
 		return false;
 	}
 
@@ -695,7 +725,7 @@ GameBoard.prototype.updateMoveHints = function() {
 
 	var selectedPiece = this.pieceController.pieceAt(this.selectedPieceId);
 	var sourceIndex = this.cellIndex(selectedPiece.cellX, selectedPiece.cellY);
-	var i = 0;
+	var numberHints = 0;
 
 	if (this.cells[sourceIndex].isTwopiece()) {
 		return 0;
@@ -718,11 +748,11 @@ GameBoard.prototype.updateMoveHints = function() {
 
 		if (this.validateMove(destinationX, destinationY)) {
 			this.cells[destinationIndex].select();
-			i++;
+			numberHints++;
 		}
 	}
 
-	return i;
+	return numberHints;
 }
 //--------------------------------------------------------
 GameBoard.prototype.unselectHints = function() {
@@ -827,7 +857,6 @@ GameBoard.prototype.onPlacePiece = function() {
 GameBoard.prototype.onResetPlace = function() {
 	this.pieceController.unselectActivePiece();
 	this.unselectActiveCell();
-
 };
 //--------------------------------------------------------
 GameBoard.prototype.updateMovie = function(delta) {
@@ -964,7 +993,7 @@ GameBoard.prototype.processFrame = function(id, x, y) {
 //--------------------------------------------------------
 GameBoard.prototype.updatePicking = function(selectedId) {
 
-	if (this.movieMode || this.animationActive) {
+	if (!this.gameRunning || this.movieMode || this.animationActive) {
 		return;
 	}
 

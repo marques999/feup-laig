@@ -47,8 +47,8 @@ MyInterface.prototype.init = function(application) {
 	//--------------------------------------------------------
 	this.lightsState = {};
 	this.lightsId = [];
-	this.serverConnected = false;
 	//--------------------------------------------------------
+	this.serverConnected = false;
 	this.playerColor = 'blackPlayer';
 	this.gui = new dat.GUI();
 };
@@ -71,7 +71,7 @@ MyInterface.prototype.readPreferences = function() {
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
-
+	//--------------------------------------------------------
 	var preferencesArray = this.scene.getPreferences();
 	this.currentScene = preferencesArray.getScene();
 	this.playerColor = preferencesArray.color;
@@ -265,7 +265,7 @@ MyInterface.prototype.gameMenu = function() {
 	var self = this;
 	//---------------------------------------------------------
 	this.mainMenu_close();
-	this.board.startGame();
+	this.scene.startGame();
 	this.gameGroup = this.gui.addFolder("Game");
 	this.cameraZoomGroup = this.gui.addFolder("Camera Controls");
 	this.cameraViewsGroup = this.gui.addFolder("Camera Views");
@@ -285,6 +285,7 @@ MyInterface.prototype.gameMenu = function() {
 	this.cameraZoomGroup.add(this.scene, "zoomOut").name("Zoom Out");
 	//---------------------------------------------------------
 	this.cameraViewsGroup.add(this.scene, "switchFrontView").name("Front View");
+	this.cameraViewsGroup.add(this.scene, "switchSceneView").name("Scene View");
 	this.cameraViewsGroup.add(this.scene, "switchTopView").name("Top View");
 	this.cameraViewsGroup.add(this.scene, "resetCamera").name("Reset View");
 	//---------------------------------------------------------
@@ -414,7 +415,6 @@ MyInterface.prototype.resetLights = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightAction = function(self, id) {
-
 	return function(value) {
 		self.scene.toggleLight(id, value);
 	};

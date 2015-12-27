@@ -60,16 +60,24 @@ BoardParser.prototype.parse = function(root) {
 		onXMLWarning(error);
 	}
 
-	var cameraTop = this.parseCoordinatesXYZ(root, 'topview');
-	var error = checkValue(cameraTop, 'topview', root.nodeName);
+	var cameraFront = this.parseCoordinatesXYZ(root, 'frontview');
+	var error = checkValue(cameraFront, 'frontview', root.nodeName);
 
 	if (error != null) {
 		parseErrors++;
 		onXMLWarning(error);
 	}
 
-	var cameraFront = this.parseCoordinatesXYZ(root, 'frontview');
-	var error = checkValue(cameraFront, 'frontview', root.nodeName);
+	var cameraScene = this.parseCoordinatesXYZ(root, 'sceneview');
+	var error = checkValue(cameraScene, 'sceneview', root.nodeName);
+
+	if (error != null) {
+		parseErrors++;
+		onXMLWarning(error);
+	}
+
+	var cameraTop = this.parseCoordinatesXYZ(root, 'topview');
+	var error = checkValue(cameraTop, 'topview', root.nodeName);
 
 	if (error != null) {
 		parseErrors++;
@@ -84,11 +92,14 @@ BoardParser.prototype.parse = function(root) {
 		printHeader('BOARD');
 		printXYZ('position', boardPosition);
 		printXYZ('size', boardSize);
+		printXYZ('frontview', cameraFront);
+		printXYZ('sceneview', cameraScene);
+		printXYZ('topview', cameraTop);
 	}
 
 	mat4.translate(this.boardMatrix, this.boardMatrix, boardPosition);
 
-	for (var xmlIndex = 4; xmlIndex < nodeSize; xmlIndex++) {
+	for (var xmlIndex = 5; xmlIndex < nodeSize; xmlIndex++) {
 
 		var child = root.children[xmlIndex];
 
@@ -98,11 +109,12 @@ BoardParser.prototype.parse = function(root) {
 	}
 
 	mat4.scale(this.boardMatrix, this.boardMatrix, boardSize);
-	
+
 	this.scene.setBoardPosition(boardPosition);
 	this.scene.setBoardMatrix(this.boardMatrix);
-	this.scene.setTopView(vec3.clone(cameraTop));
 	this.scene.setFrontView(vec3.clone(cameraFront));
+	this.scene.setSceneView(vec3.clone(cameraScene));
+	this.scene.setTopView(vec3.clone(cameraTop));
 };
 
 /**

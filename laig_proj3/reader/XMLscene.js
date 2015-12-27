@@ -16,35 +16,27 @@ XMLscene.prototype.init = function(application) {
 
 	CGFscene.prototype.init.call(this, application);
 	//---------------------------------------------------------
-	this.cameraPosition = 0.0;
-	this.cameraOrbit = 0.002;
-	this.cameraTarget = 2.0;
-	this.finalPosition = vec3.fromValues(5.0, 12.0, 5.0);
-	this.cameraDelta = vec3.create();
-	this.cameraRotate = true;
-	this.sceneRotate = 0;
 	this.gameMode = true;
-	//---------------------------------------------------------
 	this.serverHostname = 'localhost';
 	this.serverPort = 8081;
-	//---------------------------------------------------------
-	vec3.scale(this.cameraDelta, this.finalPosition, 1 / 200);
 	//---------------------------------------------------------
 	this.initCameras();
 	this.initDefaults();
 	this.initGL();
 	//---------------------------------------------------------
 	this.enableTextures(true);
-	this.setPickEnabled(true);
 	this.resetDisplay();
 };
 //--------------------------------------------------------
 XMLscene.prototype.initGame = function() {
-	this.currentId = 0;
-	this.boardMatrix = null;
-	this.board = new GameBoard(this);
-	this.board.updateMatrix(this.gameSettings.getBoard());
-	this.board.updatePlayer(this.gameSettings.getMode(), this.gameSettings.getColor());
+
+	if (this.gameMode) {
+		this.currentId = 0;
+		this.boardMatrix = null;
+		this.board = new GameBoard(this);
+		this.board.updateMatrix(this.gameSettings.getBoard());
+		this.board.updatePlayer(this.gameSettings.getMode(), this.gameSettings.getColor());
+	}
 };
 //--------------------------------------------------------
 XMLscene.prototype.initGL = function() {
@@ -61,7 +53,7 @@ XMLscene.prototype.initServer = function() {
 		this.httpServer = new GameServer(this, this.serverHostname, this.serverPort);
 		this.httpServer.requestGame();
 	}
-};;
+};
 //--------------------------------------------------------
 XMLscene.prototype.onConnect = function() {
 	alert("connection established successfully!");
@@ -70,6 +62,7 @@ XMLscene.prototype.onConnect = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.onDisconnect = function() {
+	this.httpServer = null;
 	this.guiInterface.onDisconnect();
 };
 //--------------------------------------------------------
@@ -79,12 +72,11 @@ XMLscene.prototype.onServerError = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.disconnectServer = function() {
-	if (this.httpServer == null || this.httpServer == undefined) {
-		return;
-	}
 
-	this.httpServer.requestQuit();
-}
+	if (this.httpServer != null && this.httpServer != undefined) {
+		this.httpServer.requestQuit();
+	}
+};
 //--------------------------------------------------------
 XMLscene.prototype.setSettings = function(gameSettings) {
 	this.gameSettings = gameSettings;
@@ -102,15 +94,27 @@ XMLscene.prototype.setBoardMatrix = function(boardMatrix) {
 //--------------------------------------------------------
 XMLscene.prototype.setBoardPosition = function(vec3) {
 	this.boardPosition = vec3;
-}
-//--------------------------------------------------------
-XMLscene.prototype.setTopView = function(vec3) {
-	this.cameraTopView = vec3;
-}
+};
 //--------------------------------------------------------
 XMLscene.prototype.setFrontView = function(vector3) {
 	this.cameraFrontView = vector3;
-}
+};
+//--------------------------------------------------------
+XMLscene.prototype.setSceneView = function(vector3) {
+	this.cameraSceneView = vector3;
+};
+//--------------------------------------------------------
+XMLscene.prototype.setTopView = function(vec3) {
+	this.cameraTopView = vec3;
+};
+//--------------------------------------------------------
+XMLscene.prototype.disablePicking = function() {
+	this.setPickEnabled(false);
+};
+//--------------------------------------------------------
+XMLscene.prototype.enablePicking = function() {
+	this.setPickEnabled(true);
+};
 //--------------------------------------------------------
 XMLscene.prototype.updatePicking = function() {
 
@@ -124,13 +128,14 @@ XMLscene.prototype.updatePicking = function() {
 		}
 	}
 
-	this.pickResults.splice(0,this.pickResults.length);
+	this.pickResults.splice(0, this.pickResults.length);
 };
 //---------------------------------------------------------
 XMLscene.prototype.resetDisplay = function() {
 	//---------------------------------------------------------
 	this.axis = new CGFaxis(this);
 	this.activeLights = 0;
+	this.startAfterTransition = false;
 	//---------------------------------------------------------
 	this.cameraRotationActive = false;
 	this.cameraTiltActive = false;
@@ -150,7 +155,8 @@ XMLscene.prototype.resetDisplay = function() {
 	this.initialCameraPosition = vec3.clone(this.camera.position);
 	this.initialCameraTilt = vec3.clone(this.camera.position);
 	//---------------------------------------------------------
-	this.frontViewMode = true;
+	this.frontViewMode = false;
+	this.sceneViewMode = true;
 	this.topViewMode = false;
 	//---------------------------------------------------------
 	for (var i = 0; i < this.lights; i++) {
@@ -169,7 +175,7 @@ XMLscene.prototype.loadGraph = function(lsxPath) {
 //---------------------------------------------------------
 XMLscene.prototype.resetCamera = function() {
 
-	if (this.cameraZoomActive || this.cameraTiltActive || this.cameraRotationActive) {
+	if (this.cameraAnimationActive()) {
 		return;
 	}
 
@@ -179,12 +185,81 @@ XMLscene.prototype.resetCamera = function() {
 //---------------------------------------------------------
 XMLscene.prototype.cameraTilt = function() {
 
-	if (this.cameraZoomActive || this.cameraRotationActive) {
+	if (this.cameraZoomActive || this.cameraRotationActive || this.cameraTransitionActive) {
 		return;
 	}
 
 	this.cameraTiltActive = true;
-}
+};
+//--------------------------------------------------------
+XMLscene.prototype.switchFrontView = function() {
+
+	if (this.frontViewMode || this.cameraAnimationActive()) {
+		return;
+	}
+
+	this.frontViewMode = true;
+	this.sceneViewMode = false;
+	this.topViewMode = false;
+	this.cameraTransitionActive = true;
+	this.cameraTransitionTarget = this.cameraFrontView;
+	this.processCameraDelta();
+};
+//--------------------------------------------------------
+XMLscene.prototype.switchSceneView = function() {
+
+	if (this.sceneViewMode || this.cameraAnimationActive()) {
+		return;
+	}
+
+	this.frontViewMode = false;
+	this.sceneViewMode = true;
+	this.topViewMode = false;
+	this.cameraTransitionActive = true;
+	this.cameraTransitionTarget = this.cameraSceneView;
+	this.processCameraDelta();
+};
+//--------------------------------------------------------
+XMLscene.prototype.switchTopView = function() {
+
+	if (this.topViewMode || this.cameraAnimationActive()) {
+		return;
+	}
+
+	this.frontViewMode = false;
+	this.sceneViewMode = false;
+	this.topViewMode = true;
+	this.cameraTransitionActive = true;
+	this.cameraTransitionTarget = this.cameraTopView;
+	this.processCameraDelta();
+};
+//--------------------------------------------------------
+XMLscene.prototype.zoomOut = function() {
+
+	if (this.cameraTiltActive || this.cameraRotationActive || this.cameraTransitionActive) {
+		return;
+	}
+
+	this.cameraZoomActive = true;
+	this.cameraZoomAmount = -4.0;
+	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
+};
+//--------------------------------------------------------
+XMLscene.prototype.startGame = function() {
+	this.switchFrontView();
+	this.startAfterTransition = true;
+};
+//--------------------------------------------------------
+XMLscene.prototype.zoomIn = function() {
+
+	if (this.cameraTiltActive || this.cameraRotationActive || this.cameraTransitionActive) {
+		return;
+	}
+
+	this.cameraZoomActive = true;
+	this.cameraZoomAmount = 4.0;
+	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
+};
 //---------------------------------------------------------
 XMLscene.prototype.processCameraZoom = function(deltaTime) {
 
@@ -204,10 +279,10 @@ XMLscene.prototype.processCameraZoom = function(deltaTime) {
 //--------------------------------------------------------
 XMLscene.prototype.processCameraRotation = function(deltaTime) {
 
-	if (this.cameraRotationAmount > 0 && this.currentCameraRotation <= this.targetCameraRotation) {
+	if (this.cameraRotationAmount > 0.0 && this.currentCameraRotation <= this.targetCameraRotation) {
 		this.currentCameraRotation += this.cameraRotationAmount * deltaTime;
 	}
-	else if (this.cameraRotationAmount < 0 && this.currentCameraRotation >= this.targetCameraRotation) {
+	else if (this.cameraRotationAmount < 0.0 && this.currentCameraRotation >= this.targetCameraRotation) {
 		this.currentCameraRotation += this.cameraRotationAmount * deltaTime;
 	}
 	else {
@@ -220,92 +295,52 @@ XMLscene.prototype.processCameraRotation = function(deltaTime) {
 //--------------------------------------------------------
 XMLscene.prototype.processCameraTilt = function(deltaTime) {
 
-	if (this.cameraTiltAmount < 0.0 && this.currentCameraTilt > -25.0) {
+	if (this.cameraTiltAmount < 0.0 && this.currentCameraTilt > -20.0) {
 		this.currentCameraTilt += this.cameraTiltAmount;
-		this.camera.orbit([0,1,0],2 * this.cameraTiltAmount * deltaTime);
+		this.camera.orbit([0.0, 1.0, 0.0], 2.0 * this.cameraTiltAmount * deltaTime);
 	}
-	else if (this.cameraTiltAmount > 0.0 && this.currentCameraTilt < 25.0) {
+	else if (this.cameraTiltAmount > 0.0 && this.currentCameraTilt < 20.0) {
 		this.currentCameraTilt += this.cameraTiltAmount;
-		this.camera.orbit([0,1,0],2 * this.cameraTiltAmount * deltaTime);
+		this.camera.orbit([0.0, 1.0, 0.0], 2.0 * this.cameraTiltAmount * deltaTime);
 	}
 	else {
 		this.cameraTiltActive = false;
 	}
 };
 //--------------------------------------------------------
-XMLscene.prototype.centerCamera = function(deltaTime) {
+XMLscene.prototype.processCameraTransition = function(deltaTime) {
 
-	this.cameraPan = true;
-	this.cameraRotate = false;
-	this.currentDistance = 0.0;
-	this.lastDistance = vec3.dist(this.camera.position, this.finalPosition);
-	//--------------------------------------------------------
-	var directionX = this.camera.direction[0];
-	var directionZ = this.camera.direction[2];
-	//--------------------------------------------------------
-	if (directionX > directionZ) {
-		this.targetRotation = directionZ - directionX;
+	var cameraTransitionDistance = vec3.dist(this.camera.position, this.cameraTransitionTarget);
+
+	if (cameraTransitionDistance > 0.5) {
+		var cameraPosition = vec3.create();
+		vec3.scale(cameraPosition, this.cameraTransitionDelta, deltaTime);
+		vec3.add(cameraPosition, cameraPosition, this.camera.position);
+		this.camera.setPosition(cameraPosition);
 	}
 	else {
-		this.targetRotation = directionX - directionZ;
+		this.initialCameraPosition = vec3.clone(this.cameraTransitionTarget);
+		this.initialCameraTilt = vec3.clone(this.cameraTransitionTarget);
+		this.camera.setPosition(this.cameraTransitionTarget);
+		this.cameraTransitionActive = false;
+		
+		if (this.startAfterTransition) {
+			this.startAfterTransition = false;
+			this.board.startGame();
+		}
 	}
-	//--------------------------------------------------------
-	this.deltaRotation = 0.001 / this.targetRotation;
 };
 //--------------------------------------------------------
-XMLscene.prototype.zoomOut = function() {
-
-	if (this.cameraTiltActive || this.cameraRotationActive) {
-		return;
-	}
-
-	this.cameraZoomActive = true;
-	this.cameraZoomAmount = -4.0;
-	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
-};
-//--------------------------------------------------------
-XMLscene.prototype.zoomIn = function() {
-
-	if (this.cameraTiltActive || this.cameraRotationActive) {
-		return;
-	}
-
-	this.cameraZoomActive = true;
-	this.cameraZoomAmount = 4.0;
-	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
-};
-//--------------------------------------------------------
-XMLscene.prototype.switchFrontView = function() {
-
-	if (this.frontViewMode || this.cameraAnimationActive()) {
-		return;
-	}
-
-	this.frontViewMode = true;
-	this.topViewMode = false;
-	this.camera.setPosition(this.cameraFrontView);
-	this.initialCameraPosition = vec3.clone(this.camera.position);
-	this.initialCameraTilt = vec3.clone(this.camera.position);
-};
-//--------------------------------------------------------
-XMLscene.prototype.switchTopView = function() {
-
-	if (this.topViewMode || this.cameraAnimationActive()) {
-		return;
-	}
-
-	this.frontViewMode = false;
-	this.topViewMode = true;
-	this.camera.setPosition(this.cameraTopView);
-	this.initialCameraPosition = vec3.clone(this.camera.position);
-	this.initialCameraTilt = vec3.clone(this.camera.position);
+XMLscene.prototype.processCameraDelta = function() {
+	this.cameraTransitionDelta = vec3.clone(this.cameraTransitionTarget)
+	vec3.sub(this.cameraTransitionDelta, this.cameraTransitionDelta, this.camera.position);
 };
 //--------------------------------------------------------
 XMLscene.prototype.rotateCamera = function() {
 	this.cameraRotationActive = true;
 	this.cameraRotationAmount = Math.PI;
 	this.targetCameraRotation = this.currentCameraRotation + Math.PI;
-}
+};
 //--------------------------------------------------------
 XMLscene.prototype.resetRotation = function() {
 	this.cameraTiltAmount = 0.0;
@@ -314,7 +349,7 @@ XMLscene.prototype.resetRotation = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.cameraAnimationActive = function() {
-	return this.cameraRotationActive || this.cameraTiltActive || this.cameraZoomActive;
+	return this.cameraRotationActive || this.cameraTiltActive || this.cameraTransitionActive || this.cameraZoomActive;
 }
 //--------------------------------------------------------
 XMLscene.prototype.resetPicking = function() {
@@ -330,12 +365,14 @@ XMLscene.prototype.defaultPicking = function(object) {
 	this.registerForPick(0, object);
 };
 //--------------------------------------------------------
-XMLscene.prototype.displayGraph = function() {
+XMLscene.prototype.applyInitialMatrix = function() {
 
-	this.graph.display();
-
-	for (var i = 0; i < this.activeLights; i++) {
-		this.lights[i].update();
+	if (this.gameMode && this.graph.loadedOk) {
+		this.rotate(this.currentCameraRotation, 0, 1, 0);
+		this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
+	}
+	else {
+		this.multMatrix(this.defaultMatrix);
 	}
 };
 //--------------------------------------------------------
@@ -348,7 +385,6 @@ XMLscene.prototype.displayBoard = function() {
 	this.board.display();
 };
 //--------------------------------------------------------
-
 /**
  * altera o comprimento dos eixos visíveis na cena
  * @param {Number} length - comprimento dos eixos
@@ -364,7 +400,6 @@ XMLscene.prototype.initAxis = function(length) {
  */
 XMLscene.prototype.initCameras = function() {
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
-	this.camera.setTarget([0.0, 0.0,0.0]);
 };
 
 /**
@@ -455,6 +490,14 @@ XMLscene.prototype.resetAppearance = function() {
  */
 XMLscene.prototype.resetActiveShader = function() {
 	this.setActiveShader(this.defaultShader);
+};
+
+/**
+ * regressa ao shader default definido pela cena
+ * @return {null}
+ */
+XMLscene.prototype.resetActiveShaderSimple = function() {
+	this.setActiveShaderSimple(this.defaultShader);
 };
 
 /**
@@ -555,7 +598,6 @@ XMLscene.prototype.toggleLight = function(id, enabled) {
  * @return {null}
  */
 XMLscene.prototype.onGraphLoaded = function() {
-
 	//--------------------------------------------------------
 	this.camera.far = this.frustumFar;
 	this.camera.near = this.frustumNear;
@@ -583,12 +625,14 @@ XMLscene.prototype.onGraphLoaded = function() {
 	}
 	//--------------------------------------------------------
 	if (this.gameMode) {
-		this.camera.setPosition(this.cameraFrontView);
+		this.camera.setTarget(vec3.fromValues(0.0, 0.0, 0.0));
+		this.camera.setPosition(this.cameraSceneView);
 		this.initialCameraPosition = vec3.clone(this.camera.position);
 		this.initialCameraTilt = vec3.clone(this.camera.position);
+		this.setPickEnabled(true);
 	}
 };
-
+//--------------------------------------------------------
 XMLscene.prototype.initLights = function() {
 	this.lights[0].setPosition(2.0, 3.0, 3.0, 1.0);
 	this.lights[0].setAmbient(0.1, 0.1, 0.1, 1.0);
@@ -597,7 +641,7 @@ XMLscene.prototype.initLights = function() {
 	this.lights[0].setVisible(true);
 	this.lights[0].enable();
 	this.guiInterface.pushLight('default', this.activeLights++, true);
-}
+};
 
 /**
  * altera o modo de reprodução de todas as animações presentes na cena
@@ -614,7 +658,7 @@ XMLscene.prototype.setAnimationLoop = function(loopValue) {
  * @return {null}
  */
 XMLscene.prototype.update = function(currTime) {
-
+	//--------------------------------------------------------
 	var deltaTime = (currTime - this.lastUpdate) / 1000;
 	//--------------------------------------------------------
 	if (this.gameMode) {
@@ -623,29 +667,7 @@ XMLscene.prototype.update = function(currTime) {
 		this.board.update(currTime, this.lastUpdate);
 	}
 	//--------------------------------------------------------
-	/*if (this.cameraPan) {
-
-		//this.currentDistance += vec3.len(this.cameraDelta);
-		//console.log(this.currentDistance);
-		if (Math.abs(this.camera.direction[0] - this.camera.direction[2]) > 0.01) {
-			this.camera.pan(this.cameraDelta);
-			this.camera.orbit([0,1,0],this.deltaRotation);
-		}
-		else {
-			this.cameraPan = false;
-		}
-	}
-	else if (this.cameraRotate) {
-		this.camera.orbit([0,1,0], this.cameraOrbit);
-		if (this.camera.position[2] <= 0.0) {
-			this.cameraOrbit = -this.cameraOrbit;
-		}
-		else if (this.camera.position[2] >= 20.0) {
-			this.cameraOrbit = -this.cameraOrbit;
-		}
-	}
-	*/
-	//--------------------------------------------------------
+	this.cameraTransitionActive && this.processCameraTransition(deltaTime);
 	this.cameraZoomActive && this.processCameraZoom(deltaTime);
 	this.cameraRotationActive && this.processCameraRotation(deltaTime);
 	this.cameraTiltActive && this.processCameraTilt(deltaTime);
@@ -654,33 +676,32 @@ XMLscene.prototype.update = function(currTime) {
 		this.graph.processAnimations(deltaTime);
 	}
 };
+
 /**
  * callback executado periodicamente para atualizar a visualização da cena
  * @return {null}
  */
 XMLscene.prototype.display = function() {
-
+	//--------------------------------------------------------
 	this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
 	this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+	//--------------------------------------------------------
 	this.updateProjectionMatrix();
 	this.loadIdentity();
 	this.applyViewMatrix();
+	this.applyInitialMatrix();
 	//--------------------------------------------------------
-	if (this.gameMode) {
-		this.rotate(this.currentCameraRotation, 0, 1, 0);
-		this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
-	}
-	else {
-		this.multMatrix(this.defaultMatrix);
+	for (var i = 0; i < this.activeLights; i++) {
+		this.lights[i].update();
 	}
 	//--------------------------------------------------------
 	this.axis.display();
 	this.resetAppearance();
 	//--------------------------------------------------------
-	if (this.graph.loadedOk) {
-		this.displayGraph();
-		if (this.gameMode) {
-			this.displayBoard();
-		}
+	if (!this.graph.loadedOk) {
+		return;
 	}
+	//--------------------------------------------------------
+	this.graph.display();
+	this.gameMode && this.displayBoard();
 };

@@ -370,6 +370,11 @@ PieceController.prototype.pieceAt = function(pieceId) {
 	return this.pieces[pieceId];
 };
 //--------------------------------------------------------
+PieceController.prototype.stopAnimation = function() {
+	this.animationId = null;
+	this.animation = null;
+};
+//--------------------------------------------------------
 PieceController.prototype.update = function(delta) {
 
 	if (this.animationId == null) {

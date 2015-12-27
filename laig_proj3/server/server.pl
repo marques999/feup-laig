@@ -17,33 +17,9 @@ server:-
 	port(Port),
 	write('Opened Server'),nl,
 	socket_server_open(Port, Socket),
-	server_handshake(Socket),
 	server_loop(Socket),
 	socket_server_close(Socket),
 	write('Closed Server'),nl.
-
-server_handshake(Socket):-
-	repeat,
-	socket_server_accept(Socket, _Client, Stream, [type(text)]),
-	catch((
-		read_request(Stream, Request),
-		read_header(Stream)
-	),_Exception,(
-		close_stream(Stream),
-		fail
-	)),
-	handshake_request(Request, MyReply, Status),
-	format('Request: ~q~n',[Request]),
-	format('Reply: ~q~n', [MyReply]),
-	format_reply(Stream, Status, MyReply),
-	close_stream(Stream),
-	(MyReply = yes), !.
-
-format_reply(Stream, Status, Reply):-
-	format(Stream, 'HTTP/1.0 ~p~n', [Status]),
-	format(Stream, 'Access-Control-Allow-Origin: *~n', []),
-	format(Stream, 'Content-Type: text/plain~n~n', []),
-	format(Stream, '~p', [Reply]).
 
 % Server Loop
 % Uncomment writes for more information on incomming connections
@@ -60,7 +36,10 @@ server_loop(Socket):-
 	handle_request(Request, MyReply, Status),
 	format('Request: ~q~n',[Request]),
 	format('Reply: ~q~n', [MyReply]),
-	format_reply(Stream, Status, MyReply),
+	format(Stream, 'HTTP/1.0 ~p~n', [Status]),
+	format(Stream, 'Access-Control-Allow-Origin: *~n', []),
+	format(Stream, 'Content-Type: text/plain~n~n', []),
+	format(Stream, '~p', [MyReply]),
 	close_stream(Stream),
 	(Request = quit), !.
 
@@ -73,11 +52,7 @@ close_stream(Stream):-
 % Returns 400 Bad Request on syntax error (received from parser) or on failure of parse_input
 handle_request(Request, MyReply, '200 OK'):- catch(parse_input(Request, MyReply),error(_,_),fail), !.
 handle_request(syntax_error, 'no', '400 Bad Request'):- !.
-handle_request(_, 'no', '400 Bad Request').
-
-handshake_request(Request, MyReply, '200 OK'):- catch(parse_handshake(Request, MyReply),error(_,_),fail), !.
-handshake_request(syntax_error, 'no', '400 Bad Request'):- !.
-handshake_request(_, 'no', '400 Bad Request').
+handle_request(_, 'no', '200 OK').
 
 % Reads first Line of HTTP Header and parses request
 % Returns term parsed from Request-URI
@@ -112,9 +87,9 @@ print_header_line(_).
 
 :- include('duplohex.pl').
 
-parse_handshake(pvp(_,_), yes).
-parse_handshake(pvb(_,_,_), yes).
-parse_handshake(bvb(_,_,_), yes).
+parse_input(pvp(_,_), yes).
+parse_input(pvb(_,_,_), yes).
+parse_input(bvb(_,_,_), yes).
 parse_input(quit, goodbye).
 
 parse_input(placeDisc(Board, Piece, Player, Position), yes):-
@@ -136,3 +111,5 @@ parse_input(getInitialMove(Board, Piece, Player), Reply):-
 
 parse_input(getStatus(Board, Player1, Player2), Reply):-
 	serverCheckGame(Board, Player1, Player2, Reply).
+parse_input(getStuck(Board, CurrentPlayer), Reply):-
+	serverCheckStuck(Board, CurrentPlayer, Reply).

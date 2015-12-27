@@ -11,15 +11,81 @@ body, html {
     margin: 0;
     overflow: hidden;
 }
-
 canvas {
     width: 100%;
     height: 100%;
 }
+
+h1 {
+	color:#3a6d8c; 
+	margin:0;
+	font-family: impact, "Arial Black", sans-serif;
+	color: #fff;
+	font-size: 3.0em;
+	left:0.5em;
+	right:0.5em;
+	text-align: center;
+	text-shadow:  2px  2px #000,
+				   -2px  2px #000,
+					2px -2px #000,
+}
+h3 {
+	color:#3a6d8c;
+	font-size:1.5em;
+	font-family:sans-serif;
+	line-height:26px;
+	font-weight:normal;
+	margin:0 0 8px 0;
+}#captionTop {
+ position: absolute;
+  top: .5em;
+}
+#captionBottom {
+ position: absolute;
+  bottom: .5em;
+}
+#logo {margin-bottom:20px; width:300px;}
+#logo h1 {color:#666; letter-spacing:-1px; font-weight:normal;}
+#logo h1 span {color:#444; font-weight:bold;}
+#logo .title {color:#999; font-size:12px;}
+#footer {clear:left; color:#888; margin:20px 0;}
+#footer a:link, #footer a:visited {color:#888; text-decoration:none;}
+#footer a:hover {color:#333; text-decoration:underline;}
+#simplemodal-overlay {background-color:#000;}
+#simplemodal-container {
+	height:450px; 
+	width:450px; 
+	border:4px solid black; 
+	padding:12px;
+	background:url(resources/success.png) no-repeat; 
+}
+
+#simplemodal-container a.modalCloseImg {background:url(resources/close.png) no-repeat; width:25px; height:29px; display:inline; z-index:3200; position:absolute; top:-15px; right:-16px; cursor:pointer;}
+div.modal-content {display:none;}
 </style>
 </head>
 <body>
+<script src="../lib/jquery.min.js"></script>
+<script src="../lib/jquery.simplemodal.js"></script>
 <script src="main.js">
 </script>
+		
+<!-- modal content -->
+<div id="p1Wins" class="modal-content">
+	<h1 id="captionTop">PLAYER 1 WINS!</h1>
+	<h1 id="captionBottom">NO COOKIE FOR YOU</h1>
+</div>
+<div id="p2Wins" class="modal-content">
+	<h1 id="captionTop">PLAYER 2 WINS!</h1>
+	<h1 id="captionBottom">NO COOKIE FOR YOU</h1>
+</div>
+<div id="p1Defeated" class="modal-content">
+	<h1 id="captionTop">PLAYER 1 DEFEATED!</h1>
+	<h1 id="captionBottom">YOU LOST THE GAME</h1>
+</div>
+<div id="p2Defeated" class="modal-content">
+	<h1 id="captionTop">PLAYER 2 DEFEATED!</h1>
+	<h1 id="captionBottom">YOU LOST THE GAME</h1>
+</div>
 </body>
 </html>

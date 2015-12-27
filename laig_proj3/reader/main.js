@@ -12,7 +12,6 @@ function getUrlVars() {
 
 serialInclude([
 	'../lib/CGF.js',
-	'../lib/jquery-2.1.4.min.js',
 	'MyInterface.js',
 	'XMLtexture.js',
 	'XMLnode.js',

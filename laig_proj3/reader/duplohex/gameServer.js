@@ -38,16 +38,11 @@ GameServer.prototype.requestGame = function() {
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
-
 		if (serverResponse.status == 200 && serverResponse.responseText == 'yes' ) {
 			self.xmlScene.onConnect();
 		}
-		else if (serverResponse.responseText == 'no') {
-			alert("connection error! another game is running on that server...");
-			self.xmlScene.onServerError();
-		}
 		else {
-			alert("unknown response! are you sure it's a  valid game server?");
+			alert("unknown response! are you sure it's a valid game server?");
 			self.xmlScene.onServerError();
 		}
 	}, function(httpError)
@@ -94,36 +89,35 @@ GameServer.prototype.requestStatus = function(gameBoard, player1, player2) {
 	var player1State = this.serializePlayer(player1);
 	var player2State = this.serializePlayer(player2);
 	var requestString = "getStatus(" + gameBoard + "," + player1State + "," + player2State + ")";
+	var self = this;
 	//--------------------------------------------------------
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
-
-		if (serverResponse.status == 200) { // HTTP OK
-
-			if (serverResponse.responseText == 'p1Wins') {
-				alert("PLAYER 1 WON!");
-			}
-			else if (serverResponse.responseText == 'p2Wins') {
-				alert("PLAYER 2 WON!");
-			}
-			else if (serverResponse.responseText == 'p1Stuck') {
-				alert("PLAYER 1 STUCK!");
-			}
-			else if (serverResponse.responseText == 'p2Stuck') {
-				alert("PLAYER 2 STUCK!");
-			}
-			else if(serverResponse.responseText == 'p1Defeated') {
-				alert("PLAYER 1 HAS NO PIECES LEFT AND WAS DEFEATED");
-			}
-			else if (serverResponse.responseText == 'p2Defeated') {
-				alert("PLAYER 2 HAS NO PIECES LEFT AND WAS DEFEATED");
-			}
+		if (serverResponse.status == 200 && serverResponse.responseText != 'continue') {
+			self.gameBoard.handleStatus(serverResponse.responseText);
 		}
 	}, function(e)
 	{
 		alert("error checking current game state!");
-		self.gameBoard.onResetPlace();
+	});
+};
+//--------------------------------------------------------
+GameServer.prototype.requestStuck = function(gameBoard, currentPlayer) {
+	//--------------------------------------------------------
+	var playerState = this.serializePlayer(currentPlayer);
+	var requestString = "getStuck(" + gameBoard + "," + playerState + ")";
+	var self = this;
+	//--------------------------------------------------------
+	this.getPrologRequest(requestString, function(httpResponse)
+	{
+		var serverResponse = httpResponse.currentTarget;
+		if (serverResponse.status == 200) {
+			self.gameBoard.handleStuck(serverResponse.responseText == 'yes');
+		}
+	}, function(e)
+	{
+		alert("error checking current game state!");
 	});
 };
 //--------------------------------------------------------
