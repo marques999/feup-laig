@@ -1091,7 +1091,7 @@ GameBoard.prototype.processFrame = function(id, x, y) {
 //--------------------------------------------------------
 GameBoard.prototype.updatePicking = function(selectedId) {
 
-	if (!this.gameRunning || this.animationBusy()) {
+	if (!this.gameRunning || this.animationActive) {
 		return;
 	}
 
