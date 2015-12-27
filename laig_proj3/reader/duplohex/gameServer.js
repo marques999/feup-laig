@@ -38,16 +38,17 @@ GameServer.prototype.requestGame = function() {
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
 		if (serverResponse.status == 200 && serverResponse.responseText == 'yes' ) {
 			self.xmlScene.onConnect();
 		}
 		else {
-			alert("unknown response! are you sure it's a valid game server?");
+			self.onServerUnknown();
 			self.xmlScene.onServerError();
 		}
 	}, function(httpError)
 	{
-		alert("connection error!");
+		self.onServerOffline();
 		self.xmlScene.onServerError();
 	});
 };
@@ -63,7 +64,7 @@ GameServer.prototype.getPrologRequest = function(requestString, onSuccess, onErr
 	};
 	//--------------------------------------------------------
 	request.onerror = onError || function() {
-		self.gameBoard.onDisconnect();
+		self.xmlScene.onServerError();
 	};
 	//--------------------------------------------------------
 	request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -77,10 +78,13 @@ GameServer.prototype.requestQuit = function() {
 	this.getPrologRequest('quit', function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
-
+		//--------------------------------------------------------
 		if (serverResponse.status == 200 && serverResponse.responseText == 'goodbye') {
 			self.xmlScene.onDisconnect();
 		}
+	}, function(httpError)
+	{
+		self.xmlScene.onDisconnect();
 	});
 };
 //--------------------------------------------------------
@@ -94,12 +98,14 @@ GameServer.prototype.requestStatus = function(gameBoard, player1, player2) {
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
 		if (serverResponse.status == 200 && serverResponse.responseText != 'continue') {
 			self.gameBoard.handleStatus(serverResponse.responseText);
 		}
-	}, function(e)
+	}, function(httpError)
 	{
-		alert("error checking current game state!");
+		self.onConnectionLost();
+		self.xmlScene.onServerError();
 	});
 };
 //--------------------------------------------------------
@@ -112,12 +118,14 @@ GameServer.prototype.requestStuck = function(gameBoard, currentPlayer) {
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
+		//--------------------------------------------------------
 		if (serverResponse.status == 200) {
 			self.gameBoard.handleStuck(serverResponse.responseText == 'yes');
 		}
-	}, function(e)
+	}, function(httpError)
 	{
-		alert("error checking current game state!");
+		self.onConnectionLost();
+		self.xmlScene.onServerError();
 	});
 };
 //--------------------------------------------------------
@@ -145,17 +153,18 @@ GameServer.prototype.requestBotAction = function(Board, currentPiece, initialMov
 	this.getPrologRequest(requestString, function(httpResponse)
 	{
 		var serverResponse = httpResponse.currentTarget;
-
+		//--------------------------------------------------------
 		if (serverResponse.status == 200 && serverResponse.responseText != 'no') {
 			self.gameBoard.unserializeAction(serverResponse.responseText);
 		}
 		else {
 			self.gameBoard.onResetPlace();
 		}
-	}, function(e)
+	}, function(httpError)
 	{
+		self.onConnectionTimeout();
 		self.gameBoard.onResetPlace();
-		self.gameBoard.onDisconnect();
+		self.xmlScene.onServerError();
 	});
 };
 //--------------------------------------------------------
@@ -176,9 +185,11 @@ GameServer.prototype.requestMoveDisc = function(Board, SourceX, SourceY, Destina
 		else {
 			self.gameBoard.onResetPlace();
 		}
-	}, function(e)
+	}, function(httpError)
 	{
+		self.onConnectionTimeout();
 		self.gameBoard.onResetPlace();
+		self.xmlScene.onServerError();
 	});
 };
 //--------------------------------------------------------
@@ -199,9 +210,11 @@ GameServer.prototype.requestMoveRing = function(Board, SourceX, SourceY, Destina
 		else {
 			self.gameBoard.onResetPlace();
 		}
-	}, function(e)
+	}, function(httpError)
 	{
+		self.onConnectionTimeout();
 		self.gameBoard.onResetPlace();
+		self.xmlScene.onServerError();
 	});
 };
 //--------------------------------------------------------
@@ -222,9 +235,11 @@ GameServer.prototype.requestPlaceDisc = function(Board, DestinationX, Destinatio
 		else {
 			self.gameBoard.onResetPlace();
 		}
-	}, function(e)
+	}, function(httpError)
 	{
+		self.onConnectionTimeout();
 		self.gameBoard.onResetPlace();
+		self.xmlScene.onServerError();
 	});
 };
 //--------------------------------------------------------
@@ -245,9 +260,11 @@ GameServer.prototype.requestPlaceRing = function(Board, DestinationX, Destinatio
 		else {
 			self.gameBoard.onResetPlace();
 		}
-	}, function(e)
+	}, function(httpError)
 	{
+		self.onConnectionTimeout();
 		self.gameBoard.onResetPlace();
+		self.xmlScene.onServerError();
 	});
 };
 //--------------------------------------------------------
@@ -269,4 +286,20 @@ GameServer.prototype.serializeMoveDisc = function(Board, Piece, Player, SourceX,
 //--------------------------------------------------------
 GameServer.prototype.serializeMoveRing = function(Board, Piece, Player, SourceX, SourceY, DestinationX, DestinationY) {
 	return 'moveRing(' + Board + "," + Piece + "," + Player + "," +  SourceX + '-' + SourceY + "," + DestinationX + '-' + DestinationY + ')';
+};
+//--------------------------------------------------------
+GameServer.prototype.onConnectionTimeout = function() {
+	alert("> DISCONNECTED <\nError sending request, server did not respond!");
+};
+//--------------------------------------------------------
+GameServer.prototype.onConnectionLost = function() {
+	alert("> DISCONNECTED <\nError checking current game state, lost connection to server!");
+};
+//--------------------------------------------------------
+GameServer.prototype.onServerUnknown = function() {
+	alert("> DISCONNECTED <\nReceived unknown response, are you connected to a valid game server?");
+};
+//--------------------------------------------------------
+GameServer.prototype.onServerOffline = function() {
+	alert("> DISCONNECTED <\nConnection error: server not running on target machine!");
 };

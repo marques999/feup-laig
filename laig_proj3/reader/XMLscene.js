@@ -68,7 +68,7 @@ XMLscene.prototype.onDisconnect = function() {
 //--------------------------------------------------------
 XMLscene.prototype.onServerError = function() {
 	this.httpServer = null;
-	this.guiInterface.onError();
+	this.guiInterface.onServerError();
 };
 //--------------------------------------------------------
 XMLscene.prototype.disconnectServer = function() {

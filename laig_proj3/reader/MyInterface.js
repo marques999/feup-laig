@@ -205,8 +205,12 @@ MyInterface.prototype.onConnect = function() {
 	this.connectionMenu();
 }
 //--------------------------------------------------------
-MyInterface.prototype.onError = function() {
+MyInterface.prototype.onServerError = function() {
 	this.serverConnected = false;
+	this.gameMenu_close();
+	this.board.resetBoard();
+	this.scene.resetDisplay();
+	this.mainMenu();
 }
 //--------------------------------------------------------
 MyInterface.prototype.onDisconnect = function() {
@@ -234,10 +238,6 @@ MyInterface.prototype.connectionMenu = function() {
 	else {
 		this.connectionGroup.add(this.scene, "initServer").name("Connect");
 	}
-	//--------------------------------------------------------
-	this.connectionGroup.add(this, "mainMenu").name("Exit").onChange(function() {
-		self.connectionMenu_close();
-	});
 };
 //--------------------------------------------------------
 MyInterface.prototype.connectionMenu_close = function(self) {
@@ -331,6 +331,7 @@ MyInterface.prototype.mainMenu = function() {
 	//--------------------------------------------------------
 	var self = this;
 	//--------------------------------------------------------
+	this.mainMenu_close();
 	this.mainGroup = this.gui.addFolder("Main Menu");
 	this.mainGroup.open();
 	//--------------------------------------------------------
