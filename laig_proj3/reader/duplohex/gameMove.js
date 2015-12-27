@@ -1,6 +1,5 @@
 function GameMove(board) {
 	this.board = board;
-	this.totalFrames = 0;
 	this.moves = [];
 	this.resetMovie();
 };
@@ -10,11 +9,9 @@ GameMove.prototype.constructor = GameMove;
 //--------------------------------------------------------
 GameMove.prototype.push = function(selectedPiece, sourceCell, previousPiece) {
 	this.moves.push([selectedPiece, sourceCell, previousPiece]);
-	this.totalFrames++;
 };
 //--------------------------------------------------------
 GameMove.prototype.pop = function() {
-	this.totalFrames--;
 	return this.moves.pop();
 };
 //--------------------------------------------------------
@@ -22,8 +19,12 @@ GameMove.prototype.empty = function() {
 	return this.moves.length <= 0;
 }
 //--------------------------------------------------------
+GameMove.prototype.getLength = function() {
+	return this.moves.length;
+};
+//--------------------------------------------------------
 GameMove.prototype.movieFinished = function() {
-	return this.currentFrame >= this.totalFrames;
+	return this.currentFrame >= this.moves.length;
 };
 //--------------------------------------------------------
 GameMove.prototype.resetMovie = function() {

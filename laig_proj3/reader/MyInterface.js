@@ -385,7 +385,7 @@ MyInterface.prototype.movieMenu = function() {
 	this.movieGroup.add(this.board, "skipMovieFrame").name("Skip Move");
 	this.movieGroup.add(this.board, "movieDelay", 100, 5000).step(100).name("Animation Delay");
 	this.movieGroup.add(this.board, "movieSpeed", 1, 5).step(0.1).name("Animation Speed");
-	this.movieGroup.add(this.board, "movieFrame", 0, 4).step(1).name("Current Move").listen();
+	this.movieGroup.add(this.board, "movieFrame", 0, this.board.movieLength()).step(1).name("Current Move").listen();
 };
 //--------------------------------------------------------
 MyInterface.prototype.movieMenu_close = function() {
