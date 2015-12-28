@@ -64,7 +64,7 @@ XMLscene.prototype.setSettings = function(gameSettings) {
 };
 //--------------------------------------------------------
 XMLscene.prototype.onConnect = function() {
-	alert("connection established successfully!");
+	alert("> INFORMATION <\nconnection established successfully!");
 	this.guiInterface.onConnect();
 	this.board.setServer(this.httpServer);
 };
@@ -669,7 +669,6 @@ XMLscene.prototype.onGraphLoaded = function() {
 		this.lights[i].setVisible(false);
 		this.lights[i].disable();
 	}
-	console.log(this.lights);
 	//--------------------------------------------------------
 	if (this.gameMode) {
 		this.camera.setTarget(vec3.fromValues(0.0, 0.0, 0.0));

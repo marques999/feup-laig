@@ -244,6 +244,9 @@ GameBoard.prototype.resetDefaults = function() {
 	//--------------------------------------------------------
 	this.unselectActiveCell();
 	this.unselectHints();
+	//--------------------------------------------------------
+	this.clock1.resetClock();
+	this.clock2.resetClock();
 };
 //--------------------------------------------------------
 GameBoard.prototype.getPlayer = function() {

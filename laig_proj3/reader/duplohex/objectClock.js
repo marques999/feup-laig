@@ -218,3 +218,9 @@ ObjectClock.prototype.updateClock = function(deltaTime) {
 		this.CLOCK[4] = 9;
 	}
 };
+//--------------------------------------------------------
+ObjectClock.prototype.resetClock = function() {
+	this.CLOCK = [10, 10, 12, 10, 10];
+	this.currentMillis = 0.0;
+	this.elapsedSeconds = 0.0;
+};
