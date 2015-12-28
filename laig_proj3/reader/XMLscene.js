@@ -306,32 +306,32 @@ XMLscene.prototype.processCameraRotation = function(deltaTime) {
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraTilt = function(deltaTime) {
+		
+	if(this.cameraTiltAmount < 0.0 && this.currentCameraTilt > -2.0) {
+		
+		var angleIncrement = 2.0 * this.cameraTiltAmount * deltaTime;
+		this.currentCameraTilt += angleIncrement;
 
-	var difDelta = deltaTime;
-
-	if (this.cameraTiltAmount < 0.0 && this.currentCameraTilt >= -20.0) {
-
-		this.currentCameraTilt += this.cameraTiltAmount;
-
-		if (this.currentCameraTilt < -20.0) {
-			difDelta = -(20.0 + this.cameraTiltAmount);
-			this.cameraTiltActive = false;
+		if(this.currentCameraTilt < -2.0) {
+			angleIncrement = -2.0 - (this.currentCameraTilt - angleIncrement);	
+			this.currentCameraTilt = -2.0;							
 		}
 
-		this.camera.orbit([0.0, 1.0, 0.0], 2.0 * this.cameraTiltAmount * difDelta);
+		this.camera.orbit([0.0, 1.0, 0.0], angleIncrement);
 	}
-	else if (this.cameraTiltAmount > 0.0 && this.currentCameraTilt <= 20.0) {
+	else if(this.cameraTiltAmount > 0.0 && this.currentCameraTilt < 2.0) {
 
-		this.currentCameraTilt += this.cameraTiltAmount;
+		var angleIncrement = 2.0 * this.cameraTiltAmount * deltaTime;
+		this.currentCameraTilt += angleIncrement;
+				
+		if(this.currentCameraTilt > 2.0) {
+			angleIncrement = 2.0 - (this.currentCameraTilt - angleIncrement);
+			this.currentCameraTilt = 2.0;
+		}	
 
-		if (this.currentCameraTilt < -20.0) {
-			difDelta = 20.0 - this.cameraTiltAmount;
-			this.cameraTiltActive = false;
-		}
-
-		this.camera.orbit([0.0, 1.0, 0.0], 2.0 * this.cameraTiltAmount * difDelta);
+		this.camera.orbit([0.0, 1.0, 0.0], angleIncrement);					
 	}
-	else {
+	else {		
 		this.cameraTiltActive = false;
 	}
 };
