@@ -14,10 +14,10 @@
 	</ILLUMINATION>
 	<BOARD>
 		<size x="0.15" y="0.15" z="0.15" />
-		<position x="6.5" y="2.75" z="14.5" />		
+		<position x="11.1" y="1.031" z="14.1" />		
 		<topview x="1.8" y="16.48" z="1.8" />
-		<sceneview x="15.0" y="2.5" z="15.0" />
-		<frontview x="7.5" y="8.5" z="7.5" />
+		<sceneview x="-30.0" y="10.5" z="2.0" />
+		<frontview x="2.5" y="2.5" z="2.5" />
 		<rotation axis="y" angle="-90" />
 	</BOARD>
 	<LIGHTS>		
@@ -55,6 +55,9 @@
 				<DESCENDANT id="floor" />
 				<DESCENDANT id="tree1" />
 				<DESCENDANT id="tree2" />
+				<DESCENDANT id="table" />
+				<DESCENDANT id="bench1" />
+				<DESCENDANT id="bench2" />
 			</DESCENDANTS>
 		</NODE>	 
 		<NODE id="floor">
@@ -65,7 +68,175 @@
 			<DESCENDANTS>
 				<DESCENDANT id="leaf_terrain" />
 			</DESCENDANTS>
-		</NODE>  
+		</NODE> 
+
+		<NODE id="bench1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="10" y="0.0" z="13.5"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="leg1" />
+				<DESCENDANT id="leg2" />
+				<DESCENDANT id="leg3" />
+				<DESCENDANT id="leg4" />	
+				<DESCENDANT id="trave1" />
+				<DESCENDANT id="trave2" />
+				<DESCENDANT id="trave3" />	
+				<DESCENDANT id="table_side1" />
+				<DESCENDANT id="table_side2" />
+				<DESCENDANT id="table_side3" />
+				<DESCENDANT id="table_side4" />
+				<DESCENDANT id="table_top" />			
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="table">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="10" y="0.0" z="13.5"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="leg1" />
+				<DESCENDANT id="leg2" />
+				<DESCENDANT id="leg3" />
+				<DESCENDANT id="leg4" />	
+				<DESCENDANT id="trave1" />
+				<DESCENDANT id="trave2" />
+				<DESCENDANT id="trave3" />	
+				<DESCENDANT id="table_side1" />
+				<DESCENDANT id="table_side2" />
+				<DESCENDANT id="table_side3" />
+				<DESCENDANT id="table_side4" />
+				<DESCENDANT id="table_top" />			
+			</DESCENDANTS>
+		</NODE>
+
+
+		<NODE id="table">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="-0.05" y="0.9" z="-0.05"/>	
+			<SCALE sx="2.3" sy="0.1" sz="1.3"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="table_top">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="-0.05" y="0.9" z="-0.05"/>	
+			<SCALE sx="2.3" sy="0.1" sz="1.3"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="table_side1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.2" y="0.75" z="1.075"/>	
+			<SCALE sx="1.8" sy="0.15" sz="0.05"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="table_side2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="0.0" z="-1.0"/>														
+			<DESCENDANTS>
+				<DESCENDANT id="table_side1" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="table_side3">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.075" y="0.75" z="0.2"/>	
+			<SCALE sx="0.05" sy="0.15" sz="0.8"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="table_side4">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="2.0" y="0.0" z="0.0"/>														
+			<DESCENDANTS>
+				<DESCENDANT id="table_side3" />				
+			</DESCENDANTS>
+		</NODE>
+
+
+		<NODE id="trave1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.05" y="0.1" z="0.0"/>	
+			<SCALE sx="0.1" sy="0.1" sz="1.0"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="trave2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="2.05" y="0.1" z="0.0"/>	
+			<SCALE sx="0.1" sy="0.1" sz="1.0"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="trave3">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.05" y="0.1" z="0.5"/>	
+			<SCALE sx="2.0" sy="0.1" sz="0.1"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="leg1">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="0.0" z="0.0"/>	
+			<SCALE sx="0.2" sy="0.9" sz="0.2"/>												
+			<DESCENDANTS>
+				<DESCENDANT id="primitive_cube" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="leg2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="2.0" y="0.0" z="0.0"/>															
+			<DESCENDANTS>
+				<DESCENDANT id="leg1" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="leg3">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.0" y="0.0" z="1.0"/>														
+			<DESCENDANTS>
+				<DESCENDANT id="leg1" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="leg4">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="2.0" y="0.0" z="1.0"/>															
+			<DESCENDANTS>
+				<DESCENDANT id="leg1" />				
+			</DESCENDANTS>
+		</NODE>
+		 
 		<NODE id="tree1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />	
@@ -98,7 +269,7 @@
 		<NODE id="treeleaves">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="0.0" y="1.5" z="0.0"/>										
+			<TRANSLATION x="0.0" y="1.4" z="0.0"/>										
 			<DESCENDANTS>
 				<DESCENDANT id="treeleaves1" />
 				<DESCENDANT id="treeleaves2" />
