@@ -149,7 +149,7 @@ XMLscene.prototype.loadGraph = function(lsxPath) {
 	this.resetDisplay();
 	this.activeLights = 0;
 	this.guiInterface.resetLights();
-	this.guiInterface.setActiveCamera(this.camera);
+	this.guiInterface.setActiveCamera(null);
 	new MySceneGraph(lsxPath, this);
 };
 //---------------------------------------------------------
@@ -275,34 +275,30 @@ XMLscene.prototype.processCameraDelta = function() {
 	this.currentTransitionSpan = 0.0;
 	this.cameraTransitionDelta = vec3.clone(this.cameraTransitionTarget);
 	this.cameraTransitionDistance = vec3.dist(this.camera.position, this.cameraTransitionTarget);
-	vec3.sub(this.cameraTransitionDelta, this.cameraTransitionDelta, this.camera.position);	
-	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, 0.35);
-	this.cameraTrasitionSpan = 1/0.35;
+	vec3.sub(this.cameraTransitionDelta, this.cameraTransitionDelta, this.camera.position);
+	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, 16.0 / this.cameraTransitionDistance);
+	this.cameraTrasitionSpan = this.cameraTransitionDistance / 16.0;
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraRotation = function(deltaTime) {
 
-	var endAnimation = false;
+	var cameraAnimationFinished = false;
 
-	if (this.cameraRotationAmount > 0.0 && this.currentCameraRotation <= this.targetCameraRotation) {		
+	if (this.cameraRotationAmount > 0.0 && this.currentCameraRotation <= this.targetCameraRotation) {
 		this.currentCameraRotation += this.cameraRotationAmount * deltaTime;
-
-		if(this.currentCameraRotation > this.targetCameraRotation) {
-			endAnimation = true;
+		if (this.currentCameraRotation > this.targetCameraRotation) {
+			cameraAnimationFinished = true;
 		}
-
 	}
 	else if (this.cameraRotationAmount < 0.0 && this.currentCameraRotation >= this.targetCameraRotation) {
 		this.currentCameraRotation += this.cameraRotationAmount * deltaTime;
-
-		if(this.currentCameraRotation < this.targetCameraRotation) {
-			endAnimation = true;
+		if (this.currentCameraRotation < this.targetCameraRotation) {
+			cameraAnimationFinished = true;
 		}
-
 	}
 
-	if(endAnimation) {
-		this.currentCameraRotation = this.targetCameraRotation;	
+	if (cameraAnimationFinished) {
+		this.currentCameraRotation = this.targetCameraRotation;
 		this.initialCameraTilt = vec3.clone(this.camera.position);
 		this.board.onRotationDone();
 		this.cameraRotationActive = false;
@@ -314,44 +310,50 @@ XMLscene.prototype.processCameraTilt = function(deltaTime) {
 	var difDelta = deltaTime;
 
 	if (this.cameraTiltAmount < 0.0 && this.currentCameraTilt >= -20.0) {
+
 		this.currentCameraTilt += this.cameraTiltAmount;
 
-		if(this.currentCameraTilt < -20.0) {
-			difDelta = -20.0 -this.cameraTiltAmount;
+		if (this.currentCameraTilt < -20.0) {
+			difDelta = -(20.0 + this.cameraTiltAmount);
 			this.cameraTiltActive = false;
-		}		
+		}
+
 		this.camera.orbit([0.0, 1.0, 0.0], 2.0 * this.cameraTiltAmount * difDelta);
 	}
-
 	else if (this.cameraTiltAmount > 0.0 && this.currentCameraTilt <= 20.0) {
+
 		this.currentCameraTilt += this.cameraTiltAmount;
 
-		if(this.currentCameraTilt < -20.0) {
-			difDelta = 20.0 -this.cameraTiltAmount;
+		if (this.currentCameraTilt < -20.0) {
+			difDelta = 20.0 - this.cameraTiltAmount;
 			this.cameraTiltActive = false;
-		}	
+		}
 
 		this.camera.orbit([0.0, 1.0, 0.0], 2.0 * this.cameraTiltAmount * difDelta);
+	}
+	else {
+		this.cameraTiltActive = false;
 	}
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraTransition = function(deltaTime) {
 
-	var endAnimation = false;
-
+	var cameraAnimationFinished = false;
+	var cameraPosition = vec3.create();
 	this.currentTransitionSpan += deltaTime;
 
-	if(this.currentTransitionSpan >= this.cameraTrasitionSpan) {
+	if (this.currentTransitionSpan >= this.cameraTrasitionSpan) {
 		deltaTime = this.cameraTrasitionSpan - (this.currentTransitionSpan - deltaTime);
-		endAnimation = true;
+		cameraAnimationFinished = true;
 	}
-		
-	var cameraPosition = vec3.create();
+
 	vec3.scale(cameraPosition, this.cameraTransitionDelta, deltaTime);
 	vec3.add(cameraPosition, cameraPosition, this.camera.position);
-	this.camera.setPosition(cameraPosition);			
 
-	if(endAnimation) {
+	this.camera.setPosition(cameraPosition);
+
+	if (cameraAnimationFinished) {
+
 		this.initialCameraPosition = vec3.clone(this.cameraTransitionTarget);
 		this.initialCameraTilt = vec3.clone(this.cameraTransitionTarget);
 		this.currentTransitionSpan = 0.0;
@@ -362,7 +364,6 @@ XMLscene.prototype.processCameraTransition = function(deltaTime) {
 			this.board.startGame();
 		}
 	}
-	
 };
 //---------------------------------------------------------
 XMLscene.prototype.processCameraZoom = function(deltaTime) {
@@ -487,7 +488,7 @@ XMLscene.prototype.initTranslate = function(matrix) {
  */
 XMLscene.prototype.setInterface = function(guiInterface) {
 	this.guiInterface = guiInterface;
-	this.guiInterface.setActiveCamera(this.camera);
+	this.guiInterface.setActiveCamera(null);
 	this.guiInterface.setScene(this);
 };
 
