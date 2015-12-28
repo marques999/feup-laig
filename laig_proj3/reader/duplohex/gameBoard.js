@@ -270,7 +270,6 @@ GameBoard.prototype.getPlayedPiece = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.onDisconnect = function() {
-	alert("ERROR: disconnected from server!");
 	this.gameRunning = false;
 };
 //--------------------------------------------------------
