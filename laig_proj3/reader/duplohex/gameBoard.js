@@ -392,6 +392,7 @@ GameBoard.prototype.startGame = function(server) {
 	if (this.currentPlayer.cpu) {
 		if (this.currentPlayer.color == 'white') {
 			this.botPlaying = true;
+			this.botCanPlay = true;
 			this.scene.disablePicking();
 			this.botDelay = (Math.random() * 1.5) + 1.0;
 		}
