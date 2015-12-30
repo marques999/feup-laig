@@ -9,9 +9,12 @@
 	<BOARD>
 		<position x="ff" y="ff" z="ff" />
 		<size x="ff" y="ff" b="ff" z="ff" />
-		<rotation axis="x" angle="0" />
-		<rotation axis="y" angle="0" />
-		<rotation axis="z" angle="0" />
+		<frontview x="ff" y="ff" z="ff" />
+		<sceneview x="ff" y="ff" z="ff" />
+		<topview x="ff" y="ff" z="ff" />
+		<rotation axis="x" angle="ii" />
+		<rotation axis="y" angle="ii" />
+		<rotation axis="z" angle="ii" />
 	</BOARD>
 */
 
@@ -111,6 +114,7 @@ BoardParser.prototype.parse = function(root) {
 	mat4.scale(this.boardMatrix, this.boardMatrix, boardSize);
 
 	this.scene.setBoardPosition(boardPosition);
+	this.scene.setBoardSize(boardSize);
 	this.scene.setBoardMatrix(this.boardMatrix);
 	this.scene.setFrontView(vec3.clone(cameraFront));
 	this.scene.setSceneView(vec3.clone(cameraScene));

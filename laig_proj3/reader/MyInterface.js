@@ -45,12 +45,11 @@ MyInterface.prototype.init = function(application) {
 		'smart': false
 	}
 	//--------------------------------------------------------
+	this.gui = new dat.GUI();
 	this.lightsState = {};
 	this.lightsId = [];
-	//--------------------------------------------------------
-	this.serverConnected = false;
 	this.playerColor = 'blackPlayer';
-	this.gui = new dat.GUI();
+	this.serverConnected = false;
 };
 //--------------------------------------------------------
 MyInterface.prototype.setScene = function(xmlScene) {
@@ -67,7 +66,7 @@ MyInterface.prototype.deleteFolder = function(folderName) {
 };
 //--------------------------------------------------------
 MyInterface.prototype.readPreferences = function() {
-
+	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
@@ -82,13 +81,13 @@ MyInterface.prototype.readPreferences = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.savePreferences = function() {
-
+	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
-
+	//--------------------------------------------------------
 	var preferencesArray = this.scene.getPreferences();
-
+	//--------------------------------------------------------
 	preferencesArray.setColor(this.playerColor);
 	preferencesArray.setMode(this.getBoolean(this.gameMode));
 	preferencesArray.setBoard(this.getBoolean(this.gameBoard));
@@ -96,14 +95,14 @@ MyInterface.prototype.savePreferences = function() {
 	preferencesArray.setDifficulty(this.getBoolean(this.gameDifficulty));
 	preferencesArray.setFps(this.updatePeriod);
 	preferencesArray.save();
-
+	//--------------------------------------------------------
 	this.scene.setUpdatePeriod(1000 / this.updatePeriod);
 	this.settingsMenu_close();
 	this.mainMenu();
 };
 //--------------------------------------------------------
 MyInterface.prototype.settingsMenu = function() {
-
+	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
@@ -121,7 +120,7 @@ MyInterface.prototype.settingsMenu = function() {
 		self.scene.loadGraph(currentScene);
 	}).listen();
 	//---------------------------------------------------------
-	this.settingsGroup.add(this, "playerColor", this.playerColors).name("Player Color").onChange(function() {
+	this.settingsGroup.add(this, "playerColor", this.playerColors).name("Player Color").onChange(function(){
 		self.board.updatePlayer(null, self.playerColor);
 	}).listen();
 	//---------------------------------------------------------
@@ -134,49 +133,49 @@ MyInterface.prototype.settingsMenu = function() {
 	this.modeGroup.open();
 	this.difficultyGroup.open();
 	//---------------------------------------------------------
-	this.boardGroup.add(this.gameBoard, "default").name("Default (7 x 7)").listen().onChange(function(value) {
+	this.boardGroup.add(this.gameBoard, "default").name("Default (7 x 7)").listen().onChange(function(){
 		self.toggleBoolean(self.gameBoard, "default");
 		self.board.updateMatrix('default');
 	});
 	//---------------------------------------------------------
-	this.boardGroup.add(this.gameBoard, "diagonal").name("Diagonal (7 x 7)").listen().onChange(function(value) {
+	this.boardGroup.add(this.gameBoard, "diagonal").name("Diagonal (7 x 7)").listen().onChange(function(){
 		self.toggleBoolean(self.gameBoard, "diagonal");
 		self.board.updateMatrix('diagonal');
 	});
 	//---------------------------------------------------------
-	this.boardGroup.add(this.gameBoard, "small").name("Small (6 x 6)").listen().onChange(function(value) {
+	this.boardGroup.add(this.gameBoard, "small").name("Small (6 x 6)").listen().onChange(function(){
 		self.toggleBoolean(self.gameBoard, "small");
 		self.board.updateMatrix('small');
 	});
 	//---------------------------------------------------------
-	this.modeGroup.add(this.gameMode, "pvp").name("Player VS Player").listen().onChange(function(value) {
+	this.modeGroup.add(this.gameMode, "pvp").name("Player VS Player").listen().onChange(function(){
 		self.toggleBoolean(self.gameMode, "pvp");
 		self.board.updateMode("pvp");
 	});
 	//---------------------------------------------------------
-	this.modeGroup.add(this.gameMode, "pvb").name("Player VS Bot").listen().onChange(function(value) {
+	this.modeGroup.add(this.gameMode, "pvb").name("Player VS Bot").listen().onChange(function(){
 		self.toggleBoolean(self.gameMode, "pvb");
 		self.board.updateMode("pvb");
 	});
 	//---------------------------------------------------------
-	this.modeGroup.add(this.gameMode, "bvb").name("Bot VS Bot").listen().onChange(function(value) {
+	this.modeGroup.add(this.gameMode, "bvb").name("Bot VS Bot").listen().onChange(function(){
 		self.toggleBoolean(self.gameMode, "bvb");
 		self.board.updateMode("bvb");
 	});
 	//---------------------------------------------------------
-	this.difficultyGroup.add(this.gameDifficulty, "random").name("Random Bots").listen().onChange(function(value) {
+	this.difficultyGroup.add(this.gameDifficulty, "random").name("Random Bots").listen().onChange(function(){
 		self.gameDifficulty["random"] = true;
 		self.gameDifficulty["smart"] = false;
 	});
 	//---------------------------------------------------------
-	this.difficultyGroup.add(this.gameDifficulty, "smart").name("Smart Bots").listen().onChange(function(value) {
+	this.difficultyGroup.add(this.gameDifficulty, "smart").name("Smart Bots").listen().onChange(function(){
 		self.gameDifficulty["random"] = false;
 		self.gameDifficulty["smart"] = true;
 	});
 };
 //--------------------------------------------------------
 MyInterface.prototype.settingsMenu_close = function(self) {
-
+	//---------------------------------------------------------
 	if (this.settingsGroup != undefined && this.settingsGroup != null) {
 		this.deleteFolder("Settings");
 		this.settingsGroup = undefined;
@@ -219,7 +218,7 @@ MyInterface.prototype.onDisconnect = function() {
 }
 //--------------------------------------------------------
 MyInterface.prototype.connectionMenu = function() {
-
+	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
@@ -227,6 +226,7 @@ MyInterface.prototype.connectionMenu = function() {
 	var self = this;
 	this.connectionGroup = this.gui.addFolder("Server");
 	this.connectionGroup.open();
+	//--------------------------------------------------------
 	this.connectionGroup.add(this.scene, "serverHostname").name("Hostname");
 	this.connectionGroup.add(this.scene, "serverPort").name("Port");
 	//--------------------------------------------------------
@@ -298,7 +298,7 @@ MyInterface.prototype.camerasMenu = function() {
 	//---------------------------------------------------------
 	this.cameraZoomGroup.add(this.scene, "cameraTiltAmount", -1.0, 1.0).name("Tilt").listen().onChange(function(){
 		self.scene.cameraTilt();
-	}).onFinishChange(function() {
+	}).onFinishChange(function(){
 		self.scene.resetRotation();
 	});
 	//---------------------------------------------------------
@@ -322,19 +322,18 @@ MyInterface.prototype.camerasMenu_close = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.gameMenu_close = function() {
-
+	//--------------------------------------------------------
 	if (this.gameGroup != undefined && this.gameGroup != null) {
 		this.deleteFolder("Game");
 		this.gameGroup = undefined;
 	}
-
 	//--------------------------------------------------------
 	this.camerasMenu_close();
 	this.lightsMenu_close();
 };
 //--------------------------------------------------------
 MyInterface.prototype.mainMenu = function() {
-
+	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
@@ -351,17 +350,17 @@ MyInterface.prototype.mainMenu = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.mainMenu_close = function() {
-
+	//--------------------------------------------------------
 	if (this.mainGroup != undefined && this.mainGroup != null) {
 		this.deleteFolder("Main Menu");
 		this.mainGroup = undefined;
 	}
-
+	//--------------------------------------------------------
 	this.connectionMenu_close();
 };
 //--------------------------------------------------------
 MyInterface.prototype.stopMovie = function() {
-
+	//--------------------------------------------------------
 	if (this.board.exitMovie()) {
 		this.movieMenu_close();
 		this.gameMenu();
@@ -403,7 +402,7 @@ MyInterface.prototype.movieMenu_close = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu = function() {
-
+	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
 		return;
 	}
@@ -417,7 +416,7 @@ MyInterface.prototype.lightsMenu = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu_close = function() {
-
+	//--------------------------------------------------------
 	if (this.lightsGroup != undefined && this.lightsGroup != null) {
 		this.deleteFolder("Lights");
 		this.lightsGroup = undefined;
@@ -464,7 +463,6 @@ MyInterface.prototype.aboutMenu = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.getBoolean = function(array) {
-
 	for (var key in array) {
 		if (array[key]) {
 			return key;
@@ -473,12 +471,10 @@ MyInterface.prototype.getBoolean = function(array) {
 };
 //--------------------------------------------------------
 MyInterface.prototype.toggleBoolean = function(array, element) {
-
 	for (var key in array) {
 		if (key != element) {
 			array[key] = false;
 		}
 	}
-
 	array[element] = true;
 };

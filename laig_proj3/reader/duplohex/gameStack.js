@@ -1,37 +1,37 @@
-function GameMove(board) {
+function GameStack(board) {
 	this.board = board;
 	this.moves = [];
 	this.resetMovie();
 };
 //--------------------------------------------------------
-GameMove.prototype = Object.create(Object.prototype);
-GameMove.prototype.constructor = GameMove;
+GameStack.prototype = Object.create(Object.prototype);
+GameStack.prototype.constructor = GameStack;
 //--------------------------------------------------------
-GameMove.prototype.push = function(selectedPiece, sourceCell, previousPiece) {
+GameStack.prototype.push = function(selectedPiece, sourceCell, previousPiece) {
 	this.moves.push([selectedPiece, sourceCell, previousPiece]);
 };
 //--------------------------------------------------------
-GameMove.prototype.pop = function() {
+GameStack.prototype.pop = function() {
 	return this.moves.pop();
 };
 //--------------------------------------------------------
-GameMove.prototype.empty = function() {
+GameStack.prototype.empty = function() {
 	return this.moves.length <= 0;
 }
 //--------------------------------------------------------
-GameMove.prototype.getLength = function() {
+GameStack.prototype.getLength = function() {
 	return this.moves.length;
 };
 //--------------------------------------------------------
-GameMove.prototype.movieFinished = function() {
+GameStack.prototype.movieFinished = function() {
 	return this.currentFrame >= this.moves.length;
 };
 //--------------------------------------------------------
-GameMove.prototype.resetMovie = function() {
+GameStack.prototype.resetMovie = function() {
 	this.currentFrame = 0;
 };
 //--------------------------------------------------------
-GameMove.prototype.movieStep = function() {
+GameStack.prototype.movieStep = function() {
 
 	if (!this.movieFinished()) {
 		var queueTop = this.moves[this.currentFrame];

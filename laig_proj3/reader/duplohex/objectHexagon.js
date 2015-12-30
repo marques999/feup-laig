@@ -11,7 +11,6 @@ function ObjectHexagon(scene) {
 	MyPrimitive.call(this, scene);
 	//--------------------------------------------------------
 	this.circle = new MyCircle(scene, 6, 1.0);
-	//--------------------------------------------------------
 	this.defaultAngle = Math.cos(Math.PI / 6);
 	this.position = [0.0, 0.0, 0.0];
 	this.discId = null;

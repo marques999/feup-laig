@@ -26,14 +26,10 @@ function MyCylinderInverted(scene, height, radiusBottom, radiusTop, stacks, slic
 	this.vertices = [];
 	this.initBuffers();
 };
-
+//--------------------------------------------------------
 MyCylinderInverted.prototype = Object.create(MyPrimitive.prototype);
 MyCylinderInverted.prototype.constructor = MyCylinderInverted;
-
-/**
- * inicializa os buffers WebGL da primitiva 'MyCylinderInverted'
- * @return {null}
- */
+//--------------------------------------------------------
 MyCylinderInverted.prototype.initBuffers = function() {
 
 	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;

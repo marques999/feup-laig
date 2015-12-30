@@ -155,7 +155,9 @@ GameServer.prototype.requestBotAction = function(Board, currentPiece, initialMov
 		var serverResponse = httpResponse.currentTarget;
 		//--------------------------------------------------------
 		if (serverResponse.status == 200 && serverResponse.responseText != 'no') {
-			self.gameBoard.unserializeAction(serverResponse.responseText);
+			if (!self.gameBoard.unserializeAction(serverResponse.responseText)) {
+				self.gameBoard.onResetPlace();
+			}
 		}
 		else {
 			self.gameBoard.onResetPlace();

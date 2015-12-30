@@ -19,23 +19,29 @@ XMLscene.prototype.init = function(application) {
 	this.gameMode = true;
 	this.serverHostname = 'localhost';
 	this.serverPort = 8081;
-	//---------------------------------------------------------
-	this.initCameras();
+	this.resetScene();
+};
+//--------------------------------------------------------
+XMLscene.prototype.resetScene = function() {
 	this.initDefaults();
 	this.initGL();
-	//---------------------------------------------------------
 	this.enableTextures(true);
 	this.resetDisplay();
 };
 //--------------------------------------------------------
 XMLscene.prototype.initGame = function() {
-
+	//--------------------------------------------------------
+	this.boardMatrix = null;
+	this.currentId = 0;
+	//--------------------------------------------------------
 	if (this.gameMode) {
-		this.currentId = 0;
-		this.boardMatrix = null;
 		this.board = new GameBoard(this);
 		this.board.updateMatrix(this.gameSettings.getBoard());
 		this.board.updatePlayer(this.gameSettings.getMode(), this.gameSettings.getColor());
+	}
+	else {
+		this.board = null;
+		this.setPickEnabled(false);
 	}
 };
 //--------------------------------------------------------
@@ -47,10 +53,11 @@ XMLscene.prototype.initGL = function() {
 	this.gl.depthFunc(this.gl.LEQUAL);
 	this.activeLights = 0;
 	this.axis = new CGFaxis(this);
+	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 //--------------------------------------------------------
 XMLscene.prototype.initServer = function() {
-
+	//--------------------------------------------------------
 	if (this.httpServer == null || this.httpServer == undefined) {
 		this.httpServer = new GameServer(this, this.serverHostname, this.serverPort);
 		this.httpServer.requestGame();
@@ -80,7 +87,7 @@ XMLscene.prototype.onServerError = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.disconnectServer = function() {
-
+	//--------------------------------------------------------
 	if (this.httpServer != null && this.httpServer != undefined) {
 		this.httpServer.requestQuit();
 	}
@@ -96,6 +103,10 @@ XMLscene.prototype.setBoardMatrix = function(boardMatrix) {
 //--------------------------------------------------------
 XMLscene.prototype.setBoardPosition = function(vec3) {
 	this.boardPosition = vec3;
+};
+//--------------------------------------------------------
+XMLscene.prototype.setBoardSize = function(vec3) {
+	this.boardSize = vec3;
 };
 //--------------------------------------------------------
 XMLscene.prototype.setFrontView = function(vector3) {
@@ -131,23 +142,22 @@ XMLscene.prototype.resetPicking = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.updatePicking = function() {
-
+	//--------------------------------------------------------
 	if (this.pickMode || this.pickResults == null || this.pickResults.length <= 0) {
 		return;
 	}
-
+	//--------------------------------------------------------
 	for (var i = 0; i < this.pickResults.length; i++) {
 		if (this.pickResults[i][0]) {
 			this.board.updatePicking(this.pickResults[i][1]);
 		}
 	}
-
+	//--------------------------------------------------------
 	this.pickResults.splice(0, this.pickResults.length);
 };
 //---------------------------------------------------------
 XMLscene.prototype.loadGraph = function(lsxPath) {
-	this.resetDisplay();
-	this.activeLights = 0;
+	this.resetScene();
 	this.guiInterface.resetLights();
 	this.guiInterface.setActiveCamera(null);
 	new MySceneGraph(lsxPath, this);
@@ -165,6 +175,13 @@ XMLscene.prototype.resetDisplay = function() {
 	this.currentCameraRotation = 0.0;
 	this.currentCameraTilt = 0.0;
 	this.currentCameraZoom = 0.0;
+	//---------------------------------------------------------
+	this.cameraAnimationSpeed = 2.0;
+	this.cameraTransitionSpeed = 16.0;
+	//---------------------------------------------------------
+	this.cameraOrbitVector = vec3.fromValues(0.0, 1.0, 0.0);
+	this.cameraMinimumTilt = -Math.PI / 3;
+	this.cameraMaximumTilt = Math.PI / 3;
 	//---------------------------------------------------------
 	this.cameraRotationAmount = 0.0;
 	this.cameraTiltAmount = 0.0;
@@ -189,30 +206,28 @@ XMLscene.prototype.startGame = function() {
 };
 //---------------------------------------------------------
 XMLscene.prototype.resetCamera = function() {
-
-	if (this.cameraAnimationActive()) {
-		return;
+	//---------------------------------------------------------
+	if (!this.cameraAnimationActive()) {
+		this.camera.setPosition(this.initialCameraPosition);
+		this.initialCameraTilt = this.initialCameraPosition;
 	}
-
-	this.camera.setPosition(this.initialCameraPosition);
-	this.initialCameraTilt = this.initialCameraPosition;
 };
 //---------------------------------------------------------
 XMLscene.prototype.cameraTilt = function() {
-
+	//---------------------------------------------------------
 	if (this.cameraZoomActive || this.cameraRotationActive || this.cameraTransitionActive) {
 		return;
 	}
-
+	//---------------------------------------------------------
 	this.cameraTiltActive = true;
 };
 //--------------------------------------------------------
 XMLscene.prototype.switchFrontView = function() {
-
+	//---------------------------------------------------------
 	if (this.frontViewMode || this.cameraAnimationActive()) {
 		return;
 	}
-
+	//---------------------------------------------------------
 	this.frontViewMode = true;
 	this.sceneViewMode = false;
 	this.topViewMode = false;
@@ -222,11 +237,11 @@ XMLscene.prototype.switchFrontView = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.switchSceneView = function() {
-
+	//---------------------------------------------------------
 	if (this.sceneViewMode || this.cameraAnimationActive()) {
 		return;
 	}
-
+	//---------------------------------------------------------
 	this.frontViewMode = false;
 	this.sceneViewMode = true;
 	this.topViewMode = false;
@@ -236,11 +251,11 @@ XMLscene.prototype.switchSceneView = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.switchTopView = function() {
-
+	//---------------------------------------------------------
 	if (this.topViewMode || this.cameraAnimationActive()) {
 		return;
 	}
-
+	//---------------------------------------------------------
 	this.frontViewMode = false;
 	this.sceneViewMode = false;
 	this.topViewMode = true;
@@ -250,24 +265,24 @@ XMLscene.prototype.switchTopView = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.zoomIn = function() {
-
+	//---------------------------------------------------------
 	if (this.cameraTiltActive || this.cameraRotationActive || this.cameraTransitionActive) {
 		return;
 	}
-
+	//---------------------------------------------------------
 	this.cameraZoomActive = true;
-	this.cameraZoomAmount = 4.0;
+	this.cameraZoomAmount = this.boardSize[0] * 7.0;
 	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
 };
 //--------------------------------------------------------
 XMLscene.prototype.zoomOut = function() {
-
+	//---------------------------------------------------------
 	if (this.cameraTiltActive || this.cameraRotationActive || this.cameraTransitionActive) {
 		return;
 	}
-
+	//---------------------------------------------------------
 	this.cameraZoomActive = true;
-	this.cameraZoomAmount = -4.0;
+	this.cameraZoomAmount = -this.boardSize[0] * 7.0;
 	this.targetCameraZoom = this.currentCameraZoom + this.cameraZoomAmount;
 };
 //--------------------------------------------------------
@@ -276,8 +291,8 @@ XMLscene.prototype.processCameraDelta = function() {
 	this.cameraTransitionDelta = vec3.clone(this.cameraTransitionTarget);
 	this.cameraTransitionDistance = vec3.dist(this.camera.position, this.cameraTransitionTarget);
 	vec3.sub(this.cameraTransitionDelta, this.cameraTransitionDelta, this.camera.position);
-	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, 16.0 / this.cameraTransitionDistance);
-	this.cameraTrasitionSpan = this.cameraTransitionDistance / 16.0;
+	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, this.cameraTransitionSpeed / this.cameraTransitionDistance);
+	this.cameraTrasitionSpan = this.cameraTransitionDistance / this.cameraTransitionSpeed;
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraRotation = function(deltaTime) {
@@ -306,32 +321,32 @@ XMLscene.prototype.processCameraRotation = function(deltaTime) {
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraTilt = function(deltaTime) {
-		
-	if(this.cameraTiltAmount < 0.0 && this.currentCameraTilt > -2.0) {
-		
-		var angleIncrement = 2.0 * this.cameraTiltAmount * deltaTime;
+
+	if (this.cameraTiltAmount < 0.0 && this.currentCameraTilt > this.cameraMinimumTilt) {
+
+		var angleIncrement = this.cameraAnimationSpeed * this.cameraTiltAmount * deltaTime;
 		this.currentCameraTilt += angleIncrement;
 
-		if(this.currentCameraTilt < -2.0) {
-			angleIncrement = -2.0 - (this.currentCameraTilt - angleIncrement);	
-			this.currentCameraTilt = -2.0;							
+		if (this.currentCameraTilt < this.cameraMinimumTilt) {
+			angleIncrement = this.cameraMinimumTilt - (this.currentCameraTilt - angleIncrement);
+			this.currentCameraTilt = this.cameraMinimumTilt;
 		}
 
-		this.camera.orbit([0.0, 1.0, 0.0], angleIncrement);
+		this.camera.orbit(this.cameraOrbitVector, angleIncrement);
 	}
-	else if(this.cameraTiltAmount > 0.0 && this.currentCameraTilt < 2.0) {
+	else if (this.cameraTiltAmount > 0.0 && this.currentCameraTilt < this.cameraMaximumTilt) {
 
-		var angleIncrement = 2.0 * this.cameraTiltAmount * deltaTime;
+		var angleIncrement = this.cameraAnimationSpeed * this.cameraTiltAmount * deltaTime;
 		this.currentCameraTilt += angleIncrement;
-				
-		if(this.currentCameraTilt > 2.0) {
-			angleIncrement = 2.0 - (this.currentCameraTilt - angleIncrement);
-			this.currentCameraTilt = 2.0;
-		}	
 
-		this.camera.orbit([0.0, 1.0, 0.0], angleIncrement);					
+		if (this.currentCameraTilt > this.cameraMaximumTilt) {
+			angleIncrement = this.cameraMaximumTilt - (this.currentCameraTilt - angleIncrement);
+			this.currentCameraTilt = this.cameraMaximumTilt;
+		}
+
+		this.camera.orbit(this.cameraOrbitVector, angleIncrement);
 	}
-	else {		
+	else {
 		this.cameraTiltActive = false;
 	}
 };
@@ -358,7 +373,6 @@ XMLscene.prototype.processCameraTransition = function(deltaTime) {
 		this.initialCameraTilt = vec3.clone(this.cameraTransitionTarget);
 		this.currentTransitionSpan = 0.0;
 		this.cameraTransitionActive = false;
-
 		if (this.startAfterTransition) {
 			this.startAfterTransition = false;
 			this.board.startGame();
@@ -368,12 +382,12 @@ XMLscene.prototype.processCameraTransition = function(deltaTime) {
 //---------------------------------------------------------
 XMLscene.prototype.processCameraZoom = function(deltaTime) {
 
-	if (this.cameraZoomAmount > 0 && this.currentCameraZoom < this.targetCameraZoom) {
-		this.currentCameraZoom += this.cameraZoomAmount * deltaTime;
+	if (this.cameraZoomAmount > 0.0 && this.currentCameraZoom < this.targetCameraZoom) {
+		this.currentCameraZoom += this.cameraZoomAmount * deltaTime * this.cameraAnimationSpeed;
 		this.camera.zoom(this.cameraZoomAmount * deltaTime);
 	}
-	else if (this.cameraZoomAmount < 0 && this.currentCameraZoom > this.targetCameraZoom ) {
-		this.currentCameraZoom += this.cameraZoomAmount * deltaTime;
+	else if (this.cameraZoomAmount < 0.0 && this.currentCameraZoom > this.targetCameraZoom ) {
+		this.currentCameraZoom += this.cameraZoomAmount * deltaTime * this.cameraAnimationSpeed;
 		this.camera.zoom(this.cameraZoomAmount * deltaTime);
 	}
 	else {
@@ -400,7 +414,7 @@ XMLscene.prototype.cameraAnimationActive = function() {
 }
 //--------------------------------------------------------
 XMLscene.prototype.applyInitialMatrix = function() {
-
+	//--------------------------------------------------------
 	if (this.gameMode && this.graph.loadedOk) {
 		this.rotate(Math.PI / 4 + this.currentCameraRotation, 0.0, 1.0, 0.0);
 		this.translate(this.boardPosition[0], this.boardPosition[1], this.boardPosition[2]);
@@ -411,14 +425,9 @@ XMLscene.prototype.applyInitialMatrix = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.displayBoard = function() {
-
-	if (this.boardMatrix != null) {
-		this.multMatrix(this.boardMatrix);
-	}
-
+	this.boardMatrix != null && this.multMatrix(this.boardMatrix);
 	this.board.display();
 };
-//--------------------------------------------------------
 
 /**
  * altera o comprimento dos eixos visíveis na cena
@@ -427,14 +436,6 @@ XMLscene.prototype.displayBoard = function() {
  */
 XMLscene.prototype.initAxis = function(length) {
 	this.defaultReference = length;
-};
-
-/**
- * cria um observador na cena com os valores por omissão
- * @return {null}
- */
-XMLscene.prototype.initCameras = function() {
-	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
 
 /**
@@ -614,7 +615,8 @@ XMLscene.prototype.pushLight = function(id, enabled, position, ambient, diffuse,
 	currentLight.setVisible(true);
 
 	this.toggleLight(this.activeLights, enabled);
-	this.guiInterface.pushLight(id, this.activeLights++, enabled);
+	this.guiInterface.pushLight(id, this.activeLights, enabled);
+	this.activeLights++;
 	return currentLight;
 };
 
@@ -645,7 +647,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 							   this.defaultAmbient[2], this.defaultAmbient[3]);
 	//--------------------------------------------------------
 	if (this.gameMode) {
-		vec3.multiply(this.boardPosition, this.boardPosition, [-1, -1, -1]);
+		vec3.multiply(this.boardPosition, this.boardPosition, [-1.0, -1.0, -1.0]);
 	}
 	else {
 		mat4.translate(this.defaultMatrix, this.defaultMatrix, this.defaultTranslate);
@@ -662,7 +664,8 @@ XMLscene.prototype.onGraphLoaded = function() {
 		this.lights[0].setSpecular(0.1, 0.1, 0.1, 1.0);
 		this.lights[0].setVisible(true);
 		this.lights[0].enable();
-		this.guiInterface.pushLight('default', this.activeLights++, true);
+		this.guiInterface.pushLight('default', this.activeLights, true);
+		this.activeLights++;
 	}
 	//--------------------------------------------------------
 	for (var i = this.activeLights; i < this.lights.length; i++) {
@@ -697,12 +700,6 @@ XMLscene.prototype.update = function(currTime) {
 	//--------------------------------------------------------
 	var deltaTime = (currTime - this.lastUpdate) / 1000;
 	//--------------------------------------------------------
-	if (this.gameMode) {
-		this.updatePicking();
-		this.clearPickRegistration();
-		this.board.update(currTime, this.lastUpdate);
-	}
-	//--------------------------------------------------------
 	if (this.cameraRotationActive) {
 		this.processCameraRotation(deltaTime);
 	}
@@ -716,9 +713,13 @@ XMLscene.prototype.update = function(currTime) {
 		this.processCameraTilt(deltaTime);
 	}
 	//--------------------------------------------------------
-	if (this.graph.loadedOk) {
-		this.graph.processAnimations(deltaTime);
+	if (this.gameMode) {
+		this.updatePicking();
+		this.clearPickRegistration();
+		this.board.update(currTime, this.lastUpdate);
 	}
+	//--------------------------------------------------------
+	this.graph.loadedOk && this.graph.processAnimations(deltaTime);
 };
 
 /**
@@ -742,10 +743,8 @@ XMLscene.prototype.display = function() {
 	this.axis.display();
 	this.resetAppearance();
 	//--------------------------------------------------------
-	if (!this.graph.loadedOk) {
-		return;
+	if (this.graph.loadedOk) {
+		this.graph.display();
+		this.gameMode && this.displayBoard();
 	}
-	//--------------------------------------------------------
-	this.graph.display();
-	this.gameMode && this.displayBoard();
 };

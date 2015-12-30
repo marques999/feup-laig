@@ -140,14 +140,10 @@ function MyVehicleFront(scene) {
 	this.CHOMP.loadTexture("scenes/images/vehicle_chomp.png");
 	this.METAL.loadTexture("scenes/images/vehicle_metal.png");
 };
-
+//--------------------------------------------------------
 MyVehicleFront.prototype = Object.create(MyPrimitive.prototype);
 MyVehicleFront.prototype.constructor = MyVehicleFront;
-
-/**
- * desenha a primitva 'MyVehicleFront' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyVehicleFront.prototype.display = function() {
 	this.CHOMP.apply();
 	this.FRONT.display();
@@ -160,4 +156,4 @@ MyVehicleFront.prototype.display = function() {
 	this.FRONT_LEFT.display();
 	this.scene.translate(0.0, 0.0, 3.0);
 	this.FRONT_RIGHT.display();
- };
+};

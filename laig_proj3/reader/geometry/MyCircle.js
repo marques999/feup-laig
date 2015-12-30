@@ -20,14 +20,10 @@ function MyCircle(scene, slices, radius) {
 	this.slices = slices;
 	this.initBuffers();
 };
-
+//--------------------------------------------------------
 MyCircle.prototype = Object.create(MyPrimitive.prototype);
 MyCircle.prototype.constructor = MyCircle;
-
-/**
- * inicializa os buffers WebGL da primitiva 'MyCircle'
- * @return {null}
- */
+//--------------------------------------------------------
 MyCircle.prototype.initBuffers = function() {
 
 	var halfRadius = this.radius / 2;
@@ -38,7 +34,6 @@ MyCircle.prototype.initBuffers = function() {
 	this.normals.push(0, 0, 1);
 
 	for (var i = 0; i <= this.slices; i++) {
-
 		var x = this.radius * Math.cos(thetaIncrement * i);
 		var y = this.radius * Math.sin(thetaIncrement * i);
 		this.vertices.push(x, y, 0);

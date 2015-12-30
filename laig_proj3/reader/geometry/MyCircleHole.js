@@ -21,14 +21,10 @@ function MyCircleHole(scene, slices, width) {
 	this.vertices = [];
 	this.initBuffers();
 };
-
+//--------------------------------------------------------
 MyCircleHole.prototype = Object.create(MyPrimitive.prototype);
 MyCircleHole.prototype.constructor = MyCircleHole;
-
-/**
- * inicializa os buffers WebGL da primitiva 'MyCircleHole'
- * @return {null}
- */
+//--------------------------------------------------------
 MyCircleHole.prototype.initBuffers = function() {
 
 	var theta = 0;
@@ -36,7 +32,6 @@ MyCircleHole.prototype.initBuffers = function() {
 	var vertexNumber = 0;
 
 	for (var i = 0; i <= this.slices; i++) {
-
 		var x = Math.cos(theta);
 		var y = Math.sin(theta);
 		this.vertices.push(this.radius * x, this.radius * y, 0);
@@ -50,7 +45,6 @@ MyCircleHole.prototype.initBuffers = function() {
 	}
 
 	for (var i = 0; i < this.slices; i++) {
-
 		this.indices.push(vertexNumber, vertexNumber + 1, vertexNumber + 3);
 		this.indices.push(vertexNumber, vertexNumber + 3, vertexNumber + 2);
 

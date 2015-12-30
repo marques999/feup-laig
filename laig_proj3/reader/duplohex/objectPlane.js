@@ -11,7 +11,7 @@ function ObjectPlane(scene, nrDivs) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this,scene);
 	//--------------------------------------------------------
-	this.nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 1;
+	this.nrDivs = nrDivs || 1;
 	this.patchLength = 1.0 / nrDivs;
 	this.indices = [];
 	this.normals = [];
@@ -26,17 +26,17 @@ ObjectPlane.prototype.constructor = ObjectPlane;
 ObjectPlane.prototype.initBuffers = function() {
 	//--------------------------------------------------------
 	var yCoord = 0.5;
-	var tCoord = 0;
+	var tCoord = 0.0;
 	var vertexNumber = 0;
 	//--------------------------------------------------------
 	for (var j = 0; j <= this.nrDivs; j++, tCoord += this.patchLength) {
 
 		var xCoord = -0.5;
-		var sCoord = 0;
+		var sCoord = 0.0;
 
 		for (var i = 0; i <= this.nrDivs; i++, sCoord += this.patchLength, xCoord += this.patchLength) {
-			this.vertices.push(xCoord, yCoord, 0);
-			this.normals.push(0, 0, 1);
+			this.vertices.push(xCoord, yCoord, 0.0);
+			this.normals.push(0.0, 0.0, 1.0);
 			this.texCoords.push(sCoord);
 			this.texCoords.push(tCoord);
 		}

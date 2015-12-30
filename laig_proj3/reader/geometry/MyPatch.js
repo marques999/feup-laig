@@ -30,14 +30,10 @@ function MyPatch(scene, uDivs, vDivs, uDegree, vDegree, controlPoints) {
 
 	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, uDivs, vDivs);
 };
-
+//--------------------------------------------------------
 MyPatch.prototype = Object.create(MyPrimitive.prototype);
 MyPatch.prototype.constructor = MyPatch;
-
-/**
- * desenha a primitva 'MyPatch' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyPatch.prototype.display = function() {
 	this.nurbsObject.display();
 };

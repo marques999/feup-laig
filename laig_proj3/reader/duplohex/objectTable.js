@@ -44,7 +44,7 @@ ObjectTable.prototype.display = function() {
 	this.cube.display();
 	this.scene.translate(4.7/0.3, 0.0, 0.0);
 	this.cube.display();
-	this.scene.scale(1/0.3, 1/3.5, 1/0.3);
+	this.scene.scale(1.0/0.3, 1.0/3.5, 1.0/0.3);
 	this.scene.translate(-2.35, 1.75, 1.35);
 	this.scene.scale(5.0, 0.5, 3.0);
 	this.materials["wood"].apply();

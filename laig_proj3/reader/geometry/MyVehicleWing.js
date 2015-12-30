@@ -107,14 +107,10 @@ function MyVehicleWing(scene) {
 	this.RIGHT_WING_material = new CGFappearance(scene);
 	this.RIGHT_WING_material.loadTexture("scenes/images/vehicle_wing_right.png");
 };
-
+//--------------------------------------------------------
 MyVehicleWing.prototype = Object.create(MyPrimitive.prototype);
 MyVehicleWing.prototype.constructor = MyVehicleWing;
-
-/**
- * desenha a primitva 'MyVehicleWing' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyVehicleWing.prototype.display = function() {
 	this.scene.scale(0.6, 1.0, 1.5);
 	this.RIGHT_WING_material.apply();
@@ -124,4 +120,4 @@ MyVehicleWing.prototype.display = function() {
 	this.METAL.apply();
 	this.ASA_SIDE1.display();
 	this.ASA_SIDE2.display();
- };
+};

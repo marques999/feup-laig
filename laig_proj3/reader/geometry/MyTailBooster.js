@@ -14,14 +14,10 @@ function MyTailBooster(scene) {
 	this.THRUSTER = new CGFappearance(scene);
 	this.THRUSTER.loadTexture("scenes/images/vehicle_thruster.png");
 };
-
+//--------------------------------------------------------
 MyTailBooster.prototype = Object.create(MyPrimitive.prototype);
 MyTailBooster.prototype.constructor = MyTailBooster;
-
-/**
- * desenha a primitva 'MyTailBooster' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyTailBooster.prototype.display = function() {
 	this.THRUSTER.apply();
 	this.BOOSTER1.display();

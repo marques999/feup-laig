@@ -28,7 +28,6 @@ CircularAnimation.prototype.constructor = CircularAnimation;
  * @return {null}
  */
 CircularAnimation.prototype.start = function() {
-
 	this.active = true;
 	this.currentAngle = this.angleStart;
 	this.currentTime = 0.0;

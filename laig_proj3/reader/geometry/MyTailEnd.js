@@ -76,14 +76,10 @@ function MyTailEnd(scene) {
 	this.METAL = new CGFappearance(scene);
 	this.METAL.loadTexture("scenes/images/vehicle_metal.png");
 };
-
+//--------------------------------------------------------
 MyTailEnd.prototype = Object.create(MyPrimitive.prototype);
 MyTailEnd.prototype.constructor = MyTailEnd;
-
-/**
- * desenha a primitva 'MyTailEnd' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyTailEnd.prototype.display = function() {
 
 	this.METAL.apply();

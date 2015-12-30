@@ -113,14 +113,10 @@ function MyVehicleBody(scene) {
 	this.BODY = new CGFappearance(scene);
 	this.BODY.loadTexture("scenes/images/vehicle_body.png");
 };
-
+//--------------------------------------------------------
 MyVehicleBody.prototype = Object.create(MyPrimitive.prototype);
 MyVehicleBody.prototype.constructor = MyVehicleBody;
-
-/**
- * desenha a primitva 'MyVehicleBody' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyVehicleBody.prototype.display = function() {
 	this.BODY.apply();
 	this.scene.translate(-3.0, 3.0, 0.0);

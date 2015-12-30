@@ -15,7 +15,6 @@ function MyTerrain(scene, texturePath, heightmapPath) {
 	this.terrainTexture = new CGFtexture(scene, texturePath);
 	this.heightmapTexture = new CGFtexture(scene, heightmapPath);
 	this.terrainPlane = new MyPlane(scene, 64);
-
 	this.terrainShader = new CGFshader(scene.gl, "shaders/MyTerrain.vert", "shaders/MyTerrain.frag");
 	this.terrainShader.setUniformsValues({
 		terrainTexture: 0,

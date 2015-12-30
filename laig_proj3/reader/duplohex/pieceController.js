@@ -39,7 +39,7 @@ PieceController.prototype.resetPieces = function() {
 	this.boxPos = this.board.boxPos;
 	this.numberCells = this.board.numberCells;
 	this.selectedPiece = null;
-	this.boardHeight = (this.board.baseSize[0] + this.board.baseSize[1]) / (2 * (this.board.baseSize[0] + this.board.baseSize[1])) * 1.3;
+	this.boardHeight = (this.board.baseSize[0] + this.board.baseSize[1]) / (2.0 * (this.board.baseSize[0] + this.board.baseSize[1])) * 1.3;
 	//--------------------------------------------------------
 	this.pieceSize = [
 		this.board.baseSize[0] * this.scaleFactor[0],
@@ -177,23 +177,7 @@ PieceController.prototype.display = function() {
 
 	this.defaultMaterial.apply();
 	this.scene.popMatrix();
- };
-//--------------------------------------------------------
-PieceController.prototype.pushToStack = function(pieceId) {
-
-	if (pieceId < this.p1Discs_end) {
-
-	}
-	else if (pieceId >= this.p1Rings_start && pieceId < this.p1Rings_end) {
-
-	}
-	else if (pieceId >= this.p2Discs_start && pieceId < this.p2Discs_end){
-
-	}
-	else if (pieceId >= this.p2Rings_start && pieceId < this.p2Rings_end) {
-
-	}
-}
+};
 //--------------------------------------------------------
 PieceController.prototype.removeFromStack = function(pieceId) {
 
@@ -256,7 +240,7 @@ PieceController.prototype.removeFromStack = function(pieceId) {
 };
 //--------------------------------------------------------
 PieceController.prototype.placePiece = function(pieceId, x, y, skipAnimation)  {
-
+	//--------------------------------------------------------
 	var piece = this.pieces[pieceId];
 	//--------------------------------------------------------
 	if (!piece.wasPlaced()) {

@@ -26,14 +26,10 @@ function MyCylinder(scene, height, radiusBottom, radiusTop, stacks, slices) {
 	this.vertices = [];
 	this.initBuffers();
 };
-
+//--------------------------------------------------------
 MyCylinder.prototype = Object.create(MyPrimitive.prototype);
 MyCylinder.prototype.constructor = MyCylinder;
-
-/**
- * inicializa os buffers WebGL da primitiva 'MyCylinder'
- * @return {null}
- */
+//--------------------------------------------------------
 MyCylinder.prototype.initBuffers = function() {
 
 	var radiusIncrement = (this.radiusTop - this.radiusBottom) / this.stacks;

@@ -94,40 +94,31 @@ function MyTail(scene) {
 	this.METAL = new CGFappearance(scene);
 	this.METAL.loadTexture("scenes/images/vehicle_metal.png");
 };
-
+//--------------------------------------------------------
 MyTail.prototype = Object.create(MyPrimitive.prototype);
 MyTail.prototype.constructor = MyTail;
-
-/**
- * desenha a primitva 'MyTail' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyTail.prototype.display = function() {
-
 	this.TAIL_LEFT.apply();
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, -0.1);
 	this.TOP_WING1.display();
 	this.scene.popMatrix();
-
 	this.TAIL_RIGHT.apply();
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, 0.1);
 	this.TOP_WING2.display();
 	this.scene.popMatrix();
-
 	this.METAL.apply();
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, -0.1);
 	this.TOP_WING_SIDE1.display();
 	this.scene.popMatrix();
-
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 0.0, -0.1);
 	this.scene.rotate(-Math.PI/2, 0.0, 1.0, 0.0);
 	this.TOP_WING_SIDE2.display();
 	this.scene.popMatrix();
-
 	this.scene.pushMatrix();
 	this.scene.translate(0.0, 3.0, -0.1);
 	this.scene.rotate(-Math.PI/2, 0.0, 1.0, 0.0);

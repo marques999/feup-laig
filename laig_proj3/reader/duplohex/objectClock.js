@@ -20,18 +20,13 @@ function ObjectClock(scene) {
 	this.top = new MyRectangle(scene, -0.5, 0.5, 0.5, -0.5);
 	this.ramp = new ObjectRamp(scene);
 	//--------------------------------------------------------
-	this.materials["clock"] = new CGFappearance(scene);
-	this.materials["clock"].loadTexture("resources/clock.png");
 	this.materials["body"] = new CGFappearance(scene);
 	this.materials["body"].loadTexture("resources/clock_black.png");
+	this.materials["clock"] = new CGFappearance(scene);
+	this.materials["clock"].loadTexture("resources/clock.png");
+	this.materials["default"] = new CGFappearance(scene);
 	this.materials["top"] = new CGFappearance(scene);
 	this.materials["top"].loadTexture("resources/clock_top.png");
-	this.materials["default"] = new CGFappearance(scene);
-	this.materials["red"] = new CGFappearance(scene);
-	this.materials["red"].setDiffuse(0.9, 0.05, 0.05, 0.6);
-	this.materials["red"].setAmbient(0.9, 0.05, 0.05, 0.2);
-	this.materials["red"].setSpecular(1.0, 1.0, 1.0, 0.5);
-	this.materials["red"].setShininess(30);
 	//--------------------------------------------------------
 	this.currentMillis = 0.0;
 	this.defaultFactor = 1.25 * Math.cos(Math.PI / 4);
@@ -159,6 +154,7 @@ ObjectClock.prototype.display = function() {
 		this.scene.translate(1.0, 0.0, 0.0);
 		this.DIGITS[this.RIGHT[1]].display();
 	this.scene.popMatrix();
+	//--------------------------------------------------------
 	this.materials["default"].apply();
 };
 //--------------------------------------------------------

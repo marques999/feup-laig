@@ -45,7 +45,7 @@ function LinearAnimation(span, points) {
 
 	this.orientation[0] = this.orientation[1];
 	this.velocity[0] = vec3.create();
-}
+};
 
 LinearAnimation.prototype = Object.create(Animation.prototype);
 LinearAnimation.prototype.constructor = LinearAnimation;
@@ -75,14 +75,13 @@ LinearAnimation.prototype.orientate = function(vector) {
 	}
 
 	return 3*Math.PI/2 + Math.acos(vector[0] > vector[2] ? vector[0] : vector[2]);
-}
+};
 
 /**
  * inicializa a animação com os valores por omissão
  * @return {null}
  */
 LinearAnimation.prototype.start = function() {
-
 	this.active = true;
 	this.currentTime = 0.0;
 	this.currentDelta = vec3.create();
@@ -110,28 +109,28 @@ LinearAnimation.prototype.update = function() {
  */
 LinearAnimation.prototype.step = function(deltaTime) {
 
-	if (this.active) {
-
-		this.currentTime += deltaTime;
-
-		while (this.currentTime >= this.duration[this.currentSection]) {
-
-			var difDelta = this.duration[this.currentSection] - (this.currentTime - deltaTime);
-
-			vec3.scale(this.currentDelta, this.velocity[this.currentSection], difDelta);
-			vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
-
-			deltaTime -= difDelta;
-
-			if (++this.currentSection == this.sections) {
-				this.currentSection--;
-				this.stop();
-				deltaTime = 0;
-				break;
-			}
-		}
-
-		vec3.scale(this.currentDelta, this.velocity[this.currentSection], deltaTime);
-		vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
+	if (!this.active) {
+		return;
 	}
+
+	this.currentTime += deltaTime;
+
+	while (this.currentTime >= this.duration[this.currentSection]) {
+
+		var difDelta = this.duration[this.currentSection] - (this.currentTime - deltaTime);
+
+		vec3.scale(this.currentDelta, this.velocity[this.currentSection], difDelta);
+		vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
+		deltaTime -= difDelta;
+
+		if (++this.currentSection == this.sections) {
+			this.currentSection--;
+			this.stop();
+			deltaTime = 0.0;
+			break;
+		}
+	}
+
+	vec3.scale(this.currentDelta, this.velocity[this.currentSection], deltaTime);
+	vec3.add(this.currentPosition, this.currentPosition, this.currentDelta);
 };

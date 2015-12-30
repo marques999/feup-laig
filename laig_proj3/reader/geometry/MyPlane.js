@@ -24,14 +24,10 @@ function MyPlane(scene, divs) {
 
 	this.nurbsObject = new CGFnurbsObject(scene, getSurfacePoint, divs, divs);
 };
-
+//--------------------------------------------------------
 MyPlane.prototype = Object.create(MyPrimitive.prototype);
 MyPlane.prototype.constructor = MyPlane;
-
-/**
- * desenha a primitva 'MyPlane' na XMLScene correspondente
- * @return {null}
- */
+//--------------------------------------------------------
 MyPlane.prototype.display = function() {
 	this.nurbsObject.display();
 };
