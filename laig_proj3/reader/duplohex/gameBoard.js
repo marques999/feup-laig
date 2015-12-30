@@ -641,7 +641,7 @@ GameBoard.prototype.exitMovie = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.pauseMovie = function() {
-	
+
 	if (!this.movieRotationDone) {
 		return;
 	}
@@ -650,7 +650,7 @@ GameBoard.prototype.pauseMovie = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.resetMovie = function() {
-	
+
 	if (!this.movieRotationDone) {
 		return;
 	}
@@ -664,11 +664,11 @@ GameBoard.prototype.resetMovie = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.rotateMovie = function() {
-	
+
 	if (!this.movieRotationDone || this.animationActive) {
 		return;
 	}
-	
+
 	this.scene.rotateCamera();
 	this.movieRotated = !this.movieRotated;
 	this.movieRotationDone = false;
@@ -685,11 +685,11 @@ GameBoard.prototype.startMovie = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.stopMovie = function() {
-	
+
 	if (!this.movieRotationDone) {
 		return;
 	}
-	
+
 	this.moviePaused = false;
 	this.moviePlaying = false;
 	this.historyStack.resetMovie();
@@ -710,24 +710,27 @@ GameBoard.prototype.skipMovieFrame = function() {
 GameBoard.prototype.onRotationDone = function() {
 
 	if (!this.gameRunning) {
-		return;
+		return false;
 	}
 
 	if (this.movieMode) {
 		this.movieRotationDone = true;
+		return true;
 	}
-	else if (this.movieRotated) {
+
+	if (this.movieRotated) {
 		this.movieRotated = false;
+		return true;
 	}
-	else {
-		
-		this.rotateCamera = false;
-		this.animationActive = 0;
-		
-		if (this.initialMove && this.botPlaying) {
-			this.botCanPlay = true;
-		}
+
+	this.rotateCamera = false;
+	this.animationActive = 0;
+
+	if (this.initialMove && this.botPlaying) {
+		this.botCanPlay = true;
 	}
+
+	return true;
 };
 //--------------------------------------------------------
 GameBoard.prototype.handleStatus = function(responseText) {
@@ -759,7 +762,7 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 	if (this.moviePaused) {
 		return;
 	}
-	
+
 	if (lastUpdate == 0) {
 		lastUpdate = currTime;
 	}
