@@ -16,7 +16,7 @@
 		<position x="8.5" y="2.75" z="7.5" />
 		<size x="0.6" y="0.6" z="0.6" />
 		<frontview x="7.5" y="8.5" z="7.5" />
-		<sceneview x="15.0" y="2.5" z="15.0" />
+		<sceneview x="8.5" y="16.48" z="30.0" />
 		<topview x="1.8" y="16.48" z="1.8" />
 		<rotation axis="y" angle="-90" />
 	</BOARD>

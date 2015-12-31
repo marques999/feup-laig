@@ -54,7 +54,7 @@
 			<file path="MyPark/wall_brick.jpg" />
 			<amplif_factor s="0.5" t="1.0" />
 		</TEXTURE>
-	
+
 		<TEXTURE id="texture_rusty">
 			<file path="MyPark/rusty_green.png" />
 			<amplif_factor s="1.5" t="1.25" />
