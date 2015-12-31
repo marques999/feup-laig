@@ -298,6 +298,7 @@ GameBoard.prototype.changeTurn = function() {
 
 	if (this.currentPlayer.cpu) {
 		this.botPlaying = true;
+		this.botCanPlay = true;
 		this.scene.disablePicking();
 	}
 	else {
