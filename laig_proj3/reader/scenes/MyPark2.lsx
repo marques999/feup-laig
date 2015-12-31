@@ -175,10 +175,13 @@
 				<DESCENDANT id="tree1" />
 				<DESCENDANT id="tree2" />
 				<DESCENDANT id="tree3" />
-				<DESCENDANT id="table1" />				
+				<DESCENDANT id="table1" />
+				<DESCENDANT id="table2" />
 				<DESCENDANT id="bench1" />
-		
-				<DESCENDANT id="bench4" />				
+				<DESCENDANT id="bench2" />
+				<DESCENDANT id="bench3" />
+				<DESCENDANT id="bench4" />
+				<DESCENDANT id="bench5" />
 				<DESCENDANT id="gate1" />
 				<DESCENDANT id="gate2" />
 			</DESCENDANTS>
@@ -187,11 +190,10 @@
 		<NODE id="floor">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="-1.0" y="0.0" z="21.0"/>
-		    <SCALE sx="18.0" sy="1.0" sz="22.0"/>
-		    <ROTATION axis="x" angle="-90" />
+			<TRANSLATION x="8.0" y="-0.5" z="10.0"/>
+		    <SCALE sx="18.0" sy="5.0" sz="22.0"/>
 			<DESCENDANTS>
-				<DESCENDANT id="myrectangle" />
+				<DESCENDANT id="leaf_terrain" />
 			</DESCENDANTS>
 		</NODE>
 
