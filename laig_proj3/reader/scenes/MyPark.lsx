@@ -23,7 +23,14 @@
 	<LIGHTS>
 		<LIGHT id="luz1">
 			<enable value="1" />
-			<position x="10.0" y="20.0" z="10.0" w="1.0" />
+			<position x="10.0" y="20.0" z="18.0" w="1.0" />
+			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
+			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
+			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
+		</LIGHT>
+		<LIGHT id="luz2">
+			<enable value="1" />
+			<position x="10.0" y="20.0" z="2.0" w="1.0" />
 			<ambient r="0.0" g="0.0" b="0.0" a="1.0" />
 			<diffuse r="0.8" g="0.8" b="0.8" a="0.8" />
 			<specular r="0.9" g="0.9" b="0.9" a="1.0" />
@@ -67,6 +74,10 @@
 			<file path="MyPark/table_top.png" />
 			<amplif_factor s="0.25" t="1.5" />
 		</TEXTURE>
+		<TEXTURE id="texture_grass">
+			<file path="MyPark/relva.png" />
+			<amplif_factor s="0.3" t="0.3" />
+		</TEXTURE>		
 	</TEXTURES>
 
 	<MATERIALS>
@@ -97,12 +108,11 @@
 			<diffuse r="0.78" g="0.6" b="0.35" a="0.8" />
 			<ambient r="0.78" g="0.6" b="0.35" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-		</MATERIAL>
+		</MATERIAL>		
 	</MATERIALS>
 
 	<LEAVES>
-		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />
-		<LEAF id="leaf_terrain" type="terrain" texture="scenes/MyPark/terrain_txt.png" heightmap="scenes/MyPark/terrain.png" />
+		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />		
 		<LEAF id="treeTrunk" type="cylinder" args="1.5 0.4 0.25 16 16" />
 		<LEAF id="treeLeaves1" type="cylinder" args="1 1.2 0.75 16 16" />
 		<LEAF id="treeLeaves2" type="cylinder" args="1 0.95 0.45 16 16" />
@@ -176,8 +186,7 @@
 				<DESCENDANT id="tree2" />
 				<DESCENDANT id="tree3" />
 				<DESCENDANT id="table1" />				
-				<DESCENDANT id="bench1" />
-		
+				<DESCENDANT id="bench1" />		
 				<DESCENDANT id="bench4" />				
 				<DESCENDANT id="gate1" />
 				<DESCENDANT id="gate2" />
@@ -186,7 +195,7 @@
 
 		<NODE id="floor">
 			<MATERIAL id="null" />
-			<TEXTURE id="null" />
+			<TEXTURE id="texture_grass" />
 			<TRANSLATION x="-1.0" y="0.0" z="21.0"/>
 		    <SCALE sx="18.0" sy="1.0" sz="22.0"/>
 		    <ROTATION axis="x" angle="-90" />
