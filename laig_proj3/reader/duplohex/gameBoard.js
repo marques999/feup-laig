@@ -123,18 +123,50 @@ GameBoard.prototype = Object.create(MyPrimitive.prototype);
 GameBoard.prototype.constructor = GameBoard;
 //--------------------------------------------------------
 GameBoard.prototype.updateMatrix = function(currentMatrix) {
-
+	//--------------------------------------------------------
 	this.currentMatrix = currentMatrix;
-	this.initialMove = true;
-	this.nextTurn = 0;
+	var thisMatrix = null;
+	//--------------------------------------------------------
 	this.resetCells();
 	this.resetController();
-
-	if (currentMatrix == 'diagonal') {
-		this.applyMatrix(this.diagonalMatrix);
+	//--------------------------------------------------------
+	if (this.currentMatrix == 'diagonal') {
+		thisMatrix = this.diagonalMatrix;
 	}
-	else if (currentMatrix == 'small') {
-		this.applyMatrix(this.smallMatrix);
+	else if (this.currentMatrix == 'small') {
+		thisMatrix = this.smallMatrix;
+	}
+	else {
+		return false;
+	}
+	//--------------------------------------------------------
+	for (var i = 0; i < thisMatrix.length; i++) {
+		//--------------------------------------------------------
+		var currentPiece = thisMatrix[i];
+		var cellIndex =  this.cellIndex(currentPiece[1], currentPiece[2]);
+		var pieceObject = this.pieces.placeRandom.apply(this.pieces, currentPiece);
+		//--------------------------------------------------------
+		if (pieceObject.isDisc()) {
+			this.cells[cellIndex].insertDisc(pieceObject);
+		}
+		else {
+			this.cells[cellIndex].insertRing(pieceObject);
+		}
+	}
+};
+//--------------------------------------------------------
+GameBoard.prototype.updateMovieMatrix = function() {
+	//--------------------------------------------------------
+	if (this.currentMatrix == 'diagonal') {
+		for (var i = 0; i < this.diagonalMatrix.length; i++) {
+			this.historyPieces.placeRandom.apply(this.historyPieces, this.diagonalMatrix[i]);
+		}
+	}
+	//--------------------------------------------------------
+	else if (this.currentMatrix == 'small') {
+		for (var i = 0; i < this.smallMatrix.length; i++) {
+			this.historyPieces.placeRandom.apply(this.historyPieces, this.smallMatrix[i]);
+		}
 	}
 };
 //--------------------------------------------------------
@@ -177,25 +209,6 @@ GameBoard.prototype.updatePlayer = function(gameMode, playerColor) {
 	this.updateMatrix(this.currentMatrix);
 };
 //--------------------------------------------------------
-GameBoard.prototype.applyMatrix = function(currentMatrix) {
-	//--------------------------------------------------------
-	for (var i = 0; i < currentMatrix.length; i++) {
-		//--------------------------------------------------------
-		var currentPiece = currentMatrix[i];
-		var cellIndex =  this.cellIndex(currentPiece[1], currentPiece[2]);
-		var pieceObject = this.pieces.placeRandom.apply(this.pieces, currentPiece);
-		//--------------------------------------------------------
-		this.historyPieces.placeRandom.apply(this.historyPieces, currentPiece);
-		//--------------------------------------------------------
-		if (pieceObject.isDisc()) {
-			this.cells[cellIndex].insertDisc(pieceObject);
-		}
-		else {
-			this.cells[cellIndex].insertRing(pieceObject);
-		}
-	}
-};
-//--------------------------------------------------------
 GameBoard.prototype.resetBoard = function(gameMode, playerColor) {
 	this.gameRunning = false;
 	this.pieceController.stopAnimation();
@@ -205,7 +218,7 @@ GameBoard.prototype.resetBoard = function(gameMode, playerColor) {
 };
 //--------------------------------------------------------
 GameBoard.prototype.resetCells = function(gameMode, playerColor) {
-	//--------------------------------------------------------
+
 	for (var i = 0; i < this.cells.length; i++) {
 		this.cells[i].reset();
 	}
@@ -235,7 +248,7 @@ GameBoard.prototype.resetDefaults = function() {
 	this.moviePlaying = false;
 	this.movieRotated = false;
 	this.movieRotationDone = true;
-	this.movieSpeed = 2;
+	this.movieSpeed = 1.8;
 	//--------------------------------------------------------
 	this.botPlaying = false;
 	this.botCanPlay = false;
@@ -404,7 +417,9 @@ GameBoard.prototype.startGame = function(server) {
 		this.scene.rotateCamera();
 	}
 	//--------------------------------------------------------
+	this.initialMove = true;
 	this.gameRunning = true;
+	this.nextTurn = 0;
 };
 //--------------------------------------------------------
 GameBoard.prototype.botTurn = function() {
@@ -429,6 +444,12 @@ GameBoard.prototype.undoMovement = function() {
 	if (this.animationBusy() || this.historyStack.empty() || this.initialMove) {
 		return;
 	}
+	//--------------------------------------------------------
+	this.rotateCamera = false;
+	this.animationActive = 0;
+	this.toggleCell(this.selectedCellId);
+	this.pieces.unselectActivePiece();
+	this.unselectHints();
 	//--------------------------------------------------------
 	var lastMove = this.historyStack.pop();
 	var sourceCell = this.cellIndex(lastMove[0].getX(), lastMove[0].getY());
@@ -601,15 +622,16 @@ GameBoard.prototype.displayTable = function() {
 GameBoard.prototype.backupSelection = function() {
 	this.previousSelectedPiece = this.selectedPieceId;
 	this.previousSelectedCell = this.selectedCellId;
+	this.toggleCell(this.selectedCellId);
+	this.unselectHints();
 };
 //--------------------------------------------------------
 GameBoard.prototype.restoreSelection = function() {
 	this.unselectActiveCell();
 	this.selectedPieceId = this.previousSelectedPiece;
-	if (this.previousSelectedCell != null && this.previousSelectedCell != undefined) {
-		this.toggleCell(this.previousSelectedCell);
-	}
-}
+	this.toggleCell(this.previousSelectedCell);
+	this.updatePlaceHints();
+};
 //--------------------------------------------------------
 GameBoard.prototype.exitMovie = function() {
 
@@ -622,7 +644,7 @@ GameBoard.prototype.exitMovie = function() {
 	}
 
 	this.stopMovie();
-	this.movieSpeed = 2;
+	this.movieSpeed = 1.8;
 	this.movieDelay = 200;
 	this.movieMode = false;
 	this.pieceController = this.pieces;
@@ -649,18 +671,20 @@ GameBoard.prototype.pauseMovie = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.resetMovie = function() {
-
+	//--------------------------------------------------------
 	if (!this.movieRotationDone) {
 		return;
 	}
-
+	//--------------------------------------------------------
 	this.moviePaused = false;
 	this.moviePlaying = true;
 	this.movieFrame = 0;
 	this.elapsedMillis = 0.0;
+	//--------------------------------------------------------
 	this.historyStack.resetMovie();
 	this.historyPieces.stopAnimation();
 	this.historyPieces.resetPieces();
+	this.updateMovieMatrix();
 };
 //--------------------------------------------------------
 GameBoard.prototype.rotateMovie = function() {
@@ -795,15 +819,16 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 	}
 
 	var deltaTime = currTime - lastUpdate;
+	var deltaTimeMillis = deltaTime / 1000;
 
 	if (this.movieMode && this.moviePlaying) {
-		var animationPlaying = this.historyPieces.update(deltaTime * this.movieSpeed * 0.0008);
+		var animationPlaying = this.historyPieces.update(deltaTimeMillis * this.movieSpeed);
 		this.updateMovie(deltaTime);
 	}
 	else {
 		this.clock1.update(this.player1.discs, this.player1.rings);
 		this.clock2.update(this.player2.discs, this.player2.rings);
-		var animationPlaying = this.pieceController.update(deltaTime * 0.001);
+		var animationPlaying = this.pieceController.update(deltaTimeMillis);
 	}
 
 	if (!this.gameRunning) {
@@ -828,7 +853,7 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 
 	if (this.botCanPlay) {
 
-		this.elapsedMillis += deltaTime * 0.001;
+		this.elapsedMillis += deltaTimeMillis;
 
 		if (this.elapsedMillis >= this.botDelay) {
 			this.botCanPlay = false;
@@ -851,7 +876,13 @@ GameBoard.prototype.update = function(currTime, lastUpdate) {
 //--------------------------------------------------------
 GameBoard.prototype.updatePlaceHints = function() {
 
-	if (!this.pieceController.pieceAt(this.selectedPieceId).wasPlaced()) {
+	var selectedPiece = this.pieceController.pieceAt(this.selectedPieceId);
+
+	if (selectedPiece == null || selectedPiece == undefined) {
+		return;
+	}
+
+	if (!selectedPiece.wasPlaced()) {
 
 		for (var i = 0; i < this.numberCells; i++) {
 
@@ -864,7 +895,7 @@ GameBoard.prototype.updatePlaceHints = function() {
 		}
 	}
 	else if (this.updateMoveHints() == 0) {
-		this.pieceController.pieceAt(this.selectedPieceId).setColor("red");
+		selectedPiece.setColor("red");
 	}
 };
 //--------------------------------------------------------
@@ -899,6 +930,10 @@ GameBoard.prototype.validateMove = function(cellX, cellY) {
 //--------------------------------------------------------
 GameBoard.prototype.cellIndex = function(x, y) {
 	return x * this.numberColumns + y;
+};
+//--------------------------------------------------------
+GameBoard.prototype.pieceAnimationActive = function() {
+	return this.animationActive != 0;
 };
 //--------------------------------------------------------
 GameBoard.prototype.updateMoveHints = function() {
@@ -959,7 +994,7 @@ GameBoard.prototype.unselectActiveCell = function() {
 //--------------------------------------------------------
 GameBoard.prototype.toggleCell = function(selectedId) {
 
-	if (selectedId > this.numberCells) {
+	if (selectedId == undefined || selectedId == null || selectedId > this.numberCells) {
 		return;
 	}
 
@@ -1183,20 +1218,9 @@ GameBoard.prototype.animationBusy = function() {
 };
 //--------------------------------------------------------
 GameBoard.prototype.processFrame = function(sourcePiece, destinationCell) {
-
-	if (destinationCell == null || destinationCell == undefined) { // PLACE
-		var sourceCell = this.cellIndex(sourcePiece.getX(), sourcePiece.getY());
-		this.updatePicking(sourceCell + 1);
-		this.historyPieces.placePiece(sourcePiece.getId(), sourcePiece.getX(), sourcePiece.getY());
-	}
-	else { // MOVE
-	//	this.updatePicking(destinationCell + 1);
-	//	var destinationX = ~~(destinationCell / this.numberColumns);
-	//	var destinationY = destinationCell % this.numberColumns;
-		var sourceCell = this.cellIndex(sourcePiece.getX(), sourcePiece.getY());
-		this.updatePicking(sourceCell + 1);
-		this.historyPieces.placePiece(sourcePiece.getId(), sourcePiece.getX(), sourcePiece.getY());
-	}
+	var sourceCell = this.cellIndex(sourcePiece.getX(), sourcePiece.getY());
+	this.updatePicking(sourceCell + 1);
+	this.historyPieces.placePiece(sourcePiece.getId(), sourcePiece.getX(), sourcePiece.getY());
 };
 //--------------------------------------------------------
 GameBoard.prototype.updatePicking = function(selectedId) {

@@ -209,13 +209,25 @@ MyInterface.prototype.onServerError = function() {
 	this.board.resetBoard();
 	this.scene.resetDisplay();
 	this.mainMenu();
-}
+};
 //--------------------------------------------------------
 MyInterface.prototype.onDisconnect = function() {
 	this.serverConnected = false;
 	this.connectionMenu_close();
 	this.connectionMenu();
-}
+};
+//--------------------------------------------------------
+MyInterface.prototype.quitGame = function() {
+	//---------------------------------------------------------
+	if (this.scene.cameraAnimationActive()) {
+		return;
+	}
+	//---------------------------------------------------------
+	this.gameMenu_close();
+	this.board.resetBoard();
+	this.scene.resetDisplay();
+	this.mainMenu();
+};
 //--------------------------------------------------------
 MyInterface.prototype.connectionMenu = function() {
 	//--------------------------------------------------------
@@ -226,7 +238,6 @@ MyInterface.prototype.connectionMenu = function() {
 	var self = this;
 	this.connectionGroup = this.gui.addFolder("Server");
 	this.connectionGroup.open();
-	//--------------------------------------------------------
 	this.connectionGroup.add(this.scene, "serverHostname").name("Hostname");
 	this.connectionGroup.add(this.scene, "serverPort").name("Port");
 	//--------------------------------------------------------
@@ -247,8 +258,8 @@ MyInterface.prototype.connectionMenu_close = function(self) {
 };
 //--------------------------------------------------------
 MyInterface.prototype.gameMenu = function() {
-
-	if (this.scene == undefined || this.scene == null) {
+	//---------------------------------------------------------
+	if (this.scene == undefined || this.scene == null || this.scene.cameraAnimationActive()) {
 		return false;
 	}
 	//---------------------------------------------------------
@@ -257,25 +268,20 @@ MyInterface.prototype.gameMenu = function() {
 	}
 	//---------------------------------------------------------
 	if (!this.serverConnected) {
-		alert("ERROR: you are not connected to a server!");
+		alert("> ERROR <\nNot connected, you must connect to a server first!");
 		return false;
 	}
 	//---------------------------------------------------------
 	var self = this;
 	this.mainMenu_close();
 	this.scene.startGame();
+	//---------------------------------------------------------
 	this.gameGroup = this.gui.addFolder("Game");
 	this.gameGroup.open();
-	//---------------------------------------------------------
-	this.gameGroup.add(this, "mainMenu").name("Quit Game").onChange(function(){
-		self.gameMenu_close();
-		self.board.resetBoard();
-		self.scene.resetDisplay();
-	});
-	//---------------------------------------------------------
-	this.gameGroup.add(this, "movieMenu").name("View Replay");;
-	//---------------------------------------------------------
+	this.gameGroup.add(this, "quitGame").name("Quit Game");
+	this.gameGroup.add(this, "movieMenu").name("View Replay");
 	this.gameGroup.add(this.board, "undoMovement").name("Undo Movement");
+	//---------------------------------------------------------
 	this.camerasMenu();
 	this.lightsMenu();
 };
@@ -370,7 +376,11 @@ MyInterface.prototype.stopMovie = function() {
 MyInterface.prototype.movieMenu = function() {
 	//--------------------------------------------------------
 	if (this.board == undefined || this.board == null) {
-		return;
+		return false;
+	}
+	//--------------------------------------------------------
+	if (this.scene.cameraAnimationActive() || this.board.pieceAnimationActive()) {
+		return false;
 	}
 	//--------------------------------------------------------
 	var self = this;
@@ -384,10 +394,11 @@ MyInterface.prototype.movieMenu = function() {
 	this.movieGroup.add(this, "stopMovie").name("Stop Movie");
 	//--------------------------------------------------------
 	this.camerasMenu();
+	//--------------------------------------------------------
 	this.movieGroup.add(this.board, "rotateMovie").name("Rotate Camera");
 	this.movieGroup.add(this.board, "skipMovieFrame").name("Skip Move");
-	this.movieGroup.add(this.board, "movieDelay", 100, 5000).step(100).name("Animation Delay");
-	this.movieGroup.add(this.board, "movieSpeed", 1, 5).step(0.1).name("Animation Speed");
+	this.movieGroup.add(this.board, "movieDelay", 100, 3000).step(100).name("Animation Delay");
+	this.movieGroup.add(this.board, "movieSpeed", 0.5, 4.0).step(0.1).name("Animation Speed");
 	this.movieGroup.add(this.board, "movieFrame", 0, this.board.movieLength()).step(1).name("Current Move").listen();
 };
 //--------------------------------------------------------
@@ -402,10 +413,6 @@ MyInterface.prototype.movieMenu_close = function() {
 };
 //--------------------------------------------------------
 MyInterface.prototype.lightsMenu = function() {
-	//--------------------------------------------------------
-	if (this.scene == undefined || this.scene == null) {
-		return;
-	}
 	//--------------------------------------------------------
 	this.lightsGroup = this.gui.addFolder("Lights");
 	this.lightsGroup.open();
@@ -441,7 +448,7 @@ MyInterface.prototype.lightAction = function(self, id) {
 	return function(value) {
 		self.scene.toggleLight(id, value);
 	};
-}
+};
 //--------------------------------------------------------
 MyInterface.prototype.aboutMenu = function() {
 	alert('DuploHex is a connection game related to Hex that includes discs and rings. '
