@@ -36,11 +36,20 @@ XMLscene.prototype.initGame = function() {
 	//--------------------------------------------------------
 	if (this.gameMode) {
 		this.board = new GameBoard(this);
+		this.fpsDisplay = new ObjectFont(this, "FPS:0");
 		this.board.updateMatrix(this.gameSettings.getBoard());
 		this.board.updatePlayer(this.gameSettings.getMode(), this.gameSettings.getColor());
+
+		if (this.gameSettings.getCounter()) {
+			this.enableFPSCounter();
+		}
+		else {
+			this.disableFPSCounter();
+		}
 	}
 	else {
 		this.board = null;
+		this.fpsDisplay = null;
 		this.setPickEnabled(false);
 	}
 };
@@ -428,7 +437,52 @@ XMLscene.prototype.displayBoard = function() {
 	this.boardMatrix != null && this.multMatrix(this.boardMatrix);
 	this.board.display();
 };
-
+//---------------------------------------------------------
+XMLscene.prototype.enableFPSCounter = function() {
+	this.displayFPS = true;
+	this.fpsCounter = 0;
+	this.fpsCounterScale = 0.05;
+	this.currentFps = 0.0;
+	this.accumulatorDisplay = 0;
+	this.lastDisplayUpdate = (new Date()).getTime();
+};
+//---------------------------------------------------------
+XMLscene.prototype.disableFPSCounter = function() {
+	this.displayFPS = false;
+}
+//--------------------------------------------------------
+XMLscene.prototype.calculateAverageFPS = function(deltaTime, type, displayInterval) {
+	//--------------------------------------------------------
+	if (deltaTime >= displayInterval) {
+		return;
+	}
+	//--------------------------------------------------------
+	this.accumulatorDisplay += deltaTime;
+	//--------------------------------------------------------
+	if (this.accumulatorDisplay < displayInterval) {
+		this.fpsCounter++;
+	}
+	//--------------------------------------------------------
+	else {
+		var lastAccumulator = this.accumulatorDisplay - deltaTime;
+		var differenceDelta = (displayInterval - lastAccumulator) / deltaTime;
+		//--------------------------------------------------------
+		this.fpsCounter += differenceDelta;
+		this.currentFps = this.fpsCounter / displayInterval;
+		this.accumulatorDisplay = this.accumulatorDisplay - displayInterval;
+		this.fpsCounter = 0;
+		this.fpsCounter = 1 - differenceDelta;
+	}
+};
+//--------------------------------------------------------
+XMLscene.prototype.displayCounter = function() {
+	this.pushMatrix();
+	this.translate(2.0 * this.fpsCounterScale, 1.0 - this.fpsCounterScale, -5.0);
+	this.scale(this.fpsCounterScale, this.fpsCounterScale, 1.0);
+	this.fpsDisplay.display();
+	this.popMatrix();
+};
+//--------------------------------------------------------
 /**
  * altera o comprimento dos eixos visíveis na cena
  * @param {Number} length - comprimento dos eixos
@@ -717,6 +771,7 @@ XMLscene.prototype.update = function(currTime) {
 		this.updatePicking();
 		this.clearPickRegistration();
 		this.board.update(currTime, this.lastUpdate);
+		this.displayFPS && this.fpsDisplay.updateString("FPS:" + ~~this.currentFps);
 	}
 	//--------------------------------------------------------
 	this.graph.loadedOk && this.graph.processAnimations(deltaTime);
@@ -733,6 +788,15 @@ XMLscene.prototype.display = function() {
 	//--------------------------------------------------------
 	this.updateProjectionMatrix();
 	this.loadIdentity();
+	//--------------------------------------------------------
+	if (this.displayFPS) {
+		var n = (new Date()).getTime();
+		var deltaTime = (n - this.lastDisplayUpdate) / 1000;
+		this.lastDisplayUpdate = n;
+		this.calculateAverageFPS(deltaTime, "display", 1.0);
+		this.displayCounter();
+	}
+	//--------------------------------------------------------
 	this.applyViewMatrix();
 	this.applyInitialMatrix();
 	//--------------------------------------------------------

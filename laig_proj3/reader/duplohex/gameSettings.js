@@ -48,6 +48,13 @@ function GameSettings() {
 	else {
 		this["fps"] = parseInt(localStorage["updatePeriod"]);
 	}
+		//--------------------------------------------------------
+	if (localStorage["fpsCounter"] == undefined) {
+		this["fpsCounter"] = true;
+	}
+	else {
+		this["fpsCounter"] = parseInt(localStorage["fpsCounter"]) ? true : false;
+	}
 	//--------------------------------------------------------
 	this.boardMatrix = {
 		'diagonal': 'diagonalMatrix',
@@ -62,6 +69,7 @@ GameSettings.prototype.constructor = GameSettings;
 GameSettings.prototype.save = function() {
 	localStorage["playerColor"] = this["color"];
 	localStorage["updatePeriod"] = this["fps"].toString();
+	localStorage["fpsCounter"] = this["fpsCounter"] ? "1" : "0";
 	localStorage["gameBoard"] = this["board"];
 	localStorage["gameDifficulty"] = this["difficulty"];
 	localStorage["gameMode"] = this["mode"];
@@ -100,6 +108,10 @@ GameSettings.prototype.setScene = function(gameScene) {
 	this["scene"] = gameScene;
 };
 //--------------------------------------------------------
+GameSettings.prototype.setCounter = function(counterEnabled) {
+	this["fpsCounter"] = counterEnabled;
+};
+//--------------------------------------------------------
 GameSettings.prototype.setFps = function(targetFps) {
 
 	if (targetFps > 0 && targetFps <= 60) {
@@ -115,8 +127,16 @@ GameSettings.prototype.getColor = function() {
 	return this["color"];
 };
 //--------------------------------------------------------
+GameSettings.prototype.getCounter = function() {
+	return this["fpsCounter"];
+};
+//--------------------------------------------------------
 GameSettings.prototype.getDifficulty = function() {
 	return this["difficulty"];
+};
+//--------------------------------------------------------
+GameSettings.prototype.getFps = function() {
+	return this["fps"];
 };
 //--------------------------------------------------------
 GameSettings.prototype.getMode = function() {
@@ -125,10 +145,6 @@ GameSettings.prototype.getMode = function() {
 //--------------------------------------------------------
 GameSettings.prototype.getScene = function() {
 	return this["scene"];
-};
-//--------------------------------------------------------
-GameSettings.prototype.getFps = function() {
-	return this["fps"];
 };
 //--------------------------------------------------------
 GameSettings.prototype.toString = function() {

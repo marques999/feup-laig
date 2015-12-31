@@ -64,6 +64,7 @@ serialInclude([
 	'duplohex/objectCube.js',
 	'duplohex/objectDigit.js',
 	'duplohex/objectDisc.js',
+	'duplohex/objectFont.js',
 	'duplohex/objectHexagon.js',
 	'duplohex/objectPlane.js',
 	'duplohex/objectRamp.js',

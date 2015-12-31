@@ -75,6 +75,7 @@ MyInterface.prototype.readPreferences = function() {
 	this.currentScene = preferencesArray.getScene();
 	this.playerColor = preferencesArray.color;
 	this.updatePeriod = preferencesArray.getFps();
+	this.fpsCounter = preferencesArray.getCounter();
 	this.toggleBoolean(this.gameMode, preferencesArray.mode);
 	this.toggleBoolean(this.gameBoard, preferencesArray.board);
 	this.toggleBoolean(this.gameDifficulty, preferencesArray.difficulty);
@@ -93,6 +94,7 @@ MyInterface.prototype.savePreferences = function() {
 	preferencesArray.setBoard(this.getBoolean(this.gameBoard));
 	preferencesArray.setScene(this.currentScene);
 	preferencesArray.setDifficulty(this.getBoolean(this.gameDifficulty));
+	preferencesArray.setCounter(this.fpsCounter);
 	preferencesArray.setFps(this.updatePeriod);
 	preferencesArray.save();
 	//--------------------------------------------------------
@@ -125,6 +127,16 @@ MyInterface.prototype.settingsMenu = function() {
 	}).listen();
 	//---------------------------------------------------------
 	this.settingsGroup.add(this, "updatePeriod", 1, 60).name("Target FPS").listen();
+	//---------------------------------------------------------
+	this.settingsGroup.add(this, "fpsCounter").name("Display FPS").onChange(function(counterEnabled){
+		if (counterEnabled) {
+			self.scene.enableFPSCounter();
+		}
+		else {
+			self.scene.disableFPSCounter();
+		}
+	}).listen();
+	//---------------------------------------------------------
 	this.boardGroup = this.gui.addFolder("Board");
 	this.modeGroup = this.gui.addFolder("Mode");
 	this.difficultyGroup = this.gui.addFolder("Difficulty");
