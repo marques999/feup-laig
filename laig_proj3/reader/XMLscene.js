@@ -439,16 +439,16 @@ XMLscene.prototype.displayBoard = function() {
 };
 //---------------------------------------------------------
 XMLscene.prototype.enableFPSCounter = function() {
-	this.displayFPS = true;
-	this.fpsCounter = 0;
-	this.fpsCounterScale = 0.05;
 	this.currentFps = 0.0;
-	this.accumulatorDisplay = 0;
+	this.displayFps = true;
+	this.fpsAccumulator = 0.0;
+	this.fpsCounter = 0.0;
+	this.fpsCounterScale = 0.05;
 	this.lastDisplayUpdate = (new Date()).getTime();
 };
 //---------------------------------------------------------
 XMLscene.prototype.disableFPSCounter = function() {
-	this.displayFPS = false;
+	this.displayFps = false;
 }
 //--------------------------------------------------------
 XMLscene.prototype.calculateAverageFPS = function(deltaTime, type, displayInterval) {
@@ -457,21 +457,18 @@ XMLscene.prototype.calculateAverageFPS = function(deltaTime, type, displayInterv
 		return;
 	}
 	//--------------------------------------------------------
-	this.accumulatorDisplay += deltaTime;
+	this.fpsAccumulator += deltaTime;
 	//--------------------------------------------------------
-	if (this.accumulatorDisplay < displayInterval) {
+	if (this.fpsAccumulator < displayInterval) {
 		this.fpsCounter++;
 	}
-	//--------------------------------------------------------
 	else {
-		var lastAccumulator = this.accumulatorDisplay - deltaTime;
+		var lastAccumulator = this.fpsAccumulator - deltaTime;
 		var differenceDelta = (displayInterval - lastAccumulator) / deltaTime;
-		//--------------------------------------------------------
 		this.fpsCounter += differenceDelta;
 		this.currentFps = this.fpsCounter / displayInterval;
-		this.accumulatorDisplay = this.accumulatorDisplay - displayInterval;
-		this.fpsCounter = 0;
-		this.fpsCounter = 1 - differenceDelta;
+		this.fpsAccumulator = this.fpsAccumulator - displayInterval;
+		this.fpsCounter = 1.0 - differenceDelta;
 	}
 };
 //--------------------------------------------------------
@@ -771,7 +768,10 @@ XMLscene.prototype.update = function(currTime) {
 		this.updatePicking();
 		this.clearPickRegistration();
 		this.board.update(currTime, this.lastUpdate);
-		this.displayFPS && this.fpsDisplay.updateString("FPS:" + ~~this.currentFps);
+		//--------------------------------------------------------
+		if (this.displayFps) {
+			this.fpsDisplay.updateString("FPS:" + ~~this.currentFps);
+		}
 	}
 	//--------------------------------------------------------
 	this.graph.loadedOk && this.graph.processAnimations(deltaTime);
@@ -789,7 +789,7 @@ XMLscene.prototype.display = function() {
 	this.updateProjectionMatrix();
 	this.loadIdentity();
 	//--------------------------------------------------------
-	if (this.displayFPS) {
+	if (this.displayFps) {
 		var n = (new Date()).getTime();
 		var deltaTime = (n - this.lastDisplayUpdate) / 1000;
 		this.lastDisplayUpdate = n;

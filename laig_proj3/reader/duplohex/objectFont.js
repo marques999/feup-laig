@@ -25,7 +25,6 @@ function ObjectFont(scene, string) {
 	this.fontAppearance.setSpecular(0.0, 0.0, 0.0, 1);
 	this.fontAppearance.setTexture(this.fontTexture);
 	this.fontAppearance.setShininess(120);
-	//--------------------------------------------------------
 	this.updateString(string);
 };
 //--------------------------------------------------------
@@ -49,19 +48,9 @@ ObjectFont.prototype.display = function() {
 };
 //--------------------------------------------------------
 ObjectFont.prototype.updateString = function(string) {
-	//--------------------------------------------------------
 	this.coordsArray = [];
-	//--------------------------------------------------------
 	for (var i = 0; i < string.length; i++) {
 		var characterCode = string.charCodeAt(i);
-		if (characterCode >= 0 && characterCode < 256) {
-			this.coordsArray.push([
-				characterCode % this.fontDimensions[0],
-				~~(characterCode / this.fontDimensions[1])
-			]);
-		}
-		else {
-			this.coordsArray.push([0, 0]);
-		}
+		this.coordsArray.push([characterCode % this.fontDimensions[0], ~~(characterCode / this.fontDimensions[1])]);
 	}
 };
