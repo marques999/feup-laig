@@ -943,7 +943,7 @@ GameBoard.prototype.updateMoveHints = function() {
 	var sourceIndex = this.cellIndex(selectedPiece.getX(), selectedPiece.getY());
 	var numberHints = 0;
 
-	if (this.cells[sourceIndex].isTwopiece()) {
+	if (this.initialMove || this.cells[sourceIndex].isTwopiece()) {
 		return 0;
 	}
 
@@ -1031,19 +1031,21 @@ GameBoard.prototype.placePieceHandler = function() {
 	else if (selectedPiece.wasPlaced()) { // MOVE
 
 		if (selectedPiece.isDisc()) {
-			this.server.requestMoveDisc(serializedBoard, selectedPiece.getX() + 1, selectedPiece.getY() + 1, selectedCellX + 1, selectedCellY + 1);
+			this.server.requestMoveDisc(serializedBoard, selectedPiece.getX() + 1,
+				selectedPiece.getY() + 1, selectedCellX + 1, selectedCellY + 1, this.initialMove);
 		}
 		else {
-			this.server.requestMoveRing(serializedBoard, selectedPiece.getX() + 1, selectedPiece.getY() + 1, selectedCellX + 1, selectedCellY + 1);
+			this.server.requestMoveRing(serializedBoard, selectedPiece.getX() + 1,
+				selectedPiece.getY() + 1, selectedCellX + 1, selectedCellY + 1, this.initialMove);
 		}
 	}
 	else { // PLACE
 
 		if (selectedPiece.isDisc()) {
-			this.server.requestPlaceDisc(serializedBoard, selectedCellX + 1, selectedCellY + 1);
+			this.server.requestPlaceDisc(serializedBoard, selectedCellX + 1, selectedCellY + 1, this.initialMove);
 		}
 		else {
-			this.server.requestPlaceRing(serializedBoard, selectedCellX + 1, selectedCellY + 1);
+			this.server.requestPlaceRing(serializedBoard, selectedCellX + 1, selectedCellY + 1, this.initialMove);
 		}
 	}
 };

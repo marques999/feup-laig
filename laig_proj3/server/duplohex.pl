@@ -114,6 +114,16 @@ serverPlaceRing(Board, Piece, Player, X-Y):-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+serverInitialMove(Board, placeDisc, Player, X-Y):-
+	validateCoordinates(X, Y), !,
+	validatePlaceDisc(X, Y, Board, Player).
+
+serverInitialMove(Board, placeRing, Player, X-Y):-
+	validateCoordinates(X, Y), !,
+	validatePlaceRing(X, Y, Board, Player).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 serverMoveDisc(Board, Piece, Player, FromX-FromY, ToX-ToY):-
 	serverPieceAllowed(Piece, disc),
 	validateCoordinates(FromX, FromY),

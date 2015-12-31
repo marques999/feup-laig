@@ -96,19 +96,18 @@ parse_input(placeDisc(Board, Piece, Player, Position), yes):-
 	serverPlaceDisc(Board, Piece, Player, Position).
 parse_input(placeRing(Board, Piece, Player, Position), yes):-
 	serverPlaceRing(Board, Piece, Player, Position).
-
 parse_input(moveDisc(Board, Piece, Player, From, To), yes):-
 	serverMoveDisc(Board, Piece, Player, From, To).
 parse_input(moveRing(Board, Piece, Player, From, To), yes):-
 	serverMoveRing(Board, Piece, Player, From, To).
-
+parse_input(initialMove(Board, Function, Player, Position), yes):-
+	serverInitialMove(Board, Function, Player, Position).
 parse_input(getRandomMove(Board, Piece, Player), Reply):-
 	botRandomMove(Board, Piece, Player, Reply).
 parse_input(getSmartMove(Board, Piece, Player), Reply):-
 	botSmartMove(Board, Piece, Player, Reply).
 parse_input(getInitialMove(Board, Piece, Player), Reply):-
 	botInitialMove(Board, Piece, Player, Reply).
-
 parse_input(getStatus(Board, Player1, Player2), Reply):-
 	serverCheckGame(Board, Player1, Player2, Reply).
 parse_input(getStuck(Board, CurrentPlayer), Reply):-
