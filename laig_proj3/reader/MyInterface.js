@@ -17,10 +17,10 @@ MyInterface.prototype.init = function(application) {
 	CGFinterface.prototype.init.call(this, application);
 	//--------------------------------------------------------
 	this.gameScenes = {
-		'None': 'example.lsx',
+		'None': 'MyExample.lsx',
 		'Apollo': 'MyShuttle.lsx',
 		'Billiards': 'MyBilliards.lsx',
-		'Park': 'MyExp.lsx'
+		'Park': 'MyPark.lsx'
 	};
 	//--------------------------------------------------------
 	this.playerColors = {

@@ -37,24 +37,20 @@
 		</LIGHT>
 	<LIGHTS>
 	<TEXTURES>
-		<TEXTURE id="texture_colors">
-			<file path="images/colors.jpg" />
-			<amplif_factor s="1.0" t="1.0" />
-		</TEXTURE>
 		<TEXTURE id="texture_earth">
-			<file path="images/earth.jpg" />
+			<file path="MyShuttle/earth.jpg" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 		<TEXTURE id="texture_sun">
-			<file path="images/sun.jpg" />
+			<file path="MyShuttle/sun.jpg" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 		<TEXTURE id="texture_space">
-			<file path="images/stars.jpg" />
+			<file path="MyShuttle/stars.jpg" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 		<TEXTURE id="texture_flag">
-			<file path="images/moon_flag.png" />
+			<file path="MyShuttle/moon_flag.png" />
 			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 	</TEXTURES>
@@ -120,7 +116,7 @@
 	</ANIMATIONS>
 	<LEAVES>
 		<LEAF id="leaf_vehicle" type="vehicle"/>
-		<LEAF id="leaf_terrain" type="terrain" texture="scenes/images/moon_texture.jpg" heightmap="scenes/images/moon_texture.jpg" />
+		<LEAF id="leaf_terrain" type="terrain" texture="scenes/MyShuttle/moon_texture.jpg" heightmap="scenes/MyShuttle/moon_texture.jpg" />
 		<LEAF id="leaf_earth" type="sphere" args="1.0 20 20" />
 		<LEAF id="leaf_flagA" type="patch" partsU="20" partsV="20" orderU="3" orderV="3">
 			<controlpoint coords="0.0 0.0 0.0 1.0"/>
@@ -164,7 +160,7 @@
 		<ROOT id="scene" />
 		<NODE id="scene">
 			<MATERIAL id="material_default" />
-			<TEXTURE id="texture_colors" />
+			<TEXTURE id="null" />
 			<DESCENDANTS>
 				<DESCENDANT id="vehicle_mov" />
 				<DESCENDANT id="moonSurface" />

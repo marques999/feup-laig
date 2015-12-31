@@ -38,23 +38,23 @@
 	</LIGHTS>
 	<TEXTURES>
 		<TEXTURE id="room_floor">
-			<file path="images/floor.png" />
+			<file path="MyBilliards/floor.png" />
 			<amplif_factor s="0.25" t="0.5" />
 		</TEXTURE>
 		<TEXTURE id="room_wall">
-			<file path="images/wall.png" />
+			<file path="MyBilliards/wall.png" />
 			<amplif_factor s="0.5" t="1.0" />
 		</TEXTURE>
 		<TEXTURE id="table_felt">
-			<file path="images/felt.png" />
+			<file path="MyBilliards/felt.png" />
 			<amplif_factor s="0.25" t="0.5" />
 		</TEXTURE>
 		<TEXTURE id="table_wood">
-			<file path="images/wood.jpg" />
+			<file path="MyBilliards/wood.jpg" />
 			<amplif_factor s="0.25" t="1.5" />
 		</TEXTURE>
 		<TEXTURE id="marble">
-			<file path="images/marble.png" />
+			<file path="MyBilliards/marble.png" />
 			<amplif_factor s="1.0" t="2.0" />
 		</TEXTURE>
 	</TEXTURES>
