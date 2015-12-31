@@ -30,16 +30,14 @@
 		</LIGHT>
 	</LIGHTS>
 	<TEXTURES>
-		<TEXTURE id="texture_wall_cobblestone">
-			<file path="MyPark/wall_cobblestone.jpg" />
-			<amplif_factor s="3.0" t="1.0" />
+		<TEXTURE id="texture_bench_metal">
+			<file path="MyPark/bench_metal.png" />
+			<amplif_factor s="2.0" t="1.0" />
 		</TEXTURE>
-		<TEXTURE id="texture_wall_brick">
-			<file path="MyPark/wall_brick.jpg" />
-			<amplif_factor s="0.5" t="1.0" />
+		<TEXTURE id="texture_bench_wood">
+			<file path="MyPark/bench_wood.png" />
+			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
-		
-		
 		<TEXTURE id="texture_tree_bark">
 			<file path="MyPark/tree_bark.png" />
 			<amplif_factor s="1.0" t="1.0" />
@@ -48,25 +46,26 @@
 			<file path="MyPark/tree_pine.png" />
 			<amplif_factor s="1.5" t="1.25" />
 		</TEXTURE>
-		
-		
+		<TEXTURE id="texture_wall_cobblestone">
+			<file path="MyPark/wall_cobblestone.jpg" />
+			<amplif_factor s="3.0" t="1.0" />
+		</TEXTURE>
+		<TEXTURE id="texture_wall_brick">
+			<file path="MyPark/wall_brick.jpg" />
+			<amplif_factor s="0.5" t="1.0" />
+		</TEXTURE>
+	
 		<TEXTURE id="texture_rusty">
 			<file path="MyPark/rusty_green.png" />
 			<amplif_factor s="1.5" t="1.25" />
 		</TEXTURE>
 		<TEXTURE id="texture_table">
-			<file path="MyPark/wood_table.jpg" />
+			<file path="MyPark/table_wood.png" />
 			<amplif_factor s="0.25" t="1.5" />
 		</TEXTURE>
-
-
-		<TEXTURE id="texture_bench_metal">
-			<file path="MyPark/bench_metal.png" />
-			<amplif_factor s="2.0" t="1.0" />
-		</TEXTURE>
-		<TEXTURE id="texture_bench_wood">
-			<file path="MyPark/bench_wood.png" />
-			<amplif_factor s="1.0" t="1.0" />
+		<TEXTURE id="texture_table_top">
+			<file path="MyPark/table_top.png" />
+			<amplif_factor s="0.25" t="1.5" />
 		</TEXTURE>
 	</TEXTURES>
 
@@ -92,6 +91,13 @@
 		  <ambient r="0.5" g="0.5" b="0.5" a="0.2" />
 		  <emission r="1.0" g="0.77" b="0.5" a="0.8" />
 		</MATERIAL>
+		<MATERIAL id="material_table_wood">
+			<shininess value="2" />
+			<specular r="0.1" g="0.1" b="0.1" a="0.8" />
+			<diffuse r="0.78" g="0.6" b="0.35" a="0.8" />
+			<ambient r="0.78" g="0.6" b="0.35" a="0.2" />
+			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
+		</MATERIAL>
 	</MATERIALS>
 
 	<LEAVES>
@@ -108,17 +114,14 @@
 			<controlpoint coords="0.0 0.0 1.0 1.0"/>
 			<controlpoint coords="0.0 0.0 2.0 1.0"/>
 			<controlpoint coords="0.0 0.0 3.0 1.0"/>
-
 			<controlpoint coords="0.0 1.0 0.0 1.0"/>
 			<controlpoint coords="0.0 1.0 1.0 1.0"/>
 			<controlpoint coords="0.0 1.0 2.0 1.0"/>
 			<controlpoint coords="0.0 1.0 3.0 1.0"/>
-
 			<controlpoint coords="0.0 2.0 0.0 1.0"/>
 			<controlpoint coords="0.0 2.0 1.0 1.0"/>
 			<controlpoint coords="0.0 2.0 2.0 1.0"/>
 			<controlpoint coords="0.0 2.0 3.0 1.0"/>
-
 			<controlpoint coords="0.0 3.0 0.0 1.0"/>
 			<controlpoint coords="0.0 2.4 1.0 1.0"/>
 			<controlpoint coords="0.0 2.3 2.0 1.0"/>
@@ -129,17 +132,14 @@
 			<controlpoint coords="0.0 2.4 1.0 1.0"/>
 			<controlpoint coords="0.0 2.3 2.0 1.0"/>
 			<controlpoint coords="0.0 2.2 3.0 1.0"/>
-
 			<controlpoint coords="0.0 2.0 0.0 1.0"/>
 			<controlpoint coords="0.0 2.0 1.0 1.0"/>
 			<controlpoint coords="0.0 2.0 2.0 1.0"/>
 			<controlpoint coords="0.0 2.0 3.0 1.0"/>
-
 			<controlpoint coords="0.0 1.0 0.0 1.0"/>
 			<controlpoint coords="0.0 1.0 1.0 1.0"/>
 			<controlpoint coords="0.0 1.0 2.0 1.0"/>
 			<controlpoint coords="0.0 1.0 3.0 1.0"/>
-
 			<controlpoint coords="0.0 0.0 0.0 1.0"/>
 			<controlpoint coords="0.0 0.0 1.0 1.0"/>
 			<controlpoint coords="0.0 0.0 2.0 1.0"/>
@@ -150,17 +150,14 @@
 			<controlpoint coords="0.05 0.0 0.0 1.0"/>
 			<controlpoint coords="0.1 0.0 0.0 1.0"/>
 			<controlpoint coords="0.15 0.0 0.0 1.0"/>
-
 			<controlpoint coords="0.0 -0.6 1.0 1.0"/>
 			<controlpoint coords="0.05 -0.6 1.0 1.0"/>
 			<controlpoint coords="0.1 -0.6 1.0 1.0"/>
 			<controlpoint coords="0.15 -0.6 1.0 1.0"/>
-
 			<controlpoint coords="0.0 -0.7 2.0 1.0"/>
 			<controlpoint coords="0.05 -0.7 2.0 1.0"/>
 			<controlpoint coords="0.1 -0.7 2.0 1.0"/>
 			<controlpoint coords="0.15 -0.7 2.0 1.0"/>
-
 			<controlpoint coords="0.0 -0.8 3.0 1.0"/>
 			<controlpoint coords="0.05 -0.8 3.0 1.0"/>
 			<controlpoint coords="0.1 -0.8 3.0 1.0"/>
@@ -589,7 +586,7 @@
 		</NODE>
 
 		<NODE id="table">
-			<MATERIAL id="null" />
+			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="texture_table" />
 			<DESCENDANTS>
 				<DESCENDANT id="leg1" />
@@ -627,7 +624,7 @@
 
 		<NODE id="table_top">
 			<MATERIAL id="null" />
-			<TEXTURE id="null" />
+			<TEXTURE id="texture_table_top" />
 			<TRANSLATION x="-0.05" y="0.9" z="-0.05"/>
 			<SCALE sx="2.3" sy="0.1" sz="1.3"/>
 			<DESCENDANTS>
