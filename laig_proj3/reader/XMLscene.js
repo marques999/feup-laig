@@ -25,7 +25,6 @@ XMLscene.prototype.init = function(application) {
 XMLscene.prototype.resetScene = function() {
 	this.initDefaults();
 	this.initGL();
-	this.enableTextures(true);
 	this.resetDisplay();
 };
 //--------------------------------------------------------
@@ -36,16 +35,8 @@ XMLscene.prototype.initGame = function() {
 	//--------------------------------------------------------
 	if (this.gameMode) {
 		this.board = new GameBoard(this);
-		this.fpsDisplay = new ObjectFont(this, "FPS:0");
 		this.board.updateMatrix(this.gameSettings.getBoard());
 		this.board.updatePlayer(this.gameSettings.getMode(), this.gameSettings.getColor());
-
-		if (this.gameSettings.getCounter()) {
-			this.enableFPSCounter();
-		}
-		else {
-			this.disableFPSCounter();
-		}
 	}
 	else {
 		this.board = null;
@@ -55,12 +46,16 @@ XMLscene.prototype.initGame = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.initGL = function() {
+	//--------------------------------------------------------
 	this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	this.gl.clearDepth(1000.0);
 	this.gl.enable(this.gl.DEPTH_TEST);
 	this.gl.enable(this.gl.CULL_FACE);
 	this.gl.depthFunc(this.gl.LEQUAL);
+	//--------------------------------------------------------
+	this.enableTextures(true);
 	this.activeLights = 0;
+	//--------------------------------------------------------
 	this.axis = new CGFaxis(this);
 	this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(15, 15, 15), vec3.fromValues(0, 0, 0));
 };
@@ -190,7 +185,7 @@ XMLscene.prototype.resetDisplay = function() {
 	//---------------------------------------------------------
 	this.cameraOrbitVector = vec3.fromValues(0.0, 1.0, 0.0);
 	this.cameraMinimumTilt = -Math.PI / 3;
-	this.cameraMaximumTilt = Math.PI / 3;
+	this.cameraMaximumTilt = +Math.PI / 3;
 	//---------------------------------------------------------
 	this.cameraRotationAmount = 0.0;
 	this.cameraTiltAmount = 0.0;
@@ -212,14 +207,6 @@ XMLscene.prototype.resetDisplay = function() {
 XMLscene.prototype.startGame = function() {
 	this.switchFrontView();
 	this.startAfterTransition = true;
-};
-//---------------------------------------------------------
-XMLscene.prototype.resetCamera = function() {
-	//---------------------------------------------------------
-	if (!this.cameraAnimationActive()) {
-		this.camera.setPosition(this.initialCameraPosition);
-		this.initialCameraTilt = this.initialCameraPosition;
-	}
 };
 //---------------------------------------------------------
 XMLscene.prototype.cameraTilt = function() {
@@ -382,6 +369,7 @@ XMLscene.prototype.processCameraTransition = function(deltaTime) {
 		this.initialCameraTilt = vec3.clone(this.cameraTransitionTarget);
 		this.currentTransitionSpan = 0.0;
 		this.cameraTransitionActive = false;
+
 		if (this.startAfterTransition) {
 			this.startAfterTransition = false;
 			this.board.startGame();
@@ -404,18 +392,26 @@ XMLscene.prototype.processCameraZoom = function(deltaTime) {
 		this.initialCameraTilt = vec3.clone(this.camera.position);
 	}
 };
+//---------------------------------------------------------
+XMLscene.prototype.resetCamera = function() {
+	//---------------------------------------------------------
+	if (!this.cameraAnimationActive()) {
+		this.camera.setPosition(this.initialCameraPosition);
+		this.initialCameraTilt = this.initialCameraPosition;
+	}
+};
+//--------------------------------------------------------
+XMLscene.prototype.resetCameraTilt = function() {
+	this.cameraTiltAmount = 0.0;
+	this.currentCameraTilt = 0.0;
+	this.camera.setPosition(this.initialCameraTilt);
+};
 //--------------------------------------------------------
 XMLscene.prototype.rotateCamera = function() {
 	this.camera.setPosition(this.initialCameraTilt);
 	this.cameraRotationActive = true;
 	this.cameraRotationAmount = Math.PI;
 	this.targetCameraRotation = this.currentCameraRotation + Math.PI;
-};
-//--------------------------------------------------------
-XMLscene.prototype.resetRotation = function() {
-	this.cameraTiltAmount = 0.0;
-	this.currentCameraTilt = 0.0;
-	this.camera.setPosition(this.initialCameraTilt);
 };
 //--------------------------------------------------------
 XMLscene.prototype.cameraAnimationActive = function() {
@@ -437,19 +433,14 @@ XMLscene.prototype.displayBoard = function() {
 	this.boardMatrix != null && this.multMatrix(this.boardMatrix);
 	this.board.display();
 };
-//---------------------------------------------------------
-XMLscene.prototype.enableFPSCounter = function() {
-	this.currentFps = 0.0;
-	this.displayFps = true;
-	this.fpsAccumulator = 0.0;
-	this.fpsCounter = 0.0;
-	this.fpsCounterScale = 0.05;
-	this.lastDisplayUpdate = (new Date()).getTime();
+//--------------------------------------------------------
+XMLscene.prototype.displayCounter = function() {
+	this.pushMatrix();
+	this.translate(2.0 * this.fpsCounterScale, 1.0 - this.fpsCounterScale, -5.0);
+	this.scale(this.fpsCounterScale, this.fpsCounterScale, 1.0);
+	this.fpsDisplay.display();
+	this.popMatrix();
 };
-//---------------------------------------------------------
-XMLscene.prototype.disableFPSCounter = function() {
-	this.displayFps = false;
-}
 //--------------------------------------------------------
 XMLscene.prototype.calculateAverageFPS = function(deltaTime, type, displayInterval) {
 	//--------------------------------------------------------
@@ -471,13 +462,23 @@ XMLscene.prototype.calculateAverageFPS = function(deltaTime, type, displayInterv
 		this.fpsCounter = 1.0 - differenceDelta;
 	}
 };
-//--------------------------------------------------------
-XMLscene.prototype.displayCounter = function() {
-	this.pushMatrix();
-	this.translate(2.0 * this.fpsCounterScale, 1.0 - this.fpsCounterScale, -5.0);
-	this.scale(this.fpsCounterScale, this.fpsCounterScale, 1.0);
-	this.fpsDisplay.display();
-	this.popMatrix();
+//---------------------------------------------------------
+XMLscene.prototype.disableFPSCounter = function() {
+	this.displayFps = false;
+};
+//---------------------------------------------------------
+XMLscene.prototype.enableFPSCounter = function() {
+
+	if (this.fpsCounter == null || this.fpsCounter == undefined) {
+		this.fpsDisplay = new ObjectFont(this, "FPS:0");
+	}
+
+	this.currentFps = 0.0;
+	this.displayFps = true;
+	this.fpsAccumulator = 0.0;
+	this.fpsCounter = 0.0;
+	this.fpsCounterScale = 0.05;
+	this.lastDisplayUpdate = (new Date()).getTime();
 };
 //--------------------------------------------------------
 /**
@@ -722,6 +723,13 @@ XMLscene.prototype.onGraphLoaded = function() {
 	for (var i = this.activeLights; i < this.lights.length; i++) {
 		this.lights[i].setVisible(false);
 		this.lights[i].disable();
+	}
+	//--------------------------------------------------------
+	if (this.gameSettings.getCounter()) {
+		this.enableFPSCounter();
+	}
+	else {
+		this.disableFPSCounter();
 	}
 	//--------------------------------------------------------
 	if (this.gameMode) {

@@ -15,7 +15,7 @@
 	<BOARD>
 		<size x="0.15" y="0.15" z="0.15" />
 		<position x="11.1" y="1.031" z="14.1" />
-		<topview x="1.8" y="9.5" z="1.8" />
+		<topview x="0.75" y="8.5" z="0.75" />
 		<sceneview x="-30.0" y="10.5" z="2.0" />
 		<frontview x="2.5" y="2.5" z="2.5" />
 		<rotation axis="y" angle="-90" />
@@ -61,7 +61,6 @@
 			<file path="MyPark/wall_brick.jpg" />
 			<amplif_factor s="0.5" t="1.0" />
 		</TEXTURE>
-
 		<TEXTURE id="texture_rusty">
 			<file path="MyPark/rusty_green.png" />
 			<amplif_factor s="1.5" t="1.25" />
@@ -75,11 +74,10 @@
 			<amplif_factor s="0.25" t="1.5" />
 		</TEXTURE>
 		<TEXTURE id="texture_grass">
-			<file path="MyPark/relva.png" />
-			<amplif_factor s="0.3" t="0.3" />
-		</TEXTURE>		
+			<file path="MyPark/grass.png" />
+			<amplif_factor s="0.075" t="0.075" />
+		</TEXTURE>
 	</TEXTURES>
-
 	<MATERIALS>
 		<MATERIAL id="material_bench_metal">
 			<shininess value="10" />
@@ -108,11 +106,10 @@
 			<diffuse r="0.78" g="0.6" b="0.35" a="0.8" />
 			<ambient r="0.78" g="0.6" b="0.35" a="0.2" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
-		</MATERIAL>		
+		</MATERIAL>
 	</MATERIALS>
-
 	<LEAVES>
-		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />		
+		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />
 		<LEAF id="treeTrunk" type="cylinder" args="1.5 0.4 0.25 16 16" />
 		<LEAF id="treeLeaves1" type="cylinder" args="1 1.2 0.75 16 16" />
 		<LEAF id="treeLeaves2" type="cylinder" args="1 0.95 0.45 16 16" />
@@ -185,14 +182,13 @@
 				<DESCENDANT id="tree1" />
 				<DESCENDANT id="tree2" />
 				<DESCENDANT id="tree3" />
-				<DESCENDANT id="table1" />				
-				<DESCENDANT id="bench1" />		
-				<DESCENDANT id="bench4" />				
+				<DESCENDANT id="table1" />
+				<DESCENDANT id="bench1" />
+				<DESCENDANT id="bench4" />
 				<DESCENDANT id="gate1" />
 				<DESCENDANT id="gate2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="floor">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_grass" />
@@ -203,7 +199,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_rusty" />
@@ -216,7 +211,6 @@
 				<DESCENDANT id="gate_left" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate_interior">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -225,7 +219,6 @@
 				<DESCENDANT id="interiorGate" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate_top">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -234,7 +227,6 @@
 				<DESCENDANT id="topGate" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate_down">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -244,7 +236,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate_right">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -254,7 +245,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate_left">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -264,7 +254,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -275,7 +264,6 @@
 				<DESCENDANT id="gate" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gate2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -286,7 +274,6 @@
 				<DESCENDANT id="gate" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench">
 			<MATERIAL id="material_bench_metal" />
 			<TEXTURE id="texture_bench_metal" />
@@ -310,7 +297,6 @@
 				<DESCENDANT id="arm2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -320,7 +306,6 @@
 				<DESCENDANT id="bench" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -330,7 +315,6 @@
 				<DESCENDANT id="bench" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -340,7 +324,6 @@
 				<DESCENDANT id="bench" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -349,7 +332,6 @@
 				<DESCENDANT id="bench" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench5">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -358,7 +340,6 @@
 				<DESCENDANT id="bench" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="arm1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -368,7 +349,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="arm2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -377,7 +357,6 @@
 				<DESCENDANT id="arm1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -394,7 +373,6 @@
 				<DESCENDANT id="bench_seat_back_vertical3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back_vertical1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -404,7 +382,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back_vertical2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -413,7 +390,6 @@
 				<DESCENDANT id="bench_seat_back_vertical1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back_vertical3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -422,7 +398,6 @@
 				<DESCENDANT id="bench_seat_back_vertical1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back1">
 			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="texture_bench_wood" />
@@ -432,7 +407,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back2">
 			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="texture_bench_wood" />
@@ -442,7 +416,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -451,7 +424,6 @@
 				<DESCENDANT id="bench_seat_back2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -460,7 +432,6 @@
 				<DESCENDANT id="bench_seat_back3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_back5">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -469,7 +440,6 @@
 				<DESCENDANT id="bench_seat_back4" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_horizontal">
 			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="null" />
@@ -479,7 +449,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_vertical1">
 			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="texture_bench_wood" />
@@ -489,7 +458,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_vertical2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -498,7 +466,6 @@
 				<DESCENDANT id="bench_seat_vertical1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_vertical3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -507,7 +474,6 @@
 				<DESCENDANT id="bench_seat_vertical2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_seat_vertical4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -516,7 +482,6 @@
 				<DESCENDANT id="bench_seat_vertical3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_side1">
 			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="texture_bench_wood" />
@@ -526,7 +491,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_side2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -535,7 +499,6 @@
 				<DESCENDANT id="bench_side1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_side3">
 			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="texture_bench_wood" />
@@ -545,7 +508,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_side4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -554,7 +516,6 @@
 				<DESCENDANT id="bench_side3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_leg1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -564,7 +525,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_leg2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -573,7 +533,6 @@
 				<DESCENDANT id="bench_leg1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_leg3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -582,7 +541,6 @@
 				<DESCENDANT id="bench_leg1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="bench_leg4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -591,7 +549,6 @@
 				<DESCENDANT id="bench_leg2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table">
 			<MATERIAL id="material_bench_wood" />
 			<TEXTURE id="texture_table" />
@@ -610,7 +567,6 @@
 				<DESCENDANT id="table_top" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -619,7 +575,6 @@
 				<DESCENDANT id="table" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -628,7 +583,6 @@
 				<DESCENDANT id="table" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_top">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_table_top" />
@@ -638,7 +592,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -648,7 +601,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -657,7 +609,6 @@
 				<DESCENDANT id="table_side1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -667,7 +618,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="table_side4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -676,7 +626,6 @@
 				<DESCENDANT id="table_side3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="trave1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -686,7 +635,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="trave2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -696,7 +644,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="trave3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -706,7 +653,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -716,7 +662,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -725,7 +670,6 @@
 				<DESCENDANT id="leg1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -734,7 +678,6 @@
 				<DESCENDANT id="leg1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="leg4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -743,7 +686,6 @@
 				<DESCENDANT id="leg1" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="tree1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -844,7 +786,6 @@
 				<DESCENDANT id="gatePillar2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="longWall">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_wall_brick" />
@@ -854,7 +795,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="longWallV2">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_wall_brick" />
@@ -864,7 +804,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="longWallV3">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_wall_brick" />
@@ -874,7 +813,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="longWall2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -882,7 +820,6 @@
 				<DESCENDANT id="longWallV3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="longWall3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -891,7 +828,6 @@
 				<DESCENDANT id="longWallV3" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="longWall4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -934,7 +870,6 @@
 				<DESCENDANT id="longWallV2" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="pillar">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_wall_cobblestone" />
@@ -943,7 +878,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="light">
 			<MATERIAL id="material_glass_yellow" />
 			<TEXTURE id="null" />
@@ -953,7 +887,6 @@
 				<DESCENDANT id="mysphere" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gateLight1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -964,7 +897,6 @@
 				<DESCENDANT id="gateLight" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="pillarV2">
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_wall_cobblestone" />
@@ -973,7 +905,6 @@
 				<DESCENDANT id="primitive_cube" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gatePillar">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -984,7 +915,6 @@
 				<DESCENDANT id="light" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="gatePillar2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -993,7 +923,6 @@
 				<DESCENDANT id="gatePillar" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="pillar2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1042,7 +971,6 @@
 				<DESCENDANT id="pillar" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_cube">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
@@ -1106,7 +1034,6 @@
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>
 		</NODE>
-
 		<NODE id="primitive_wall">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />

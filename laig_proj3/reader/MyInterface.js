@@ -65,6 +65,17 @@ MyInterface.prototype.deleteFolder = function(folderName) {
 	this.gui.onResize();
 };
 //--------------------------------------------------------
+MyInterface.prototype.resetFps = function() {
+	//--------------------------------------------------------
+	if (this.scene == undefined || this.scene == null) {
+		return;
+	}
+	//--------------------------------------------------------
+	var preferencesArray = this.scene.getPreferences();
+	this.updatePeriod = preferencesArray.getFps();
+	this.fpsCounter = preferencesArray.getCounter();
+};
+//--------------------------------------------------------
 MyInterface.prototype.readPreferences = function() {
 	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
@@ -119,6 +130,7 @@ MyInterface.prototype.settingsMenu = function() {
 	this.settingsGroup.add(this, "readPreferences").name("Reset Settings");
 	//---------------------------------------------------------
 	this.settingsGroup.add(this, "currentScene", this.gameScenes).name("Environment").onChange(function(currentScene) {
+		self.resetFps();
 		self.scene.loadGraph(currentScene);
 	}).listen();
 	//---------------------------------------------------------
@@ -211,8 +223,7 @@ MyInterface.prototype.settingsMenu_close = function(self) {
 //--------------------------------------------------------
 MyInterface.prototype.onConnect = function() {
 	this.serverConnected = true;
-	this.connectionMenu_close();
-	this.connectionMenu();
+	this.connectionMenu_update();
 }
 //--------------------------------------------------------
 MyInterface.prototype.onServerError = function() {
@@ -225,8 +236,7 @@ MyInterface.prototype.onServerError = function() {
 //--------------------------------------------------------
 MyInterface.prototype.onDisconnect = function() {
 	this.serverConnected = false;
-	this.connectionMenu_close();
-	this.connectionMenu();
+	this.connectionMenu_update();
 };
 //--------------------------------------------------------
 MyInterface.prototype.quitGame = function() {
@@ -261,12 +271,17 @@ MyInterface.prototype.connectionMenu = function() {
 	}
 };
 //--------------------------------------------------------
-MyInterface.prototype.connectionMenu_close = function(self) {
-
+MyInterface.prototype.connectionMenu_close = function() {
+	//--------------------------------------------------------
 	if (this.connectionGroup != undefined && this.connectionGroup != null) {
 		this.deleteFolder("Server");
 		this.connectionGroup = undefined;
 	}
+};
+//--------------------------------------------------------
+MyInterface.prototype.connectionMenu_update = function() {
+	this.connectionMenu_close();
+	this.connectionMenu();
 };
 //--------------------------------------------------------
 MyInterface.prototype.gameMenu = function() {
@@ -317,7 +332,7 @@ MyInterface.prototype.camerasMenu = function() {
 	this.cameraZoomGroup.add(this.scene, "cameraTiltAmount", -1.0, 1.0).name("Tilt").listen().onChange(function(){
 		self.scene.cameraTilt();
 	}).onFinishChange(function(){
-		self.scene.resetRotation();
+		self.scene.resetCameraTilt();
 	});
 	//---------------------------------------------------------
 	this.cameraViewsGroup.add(this.scene, "switchFrontView").name("Front View");
