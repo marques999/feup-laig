@@ -721,8 +721,9 @@ XMLscene.prototype.onGraphLoaded = function() {
 	}
 	//--------------------------------------------------------
 	for (var i = this.activeLights; i < this.lights.length; i++) {
-		this.lights[i].setVisible(false);
+		this.lights[i] = new CGFlight(this, i);
 		this.lights[i].disable();
+		this.lights[i].update();
 	}
 	//--------------------------------------------------------
 	if (this.gameSettings.getCounter()) {
