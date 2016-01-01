@@ -48,8 +48,11 @@ MyInterface.prototype.init = function(application) {
 	this.gui = new dat.GUI();
 	this.lightsState = {};
 	this.lightsId = [];
+	this.fpsCounter = true;
 	this.playerColor = 'blackPlayer';
+	this.playerTimeout = 20;
 	this.serverConnected = false;
+	this.updatePeriod = 60;
 };
 //--------------------------------------------------------
 MyInterface.prototype.setScene = function(xmlScene) {
@@ -82,14 +85,20 @@ MyInterface.prototype.readPreferences = function() {
 		return;
 	}
 	//--------------------------------------------------------
+	if (this.board == undefined || this.board == null) {
+		return;
+	}
+	//--------------------------------------------------------
 	var preferencesArray = this.scene.getPreferences();
 	this.currentScene = preferencesArray.getScene();
-	this.playerColor = preferencesArray.color;
-	this.updatePeriod = preferencesArray.getFps();
 	this.fpsCounter = preferencesArray.getCounter();
-	this.toggleBoolean(this.gameMode, preferencesArray.mode);
-	this.toggleBoolean(this.gameBoard, preferencesArray.board);
-	this.toggleBoolean(this.gameDifficulty, preferencesArray.difficulty);
+	this.playerColor = preferencesArray.getColor();
+	this.playerTimeout = preferencesArray.getTimeout();
+	this.updatePeriod = preferencesArray.getFps();
+	//--------------------------------------------------------
+	this.toggleBoolean(this.gameMode, preferencesArray.getMode());
+	this.toggleBoolean(this.gameBoard, preferencesArray.getBoard());
+	this.toggleBoolean(this.gameDifficulty, preferencesArray.getDifficulty());
 };
 //--------------------------------------------------------
 MyInterface.prototype.savePreferences = function() {
@@ -99,17 +108,21 @@ MyInterface.prototype.savePreferences = function() {
 	}
 	//--------------------------------------------------------
 	var preferencesArray = this.scene.getPreferences();
+	this.updatePeriod = Math.round(this.updatePeriod);
+	this.playerTimeout = Math.round(this.playerTimeout);
 	//--------------------------------------------------------
-	preferencesArray.setColor(this.playerColor);
-	preferencesArray.setMode(this.getBoolean(this.gameMode));
 	preferencesArray.setBoard(this.getBoolean(this.gameBoard));
-	preferencesArray.setScene(this.currentScene);
-	preferencesArray.setDifficulty(this.getBoolean(this.gameDifficulty));
+	preferencesArray.setColor(this.playerColor);
 	preferencesArray.setCounter(this.fpsCounter);
 	preferencesArray.setFps(this.updatePeriod);
+	preferencesArray.setDifficulty(this.getBoolean(this.gameDifficulty));
+	preferencesArray.setMode(this.getBoolean(this.gameMode));
+	preferencesArray.setScene(this.currentScene);
+	preferencesArray.setTimeout(this.playerTimeout);
 	preferencesArray.save();
 	//--------------------------------------------------------
 	this.scene.setUpdatePeriod(1000 / this.updatePeriod);
+	this.board.updateTimeout(this.playerTimeout);
 	this.settingsMenu_close();
 	this.mainMenu();
 };
@@ -138,7 +151,8 @@ MyInterface.prototype.settingsMenu = function() {
 		self.board.updatePlayer(null, self.playerColor);
 	}).listen();
 	//---------------------------------------------------------
-	this.settingsGroup.add(this, "updatePeriod", 1, 60).name("Target FPS").listen();
+	this.settingsGroup.add(this, "playerTimeout", 10, 60).step(1).name("Turn Timeout").listen();
+	this.settingsGroup.add(this, "updatePeriod", 1, 60).step(1).name("Target FPS").listen();
 	//---------------------------------------------------------
 	this.settingsGroup.add(this, "fpsCounter").name("Display FPS").onChange(function(counterEnabled){
 		if (counterEnabled) {
@@ -267,7 +281,7 @@ MyInterface.prototype.connectionMenu = function() {
 		this.connectionGroup.add(this.scene, "disconnectServer").name("Disconnect");
 	}
 	else {
-		this.connectionGroup.add(this.scene, "initServer").name("Connect");
+		this.connectionGroup.add(this.scene, "initializeServer").name("Connect");
 	}
 };
 //--------------------------------------------------------
@@ -284,9 +298,13 @@ MyInterface.prototype.connectionMenu_update = function() {
 	this.connectionMenu();
 };
 //--------------------------------------------------------
-MyInterface.prototype.gameMenu = function() {
+MyInterface.prototype.gameMenu = function(startGame) {
 	//---------------------------------------------------------
-	if (this.scene == undefined || this.scene == null || this.scene.cameraAnimationActive()) {
+	if (this.scene == undefined || this.scene == null) {
+		return false;
+	}
+	//---------------------------------------------------------
+	if ((startGame == undefined || startGame) && this.scene.cameraAnimationActive()) {
 		return false;
 	}
 	//---------------------------------------------------------
@@ -301,7 +319,10 @@ MyInterface.prototype.gameMenu = function() {
 	//---------------------------------------------------------
 	var self = this;
 	this.mainMenu_close();
-	this.scene.startGame();
+	//---------------------------------------------------------
+	if (startGame == undefined || startGame) {
+		this.scene.startGame();
+	}
 	//---------------------------------------------------------
 	this.gameGroup = this.gui.addFolder("Game");
 	this.gameGroup.open();
@@ -396,7 +417,7 @@ MyInterface.prototype.stopMovie = function() {
 	//--------------------------------------------------------
 	if (this.board.exitMovie()) {
 		this.movieMenu_close();
-		this.gameMenu();
+		this.gameMenu(false);
 	}
 };
 //--------------------------------------------------------

@@ -87,7 +87,7 @@ main=function() {
 	app.setScene(myScene);
 	app.setInterface(myInterface);
 	myInterface.setActiveCamera(null);
-	myScene.setSettings(mySettings);
+	myScene.initializeSettings(mySettings);
 	myScene.setInterface(myInterface);
 	//--------------------------------------------------------
 	var filename = mySettings.getScene();

@@ -4,8 +4,8 @@
  * @author Carlos Samouco, Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {GameBoard} board - referência para a primitiva "tabuleiro"
- * @param {Object} player1 - estrutura de dados do jogador 1
- * @param {Object} player2 - estrutura de dados do jogador 2
+ * @param {Object} player1 - estrutura de dados referente ao jogador 1
+ * @param {Object} player2 - estrutura de dados referente ao jogador 2
  * @return {null}
 */
 function PieceController(scene, board, player1, player2) {
