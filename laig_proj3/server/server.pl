@@ -7,7 +7,7 @@
 :- use_module(library(codesio)).
 
 %                 ------------- %
-% #server                       %
+% #predicados                   %
 %                 ------------- %
 
 port(8081).
@@ -82,7 +82,7 @@ check_end_of_header(_).
 print_header_line(_).
 
 %                 ------------- %
-% #commands                     %
+% #protocolo                    %
 %                 ------------- %
 
 :- include('duplohex.pl').

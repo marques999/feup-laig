@@ -656,7 +656,7 @@ XMLscene.prototype.onGraphLoaded = function() {
 	this.gl.clearColor(this.defaultBackground[0], this.defaultBackground[1],
 					   this.defaultBackground[2], this.defaultBackground[3]);
 	//--------------------------------------------------------
-	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1], 
+	this.setGlobalAmbientLight(this.defaultAmbient[0], this.defaultAmbient[1],
 								this.defaultAmbient[2], this.defaultAmbient[3]);
 	//--------------------------------------------------------
 	if (this.activeLights == 0) {
