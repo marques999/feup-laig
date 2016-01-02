@@ -18,8 +18,8 @@ MyInterface.prototype.init = function(application) {
 	//--------------------------------------------------------
 	this.gameScenes = {
 		'None': 'MyExample.lsx',
-		'Apollo': 'MyShuttle.lsx',
 		'Billiards': 'MyBilliards.lsx',
+		'Darkroom': 'MyDarkroom.lsx',
 		'Park': 'MyPark.lsx'
 	};
 	//--------------------------------------------------------
