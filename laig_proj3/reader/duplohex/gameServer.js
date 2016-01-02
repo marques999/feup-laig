@@ -1,10 +1,8 @@
 /**
  * construtor default da classe 'GameServer'
  * @constructor
- * @augments MyPrimitive
+ * @augments Object
  * @author Diogo Marques
- * @param {GameBoard} board - apontador para uma primitiva "tabuleiro"
- * @param {GameSettings} settings - estrutura de dados contendo as configurações do jogo
  * @param {String} address - endereço IP ou hostname do servidor HTTP
  * @param {String} port - porta de rede onde o servidor HTTP se encontra a correr
  * @return {null}

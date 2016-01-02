@@ -2,8 +2,8 @@
  * construtor default da classe 'GameBoard'
  * @constructor
  * @augments MyPrimitive
- * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @author Carlos Samouco, Diogo Marques
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @return {null}
  */
 function GameBoard(scene) {

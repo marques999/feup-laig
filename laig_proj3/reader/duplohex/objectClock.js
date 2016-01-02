@@ -1,5 +1,5 @@
 /**
- * construtor default da classe 'objectClock'
+ * construtor default da classe 'ObjectClock'
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco, Diogo Marques
@@ -46,7 +46,7 @@ ObjectClock.prototype = Object.create(MyPrimitive.prototype);
 ObjectClock.prototype.constructor = ObjectClock;
 //--------------------------------------------------------
 ObjectClock.prototype.display = function() {
-
+	//--------------------------------------------------------
 	this.scene.pushMatrix();
 		this.materials["body"].apply();
 		this.ramp.display();

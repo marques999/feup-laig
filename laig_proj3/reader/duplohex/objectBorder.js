@@ -4,8 +4,8 @@
  * @augments MyPrimitive
  * @author Carlos Samouco, Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
- * @param {Number} size - qwertyuiop asdfghjkl zxcvbnm
- * @param {Number} color - qwertyuiop asdfghjkl zxcvbnm
+ * @param {Number} size - número de células do tabuleiro
+ * @param {String} color - cor do jogador para inicialização dos materiais
  * @return {null}
  */
 function ObjectBorder(scene, size, color) {

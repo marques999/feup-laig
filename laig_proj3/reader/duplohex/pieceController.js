@@ -1,6 +1,7 @@
 /**
  * construtor default da classe 'PieceController'
  * @constructor
+ * @augments MyPrimitive
  * @author Carlos Samouco, Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {GameBoard} board - referência para a primitiva "tabuleiro"

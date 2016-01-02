@@ -4,8 +4,9 @@
  * @augments MyPrimitive
  * @author Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
- * @param {Number} color - cor da peça para inicialização dos materiais
- * @param {Number} position - posição absoluta da peça
+ * @param {Number} id - número identificador de picking da peça
+ * @param {String} color - cor da peça para inicialização dos materiais
+ * @param {Array} position - posição absoluta da peça
  * @return {null}
  */
 function GamePiece(scene, id, position, color) {
