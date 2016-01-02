@@ -153,15 +153,15 @@
 	</MATERIALS>
 	<LEAVES>
 		<LEAF id="myrectangle" type="rectangle" args="0.0 1.0 1.0 0.0" />
-		<LEAF id="leg_base1" type="cylinder" args="0.5 0.2 0.4 1.0 16.0" />
-		<LEAF id="leg_base2" type="cylinder" args="1.5 0.4 0.2 1 16" />
-		<LEAF id="mycylinder" type="cylinder" args="1.0 1.0 1.0 1 16" />
+		<LEAF id="leg_base1" type="cylinder" args="0.5 0.2 0.4 8 16" />
+		<LEAF id="leg_base2" type="cylinder" args="1.5 0.4 0.2 8 16" />
+		<LEAF id="mycylinder" type="cylinder" args="1.0 1.0 1.0 8 16" />
 		<LEAF id="mysconce_chain" type="cylinder" args="0.75 0.65 0.5 16 16" />
 		<LEAF id="myball" type="sphere" args="0.15 16 16" />
 		<LEAF id="mylamp" type="sphere" args="0.15 16 16" />
-		<LEAF id="mycueTop" type="cylinder" args="0.2 0.02 0.02 1 16" />
-		<LEAF id="mycueMid" type="cylinder" args="2.0 0.02 0.05 1 16" />
-		<LEAF id="mycueDown" type="cylinder" args="1.0 0.05 0.05 1 16" />
+		<LEAF id="mycueTop" type="cylinder" args="0.2 0.02 0.02 8 16" />
+		<LEAF id="mycueMid" type="cylinder" args="2.0 0.02 0.05 8 16" />
+		<LEAF id="mycueDown" type="cylinder" args="1.0 0.05 0.05 8 16" />
 	</LEAVES>
 	<NODES>
 		<ROOT id="scene" />
