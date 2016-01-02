@@ -279,8 +279,12 @@ XMLscene.prototype.processCameraDelta = function() {
 	this.cameraTransitionDelta = vec3.clone(this.cameraTransitionTarget);
 	this.cameraTransitionDistance = vec3.dist(this.camera.position, this.cameraTransitionTarget);
 	vec3.sub(this.cameraTransitionDelta, this.cameraTransitionDelta, this.camera.position);
-	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, this.cameraTransitionSpeed / this.cameraTransitionDistance);
-	this.cameraTrasitionSpan = this.cameraTransitionDistance / this.cameraTransitionSpeed;
+	var averageBoardSize = (this.boardSize[0] + this.boardSize[1] + this.boardSize[2])/3;
+	var velocidade = (averageBoardSize*2.22 + 0.67)/(2.97* this.cameraTransitionDistance - 9.29);
+	var scaleFactor = this.cameraTransitionDistance*velocidade;	
+	console.log("velocidade: " + scaleFactor*this.cameraTransitionDistance + " scaleFactor: " + scaleFactor + " distance: " + this.cameraTransitionDistance);
+	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, scaleFactor);//this.cameraTransitionSpeed / this.cameraTransitionDistance);
+	this.cameraTrasitionSpan = 1/scaleFactor;//this.cameraTransitionDistance / this.cameraTransitionSpeed;
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraRotation = function(deltaTime) {

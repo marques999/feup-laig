@@ -49,6 +49,7 @@
 		<LEAF id="baseSconce" type="cylinder" args="1.0 0.5 0.077 16 16" />
 		<LEAF id="topSconce" type="cylinder" args="1.0 0.5 0.3 16 16" />
 		<LEAF id="myshere" type="sphere" args="0.5 20 20" />
+		<LEAF id="mycircle" type="circle" args="0.5 20" />
 	</LEAVES>
 	<NODES>		
 		<ROOT id="scene" />
@@ -62,7 +63,7 @@
 				<DESCENDANT id="window1" />
 				<DESCENDANT id="background" />
 				<DESCENDANT id="table" />	
-				<DESCENDANT id="vehicle" />	
+				<DESCENDANT id="vehicle_structure" />	
 				<DESCENDANT id="sofa" />	
 				<DESCENDANT id="ball" />
 				<DESCENDANT id="sconce" />						
@@ -82,9 +83,29 @@
 
 		<NODE id="sconce_top">
 			<MATERIAL id="null" />
+			<TEXTURE id="null" />							
+			<DESCENDANTS>
+			    <DESCENDANT id="sconce_top1" />	
+			    <DESCENDANT id="sconce_top2" />									
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="sconce_top1">
+			<MATERIAL id="null" />
 			<TEXTURE id="null" />
 			<TRANSLATION x="0.0" y="1.6" z="0.0" />
 			<SCALE sx="1.0" sy="0.6" sz="1.0" />
+			<ROTATION axis="x" angle="-90" />						
+			<DESCENDANTS>
+			    <DESCENDANT id="topSconce" />									
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="sconce_top2">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<TRANSLATION x="0.0" y="1.6" z="0.0" />
+			<SCALE sx="-1.0" sy="0.6" sz="-1.0" />
 			<ROTATION axis="x" angle="-90" />						
 			<DESCENDANTS>
 			    <DESCENDANT id="topSconce" />									
@@ -143,10 +164,10 @@
 			</DESCENDANTS>
 		</NODE>
 
-		<NODE id="tableV2_Top">
+		<NODE id="tableV2_Top1">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="0.4" y="0.7" z="0.4" />	
+			<TRANSLATION x="0.35" y="0.7" z="0.35" />	
 			<SCALE sx="1.4" sy="0.2" sz="1.4" />
 			<ROTATION axis="x" angle="-90" />								
 			<DESCENDANTS>
@@ -154,10 +175,29 @@
 			</DESCENDANTS>
 		</NODE>
 
-		<NODE id="tableV2_legs">
+		<NODE id="tableV2_Top2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="0.0" y="0.0" z="0.0" />							
+			<TRANSLATION x="0.35" y="0.9" z="0.35" />	
+			<SCALE sx="1.4" sy="0.2" sz="1.4" />
+			<ROTATION axis="x" angle="-90" />										
+			<DESCENDANTS>
+				<DESCENDANT id="mycircle" />							
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="tableV2_Top">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />										
+			<DESCENDANTS>
+				<DESCENDANT id="tableV2_Top1" />
+				<DESCENDANT id="tableV2_Top2" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="tableV2_legs">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />								
 			<DESCENDANTS>
 				<DESCENDANT id="tableV2_leg1" />
 				<DESCENDANT id="tableV2_leg2" />
@@ -179,7 +219,7 @@
 		<NODE id="tableV2_leg2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="0.8" y="0.0" z="0.0" />	
+			<TRANSLATION x="0.7" y="0.0" z="0.0" />	
 			<SCALE sx="0.1" sy="0.75" sz="0.1" />
 			<ROTATION axis="x" angle="-90" />		
 			<DESCENDANTS>
@@ -190,7 +230,7 @@
 		<NODE id="tableV2_leg3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="0.0" y="0.0" z="0.8" />	
+			<TRANSLATION x="0.0" y="0.0" z="0.7" />	
 			<SCALE sx="0.1" sy="0.75" sz="0.1" />
 			<ROTATION axis="x" angle="-90" />		
 			<DESCENDANTS>
@@ -201,7 +241,7 @@
 		<NODE id="tableV2_leg4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="0.8" y="0.0" z="0.8" />	
+			<TRANSLATION x="0.7" y="0.0" z="0.7" />	
 			<SCALE sx="0.1" sy="0.75" sz="0.1" />
 			<ROTATION axis="x" angle="-90" />		
 			<DESCENDANTS>
@@ -299,13 +339,43 @@
 			</DESCENDANTS>
 		</NODE>
 
-		<NODE id="vehicle">
+		<NODE id="vehicle_structure">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="14.25" y="0.0" z="19.25" />
-			<SCALE sx="0.1" sy="0.1" sz="0.1" />
-			<ROTATION axis="y" angle="-70" />
-			<ROTATION axis="z" angle="90" />
+			<TRANSLATION x="14.1" y="0.9" z="18.5" />		
+			<DESCENDANTS>
+				<DESCENDANT id="vehicle_structure_base" />	
+				<DESCENDANT id="vehicle_structure_middle" />	
+				<DESCENDANT id="vehicle" />				
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="vehicle_structure_base">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<SCALE sx="0.55" sy="0.55" sz="0.55" />		
+			<DESCENDANTS>
+				<DESCENDANT id="sconce_base" />								
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="vehicle_structure_middle">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />
+			<SCALE sx="0.05" sy="0.37" sz="0.05" />	
+			<ROTATION axis="x" angle="-90" />	
+			<DESCENDANTS>
+				<DESCENDANT id="mycylinder" />								
+			</DESCENDANTS>
+		</NODE>
+
+		<NODE id="vehicle">
+			<MATERIAL id="null" />
+			<TEXTURE id="null" />	
+			<TRANSLATION x="0.25" y="0.3" z="0.0" />		
+			<SCALE sx="0.11" sy="0.11" sz="0.11" />
+			<ROTATION axis="y" angle="160" />
+			<ROTATION axis="z" angle="30" />
 			<DESCENDANTS>
 				<DESCENDANT id="leaf_vehicle" />					
 			</DESCENDANTS>
