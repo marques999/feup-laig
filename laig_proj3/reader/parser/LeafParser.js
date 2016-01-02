@@ -11,6 +11,7 @@
 		<LEAF id="ss" type="cylinder" args="ff ff ff ii ii"/>
 		<LEAF id="ss" type="sphere" args="ff ii ii"/>
 		<LEAF id="ss" type="triangle" args="ff ff ff ff ff ff ff ff ff"/>
+		<LEAF id="ss" type="circle" args="ff ii"/>
 		<LEAF id="ss" type="plane" parts="ii"/>
 		<LEAF id="ss" type="terrain" texture="ss" heightmap="ss"/>
 		<LEAF id="ss" type="vehicle"/>
@@ -85,6 +86,9 @@ LeafParser.prototype.readType = function(id, root, leafType) {
 	}
 	else if (leafType == 'cylinder') {
 		error = this.readCylinder(id, root);
+	}
+	else if (leafType == 'circle') {
+		error = this.readCircle(id, root);
 	}
 	else if (leafType == 'sphere') {
 		error = this.readSphere(id, root);
@@ -399,6 +403,54 @@ LeafParser.prototype.readPatch = function(id, root) {
 	}
 
 	this.result = new MyPatch(this.scene, myDivsU, myDivsV, myDegreeU, myDegreeV, controlPoints);
+};
+
+/**
+ * processa uma primitiva do tipo "circle" e acrescenta ao array de leaves do grafo
+ * @param {Number} id - identificador da leaf/primitiva atual
+ * @param {XMLElement} root - estutura de dados XML que contém os argumentos não processados
+ * @return {String|null} - null se a função terminar com sucesso, caso contrário retorna uma mensagem de erro
+ */
+LeafParser.prototype.readCircle = function(id, root) {
+
+	if (!root.hasAttribute('args')) {
+		return onAttributeMissing('args', id, 'CIRCLE');
+	}
+
+	var unprocessedArgs = this.reader.getString(root, 'args');
+	var leafArgs = unprocessedArgs.replace(/\s+/g, ' ').split(' ');
+
+	if (leafArgs.length != 2) {
+		return onInvalidArguments(id, leafArgs.length, 5);
+	}
+
+	var parseErrors = 0;
+	var myRadius = parseFloat(leafArgs[0]);
+
+	if (myRadius != myRadius) {
+		onAttributeInvalid('radius', id, 'CIRCLE');
+		parseErrors++;
+	}
+
+	var mySlices = parseInt(leafArgs[1]);
+
+	if (mySlices != mySlices) {
+		onAttributeInvalidWarn('number of slices', id, 'CIRCLE');
+		parseErrors++;
+	}
+
+	if (parseErrors != 0) {
+		return onParseError('CIRCLE', parseErrors, id);
+	}
+
+	this.result = new MyCircle(this.scene, mySlices, myRadius);
+
+	if (this.verbose) {
+		printHeader("LEAF", id);
+		printSingle('type', 'circle');
+		printSingle('radius', myRadius);
+		printSingle('slices', mySlices);
+	}
 };
 
 /**
