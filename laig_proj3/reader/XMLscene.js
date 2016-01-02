@@ -103,6 +103,7 @@ XMLscene.prototype.setBoardPosition = function(vector3) {
 //--------------------------------------------------------
 XMLscene.prototype.setBoardSize = function(vector3) {
 	this.boardSize = vector3;
+	this.cameraTransitionSpeed = 40.0 * vector3[0];
 };
 //--------------------------------------------------------
 XMLscene.prototype.setFrontView = function(vector3) {
