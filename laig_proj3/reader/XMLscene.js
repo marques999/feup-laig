@@ -275,16 +275,20 @@ XMLscene.prototype.zoomOut = function() {
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraDelta = function() {
+	//---------------------------------------------------------
 	this.currentTransitionSpan = 0.0;
 	this.cameraTransitionDelta = vec3.clone(this.cameraTransitionTarget);
 	this.cameraTransitionDistance = vec3.dist(this.camera.position, this.cameraTransitionTarget);
+	//---------------------------------------------------------
 	vec3.sub(this.cameraTransitionDelta, this.cameraTransitionDelta, this.camera.position);
-	var averageBoardSize = (this.boardSize[0] + this.boardSize[1] + this.boardSize[2])/3;
-	var velocidade = (averageBoardSize*2.22 + 0.67)/(2.97* this.cameraTransitionDistance - 9.29);
-	var scaleFactor = this.cameraTransitionDistance*velocidade;	
-	console.log("velocidade: " + scaleFactor*this.cameraTransitionDistance + " scaleFactor: " + scaleFactor + " distance: " + this.cameraTransitionDistance);
-	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, scaleFactor);//this.cameraTransitionSpeed / this.cameraTransitionDistance);
-	this.cameraTrasitionSpan = 1/scaleFactor;//this.cameraTransitionDistance / this.cameraTransitionSpeed;
+	//---------------------------------------------------------
+	var averageBoardSize = (this.boardSize[0] + this.boardSize[1] + this.boardSize[2]) / 3;
+	var transitionSpeed = (averageBoardSize * 2.22 + 0.67) / (2.97 * this.cameraTransitionDistance - 9.29);
+	var scaleFactor = this.cameraTransitionDistance * transitionSpeed;
+	//---------------------------------------------------------
+	vec3.scale(this.cameraTransitionDelta, this.cameraTransitionDelta, scaleFactor);
+	//---------------------------------------------------------
+	this.cameraTrasitionSpan = 1.0 / scaleFactor;
 };
 //--------------------------------------------------------
 XMLscene.prototype.processCameraRotation = function(deltaTime) {
@@ -448,11 +452,11 @@ XMLscene.prototype.disableFPSCounter = function() {
 };
 //---------------------------------------------------------
 XMLscene.prototype.enableFPSCounter = function() {
-
+	//---------------------------------------------------------
 	if (this.fpsCounter == null || this.fpsCounter == undefined) {
 		this.fpsDisplay = new ObjectFont(this, "FPS:0");
 	}
-
+	//---------------------------------------------------------
 	this.currentFps = 0.0;
 	this.displayFps = true;
 	this.fpsAccumulator = 0.0;
