@@ -1,59 +1,66 @@
 /**
  * construtor default da classe 'GameSettings'
  * @constructor
- * @augments MyPrimitive
+ * @augments Object
  * @author Diogo Marques
  * @return {null}
  */
 function GameSettings() {
 	//--------------------------------------------------------
-	if (localStorage["playerColor"] == undefined) {
-		this["color"] = 'whitePlayer';
-	}
-	else {
-		this["color"] = localStorage["playerColor"];
-	}
-	//--------------------------------------------------------
-	if (localStorage["gameBoard"] == undefined) {
+	if (localStorage["gameBoard"] == undefined || localStorage["gameBoard"] == null) {
 		this["board"] = 'default';
 	}
 	else {
 		this["board"] = localStorage["gameBoard"];
 	}
 	//--------------------------------------------------------
-	if (localStorage["gameDifficulty"] == undefined) {
+	if (localStorage["playerColor"] == undefined || localStorage["playerColor"] == null) {
+		this["color"] = 'whitePlayer';
+	}
+	else {
+		this["color"] = localStorage["playerColor"];
+	}
+	//--------------------------------------------------------
+	if (localStorage["fpsCounter"] == undefined || localStorage["fpsCounter"] == null) {
+		this["counter"] = true;
+	}
+	else {
+		this["counter"] = parseInt(localStorage["fpsCounter"]) ? true : false;
+	}
+	//--------------------------------------------------------
+	if (localStorage["gameDifficulty"] == undefined || localStorage["gameDifficulty"] == null) {
 		this["difficulty"] = 'random';
 	}
 	else {
 		this["difficulty"] = localStorage["gameDifficulty"];
 	}
 	//--------------------------------------------------------
-	if (localStorage["gameMode"] == undefined) {
+	if (localStorage["updatePeriod"] == undefined || localStorage["updatePeriod"] == null) {
+		this["fps"] = 60;
+	}
+	else {
+		this["fps"] = parseInt(localStorage["updatePeriod"]);
+	}
+	//--------------------------------------------------------
+	if (localStorage["gameMode"] == undefined || localStorage["gameMode"] == null) {
 		this["mode"] = 'pvp';
 	}
 	else {
 		this["mode"] = localStorage["gameMode"];
 	}
 	//--------------------------------------------------------
-	if (localStorage["gameScene"] == undefined) {
-		this["scene"] = 'example.lsx';
+	if (localStorage["gameScene"] == undefined || localStorage["gameScene"] == null) {
+		this["scene"] = 'MyExample.lsx';
 	}
 	else {
 		this["scene"] = localStorage["gameScene"];
 	}
 	//--------------------------------------------------------
-	if (localStorage["updatePeriod"] == undefined) {
-		this["fps"] = 60;
+	if (localStorage["playerTimeout"] == undefined || localStorage["playerTimeout"] == null) {
+		this["timeout"] = 20;
 	}
 	else {
-		this["fps"] = parseInt(localStorage["updatePeriod"]);
-	}
-		//--------------------------------------------------------
-	if (localStorage["fpsCounter"] == undefined) {
-		this["fpsCounter"] = true;
-	}
-	else {
-		this["fpsCounter"] = parseInt(localStorage["fpsCounter"]) ? true : false;
+		this["timeout"] = parseInt(localStorage["playerTimeout"]);
 	}
 	//--------------------------------------------------------
 	this.boardMatrix = {
@@ -66,59 +73,6 @@ function GameSettings() {
 GameSettings.prototype = Object.create(Object.prototype);
 GameSettings.prototype.constructor = GameSettings;
 //--------------------------------------------------------
-GameSettings.prototype.save = function() {
-	localStorage["playerColor"] = this["color"];
-	localStorage["updatePeriod"] = this["fps"].toString();
-	localStorage["fpsCounter"] = this["fpsCounter"] ? "1" : "0";
-	localStorage["gameBoard"] = this["board"];
-	localStorage["gameDifficulty"] = this["difficulty"];
-	localStorage["gameMode"] = this["mode"];
-	localStorage["gameScene"] = this["scene"];
-};
-//--------------------------------------------------------
-GameSettings.prototype.setBoard = function(boardType) {
-
-	if (boardType == 'default' || boardType == 'small' || boardType == 'diagonal') {
-		this["board"] = boardType;
-	}
-};
-//--------------------------------------------------------
-GameSettings.prototype.setColor = function(playerColor) {
-
-	if (playerColor == 'blackPlayer' || playerColor == 'whitePlayer')  {
-		this["color"] = playerColor;
-	}
-};
-//--------------------------------------------------------
-GameSettings.prototype.setDifficulty = function(gameDifficulty) {
-
-	if (gameDifficulty == 'smart' || gameDifficulty == 'random') {
-		this["difficulty"] = gameDifficulty;
-	}
-};
-//--------------------------------------------------------
-GameSettings.prototype.setMode = function(gameMode) {
-
-	if (gameMode == 'pvp' || gameMode == 'pvb' || gameMode == 'bvb') {
-		this["mode"] = gameMode;
-	}
-};
-//--------------------------------------------------------
-GameSettings.prototype.setScene = function(gameScene) {
-	this["scene"] = gameScene;
-};
-//--------------------------------------------------------
-GameSettings.prototype.setCounter = function(counterEnabled) {
-	this["fpsCounter"] = counterEnabled;
-};
-//--------------------------------------------------------
-GameSettings.prototype.setFps = function(targetFps) {
-
-	if (targetFps > 0 && targetFps <= 60) {
-		this["fps"] = targetFps;
-	}
-};
-//--------------------------------------------------------
 GameSettings.prototype.getBoard = function() {
 	return this["board"];
 };
@@ -128,7 +82,7 @@ GameSettings.prototype.getColor = function() {
 };
 //--------------------------------------------------------
 GameSettings.prototype.getCounter = function() {
-	return this["fpsCounter"];
+	return this["counter"];
 };
 //--------------------------------------------------------
 GameSettings.prototype.getDifficulty = function() {
@@ -145,6 +99,71 @@ GameSettings.prototype.getMode = function() {
 //--------------------------------------------------------
 GameSettings.prototype.getScene = function() {
 	return this["scene"];
+};
+//--------------------------------------------------------
+GameSettings.prototype.getTimeout = function() {
+	return this["timeout"];
+};
+//--------------------------------------------------------
+GameSettings.prototype.setBoard = function(boardType) {
+
+	if (boardType == 'default' || boardType == 'small' || boardType == 'diagonal') {
+		this["board"] = boardType;
+	}
+};
+//--------------------------------------------------------
+GameSettings.prototype.setColor = function(playerColor) {
+
+	if (playerColor == 'blackPlayer' || playerColor == 'whitePlayer')  {
+		this["color"] = playerColor;
+	}
+};
+//--------------------------------------------------------
+GameSettings.prototype.setCounter = function(counterEnabled) {
+	this["counter"] = counterEnabled;
+};
+//--------------------------------------------------------
+GameSettings.prototype.setDifficulty = function(gameDifficulty) {
+
+	if (gameDifficulty == 'smart' || gameDifficulty == 'random') {
+		this["difficulty"] = gameDifficulty;
+	}
+};
+//--------------------------------------------------------
+GameSettings.prototype.setFps = function(targetFps) {
+
+	if (targetFps > 0 && targetFps <= 60) {
+		this["fps"] = targetFps;
+	}
+};
+//--------------------------------------------------------
+GameSettings.prototype.setMode = function(gameMode) {
+
+	if (gameMode == 'pvp' || gameMode == 'pvb' || gameMode == 'bvb') {
+		this["mode"] = gameMode;
+	}
+};
+//--------------------------------------------------------
+GameSettings.prototype.setScene = function(gameScene) {
+	this["scene"] = gameScene;
+};
+//--------------------------------------------------------
+GameSettings.prototype.setTimeout = function(playerTimeout) {
+
+	if (playerTimeout >= 10 && playerTimeout <= 60) {
+		this["timeout"] = playerTimeout;
+	}
+};
+//--------------------------------------------------------
+GameSettings.prototype.save = function() {
+	localStorage["fpsCounter"] = this["counter"] ? "1" : "0";
+	localStorage["gameBoard"] = this["board"];
+	localStorage["gameDifficulty"] = this["difficulty"];
+	localStorage["gameMode"] = this["mode"];
+	localStorage["gameScene"] = this["scene"];
+	localStorage["playerColor"] = this["color"];
+	localStorage["playerTimeout"] = this["timeout"].toString();
+	localStorage["updatePeriod"] = this["fps"].toString();
 };
 //--------------------------------------------------------
 GameSettings.prototype.toString = function() {

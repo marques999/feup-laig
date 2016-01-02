@@ -2,11 +2,10 @@
  * construtor default da classe 'MyCircleHole'
  * @constructor
  * @augments MyPrimitive
- * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Number} radius - raio da esfera
+ * @author Carlos Samouco
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} stacks - número de secções da esfera em altura
- * @param {Number} slices - número de secçoes da esfera em torno do raio
+ * @param {Number} slices - número de secções da esfera em torno do raio
  * @return {null}
  */
 function MyCircleHole(scene, slices, width) {

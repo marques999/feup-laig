@@ -1,12 +1,12 @@
 <SCENE>
 	<INITIALS>
 		<frustum near="0.1" far="200" />
-		<translation x="-15.0" y="-10.0" z="-15.0" />
+		<translation x="0.0" y="0.0" z="0.0" />
 		<rotation axis="y" angle="0.0" />
 		<rotation axis="x" angle="0.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
-		<reference length="5.0" />
+		<reference length="1.0" />
 	</INITIALS>
 	<ILLUMINATION>
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
@@ -43,7 +43,7 @@
 		</TEXTURE>
 		<TEXTURE id="texture_bench_wood">
 			<file path="MyPark/bench_wood.png" />
-			<amplif_factor s="1.0" t="1.0" />
+			<amplif_factor s="1.0" t="5.0" />
 		</TEXTURE>
 		<TEXTURE id="texture_tree_bark">
 			<file path="MyPark/tree_bark.png" />
@@ -61,13 +61,13 @@
 			<file path="MyPark/wall_brick.jpg" />
 			<amplif_factor s="0.5" t="1.0" />
 		</TEXTURE>
-		<TEXTURE id="texture_rusty">
-			<file path="MyPark/rusty_green.png" />
-			<amplif_factor s="1.5" t="1.25" />
+		<TEXTURE id="texture_wooden_gate">
+			<file path="MyPark/wooden_gate.png" />
+			<amplif_factor s="1.0" t="1.0" />
 		</TEXTURE>
 		<TEXTURE id="texture_table">
 			<file path="MyPark/table_wood.png" />
-			<amplif_factor s="0.25" t="1.5" />
+			<amplif_factor s="3.0" t="1.5" />
 		</TEXTURE>
 		<TEXTURE id="texture_table_top">
 			<file path="MyPark/table_top.png" />
@@ -183,7 +183,10 @@
 				<DESCENDANT id="tree2" />
 				<DESCENDANT id="tree3" />
 				<DESCENDANT id="table1" />
+				<DESCENDANT id="table2" />
 				<DESCENDANT id="bench1" />
+				<DESCENDANT id="bench2" />
+				<DESCENDANT id="bench3" />
 				<DESCENDANT id="bench4" />
 				<DESCENDANT id="gate1" />
 				<DESCENDANT id="gate2" />
@@ -200,8 +203,8 @@
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="gate">
-			<MATERIAL id="null" />
-			<TEXTURE id="texture_rusty" />
+			<MATERIAL id="material_bench_wood" />
+			<TEXTURE id="texture_wooden_gate" />
 			<DESCENDANTS>
 				<DESCENDANT id="exteriorGate" />
 				<DESCENDANT id="gate_interior" />
@@ -309,8 +312,8 @@
 		<NODE id="bench2">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="13.5" y="0.0" z="2.0"/>
-			<ROTATION axis="y" angle="180" />
+			<TRANSLATION x="15.0" y="0.0" z="5.0"/>
+			<ROTATION axis="y" angle="90" />
 			<DESCENDANTS>
 				<DESCENDANT id="bench" />
 			</DESCENDANTS>
@@ -318,21 +321,12 @@
 		<NODE id="bench3">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
-			<TRANSLATION x="15.0" y="0.0" z="5.0"/>
-			<ROTATION axis="y" angle="90" />
-			<DESCENDANTS>
-				<DESCENDANT id="bench" />
-			</DESCENDANTS>
-		</NODE>
-		<NODE id="bench4">
-			<MATERIAL id="null" />
-			<TEXTURE id="null" />
 			<TRANSLATION x="10.2" y="0.0" z="15.0"/>
 			<DESCENDANTS>
 				<DESCENDANT id="bench" />
 			</DESCENDANTS>
 		</NODE>
-		<NODE id="bench5">
+		<NODE id="bench4">
 			<MATERIAL id="null" />
 			<TEXTURE id="null" />
 			<TRANSLATION x="7.1" y="0.0" z="9.5"/>
@@ -500,8 +494,8 @@
 			</DESCENDANTS>
 		</NODE>
 		<NODE id="bench_side3">
-			<MATERIAL id="material_bench_wood" />
-			<TEXTURE id="texture_bench_wood" />
+			<MATERIAL id="material_bench_metal" />
+			<TEXTURE id="texture_bench_metal" />
 			<TRANSLATION x="0.025" y="0.325" z="0.1"/>
 			<SCALE sx="0.075" sy="0.075" sz="0.475"/>
 			<DESCENDANTS>

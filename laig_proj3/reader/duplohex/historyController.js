@@ -1,6 +1,7 @@
 /**
  * construtor default da classe 'HistoryController'
  * @constructor
+ * @augments MyPrimitive
  * @author Diogo Marques
  * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {GameBoard} board - referência para a primitiva "tabuleiro"

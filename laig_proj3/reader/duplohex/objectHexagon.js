@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco, Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @return {null}
  */
 function ObjectHexagon(scene) {

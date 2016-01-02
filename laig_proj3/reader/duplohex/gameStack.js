@@ -1,3 +1,10 @@
+/**
+ * construtor default da classe 'GameStack'
+ * @constructor
+ * @augments Object
+ * @author Diogo Marques
+ * @return {null}
+ */
 function GameStack(board) {
 	this.board = board;
 	this.moves = [];
