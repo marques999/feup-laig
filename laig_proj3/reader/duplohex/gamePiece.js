@@ -25,27 +25,27 @@ function GamePiece(scene, id, position, color) {
 		this.materials["default"] = new CGFappearance(scene);
 		this.materials["default"].setDiffuse(0.05, 0.05, 0.05, 0.6);
 		this.materials["default"].setAmbient(0.08, 0.08, 0.08, 0.2);
-		this.materials["default"].setSpecular(1.0, 1.0, 1.0, 0.5);
+		this.materials["default"].setSpecular(0.2, 0.2, 0.2, 1.0);
 		this.materials["default"].setShininess(30);
 	}
 	else if (color == 'white') {
 		this.materials["default"] = new CGFappearance(scene);
 		this.materials["default"].setDiffuse(0.7, 0.7, 0.7, 0.6);
-		this.materials["default"].setAmbient(0.50, 0.50, 0.50, 0.2);
-		this.materials["default"].setSpecular(1.0, 1.0, 1.0, 0.5);
+		this.materials["default"].setAmbient(0.5, 0.5, 0.5, 0.2);
+		this.materials["default"].setSpecular(0.2, 0.2, 0.2, 1.0);
 		this.materials["default"].setShininess(30);
 	}
 	//--------------------------------------------------------
 	this.materials["yellow"] = new CGFappearance(scene);
 	this.materials["yellow"].setDiffuse(0.9, 0.9, 0.05, 0.6);
 	this.materials["yellow"].setAmbient(0.1, 0.9, 0.1, 0.2);
-	this.materials["yellow"].setSpecular(1.0, 1.0, 1.0, 0.5);
+	this.materials["yellow"].setSpecular(0.2, 0.2, 0.2, 1.0);
 	this.materials["yellow"].setShininess(30);
 	//--------------------------------------------------------
 	this.materials["red"] = new CGFappearance(scene);
 	this.materials["red"].setDiffuse(0.9, 0.05, 0.05, 0.6);
 	this.materials["red"].setAmbient(0.9, 0.05, 0.05, 0.2);
-	this.materials["red"].setSpecular(1.0, 1.0, 1.0, 0.5);
+	this.materials["red"].setSpecular(0.2, 0.2, 0.2, 1.0);
 	this.materials["red"].setShininess(30);
 	//--------------------------------------------------------
 	this.material = this.materials["default"];

@@ -6,16 +6,16 @@
 		<rotation axis="x" angle="0.0" />
 		<rotation axis="z" angle="0.0" />
 		<scale sx="1.0" sy="1.0" sz="1.0" />
-		<reference length="5.0" />
+		<reference length="1.0" />
 	</INITIALS>
 	<ILLUMINATION>
 		<ambient r="0.1" g="0.1" b="0.1" a="1.0" />
-		<background r="0.08" g="0.08" b="0.12" a="1.0" />
+		<background r="0.0" g="0.0" b="0.0" a="1.0" />
 	</ILLUMINATION>
 	<BOARD>
 		<size x="0.15" y="0.15" z="0.15" />
 		<position x="7.5" y="0.631" z="10.0" />
-		<topview x="0.01" y="7.0" z="0.01" />
+		<topview x="0.5" y="6.5" z="0.5" />
 		<sceneview x="9.0" y="1.0" z="4.0" />
 		<frontview x="2.5" y="2.5" z="2.5" />
 		<rotation axis="y" angle="-90" />
@@ -105,7 +105,11 @@
 		</TEXTURE>
 		<TEXTURE id="texture_carpet">
 			<file path="MyRoom/carpet.png" />
-			<amplif_factor s="0.2" t="0.3" />
+			<amplif_factor s="0.15" t="0.25" />
+		</TEXTURE>
+		<TEXTURE id="texture_ceiling">
+			<file path="MyRoom/ceiling.png" />
+			<amplif_factor s="0.25" t="0.25" />
 		</TEXTURE>
 		<TEXTURE id="texture_floor">
 			<file path="MyRoom/floor.jpg" />
@@ -562,7 +566,7 @@
 		</NODE>
 		<NODE id="ceiling">
 			<MATERIAL id="null" />
-			<TEXTURE id="null" />
+			<TEXTURE id="texture_ceiling" />
 			<TRANSLATION x="0.0" y="1.0" z="0.0" />
 			<ROTATION axis="x" angle="90" />
 			<DESCENDANTS>
