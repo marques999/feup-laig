@@ -39,9 +39,9 @@
 	<MATERIALS>
 		<MATERIAL id="material_default">
 			<shininess value="5" />
-			<specular r="0.5" g="0.5" b="0.5" a="1.0" />
-			<diffuse r="0.5" g="0.5" b="0.5" a="1.0" />
-			<ambient r="0.5" g="0.5" b="0.5" a="0.0" />
+			<specular r="0.45" g="0.45" b="0.45" a="1.0" />
+			<diffuse r="0.45" g="0.45" b="0.45" a="1.0" />
+			<ambient r="0.45" g="0.45" b="0.45" a="0.0" />
 			<emission r="0.0" g="0.0" b="0.0" a="0.0" />
 		</MATERIAL>
 		<MATERIAL id="material_floor">
@@ -490,7 +490,7 @@
 		</NODE>
 		<NODE id="table">
 			<MATERIAL id="material_default" />
-			<TEXTURE id="null" />
+			<TEXTURE id="texture_metal" />
 			<TRANSLATION x="6.25" y="0.0" z="9.25" />
 			<DESCENDANTS>
 				<DESCENDANT id="table_leg1" />
