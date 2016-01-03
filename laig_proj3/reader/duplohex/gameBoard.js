@@ -298,15 +298,13 @@ GameBoard.prototype.changeTurn = function() {
 		this.currentPlayer = this.player1;
 	}
 
-	this.playerChanged = true;
-
 	if (this.currentPlayer.cpu) {
 		this.botPlaying = true;
-		this.botCanPlay = true;
 		this.scene.disablePicking();
 	}
 	else {
 		this.botPlaying = false;
+		this.botCanPlay = false;
 		this.scene.enablePicking();
 	}
 
@@ -803,9 +801,9 @@ GameBoard.prototype.checkBotTurn = function(deltaTime) {
 
 		if (this.elapsedMillis >= this.botDelay) {
 			this.botCanPlay = false;
-			this.botTurn();
 			this.botDelay = (Math.random() * 1.5) + 1.0;
 			this.elapsedMillis = 0.0;
+			this.botTurn();
 		}
 	}
 };

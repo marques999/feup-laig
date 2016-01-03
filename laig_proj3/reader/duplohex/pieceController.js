@@ -412,9 +412,8 @@ PieceController.prototype.placeRandom = function(typeId, x, y)  {
 		return -1;
 	}
 	//--------------------------------------------------------
-	this.removeFromStack(pieceId);
-	//--------------------------------------------------------
 	var piece = this.pieces[pieceId];
+	this.removeFromStack(pieceId);
 	var newX = this.pieceBase[0] + 2.5 * x;
 	var newY = this.pieceBase[1];
 	var newZ = this.pieceBase[2] - 2.5 * this.defaultAngle * x - 5.0 * this.defaultAngle * y;
