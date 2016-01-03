@@ -1,7 +1,8 @@
 /**
  * construtor default da classe 'XMLnode'
  * @constructor
- * @author Carlos Samouco
+ * @augments Object
+ * @author Diogo Marques
  * @param {String} id - identificador do node
  * @param {String} textureId -  identificador da textura associada a este node
  * @param {String} materialId - identificador do material associado a este node

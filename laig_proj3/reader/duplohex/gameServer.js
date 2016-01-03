@@ -3,8 +3,6 @@
  * @constructor
  * @augments Object
  * @author Diogo Marques
- * @param {String} address - endereço IP ou hostname do servidor HTTP
- * @param {String} port - porta de rede onde o servidor HTTP se encontra a correr
  * @return {null}
  */
 function GameServer(scene, address, port) {

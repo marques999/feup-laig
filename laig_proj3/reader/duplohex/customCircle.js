@@ -3,8 +3,8 @@
  * @constructor
  * @augments MyPrimitive
  * @author Carlos Samouco
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Number} slices - número de divisões do círculo em torno do raio
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
+ * @param {Number} slices - número de divisões da circunferência em torno do raio
  * @param {Number} angle - comprimento do arco de circunferência
  * @param {Number} radius - raio da circunferência
  * @return {null}

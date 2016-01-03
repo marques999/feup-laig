@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} uDivs - número de divisões da superfície NURBS na coordenada U
  * @param {Number} vDivs - número de divisões da superfície NURBS na coordenada V
  * @param {Number} uDegree - grau da superfície NURBS na coordenada U
@@ -13,7 +13,7 @@
  */
 function MyPatch(scene, uDivs, vDivs, uDegree, vDegree, controlPoints) {
 
-	CGFobject.call(this, scene);
+	MyPrimitive.call(this, scene);
 
 	var knotsArray = [
 		[0, 0, 1, 1],

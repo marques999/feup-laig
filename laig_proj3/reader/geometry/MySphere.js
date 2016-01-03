@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} radius - raio da esfera
  * @param {Number} stacks - número de secções da esfera em altura
  * @param {Number} slices - número de secçoes da esfera em torno do raio

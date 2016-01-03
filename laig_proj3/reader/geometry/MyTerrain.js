@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {String} texturePath - caminho para o ficheiro de textura do terreno
  * @param {String} heightmapPath - caminho para o ficheiro de relevo do terreno
  * @return {null}

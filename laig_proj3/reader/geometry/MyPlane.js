@@ -3,13 +3,13 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
- * @param {Number} nrDivs - número de divisões do plano em partes por eixo
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
+ * @param {Number} divs - número de divisões do plano em partes por eixo
  * @return {null}
  */
 function MyPlane(scene, divs) {
 
-	CGFobject.call(this, scene);
+	MyPrimitive.call(this, scene);
 
 	var controlPoints = [
 		[[0.5, 0.0, 0.5, 1.0], [-0.5, 0.0, 0.5, 1.0]],

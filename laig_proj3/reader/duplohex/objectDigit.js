@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} minS - limite inferior da coordenada S da font texture
  * @param {Number} maxS - limite superior da coordenada S da font texture
  * @return {null}

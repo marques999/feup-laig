@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number[]} v1 - vetor de coordenadas (x, y, z) do vértice esquerdo da base do triângulo
  * @param {Number[]} v2 - vetor de coordenadas (x, y, z) do vértice direito da base do triângulo
  * @param {Number[]} v3 - vetor de coordenadas (x, y, z) do vértice de topo do triângulo

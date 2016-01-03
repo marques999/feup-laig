@@ -3,7 +3,7 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {XMLScene} scene - XMLScene onde esta primitiva será desenhada
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
  * @param {Number} height - altura do cilindro
  * @param {Number} radiusBottom - raio da base inferior do cilindro
  * @param {Number} radiusTop - radio da base superior do cilindro

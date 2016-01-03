@@ -8,7 +8,7 @@
  * @param {Object} player1 - estrutura de dados referente ao jogador 1
  * @param {Object} player2 - estrutura de dados referente ao jogador 2
  * @return {null}
-*/
+ */
 function PieceController(scene, board, player1, player2) {
 	//--------------------------------------------------------
 	MyPrimitive.call(this, scene);

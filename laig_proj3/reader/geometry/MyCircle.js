@@ -3,9 +3,9 @@
  * @constructor
  * @augments MyPrimitive
  * @author Diogo Marques
- * @param {CGFscene} scene - CGFscene onde esta primitiva será desenhada
- * @param {Number} slices - número de divisões do círculo em torno do raio
- * @param {Number} radius - raio do círculo
+ * @param {XMLscene} scene - XMLscene onde esta primitiva será desenhada
+ * @param {Number} slices - número de divisões da circunferência em torno do raio
+ * @param {Number} radius - raio da circunferência
  * @return {null}
  */
 function MyCircle(scene, slices, radius) {
