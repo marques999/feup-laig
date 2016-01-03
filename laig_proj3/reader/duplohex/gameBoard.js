@@ -45,8 +45,6 @@ function GameBoard(scene) {
 	//--------------------------------------------------------
 	this.cylinder = new MyCylinder(scene, 1.0, 1.0, 1.0, 20, 6);
 	this.base = new MyRectangle(scene, 0.0, 1.0, 1.0, 0.0);
-	this.chair = new ObjectChair(scene);
-	this.table = new ObjectTable(scene);
 	this.whiteBorder = new ObjectBorder(scene, this.numberRows, 'white');
 	this.blackBorder = new ObjectBorder(scene, this.numberColumns, 'black');
 	this.pieces = new PieceController(scene, this, this.player1, this.player2);
@@ -608,27 +606,6 @@ GameBoard.prototype.displayClock = function() {
 	this.scene.popMatrix();
 };
 //--------------------------------------------------------
-GameBoard.prototype.displayChair = function() {
-	this.scene.pushMatrix();
-	this.scene.rotate(Math.PI / 2, 0.0, 1.0, 0.0);
-	this.scene.scale(this.baseSize[0] * 2.25, 7.5, this.baseSize[1]);
-	this.scene.translate(0.0, 0.0, -this.baseSize[0]);
-	this.chair.display();
-	this.scene.translate(0.0, 0.0, this.baseSize[0]);
-	this.scene.rotate(Math.PI, 0.0, 1.0, 0.0);
-	this.scene.translate(0.0, 0.0, -this.baseSize[0]);
-	this.chair.display();
-	this.scene.popMatrix();
-};
-//--------------------------------------------------------
-GameBoard.prototype.displayTable = function() {
-	this.scene.pushMatrix();
-	this.scene.rotate(Math.PI / 2, 0.0, 1.0, 0.0);
-	this.scene.scale(this.baseSize[0] * 3.0, 5.0, this.baseSize[1] * 3.0);
-	this.table.display();
-	this.scene.popMatrix();
-};
-//--------------------------------------------------------
 GameBoard.prototype.backupSelection = function() {
 	this.previousSelectedPiece = this.selectedPieceId;
 	this.previousSelectedCell = this.selectedCellId;
@@ -751,7 +728,7 @@ GameBoard.prototype.onRotationDone = function() {
 		this.movieRotated = false;
 		return true;
 	}
-	
+
 	if (!this.gameRunning) {
 		return false;
 	}

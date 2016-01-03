@@ -59,7 +59,6 @@ serialInclude([
 	'duplohex/gameSettings.js',
 	'duplohex/gameStack.js',
 	'duplohex/objectBorder.js',
-	'duplohex/objectChair.js',
 	'duplohex/objectClock.js',
 	'duplohex/objectCube.js',
 	'duplohex/objectDigit.js',
@@ -69,7 +68,6 @@ serialInclude([
 	'duplohex/objectPlane.js',
 	'duplohex/objectRamp.js',
 	'duplohex/objectRing.js',
-	'duplohex/objectTable.js',
 	'duplohex/pieceController.js',
 	'duplohex/historyController.js',
 	//--------------------------------------------------------
