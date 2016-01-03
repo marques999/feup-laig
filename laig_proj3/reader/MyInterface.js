@@ -101,6 +101,13 @@ MyInterface.prototype.readPreferences = function() {
 	this.toggleBoolean(this.gameDifficulty, preferencesArray.getDifficulty());
 };
 //--------------------------------------------------------
+MyInterface.prototype.resetPreferences = function() {
+	this.readPreferences();
+	this.scene.loadGraph(this.currentScene);
+	this.board.updatePlayer(this.getBoolean(this.gameDifficulty), this.playerColor);
+	this.board.updateMatrix(this.getBoolean(this.gameMode));
+};
+//--------------------------------------------------------
 MyInterface.prototype.savePreferences = function() {
 	//--------------------------------------------------------
 	if (this.scene == undefined || this.scene == null) {
@@ -140,7 +147,7 @@ MyInterface.prototype.settingsMenu = function() {
 	this.settingsGroup = this.gui.addFolder("Settings");
 	this.settingsGroup.open();
 	this.settingsGroup.add(this, "savePreferences").name("Save Settings");
-	this.settingsGroup.add(this, "readPreferences").name("Reset Settings");
+	this.settingsGroup.add(this, "resetPreferences").name("Reset Settings");
 	//---------------------------------------------------------
 	this.settingsGroup.add(this, "currentScene", this.gameScenes).name("Environment").onChange(function(currentScene) {
 		self.resetFps();
