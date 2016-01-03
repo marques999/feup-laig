@@ -1072,7 +1072,7 @@ GameBoard.prototype.onPlacePiece = function() {
 
 	if (selectedPiece.wasPlaced()) { // MOVE
 
-		this.historyStack.push(selectedPiece, sourceCell, this.piecePlayed);
+		this.historyStack.pushUndo(selectedPiece, sourceCell, this.piecePlayed);
 
 		if (selectedPiece.isDisc()) {
 			this.cells[sourceCell].removeDisc();
@@ -1082,10 +1082,11 @@ GameBoard.prototype.onPlacePiece = function() {
 		}
 	}
 	else { // PLACE
-		this.historyStack.push(selectedPiece, null, this.piecePlayed);
+		this.historyStack.pushUndo(selectedPiece, null, this.piecePlayed);
 	}
 
 	this.pieceController.placePiece(this.selectedPieceId, selectedCellX, selectedCellY);
+	this.historyStack.pushMove(this.selectedPieceId, selectedCellX, selectedCellY);
 	this.registerTurn(selectedPiece);
 
 	if (selectedPiece.isDisc()) {
@@ -1232,10 +1233,9 @@ GameBoard.prototype.animationBusy = function() {
 	return this.movieMode || this.rotateCamera || this.animationActive;
 };
 //--------------------------------------------------------
-GameBoard.prototype.processFrame = function(sourcePiece, destinationCell) {
-	var sourceCell = this.cellIndex(sourcePiece.getX(), sourcePiece.getY());
-	this.updatePicking(sourceCell + 1);
-	this.historyPieces.placePiece(sourcePiece.getId(), sourcePiece.getX(), sourcePiece.getY());
+GameBoard.prototype.processFrame = function(id, x, y) {
+	this.updatePicking(this.cellIndex(x, y) + 1);
+	this.pieceController.placePiece(id, x, y);
 };
 //--------------------------------------------------------
 GameBoard.prototype.updatePicking = function(selectedId) {
