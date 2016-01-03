@@ -45,6 +45,18 @@
 			<file path="MyPark/bench_wood.png" />
 			<amplif_factor s="1.0" t="5.0" />
 		</TEXTURE>
+		<TEXTURE id="texture_grass">
+			<file path="MyPark/grass.png" />
+			<amplif_factor s="0.075" t="0.075" />
+		</TEXTURE>
+		<TEXTURE id="texture_table">
+			<file path="MyPark/table_wood.png" />
+			<amplif_factor s="3.0" t="1.5" />
+		</TEXTURE>
+		<TEXTURE id="texture_table_top">
+			<file path="MyPark/table_top.png" />
+			<amplif_factor s="0.25" t="1.5" />
+		</TEXTURE>
 		<TEXTURE id="texture_tree_bark">
 			<file path="MyPark/tree_bark.png" />
 			<amplif_factor s="1.0" t="1.0" />
@@ -64,18 +76,6 @@
 		<TEXTURE id="texture_wooden_gate">
 			<file path="MyPark/wooden_gate.png" />
 			<amplif_factor s="1.0" t="1.0" />
-		</TEXTURE>
-		<TEXTURE id="texture_table">
-			<file path="MyPark/table_wood.png" />
-			<amplif_factor s="3.0" t="1.5" />
-		</TEXTURE>
-		<TEXTURE id="texture_table_top">
-			<file path="MyPark/table_top.png" />
-			<amplif_factor s="0.25" t="1.5" />
-		</TEXTURE>
-		<TEXTURE id="texture_grass">
-			<file path="MyPark/grass.png" />
-			<amplif_factor s="0.075" t="0.075" />
 		</TEXTURE>
 	</TEXTURES>
 	<MATERIALS>
@@ -196,8 +196,8 @@
 			<MATERIAL id="null" />
 			<TEXTURE id="texture_grass" />
 			<TRANSLATION x="-1.0" y="0.0" z="21.0"/>
-		    <SCALE sx="18.0" sy="1.0" sz="22.0"/>
-		    <ROTATION axis="x" angle="-90" />
+			<SCALE sx="18.0" sy="1.0" sz="22.0"/>
+			<ROTATION axis="x" angle="-90" />
 			<DESCENDANTS>
 				<DESCENDANT id="myrectangle" />
 			</DESCENDANTS>

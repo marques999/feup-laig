@@ -19,8 +19,8 @@ MyInterface.prototype.init = function(application) {
 	this.gameScenes = {
 		'None': 'MyExample.lsx',
 		'Billiards': 'MyBilliards.lsx',
-		'Darkroom': 'MyDarkRoom.lsx',
-		'Park': 'MyPark.lsx'
+		'Park': 'MyPark.lsx',
+		'Room': 'MyRoom.lsx'
 	};
 	//--------------------------------------------------------
 	this.playerColors = {
