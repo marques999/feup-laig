@@ -186,7 +186,7 @@ validatePlaceRing(_, _, _, _).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% verifica se o jogador atual tem jogadas regulars disponíveis
+% verifica se o jogador atual tem jogadas regulares disponíveis
 serverCheckStuck(Board, Player, yes):- isPlayerStuck(Board, Player).
 
 % verifica se o jogador 1 venceu a partida atual
